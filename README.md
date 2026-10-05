@@ -23,6 +23,13 @@ Get the latest version from the **[Releases](https://github.com/Farathim89/abs-d
 | `ABS-DA-Setup-<version>.exe` | Installer: Start Menu + desktop shortcuts, uninstaller, no admin rights needed |
 | `ABS-DA-Portable-<version>.exe` | Single file, no install — settings are kept in an `abs-da-data` folder next to it |
 
+> **Using the portable?** Give it a folder of its own first, for example `C:\Tools\ABS-DA` or
+> `Documents\ABS-DA`, put the `.exe` in it and start it from there. The app keeps its settings and
+> login in an `abs-da-data` folder next to the `.exe`, so this keeps everything together and easy
+> to move or delete. Avoid running it straight from Downloads or the Desktop, and avoid synced
+> (OneDrive/Dropbox) or read-only folders. To update, replace the `.exe` in that folder; your
+> settings stay.
+
 Windows may show **"Windows protected your PC"** the first time, because the app isn't
 code-signed. Click **More info → Run anyway**.
 
