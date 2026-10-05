@@ -1,0 +1,34 @@
+# Builds the Windows installer and portable exe from source on GitHub's servers,
+# so every release can be traced back to the code in this repo.
+name: Build
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build installer + portable
+        run: npx electron-builder --win --publish never
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ABS-DA-windows
+          path: |
+            dist/*.exe
+          if-no-files-found: error

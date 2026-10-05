@@ -71,8 +71,24 @@ Pick them in the title bar: **View → Theme** and **View → Bookshelf**. They 
 
 ## Privacy
 
-ABS-DA talks only to the server you enter. No analytics, no telemetry, no accounts. Settings live
-in `%APPDATA%\ABS Desktop App` (or `abs-da-data` next to the portable exe).
+This program will not transfer any information to other networked systems unless specifically
+requested by the user or the person installing or operating it. ABS-DA only connects to the
+Audiobookshelf server you enter — no analytics, no telemetry, no accounts. Settings live in
+`%APPDATA%\ABS Desktop App` (or `abs-da-data` next to the portable exe). Your server's own
+privacy rules are set by whoever runs it.
+
+## Code signing policy
+
+Release files are built from this repository's source by GitHub Actions
+([build workflow](.github/workflows/build.yml)). Releases are not code-signed yet; we're applying
+for free code signing from the [SignPath Foundation](https://signpath.org). Once approved:
+*Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by
+[SignPath Foundation](https://signpath.org).*
+
+Team roles:
+
+- Committers and reviewers: [Farathim89](https://github.com/Farathim89)
+- Approvers: [Farathim89](https://github.com/Farathim89)
 
 ## Build from source
 
