@@ -7,6 +7,8 @@ admin tool (users, libraries, scanning, metadata editing, uploads, backups, logs
 a proper Windows app, with desktop extras on top: system tray, themes, bookshelf art, saved
 login, media keys and more.
 
+![ABS-DA showing an Audiobookshelf library on the wood bookshelf](docs/screenshot.jpg)
+
 > ABS-DA is a community project. It is **not affiliated with or endorsed by** the Audiobookshelf
 > project. All the credit for Audiobookshelf itself goes to [advplyr](https://github.com/advplyr)
 > and the [Audiobookshelf contributors](https://github.com/advplyr/audiobookshelf).
