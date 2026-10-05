@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Įklijuokite ją į pranešimą apie klaidą. Joje nėra slaptažodžių, naudotojų vardų ar serverio adreso.",
   "help.openReport": "Atidaryti pranešimą apie klaidą",
   "data.notWritableTitle": "Čia nepavyksta išsaugoti nustatymų",
-  "data.notWritableMsg": "ABS Desktop App negali rašyti į šį aplanką:\n{folder}\n\nPerkelkite .exe failą į aplanką, į kurį galite rašyti (pavyzdžiui, Dokumentai arba C:\\Tools), ir paleiskite jį iš naujo."
+  "data.notWritableMsg": "ABS Desktop App negali rašyti į šį aplanką:\n{folder}\n\nPerkelkite .exe failą į aplanką, į kurį galite rašyti (pavyzdžiui, Dokumentai arba C:\\Tools), ir paleiskite jį iš naujo.",
+  "app.hwAccel": "Naudoti aparatinį spartinimą",
+  "app.restartTitle": "Reikia paleisti iš naujo",
+  "app.restartMsg": "Pakeitimas įsigalios, kai ABS Desktop App bus paleista iš naujo. Paleisti iš naujo dabar?",
+  "app.restartNow": "Paleisti iš naujo dabar"
 }

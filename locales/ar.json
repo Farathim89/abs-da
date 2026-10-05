@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "الصقها في تقرير الخطأ. لا تحتوي على كلمات مرور أو أسماء مستخدمين أو عنوان الخادم.",
   "help.openReport": "فتح تقرير الخطأ",
   "data.notWritableTitle": "لا يمكن حفظ الإعدادات هنا",
-  "data.notWritableMsg": "لا يستطيع ABS Desktop App الكتابة في هذا المجلد:\n{folder}\n\nانقل ملف .exe إلى مجلد يمكنك الكتابة فيه (مثل المستندات أو C:\\Tools) ثم شغّله مرة أخرى."
+  "data.notWritableMsg": "لا يستطيع ABS Desktop App الكتابة في هذا المجلد:\n{folder}\n\nانقل ملف .exe إلى مجلد يمكنك الكتابة فيه (مثل المستندات أو C:\\Tools) ثم شغّله مرة أخرى.",
+  "app.hwAccel": "استخدام تسريع الأجهزة",
+  "app.restartTitle": "يلزم إعادة التشغيل",
+  "app.restartMsg": "سيسري التغيير بعد إعادة تشغيل ABS Desktop App. هل تريد إعادة التشغيل الآن؟",
+  "app.restartNow": "إعادة التشغيل الآن"
 }

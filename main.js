@@ -62,6 +62,13 @@ if (process.env.PORTABLE_EXECUTABLE_DIR) {
   }
 }
 
+// App → Use hardware acceleration (off = the cure for drawing glitches with some
+// graphics drivers). Must be decided before the app is ready, so read it here.
+try {
+  const early = JSON.parse(fs.readFileSync(path.join(app.getPath("userData"), "config.json"), "utf8"));
+  if (early.hardwareAcceleration === false) app.disableHardwareAcceleration();
+} catch {}
+
 // Only one copy of the app at a time — launching it again focuses the open one.
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) app.quit();
@@ -995,11 +1002,42 @@ async function clearCacheAndRestart() {
   });
   if (response !== 0) return;
   await clearWebCache();
-  // Portable: restart the .exe you started (not the unpacked copy in Temp).
+  restartApp();
+}
+
+// Restart the app. Portable: restart the .exe you started (not the unpacked copy in Temp).
+function restartApp() {
   const exe = process.env.PORTABLE_EXECUTABLE_FILE;
   app.relaunch(exe ? { execPath: exe, args: [] } : undefined);
   isQuitting = true;
   app.exit(0);
+}
+
+// App → Use hardware acceleration: saved, then applied on the next start.
+async function setHardwareAcceleration(on) {
+  config = { ...config, hardwareAcceleration: on };
+  writeJson(dataFile("config.json"), config);
+  const { response } = await dialog.showMessageBox(win, {
+    type: "question",
+    title: tr("app.restartTitle"),
+    message: tr("app.restartTitle"),
+    detail: tr("app.restartMsg"),
+    buttons: [tr("app.restartNow"), tr("update.later")],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response === 0) restartApp();
+}
+
+// Graphics card(s) for diagnostics, e.g. "NVIDIA 0x2484 (active)".
+async function gpuSummary() {
+  const vendors = { 0x8086: "Intel", 0x10de: "NVIDIA", 0x1002: "AMD", 0x1414: "Microsoft (software)", 0x5143: "Qualcomm" };
+  try {
+    const info = await app.getGPUInfo("basic");
+    const list = (info.gpuDevice || []).map((d) =>
+      `${vendors[d.vendorId] || "0x" + Number(d.vendorId).toString(16)} 0x${Number(d.deviceId).toString(16)}${d.active ? " (active)" : ""}`);
+    return list.join(", ") || "unknown";
+  } catch { return "unknown"; }
 }
 
 // Help → Copy Diagnostics: technical details for a bug report — no passwords,
@@ -1016,6 +1054,7 @@ async function copyDiagnostics() {
     `Data folder: ${short(app.getPath("userData"))}`,
     `Language: ${uiLang()} (choice: ${config.langChoice || "auto"}, Audiobookshelf: ${config.webLang || "?"}, Windows: ${app.getLocale()})`,
     `Theme: ${themeId()}, bookshelf: ${shelfArtId()}, text size: ${Math.round(textSize() * 100)}%`,
+    `Graphics: ${await gpuSummary()}, hardware acceleration ${app.isHardwareAccelerationEnabled() ? "on" : "off"}`,
   ];
   if (config.webUrl) {
     try {
@@ -1239,6 +1278,12 @@ function buildMenu() {
         { type: "separator" },
         { label: tr("app.reload"), ...shortcut("F5"), click: () => wc().reload() },
         { label: tr("app.clearCache"), click: clearCacheAndRestart },
+        {
+          label: tr("app.hwAccel"),
+          type: "checkbox",
+          checked: config.hardwareAcceleration !== false,
+          click: (item) => setHardwareAcceleration(item.checked),
+        },
         { type: "separator" },
         { label: tr("app.exit"), click: () => app.quit() },
       ],

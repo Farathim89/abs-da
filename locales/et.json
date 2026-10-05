@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Kleebi see oma veateatesse. See ei sisalda paroole, kasutajanimesid ega serveri aadressi.",
   "help.openReport": "Ava veateade",
   "data.notWritableTitle": "Seadeid ei saa siia salvestada",
-  "data.notWritableMsg": "ABS Desktop App ei saa sellesse kausta kirjutada:\n{folder}\n\nTeisalda .exe-fail kausta, kuhu saad kirjutada (näiteks Dokumendid või C:\\Tools), ja käivita see uuesti."
+  "data.notWritableMsg": "ABS Desktop App ei saa sellesse kausta kirjutada:\n{folder}\n\nTeisalda .exe-fail kausta, kuhu saad kirjutada (näiteks Dokumendid või C:\\Tools), ja käivita see uuesti.",
+  "app.hwAccel": "Kasuta riistvaralist kiirendust",
+  "app.restartTitle": "Vajalik on taaskäivitus",
+  "app.restartMsg": "Muudatus jõustub pärast seda, kui ABS Desktop App on taaskäivitatud. Kas taaskäivitada kohe?",
+  "app.restartNow": "Taaskäivita kohe"
 }

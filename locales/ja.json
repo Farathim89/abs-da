@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "バグ報告に貼り付けてください。パスワード、ユーザー名、サーバーアドレスは含まれていません。",
   "help.openReport": "バグ報告を開く",
   "data.notWritableTitle": "ここには設定を保存できません",
-  "data.notWritableMsg": "ABS Desktop App はこのフォルダーに書き込めません:\n{folder}\n\n.exe ファイルを書き込み可能なフォルダー（例: ドキュメント や C:\\Tools）に移動してから、もう一度起動してください。"
+  "data.notWritableMsg": "ABS Desktop App はこのフォルダーに書き込めません:\n{folder}\n\n.exe ファイルを書き込み可能なフォルダー（例: ドキュメント や C:\\Tools）に移動してから、もう一度起動してください。",
+  "app.hwAccel": "ハードウェア アクセラレーションを使用する",
+  "app.restartTitle": "再起動が必要です",
+  "app.restartMsg": "変更は ABS Desktop App の再起動後に有効になります。今すぐ再起動しますか？",
+  "app.restartNow": "今すぐ再起動"
 }

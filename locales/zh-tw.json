@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "請將其貼到您的錯誤回報中。其中不包含密碼、使用者名稱或伺服器位址。",
   "help.openReport": "開啟錯誤回報",
   "data.notWritableTitle": "無法在此儲存設定",
-  "data.notWritableMsg": "ABS Desktop App 無法寫入此資料夾：\n{folder}\n\n請將 .exe 檔案移到您可以寫入的資料夾（例如「文件」或 C:\\Tools），然後重新啟動。"
+  "data.notWritableMsg": "ABS Desktop App 無法寫入此資料夾：\n{folder}\n\n請將 .exe 檔案移到您可以寫入的資料夾（例如「文件」或 C:\\Tools），然後重新啟動。",
+  "app.hwAccel": "使用硬體加速",
+  "app.restartTitle": "需要重新啟動",
+  "app.restartMsg": "此變更將在 ABS Desktop App 重新啟動後生效。要立即重新啟動嗎？",
+  "app.restartNow": "立即重新啟動"
 }

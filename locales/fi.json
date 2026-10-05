@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Liitä ne vikailmoitukseesi. Ne eivät sisällä salasanoja, käyttäjänimiä tai palvelimen osoitetta.",
   "help.openReport": "Avaa vikailmoitus",
   "data.notWritableTitle": "Asetuksia ei voi tallentaa tähän",
-  "data.notWritableMsg": "ABS Desktop App ei voi kirjoittaa tähän kansioon:\n{folder}\n\nSiirrä .exe-tiedosto kansioon, johon voit kirjoittaa (esimerkiksi Tiedostot tai C:\\Tools), ja käynnistä se uudelleen."
+  "data.notWritableMsg": "ABS Desktop App ei voi kirjoittaa tähän kansioon:\n{folder}\n\nSiirrä .exe-tiedosto kansioon, johon voit kirjoittaa (esimerkiksi Tiedostot tai C:\\Tools), ja käynnistä se uudelleen.",
+  "app.hwAccel": "Käytä laitteistokiihdytystä",
+  "app.restartTitle": "Uudelleenkäynnistys tarvitaan",
+  "app.restartMsg": "Muutos tulee voimaan, kun ABS Desktop App käynnistetään uudelleen. Käynnistetäänkö uudelleen nyt?",
+  "app.restartNow": "Käynnistä uudelleen nyt"
 }

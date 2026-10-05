@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Hãy dán thông tin này vào báo cáo lỗi của bạn. Thông tin không chứa mật khẩu, tên người dùng hay địa chỉ máy chủ.",
   "help.openReport": "Mở báo cáo lỗi",
   "data.notWritableTitle": "Không thể lưu cài đặt ở đây",
-  "data.notWritableMsg": "ABS Desktop App không thể ghi vào thư mục này:\n{folder}\n\nHãy di chuyển tệp .exe đến một thư mục bạn có quyền ghi (ví dụ: Tài liệu hoặc C:\\Tools) rồi khởi động lại."
+  "data.notWritableMsg": "ABS Desktop App không thể ghi vào thư mục này:\n{folder}\n\nHãy di chuyển tệp .exe đến một thư mục bạn có quyền ghi (ví dụ: Tài liệu hoặc C:\\Tools) rồi khởi động lại.",
+  "app.hwAccel": "Sử dụng tăng tốc phần cứng",
+  "app.restartTitle": "Cần khởi động lại",
+  "app.restartMsg": "Thay đổi sẽ có hiệu lực sau khi ABS Desktop App khởi động lại. Khởi động lại ngay?",
+  "app.restartNow": "Khởi động lại ngay"
 }

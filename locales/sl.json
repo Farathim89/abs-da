@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Prilepite jo v poročilo o napaki. Ne vsebuje gesel, uporabniških imen ali naslova strežnika.",
   "help.openReport": "Odpri poročilo o napaki",
   "data.notWritableTitle": "Nastavitev tukaj ni mogoče shraniti",
-  "data.notWritableMsg": "ABS Desktop App ne more pisati v to mapo:\n{folder}\n\nPremaknite datoteko .exe v mapo, v katero lahko pišete (na primer Dokumenti ali C:\\Tools), in jo znova zaženite."
+  "data.notWritableMsg": "ABS Desktop App ne more pisati v to mapo:\n{folder}\n\nPremaknite datoteko .exe v mapo, v katero lahko pišete (na primer Dokumenti ali C:\\Tools), in jo znova zaženite.",
+  "app.hwAccel": "Uporabi strojno pospeševanje",
+  "app.restartTitle": "Potreben je vnovični zagon",
+  "app.restartMsg": "Sprememba bo začela veljati po vnovičnem zagonu aplikacije ABS Desktop App. Ali jo želite znova zagnati zdaj?",
+  "app.restartNow": "Znova zaženi zdaj"
 }

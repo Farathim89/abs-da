@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Illessze be őket a hibajelentésbe. Nem tartalmaznak jelszót, felhasználónevet vagy szervercímet.",
   "help.openReport": "Hibajelentés megnyitása",
   "data.notWritableTitle": "A beállítások itt nem menthetők",
-  "data.notWritableMsg": "Az ABS Desktop App nem tud írni ebbe a mappába:\n{folder}\n\nHelyezze át az .exe fájlt egy írható mappába (például a Dokumentumok mappába vagy a C:\\Tools mappába), majd indítsa el újra."
+  "data.notWritableMsg": "Az ABS Desktop App nem tud írni ebbe a mappába:\n{folder}\n\nHelyezze át az .exe fájlt egy írható mappába (például a Dokumentumok mappába vagy a C:\\Tools mappába), majd indítsa el újra.",
+  "app.hwAccel": "Hardveres gyorsítás használata",
+  "app.restartTitle": "Újraindítás szükséges",
+  "app.restartMsg": "A módosítás az ABS Desktop App újraindítása után lép életbe. Újraindítja most?",
+  "app.restartNow": "Újraindítás most"
 }

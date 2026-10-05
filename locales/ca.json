@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Enganxeu-lo a l’informe d’error. No conté contrasenyes, noms d’usuari ni l’adreça del servidor.",
   "help.openReport": "Obre l’informe d’error",
   "data.notWritableTitle": "No es poden desar els paràmetres aquí",
-  "data.notWritableMsg": "ABS Desktop App no pot escriure en aquesta carpeta:\n{folder}\n\nMoveu el fitxer .exe a una carpeta on pugueu escriure (per exemple, Documents o C:\\Tools) i torneu-lo a iniciar."
+  "data.notWritableMsg": "ABS Desktop App no pot escriure en aquesta carpeta:\n{folder}\n\nMoveu el fitxer .exe a una carpeta on pugueu escriure (per exemple, Documents o C:\\Tools) i torneu-lo a iniciar.",
+  "app.hwAccel": "Utilitza l’acceleració per maquinari",
+  "app.restartTitle": "Cal reiniciar",
+  "app.restartMsg": "El canvi s’aplicarà quan es reiniciï ABS Desktop App. Voleu reiniciar ara?",
+  "app.restartNow": "Reinicia ara"
 }

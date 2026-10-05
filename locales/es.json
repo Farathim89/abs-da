@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Pégalo en tu informe de error. No contiene contraseñas, nombres de usuario ni la dirección del servidor.",
   "help.openReport": "Abrir informe de error",
   "data.notWritableTitle": "No se pueden guardar los ajustes aquí",
-  "data.notWritableMsg": "ABS Desktop App no puede escribir en esta carpeta:\n{folder}\n\nMueve el archivo .exe a una carpeta en la que puedas escribir (por ejemplo, Documentos o C:\\Tools) y vuelve a iniciarlo."
+  "data.notWritableMsg": "ABS Desktop App no puede escribir en esta carpeta:\n{folder}\n\nMueve el archivo .exe a una carpeta en la que puedas escribir (por ejemplo, Documentos o C:\\Tools) y vuelve a iniciarlo.",
+  "app.hwAccel": "Usar aceleración por hardware",
+  "app.restartTitle": "Es necesario reiniciar",
+  "app.restartMsg": "El cambio se aplicará cuando ABS Desktop App se reinicie. ¿Reiniciar ahora?",
+  "app.restartNow": "Reiniciar ahora"
 }

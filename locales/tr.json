@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Bunları hata raporunuza yapıştırın. Parola, kullanıcı adı veya sunucu adresi içermez.",
   "help.openReport": "Hata raporunu aç",
   "data.notWritableTitle": "Ayarlar buraya kaydedilemiyor",
-  "data.notWritableMsg": "ABS Desktop App bu klasöre yazamıyor:\n{folder}\n\n.exe dosyasını yazabileceğiniz bir klasöre (örneğin Belgeler veya C:\\Tools) taşıyın ve yeniden başlatın."
+  "data.notWritableMsg": "ABS Desktop App bu klasöre yazamıyor:\n{folder}\n\n.exe dosyasını yazabileceğiniz bir klasöre (örneğin Belgeler veya C:\\Tools) taşıyın ve yeniden başlatın.",
+  "app.hwAccel": "Donanım hızlandırmayı kullan",
+  "app.restartTitle": "Yeniden başlatma gerekli",
+  "app.restartMsg": "Değişiklik, ABS Desktop App yeniden başlatıldıktan sonra geçerli olur. Şimdi yeniden başlatılsın mı?",
+  "app.restartNow": "Şimdi yeniden başlat"
 }

@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Incollala nella tua segnalazione di bug. Non contiene password, nomi utente né l’indirizzo del server.",
   "help.openReport": "Apri segnalazione di bug",
   "data.notWritableTitle": "Impossibile salvare le impostazioni qui",
-  "data.notWritableMsg": "ABS Desktop App non può scrivere in questa cartella:\n{folder}\n\nSposta il file .exe in una cartella in cui puoi scrivere (ad esempio Documenti o C:\\Tools) e avvialo di nuovo."
+  "data.notWritableMsg": "ABS Desktop App non può scrivere in questa cartella:\n{folder}\n\nSposta il file .exe in una cartella in cui puoi scrivere (ad esempio Documenti o C:\\Tools) e avvialo di nuovo.",
+  "app.hwAccel": "Usa accelerazione hardware",
+  "app.restartTitle": "Riavvio necessario",
+  "app.restartMsg": "La modifica avrà effetto dopo il riavvio di ABS Desktop App. Riavviare ora?",
+  "app.restartNow": "Riavvia ora"
 }

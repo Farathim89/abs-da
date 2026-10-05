@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "버그 신고에 붙여넣으세요. 비밀번호, 사용자 이름, 서버 주소는 포함되어 있지 않습니다.",
   "help.openReport": "버그 신고 열기",
   "data.notWritableTitle": "여기에 설정을 저장할 수 없습니다",
-  "data.notWritableMsg": "ABS Desktop App이 이 폴더에 쓸 수 없습니다:\n{folder}\n\n.exe 파일을 쓰기 가능한 폴더(예: 문서 또는 C:\\Tools)로 옮긴 후 다시 실행하세요."
+  "data.notWritableMsg": "ABS Desktop App이 이 폴더에 쓸 수 없습니다:\n{folder}\n\n.exe 파일을 쓰기 가능한 폴더(예: 문서 또는 C:\\Tools)로 옮긴 후 다시 실행하세요.",
+  "app.hwAccel": "하드웨어 가속 사용",
+  "app.restartTitle": "다시 시작 필요",
+  "app.restartMsg": "변경 사항은 ABS Desktop App을 다시 시작한 후에 적용됩니다. 지금 다시 시작하시겠습니까?",
+  "app.restartNow": "지금 다시 시작"
 }

@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Lim den inn i feilrapporten din. Den inneholder ingen passord, brukernavn eller serveradresse.",
   "help.openReport": "Åpne feilrapport",
   "data.notWritableTitle": "Kan ikke lagre innstillinger her",
-  "data.notWritableMsg": "ABS Desktop App kan ikke skrive til denne mappen:\n{folder}\n\nFlytt .exe-filen til en mappe du kan skrive til (for eksempel Dokumenter eller C:\\Tools), og start den på nytt."
+  "data.notWritableMsg": "ABS Desktop App kan ikke skrive til denne mappen:\n{folder}\n\nFlytt .exe-filen til en mappe du kan skrive til (for eksempel Dokumenter eller C:\\Tools), og start den på nytt.",
+  "app.hwAccel": "Bruk maskinvareakselerasjon",
+  "app.restartTitle": "Omstart kreves",
+  "app.restartMsg": "Endringen trer i kraft når ABS Desktop App er startet på nytt. Vil du starte på nytt nå?",
+  "app.restartNow": "Start på nytt nå"
 }

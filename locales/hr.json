@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Zalijepite je u prijavu pogreške. Ne sadrži lozinke, korisnička imena ni adresu poslužitelja.",
   "help.openReport": "Otvori prijavu pogreške",
   "data.notWritableTitle": "Postavke se ovdje ne mogu spremiti",
-  "data.notWritableMsg": "ABS Desktop App ne može pisati u ovu mapu:\n{folder}\n\nPremjestite datoteku .exe u mapu u koju možete pisati (na primjer Dokumenti ili C:\\Tools) i ponovno je pokrenite."
+  "data.notWritableMsg": "ABS Desktop App ne može pisati u ovu mapu:\n{folder}\n\nPremjestite datoteku .exe u mapu u koju možete pisati (na primjer Dokumenti ili C:\\Tools) i ponovno je pokrenite.",
+  "app.hwAccel": "Upotrijebi hardversko ubrzanje",
+  "app.restartTitle": "Potrebno je ponovno pokretanje",
+  "app.restartMsg": "Promjena će stupiti na snagu nakon ponovnog pokretanja aplikacije ABS Desktop App. Želite li je ponovno pokrenuti sada?",
+  "app.restartNow": "Ponovno pokreni sada"
 }

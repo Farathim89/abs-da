@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Paste them into your bug report. They contain no passwords, usernames or server address.",
   "help.openReport": "Open bug report",
   "data.notWritableTitle": "Can't save settings here",
-  "data.notWritableMsg": "ABS Desktop App can't write to this folder:\n{folder}\n\nMove the .exe to a folder you can write to (for example Documents or C:\\Tools) and start it again."
+  "data.notWritableMsg": "ABS Desktop App can't write to this folder:\n{folder}\n\nMove the .exe to a folder you can write to (for example Documents or C:\\Tools) and start it again.",
+  "app.hwAccel": "Use hardware acceleration",
+  "app.restartTitle": "Restart needed",
+  "app.restartMsg": "The change takes effect after ABS Desktop App restarts. Restart now?",
+  "app.restartNow": "Restart now"
 }

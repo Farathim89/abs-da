@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Füge sie in deinen Fehlerbericht ein. Sie enthalten keine Passwörter, Benutzernamen und keine Serveradresse.",
   "help.openReport": "Fehlerbericht öffnen",
   "data.notWritableTitle": "Einstellungen können hier nicht gespeichert werden",
-  "data.notWritableMsg": "ABS Desktop App kann nicht in diesen Ordner schreiben:\n{folder}\n\nVerschiebe die .exe in einen Ordner, in den du schreiben kannst (zum Beispiel Dokumente oder C:\\Tools), und starte sie erneut."
+  "data.notWritableMsg": "ABS Desktop App kann nicht in diesen Ordner schreiben:\n{folder}\n\nVerschiebe die .exe in einen Ordner, in den du schreiben kannst (zum Beispiel Dokumente oder C:\\Tools), und starte sie erneut.",
+  "app.hwAccel": "Hardwarebeschleunigung verwenden",
+  "app.restartTitle": "Neustart erforderlich",
+  "app.restartMsg": "Die Änderung wird nach einem Neustart von ABS Desktop App wirksam. Jetzt neu starten?",
+  "app.restartNow": "Jetzt neu starten"
 }

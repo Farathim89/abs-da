@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "הדבק אותם בדיווח הבאג שלך. הם אינם כוללים סיסמאות, שמות משתמש או כתובת שרת.",
   "help.openReport": "פתח דיווח באג",
   "data.notWritableTitle": "לא ניתן לשמור כאן את ההגדרות",
-  "data.notWritableMsg": "ABS Desktop App לא יכולה לכתוב לתיקייה הזו:\n{folder}\n\nהעבר את קובץ ה-.exe לתיקייה שאפשר לכתוב אליה (לדוגמה מסמכים או C:\\Tools) והפעל אותו מחדש."
+  "data.notWritableMsg": "ABS Desktop App לא יכולה לכתוב לתיקייה הזו:\n{folder}\n\nהעבר את קובץ ה-.exe לתיקייה שאפשר לכתוב אליה (לדוגמה מסמכים או C:\\Tools) והפעל אותו מחדש.",
+  "app.hwAccel": "השתמש בהאצת חומרה",
+  "app.restartTitle": "נדרשת הפעלה מחדש",
+  "app.restartMsg": "השינוי ייכנס לתוקף לאחר הפעלה מחדש של ABS Desktop App. להפעיל מחדש עכשיו?",
+  "app.restartNow": "הפעל מחדש עכשיו"
 }

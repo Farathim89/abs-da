@@ -150,5 +150,9 @@
   "help.diagCopiedMsg": "Cole no seu relatório de bug. Ele não contém senhas, nomes de usuário nem o endereço do servidor.",
   "help.openReport": "Abrir relatório de bug",
   "data.notWritableTitle": "Não é possível salvar as configurações aqui",
-  "data.notWritableMsg": "O ABS Desktop App não consegue gravar nesta pasta:\n{folder}\n\nMova o arquivo .exe para uma pasta em que você possa gravar (por exemplo, Documentos ou C:\\Tools) e inicie-o novamente."
+  "data.notWritableMsg": "O ABS Desktop App não consegue gravar nesta pasta:\n{folder}\n\nMova o arquivo .exe para uma pasta em que você possa gravar (por exemplo, Documentos ou C:\\Tools) e inicie-o novamente.",
+  "app.hwAccel": "Usar aceleração de hardware",
+  "app.restartTitle": "Reinicialização necessária",
+  "app.restartMsg": "A alteração terá efeito depois que o ABS Desktop App for reiniciado. Reiniciar agora?",
+  "app.restartNow": "Reiniciar agora"
 }
