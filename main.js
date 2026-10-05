@@ -741,8 +741,8 @@ function guardLinks(contents) {
 
 // ---- settings window ---------------------------------------------------------
 // The web app's settings (everything under /config: server settings, libraries,
-// users, stats…) open in a window of their own on top of the app, instead of
-// replacing the page you're on.
+// users, stats…) and the Upload page open in a window of their own on top of the
+// app, instead of replacing the page you're on.
 let settingsWin = null;
 
 // The web app's path for a page, e.g. "/config/libraries" (without the /audiobookshelf base).
@@ -754,7 +754,14 @@ function appPath(url) {
     return (p || "/") + u.search;
   } catch { return "/"; }
 }
-const isSettingsUrl = (url) => isServerUrl(url) && /^\/config(\/|$|\?)/.test(appPath(url));
+const isSettingsUrl = (url) => isServerUrl(url) && /^\/(config|upload)(\/|$|\?)/.test(appPath(url));
+
+// Title and icon for the settings window's strip, by page.
+const GEAR_PATH = "M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 00-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 00-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 001.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 001.7-1l2.5 1 2-3.5zM12 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z";
+const UPLOAD_PATH = "M5 20h14v-2H5v2zm7-16l-6 6h4v6h4v-6h4l-6-6z";
+const settingsLook = (url) => (/^\/upload/.test(appPath(url))
+  ? { label: "Upload", icon: UPLOAD_PATH }
+  : { label: "Settings", icon: GEAR_PATH });
 
 // Show a page of the web app in the main window, without reloading it.
 function routeMain(p) {
@@ -772,14 +779,27 @@ const SETTINGS_CSS = `
   div:has(> #appbar) { height: ${TITLE_H}px !important; visibility: hidden !important; }
   #page-wrapper { height: calc(100% - ${TITLE_H}px) !important; }
   #page-wrapper .fixed.top-16 { top: ${TITLE_H}px !important; }
+  /* The app's side menu (Home, Library…) isn't needed here (e.g. on Upload). */
+  div:has(> #siderail-buttons-container) { display: none !important; }
+  #app-content.has-siderail { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; left: 0 !important; }
 `;
-const SETTINGS_BAR_JS = `(() => {
-  if (document.getElementById("absda-settings-bar")) return;
-  const bar = document.createElement("div");
-  bar.id = "absda-settings-bar";
-  bar.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 00-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 00-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 001.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 001.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" transform="translate(-1 0)"/></svg><span>Settings</span>';
-  document.body.appendChild(bar);
+const settingsBarJs = ({ label, icon }) => `(() => {
+  let bar = document.getElementById("absda-settings-bar");
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "absda-settings-bar";
+    bar.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path/></svg><span></span>';
+    document.body.appendChild(bar);
+  }
+  bar.querySelector("path").setAttribute("d", ${JSON.stringify(icon)});
+  bar.querySelector("span").textContent = ${JSON.stringify(label)};
 })()`;
+function updateSettingsBar() {
+  if (!settingsWin || settingsWin.isDestroyed()) return;
+  const look = settingsLook(settingsWin.webContents.getURL());
+  settingsWin.setTitle(look.label);
+  settingsWin.webContents.executeJavaScript(settingsBarJs(look)).catch(() => {});
+}
 
 function openSettings(url) {
   if (settingsWin && !settingsWin.isDestroyed()) {
@@ -802,7 +822,7 @@ function openSettings(url) {
     x: Math.round(Math.min(Math.max(b.x + (b.width - width) / 2, area.x), area.x + area.width - width)),
     y: Math.round(Math.min(Math.max(b.y + (b.height - height) / 2, area.y), area.y + area.height - height)),
     width, height, minWidth: 720, minHeight: 480,
-    title: "Settings",
+    title: settingsLook(url).label,
     icon: ICON,
     backgroundColor: t.title.bg,
     show: false,
@@ -822,8 +842,9 @@ function openSettings(url) {
   settingsWin.on("closed", () => { settingsWin = null; });
   sc.on("dom-ready", () => {
     sc.insertCSS(SETTINGS_CSS).catch(() => {});
-    sc.executeJavaScript(SETTINGS_BAR_JS).catch(() => {});
+    updateSettingsBar();
   });
+  sc.on("did-navigate-in-page", (_e, _url, isMainFrame) => { if (isMainFrame) updateSettingsBar(); });
   // Leaving settings (e.g. a link to a book or the home page) → show that in the main window.
   // (The login page is part of opening settings: the web app passes through it to
   // check your sign-in, then continues to the settings page.)

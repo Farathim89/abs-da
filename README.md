@@ -50,7 +50,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - **6 themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**
-- **Settings open in their own window**, so the page you're on and what's playing stay put
+- **Settings and Upload open in their own window**, so the page you're on and what's playing stay put
 - **17 bookshelf arts**: woods, stone, materials and scenes (starry night, aurora, ocean), all
   drawn in code
 - Mouse back/forward buttons, `Alt+←` / `Alt+→`, `F5` reload, `F11` fullscreen, zoom

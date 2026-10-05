@@ -163,7 +163,7 @@ if (location.protocol !== "file:") {
     if (!a) return;
     let url;
     try { url = new URL(a.getAttribute("href"), location.href); } catch { return; }
-    if (url.origin !== location.origin || !/\/config(\/|$)/.test(url.pathname)) return;
+    if (url.origin !== location.origin || !/\/(config|upload)(\/|$)/.test(url.pathname)) return;
     e.preventDefault();
     e.stopImmediatePropagation();
     ipcRenderer.send("desktop:open-settings", url.href);
