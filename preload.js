@@ -199,6 +199,7 @@ if (location.protocol !== "file:") {
 
   const GEAR_D = "M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 00-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 00-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 001.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 001.7-1l2.5 1 2-3.5zM12 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z";
   const UPLOAD_D = "M5 20h14v-2H5v2zm7-16l-6 6h4v6h4v-6h4l-6-6z";
+  const PERSON_D = "M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4z";
   const HEAD_CSS = `
     #${HEAD_ID} { position: fixed; top: 0; left: 0; right: 0; height: 44px; z-index: 2147483000;
       display: flex; align-items: center; gap: 10px; padding: 0 8px 0 16px; background: var(--tb-bg, #1b1b1b);
@@ -212,8 +213,10 @@ if (location.protocol !== "file:") {
   `;
   function ensureOverlayHead() {
     if (windowKind !== "settings" || !document.body) return;
-    const upload = /\/upload(\/|$)/.test(location.pathname);
-    const label = upload ? T("win.upload", "Upload") : T("win.settings", "Settings");
+    const page = /\/upload(\/|$)/.test(location.pathname) ? "upload"
+      : /\/account(\/|$)/.test(location.pathname) ? "account" : "settings";
+    const label = page === "upload" ? T("win.upload", "Upload")
+      : page === "account" ? T("win.account", "Account") : T("win.settings", "Settings");
     let head = document.getElementById(HEAD_ID);
     if (!head) {
       if (!document.getElementById("absda-head-css")) {
@@ -228,7 +231,7 @@ if (location.protocol !== "file:") {
       head.querySelector("button").addEventListener("click", () => ipcRenderer.send("desktop:close-settings"));
       document.body.append(head);
     }
-    head.querySelector("path").setAttribute("d", upload ? UPLOAD_D : GEAR_D);
+    head.querySelector("path").setAttribute("d", page === "upload" ? UPLOAD_D : page === "account" ? PERSON_D : GEAR_D);
     if (head.querySelector("span").textContent !== label) head.querySelector("span").textContent = label;
     head.querySelector("button").title = T("win.close", "Close");
   }
@@ -252,7 +255,7 @@ if (location.protocol !== "file:") {
     if (!a) return;
     let url;
     try { url = new URL(a.getAttribute("href"), location.href); } catch { return; }
-    if (url.origin !== location.origin || !/\/(config|upload)(\/|$)/.test(url.pathname)) return;
+    if (url.origin !== location.origin || !/\/(config|upload|account)(\/|$)/.test(url.pathname)) return;
     e.preventDefault();
     e.stopImmediatePropagation();
     ipcRenderer.send("desktop:open-settings", url.href);

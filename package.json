@@ -34,6 +34,7 @@
       "server.js",
       "shelf-art.js",
       "i18n.js",
+      "locales/*.json",
       "connect.html",
       "connect.css",
       "connect.js",

@@ -837,7 +837,7 @@ function appPath(url) {
     return (p || "/") + u.search;
   } catch { return "/"; }
 }
-const isSettingsUrl = (url) => isServerUrl(url) && /^\/(config|upload)(\/|$|\?)/.test(appPath(url));
+const isSettingsUrl = (url) => isServerUrl(url) && /^\/(config|upload|account)(\/|$|\?)/.test(appPath(url));
 
 // Show a page of the web app in the main window, without reloading it.
 function routeMain(p) {
@@ -866,6 +866,14 @@ const SETTINGS_CSS = `
   #app-content.has-siderail { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; left: 0 !important; }
   html::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 2147483001;
     border: 1px solid rgba(255, 255, 255, .22); }
+  /* Settings menu: the open page gets the same marker as the app's side menu. */
+  #page-wrapper .fixed.top-16 a > div.absolute.left-0 { display: none !important; }
+  #page-wrapper .fixed.top-16 a[aria-current="page"] { background: rgba(255, 255, 255, .09) !important; }
+  #page-wrapper .fixed.top-16 a[aria-current="page"] > div.absolute.left-0 {
+    display: block !important; width: 5px !important; background: var(--tb-logo, #f0a848) !important; border-radius: 0 4px 4px 0; }
+  #page-wrapper .fixed.top-16 a[aria-current="page"] p {
+    font-weight: 600; text-decoration: underline; text-decoration-color: var(--tb-logo, #f0a848);
+    text-decoration-thickness: 2px; text-underline-offset: 5px; }
 `;
 
 function openSettings(url) {
@@ -895,7 +903,12 @@ function openSettings(url) {
   const leave = (u) => {
     if (!isServerUrl(u) || isSettingsUrl(u)) return;
     const p = appPath(u);
-    if (/^\/login(\/|$|\?)/.test(p)) return;
+    if (/^\/login(\/|$|\?)/.test(p)) {
+      if (/[?&]redirect=/.test(p)) return;   // just checking your sign-in on the way in
+      closeSettings();                        // you signed out (Account → Logout)
+      if (view) wc().reload();
+      return;
+    }
     routeMain(p);
     closeSettings();
   };
@@ -912,7 +925,13 @@ function closeSettings() {
   settingsView = null;
   if (win && !win.isDestroyed()) win.contentView.removeChildView(v);
   try { v.webContents.close(); } catch {}
-  if (view) { wc().send("desktop:overlay", false); wc().focus(); }
+  if (view) {
+    wc().send("desktop:overlay", false);
+    wc().focus();
+    // A language picked on the Account page shows up in the app right away.
+    wc().executeJavaScript("window.$nuxt && localStorage.getItem('lang') && $nuxt.$setLanguageCode(localStorage.getItem('lang'))")
+      .catch(() => {}).finally(() => setTimeout(() => readWebLang(wc()), 500));
+  }
 }
 
 // ---- menu (opened from the title bar) --------------------------------------
