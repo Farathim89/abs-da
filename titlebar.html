@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self';"
+    />
+    <title>ABS Desktop App</title>
+    <link rel="stylesheet" href="titlebar.css" />
+  </head>
+  <body>
+    <!-- The app's own title bar. Minimise / maximise / close are drawn by
+         Windows on the right (title bar overlay); this fills the rest. -->
+    <header class="bar">
+      <svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 3a9 9 0 00-9 9v6a3 3 0 003 3h1a1 1 0 001-1v-6a1 1 0 00-1-1H5v-1a7 7 0 0114 0v1h-2a1 1 0 00-1 1v6a1 1 0 001 1h1a3 3 0 003-3v-6a9 9 0 00-9-9z"/>
+      </svg>
+      <nav class="menus">
+        <button type="button" data-menu="0">App</button>
+        <button type="button" data-menu="1">Edit</button>
+        <button type="button" data-menu="2">View</button>
+        <button type="button" data-menu="3">Navigate</button>
+        <button type="button" data-menu="4">Help</button>
+      </nav>
+      <div id="title" class="title">ABS Desktop App</div>
+    </header>
+    <script src="titlebar.js"></script>
+  </body>
+</html>

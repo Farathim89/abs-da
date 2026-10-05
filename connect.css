@@ -1,0 +1,94 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Colours follow the app's theme (main.js injects the --cn-* values);
+   the fallbacks are the default Audiobookshelf theme. */
+:root {
+  --bg: var(--cn-bg, #232323);
+  --card: var(--cn-card, #2e2d2b);
+  --field: var(--cn-field, #3a3835);
+  --border: var(--cn-border, #4a4744);
+  --gold: var(--cn-accent, #f0a848);
+  --text: #ece8e1;
+  --muted: #a8a196;
+  --error: #ff7b6b;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.card {
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.logo { width: 52px; height: 52px; color: var(--gold); }
+
+h1 { font-size: 21px; font-weight: 600; margin: 12px 0 6px; }
+
+.muted { color: var(--muted); margin: 0 0 20px; font-size: 14px; word-break: break-all; }
+
+form { text-align: left; }
+
+label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+input {
+  width: 100%;
+  padding: 11px 12px;
+  background: var(--field);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 15px;
+}
+input:focus { outline: 2px solid var(--gold); outline-offset: 0; border-color: transparent; }
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  padding: 11px 18px;
+}
+button:disabled { opacity: 0.6; cursor: default; }
+
+.primary { background: var(--gold); color: #201400; font-weight: 600; }
+.primary:hover:not(:disabled) { filter: brightness(0.88); }
+.secondary { background: var(--field); color: var(--text); }
+.secondary:hover { filter: brightness(1.2); }
+
+form .primary { width: 100%; margin-top: 14px; }
+form .secondary { width: 100%; margin-top: 8px; }
+
+.actions { display: flex; gap: 10px; justify-content: center; }
+
+.error-box {
+  background: rgba(255, 123, 107, 0.12);
+  border: 1px solid rgba(255, 123, 107, 0.4);
+  color: var(--error);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin-bottom: 18px;
+  word-break: break-word;
+}
+
+.status { min-height: 20px; margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+.status.err { color: var(--error); }
+
+.hidden { display: none !important; }

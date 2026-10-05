@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:;"
+    />
+    <title>ABS Desktop App</title>
+    <link rel="stylesheet" href="connect.css" />
+  </head>
+  <body>
+    <main class="card">
+      <svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 3a9 9 0 00-9 9v6a3 3 0 003 3h1a1 1 0 001-1v-6a1 1 0 00-1-1H5v-1a7 7 0 0114 0v1h-2a1 1 0 00-1 1v6a1 1 0 001 1h1a3 3 0 003-3v-6a9 9 0 00-9-9z"/>
+      </svg>
+      <h1 id="title">Connect to your server</h1>
+      <p id="subtitle" class="muted">Enter the address of your Audiobookshelf server.</p>
+
+      <div id="error-box" class="error-box hidden"></div>
+
+      <form id="form" autocomplete="off">
+        <label for="server">Server address</label>
+        <input id="server" type="text" placeholder="http://your-server:13378" spellcheck="false" />
+        <button id="connect" type="submit" class="primary">Connect</button>
+        <button id="cancel" type="button" class="secondary hidden">Cancel</button>
+      </form>
+
+      <div id="error-actions" class="actions hidden">
+        <button id="retry" type="button" class="primary">Retry</button>
+        <button id="change" type="button" class="secondary">Change server</button>
+      </div>
+
+      <p id="status" class="status"></p>
+    </main>
+    <script src="connect.js"></script>
+  </body>
+</html>

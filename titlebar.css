@@ -1,0 +1,68 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Colours come from the current theme (main.js injects --tb-* values);
+   these are the defaults (Audiobookshelf theme). */
+:root {
+  --tb-bg: #1b1b1b;
+  --tb-fg: #e5e5e5;
+  --tb-hover: #333333;
+  --tb-logo: #f0a848;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--tb-bg);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  user-select: none;
+}
+
+/* The draggable bar. The env() values are the space left of Windows'
+   minimise/maximise/close buttons. */
+.bar {
+  position: fixed;
+  left: env(titlebar-area-x, 0);
+  top: env(titlebar-area-y, 0);
+  width: env(titlebar-area-width, 100%);
+  height: env(titlebar-area-height, 36px);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-left: 10px;
+  color: var(--tb-fg);
+  -webkit-app-region: drag;   /* drag to move, double-click to maximise */
+}
+
+.logo { width: 18px; height: 18px; flex: none; margin-right: 6px; color: var(--tb-logo); }
+
+.menus { display: flex; -webkit-app-region: no-drag; }
+
+.menus button {
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: var(--tb-fg);
+  font: inherit;
+  font-size: 13px;
+  padding: 5px 9px;
+}
+.menus button:hover,
+.menus button.open { background: var(--tb-hover); }
+
+.title {
+  flex: 1;
+  min-width: 0;
+  padding: 0 12px;
+  text-align: center;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dim when the window isn't focused, like normal Windows title bars. */
+body.blurred .logo,
+body.blurred .menus button,
+body.blurred .title { opacity: 0.5; }

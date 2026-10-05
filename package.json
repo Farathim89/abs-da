@@ -1,0 +1,66 @@
+{
+  "name": "abs-da",
+  "productName": "ABS Desktop App",
+  "version": "2.0.0",
+  "description": "ABS-DA: an unofficial Windows desktop app for Audiobookshelf — player, e-book reader and admin tools",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win",
+    "dist:setup": "electron-builder --win nsis",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "author": "Farathim",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.farathim.audiobookshelfplayer",
+    "productName": "ABS Desktop App",
+    "copyright": "Copyright © 2026 Farathim — GPL-3.0-or-later",
+    "files": [
+      "main.js",
+      "preload.js",
+      "server.js",
+      "shelf-art.js",
+      "connect.html",
+      "connect.css",
+      "connect.js",
+      "titlebar.html",
+      "titlebar.css",
+      "titlebar.js",
+      "build/icon.ico",
+      "LICENSE"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ABS Desktop App",
+      "uninstallDisplayName": "ABS Desktop App",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "license": "LICENSE",
+      "runAfterFinish": true,
+      "include": "build/installer.nsh",
+      "artifactName": "ABS-DA-Setup-${version}.exe"
+    },
+    "portable": {
+      "artifactName": "ABS-DA-Portable-${version}.exe"
+    }
+  }
+}
