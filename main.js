@@ -73,9 +73,16 @@ const TITLE_H = 36;
 //    ebook reader (reader is z-60, player bar z-50). While the reader is open,
 //    lift the player above it. The reader already stops 164px above the bottom
 //    to make room for the player, so only those pop-up menus are affected.
+//  - The seek bar's hover bubble ("9:09:59 - Chapter 22") is a glaring white box:
+//    make it dark with light text and a theme-coloured border and arrow.
 const ABS_CSS_FIXES = `
   body:has(#reader) #mediaPlayerContainer { z-index: 61 !important; }
   #mediaPlayerContainer .volumeMenu { z-index: 30; }
+  #mediaPlayerContainer div.bg-white.text-black.rounded-full:has(> p) {
+    background: var(--color-primary, #232323) !important; color: #f3f4f6 !important;
+    border: 1px solid var(--tb-logo, #f0a848); box-shadow: 0 2px 10px rgba(0, 0, 0, .6); }
+  #mediaPlayerContainer div.bg-white.text-black.rounded-full:has(.arrow-down) { background: transparent !important; }
+  #mediaPlayerContainer .arrow-down { border-top-color: var(--tb-logo, #f0a848) !important; }
 `;
 
 // ---- Themes ----------------------------------------------------------------
