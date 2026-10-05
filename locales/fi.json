@@ -140,5 +140,13 @@
   "update.upToDate": "Käytössäsi on uusin versio",
   "update.upToDateMsg": "ABS Desktop App {version} on uusin versio.",
   "update.failed": "Päivitysten tarkistus epäonnistui",
-  "update.failedMsg": "Tarkista internetyhteys ja yritä uudelleen."
+  "update.failedMsg": "Tarkista internetyhteys ja yritä uudelleen.",
+  "app.clearCache": "Tyhjennä välimuisti ja käynnistä uudelleen…",
+  "app.clearCacheTitle": "Tyhjennä välimuisti",
+  "app.clearCacheMsg": "Tämä tyhjentää sovelluksen tallentamat verkkotiedostot ja käynnistää sen uudelleen. Palvelimesi, tallennettu kirjautumisesi ja asetuksesi säilyvät.",
+  "app.clearCacheOk": "Tyhjennä ja käynnistä uudelleen",
+  "help.diagnostics": "Kopioi diagnostiikkatiedot",
+  "help.diagCopied": "Diagnostiikkatiedot kopioitu",
+  "help.diagCopiedMsg": "Liitä ne vikailmoitukseesi. Ne eivät sisällä salasanoja, käyttäjänimiä tai palvelimen osoitetta.",
+  "help.openReport": "Avaa vikailmoitus"
 }

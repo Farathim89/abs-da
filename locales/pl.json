@@ -140,5 +140,13 @@
   "update.upToDate": "Masz najnowszą wersję",
   "update.upToDateMsg": "ABS Desktop App {version} to najnowsza wersja.",
   "update.failed": "Nie udało się sprawdzić aktualizacji",
-  "update.failedMsg": "Sprawdź połączenie z internetem i spróbuj ponownie."
+  "update.failedMsg": "Sprawdź połączenie z internetem i spróbuj ponownie.",
+  "app.clearCache": "Wyczyść pamięć podręczną i uruchom ponownie…",
+  "app.clearCacheTitle": "Wyczyść pamięć podręczną",
+  "app.clearCacheMsg": "Spowoduje to usunięcie zapisanych plików internetowych aplikacji i jej ponowne uruchomienie. Serwer, zapisane logowanie i ustawienia zostaną zachowane.",
+  "app.clearCacheOk": "Wyczyść i uruchom ponownie",
+  "help.diagnostics": "Kopiuj diagnostykę",
+  "help.diagCopied": "Skopiowano diagnostykę",
+  "help.diagCopiedMsg": "Wklej ją do zgłoszenia błędu. Nie zawiera haseł, nazw użytkowników ani adresu serwera.",
+  "help.openReport": "Otwórz zgłoszenie błędu"
 }

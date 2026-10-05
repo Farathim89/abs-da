@@ -140,5 +140,13 @@
   "update.upToDate": "Máte nejnovější verzi",
   "update.upToDateMsg": "ABS Desktop App {version} je nejnovější verze.",
   "update.failed": "Aktualizace se nepodařilo zkontrolovat",
-  "update.failedMsg": "Zkontrolujte připojení k internetu a zkuste to znovu."
+  "update.failedMsg": "Zkontrolujte připojení k internetu a zkuste to znovu.",
+  "app.clearCache": "Vymazat mezipaměť a restartovat…",
+  "app.clearCacheTitle": "Vymazat mezipaměť",
+  "app.clearCacheMsg": "Tímto se vyprázdní uložené webové soubory aplikace a aplikace se restartuje. Váš server, uložené přihlášení a nastavení zůstanou zachovány.",
+  "app.clearCacheOk": "Vymazat a restartovat",
+  "help.diagnostics": "Kopírovat diagnostiku",
+  "help.diagCopied": "Diagnostika zkopírována",
+  "help.diagCopiedMsg": "Vložte ji do hlášení o chybě. Neobsahuje žádná hesla, uživatelská jména ani adresu serveru.",
+  "help.openReport": "Otevřít hlášení o chybě"
 }

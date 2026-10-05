@@ -140,5 +140,13 @@
   "update.upToDate": "Você está com a versão mais recente",
   "update.upToDateMsg": "O ABS Desktop App {version} é a versão mais recente.",
   "update.failed": "Não foi possível verificar atualizações",
-  "update.failedMsg": "Verifique sua conexão com a internet e tente novamente."
+  "update.failedMsg": "Verifique sua conexão com a internet e tente novamente.",
+  "app.clearCache": "Limpar cache e reiniciar…",
+  "app.clearCacheTitle": "Limpar cache",
+  "app.clearCacheMsg": "Isso esvazia os arquivos web armazenados do aplicativo e o reinicia. Seu servidor, login salvo e configurações são mantidos.",
+  "app.clearCacheOk": "Limpar e reiniciar",
+  "help.diagnostics": "Copiar diagnóstico",
+  "help.diagCopied": "Diagnóstico copiado",
+  "help.diagCopiedMsg": "Cole no seu relatório de bug. Ele não contém senhas, nomes de usuário nem o endereço do servidor.",
+  "help.openReport": "Abrir relatório de bug"
 }

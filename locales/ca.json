@@ -140,5 +140,13 @@
   "update.upToDate": "Teniu la versió més recent",
   "update.upToDateMsg": "ABS Desktop App {version} és la versió més recent.",
   "update.failed": "No s’han pogut cercar actualitzacions",
-  "update.failedMsg": "Comproveu la connexió a internet i torneu-ho a provar."
+  "update.failedMsg": "Comproveu la connexió a internet i torneu-ho a provar.",
+  "app.clearCache": "Buida la memòria cau i reinicia…",
+  "app.clearCacheTitle": "Buida la memòria cau",
+  "app.clearCacheMsg": "Això buida els fitxers web desats de l’aplicació i la reinicia. Es conserven el servidor, l’inici de sessió desat i els paràmetres.",
+  "app.clearCacheOk": "Buida i reinicia",
+  "help.diagnostics": "Copia el diagnòstic",
+  "help.diagCopied": "S’ha copiat el diagnòstic",
+  "help.diagCopiedMsg": "Enganxeu-lo a l’informe d’error. No conté contrasenyes, noms d’usuari ni l’adreça del servidor.",
+  "help.openReport": "Obre l’informe d’error"
 }

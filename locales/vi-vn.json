@@ -140,5 +140,13 @@
   "update.upToDate": "Bạn đang dùng phiên bản mới nhất",
   "update.upToDateMsg": "ABS Desktop App {version} là phiên bản mới nhất.",
   "update.failed": "Không thể kiểm tra cập nhật",
-  "update.failedMsg": "Hãy kiểm tra kết nối internet và thử lại."
+  "update.failedMsg": "Hãy kiểm tra kết nối internet và thử lại.",
+  "app.clearCache": "Xóa bộ nhớ đệm và khởi động lại…",
+  "app.clearCacheTitle": "Xóa bộ nhớ đệm",
+  "app.clearCacheMsg": "Thao tác này sẽ xóa các tệp web đã lưu của ứng dụng và khởi động lại ứng dụng. Máy chủ, thông tin đăng nhập đã lưu và cài đặt của bạn vẫn được giữ nguyên.",
+  "app.clearCacheOk": "Xóa và khởi động lại",
+  "help.diagnostics": "Sao chép thông tin chẩn đoán",
+  "help.diagCopied": "Đã sao chép thông tin chẩn đoán",
+  "help.diagCopiedMsg": "Hãy dán thông tin này vào báo cáo lỗi của bạn. Thông tin không chứa mật khẩu, tên người dùng hay địa chỉ máy chủ.",
+  "help.openReport": "Mở báo cáo lỗi"
 }

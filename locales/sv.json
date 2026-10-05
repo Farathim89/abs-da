@@ -140,5 +140,13 @@
   "update.upToDate": "Du har den senaste versionen",
   "update.upToDateMsg": "ABS Desktop App {version} är den senaste versionen.",
   "update.failed": "Kunde inte söka efter uppdateringar",
-  "update.failedMsg": "Kontrollera internetanslutningen och försök igen."
+  "update.failedMsg": "Kontrollera internetanslutningen och försök igen.",
+  "app.clearCache": "Rensa cache och starta om…",
+  "app.clearCacheTitle": "Rensa cache",
+  "app.clearCacheMsg": "Detta tömmer appens sparade webbfiler och startar om den. Din server, sparade inloggning och dina inställningar behålls.",
+  "app.clearCacheOk": "Rensa och starta om",
+  "help.diagnostics": "Kopiera diagnostik",
+  "help.diagCopied": "Diagnostik kopierad",
+  "help.diagCopiedMsg": "Klistra in den i din felrapport. Den innehåller inga lösenord, användarnamn eller serveradress.",
+  "help.openReport": "Öppna felrapport"
 }

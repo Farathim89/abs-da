@@ -15,9 +15,10 @@
 
 const {
   app, BrowserWindow, WebContentsView, Menu, Tray, ipcMain, shell, dialog,
-  screen, session, safeStorage, webContents, net, Notification,
+  screen, session, safeStorage, webContents, net, Notification, clipboard,
 } = require("electron");
 const path = require("path");
+const os = require("os");
 const fs = require("fs");
 const { normalizeServer, probeServer } = require("./server");
 const { SHELF_ARTS, artUrl } = require("./shelf-art");
@@ -938,6 +939,74 @@ function closeSettings() {
 // ---- menu (opened from the title bar) --------------------------------------
 const REPO_URL = "https://github.com/Farathim89/abs-da";
 
+// ---- troubleshooting: clear cache, copy diagnostics --------------------------
+// App → Clear Cache and Restart…: empties the stored web files (cache, service
+// workers, code cache) but keeps your server, saved login, sign-in and settings.
+async function clearCacheAndRestart() {
+  const { response } = await dialog.showMessageBox(win, {
+    type: "question",
+    title: tr("app.clearCacheTitle"),
+    message: tr("app.clearCacheTitle"),
+    detail: tr("app.clearCacheMsg"),
+    buttons: [tr("app.clearCacheOk"), tr("connect.cancel")],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response !== 0) return;
+  const ses = session.defaultSession;
+  try { await ses.clearCache(); } catch {}
+  try { await ses.clearCodeCaches({}); } catch {}
+  try { await ses.clearStorageData({ storages: ["serviceworkers", "cachestorage", "shadercache"] }); } catch {}
+  // Portable: restart the .exe you started (not the unpacked copy in Temp).
+  const exe = process.env.PORTABLE_EXECUTABLE_FILE;
+  app.relaunch(exe ? { execPath: exe, args: [] } : undefined);
+  isQuitting = true;
+  app.exit(0);
+}
+
+// Help → Copy Diagnostics: technical details for a bug report — no passwords,
+// usernames or server address (paths are shortened to %USERPROFILE%).
+async function copyDiagnostics() {
+  const home = os.homedir();
+  const short = (p) => (p ? String(p).split(home).join("%USERPROFILE%") : "");
+  const kind = process.env.PORTABLE_EXECUTABLE_FILE ? "Portable" : app.isPackaged ? "Installed" : "Development";
+  const lines = [
+    `ABS-DA ${app.getVersion()} (${kind})`,
+    `Electron ${process.versions.electron} / Chromium ${process.versions.chrome}`,
+    `Windows ${process.getSystemVersion()} (${os.arch()}), display scale ${Math.round(screen.getPrimaryDisplay().scaleFactor * 100)}%`,
+    `App: ${short(process.env.PORTABLE_EXECUTABLE_FILE || app.getPath("exe"))}`,
+    `Data folder: ${short(app.getPath("userData"))}`,
+    `Language: ${uiLang()} (choice: ${config.langChoice || "auto"}, Audiobookshelf: ${config.webLang || "?"}, Windows: ${app.getLocale()})`,
+    `Theme: ${themeId()}, bookshelf: ${shelfArtId()}, text size: ${Math.round(textSize() * 100)}%`,
+  ];
+  if (config.webUrl) {
+    try {
+      const u = new URL(config.webUrl);
+      lines.push(`Server: ${u.protocol.replace(":", "")}, port ${u.port || (u.protocol === "https:" ? 443 : 80)}, web app at ${u.pathname}`);
+      const res = await net.fetch(`${String(config.server || u.origin).replace(/\/+$/, "")}/status`);
+      const st = await res.json();
+      lines.push(`Audiobookshelf ${st.serverVersion || "?"}, sign-in: ${(st.authMethods || []).join(", ") || "?"}, language: ${st.language || "?"}`);
+    } catch (err) {
+      lines.push(`Server status: couldn't read (${err.message})`);
+    }
+  } else {
+    lines.push("Server: not set up yet");
+  }
+  if (view) lines.push(`Current page: ${appPath(wc().getURL())}`);
+  const text = lines.join("\n");
+  clipboard.writeText(text);
+  const { response } = await dialog.showMessageBox(win, {
+    type: "info",
+    title: tr("help.diagCopied"),
+    message: tr("help.diagCopied"),
+    detail: `${tr("help.diagCopiedMsg")}\n\n${text}`,
+    buttons: [tr("about.ok"), tr("help.openReport")],
+    defaultId: 0,
+    cancelId: 0,
+  });
+  if (response === 1) openExternal(`${REPO_URL}/issues/new?template=bug_report.yml`);
+}
+
 // ---- update check -----------------------------------------------------------
 // Asks GitHub for the newest ABS-DA release (nothing personal is sent, nothing is
 // installed). If it's newer: an "Update x.y.z" pill in the title bar, a one-time
@@ -1130,6 +1199,7 @@ function buildMenu() {
         },
         { type: "separator" },
         { label: tr("app.reload"), ...shortcut("F5"), click: () => wc().reload() },
+        { label: tr("app.clearCache"), click: clearCacheAndRestart },
         { type: "separator" },
         { label: tr("app.exit"), click: () => app.quit() },
       ],
@@ -1183,6 +1253,7 @@ function buildMenu() {
         { label: tr("help.report"), click: () => openExternal(`${REPO_URL}/issues/new/choose`) },
         { label: tr("help.github"), click: () => openExternal(REPO_URL) },
         { label: tr("update.check"), click: () => checkForUpdates(true) },
+        { label: tr("help.diagnostics"), click: copyDiagnostics },
         { type: "separator" },
         { label: tr("help.devTools"), ...shortcut("Ctrl+Shift+I"), click: toggleDevTools },
         { type: "separator" },

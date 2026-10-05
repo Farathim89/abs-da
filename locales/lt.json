@@ -140,5 +140,13 @@
   "update.upToDate": "Naudojate naujausią versiją",
   "update.upToDateMsg": "ABS Desktop App {version} yra naujausia versija.",
   "update.failed": "Nepavyko patikrinti naujinimų",
-  "update.failedMsg": "Patikrinkite interneto ryšį ir bandykite dar kartą."
+  "update.failedMsg": "Patikrinkite interneto ryšį ir bandykite dar kartą.",
+  "app.clearCache": "Išvalyti talpyklą ir paleisti iš naujo…",
+  "app.clearCacheTitle": "Išvalyti talpyklą",
+  "app.clearCacheMsg": "Bus ištrinti programėlės išsaugoti žiniatinklio failai ir ji bus paleista iš naujo. Jūsų serveris, išsaugotas prisijungimas ir nustatymai išliks.",
+  "app.clearCacheOk": "Išvalyti ir paleisti iš naujo",
+  "help.diagnostics": "Kopijuoti diagnostiką",
+  "help.diagCopied": "Diagnostika nukopijuota",
+  "help.diagCopiedMsg": "Įklijuokite ją į pranešimą apie klaidą. Joje nėra slaptažodžių, naudotojų vardų ar serverio adreso.",
+  "help.openReport": "Atidaryti pranešimą apie klaidą"
 }

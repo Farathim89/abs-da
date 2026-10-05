@@ -140,5 +140,13 @@
   "update.upToDate": "최신 버전입니다",
   "update.upToDateMsg": "현재 최신 버전은 ABS Desktop App {version}입니다.",
   "update.failed": "업데이트를 확인하지 못했습니다",
-  "update.failedMsg": "인터넷 연결을 확인한 후 다시 시도하세요."
+  "update.failedMsg": "인터넷 연결을 확인한 후 다시 시도하세요.",
+  "app.clearCache": "캐시 지우기 및 다시 시작…",
+  "app.clearCacheTitle": "캐시 지우기",
+  "app.clearCacheMsg": "앱에 저장된 웹 파일을 비우고 앱을 다시 시작합니다. 서버, 저장된 로그인 정보, 설정은 그대로 유지됩니다.",
+  "app.clearCacheOk": "지우고 다시 시작",
+  "help.diagnostics": "진단 정보 복사",
+  "help.diagCopied": "진단 정보 복사됨",
+  "help.diagCopiedMsg": "버그 신고에 붙여넣으세요. 비밀번호, 사용자 이름, 서버 주소는 포함되어 있지 않습니다.",
+  "help.openReport": "버그 신고 열기"
 }

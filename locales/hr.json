@@ -140,5 +140,13 @@
   "update.upToDate": "Imate najnoviju verziju",
   "update.upToDateMsg": "ABS Desktop App {version} najnovija je verzija.",
   "update.failed": "Provjera ažuriranja nije uspjela",
-  "update.failedMsg": "Provjerite internetsku vezu i pokušajte ponovno."
+  "update.failedMsg": "Provjerite internetsku vezu i pokušajte ponovno.",
+  "app.clearCache": "Očisti predmemoriju i ponovno pokreni…",
+  "app.clearCacheTitle": "Očisti predmemoriju",
+  "app.clearCacheMsg": "Ovo prazni spremljene web-datoteke aplikacije i ponovno je pokreće. Vaš poslužitelj, spremljena prijava i postavke ostaju sačuvani.",
+  "app.clearCacheOk": "Očisti i ponovno pokreni",
+  "help.diagnostics": "Kopiraj dijagnostiku",
+  "help.diagCopied": "Dijagnostika kopirana",
+  "help.diagCopiedMsg": "Zalijepite je u prijavu pogreške. Ne sadrži lozinke, korisnička imena ni adresu poslužitelja.",
+  "help.openReport": "Otvori prijavu pogreške"
 }

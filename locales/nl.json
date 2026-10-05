@@ -140,5 +140,13 @@
   "update.upToDate": "Je bent helemaal bij",
   "update.upToDateMsg": "ABS Desktop App {version} is de nieuwste versie.",
   "update.failed": "Kan niet controleren op updates",
-  "update.failedMsg": "Controleer je internetverbinding en probeer het opnieuw."
+  "update.failedMsg": "Controleer je internetverbinding en probeer het opnieuw.",
+  "app.clearCache": "Cache wissen en opnieuw starten…",
+  "app.clearCacheTitle": "Cache wissen",
+  "app.clearCacheMsg": "Hiermee worden de opgeslagen webbestanden van de app gewist en wordt de app opnieuw gestart. Je server, opgeslagen login en instellingen blijven behouden.",
+  "app.clearCacheOk": "Wissen en opnieuw starten",
+  "help.diagnostics": "Diagnosegegevens kopiëren",
+  "help.diagCopied": "Diagnosegegevens gekopieerd",
+  "help.diagCopiedMsg": "Plak ze in je bugmelding. Ze bevatten geen wachtwoorden, gebruikersnamen of serveradres.",
+  "help.openReport": "Bugmelding openen"
 }

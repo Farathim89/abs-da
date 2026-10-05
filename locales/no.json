@@ -140,5 +140,13 @@
   "update.upToDate": "Du har nyeste versjon",
   "update.upToDateMsg": "ABS Desktop App {version} er nyeste versjon.",
   "update.failed": "Kunne ikke se etter oppdateringer",
-  "update.failedMsg": "Sjekk internettforbindelsen og prøv igjen."
+  "update.failedMsg": "Sjekk internettforbindelsen og prøv igjen.",
+  "app.clearCache": "Tøm hurtigbuffer og start på nytt…",
+  "app.clearCacheTitle": "Tøm hurtigbuffer",
+  "app.clearCacheMsg": "Dette tømmer appens lagrede nettfiler og starter den på nytt. Serveren din, den lagrede påloggingen og innstillingene dine beholdes.",
+  "app.clearCacheOk": "Tøm og start på nytt",
+  "help.diagnostics": "Kopier diagnostikk",
+  "help.diagCopied": "Diagnostikk kopiert",
+  "help.diagCopiedMsg": "Lim den inn i feilrapporten din. Den inneholder ingen passord, brukernavn eller serveradresse.",
+  "help.openReport": "Åpne feilrapport"
 }

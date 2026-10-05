@@ -140,5 +140,13 @@
   "update.upToDate": "En güncel sürümü kullanıyorsunuz",
   "update.upToDateMsg": "ABS Desktop App {version} en yeni sürümdür.",
   "update.failed": "Güncellemeler denetlenemedi",
-  "update.failedMsg": "İnternet bağlantınızı kontrol edip tekrar deneyin."
+  "update.failedMsg": "İnternet bağlantınızı kontrol edip tekrar deneyin.",
+  "app.clearCache": "Önbelleği Temizle ve Yeniden Başlat…",
+  "app.clearCacheTitle": "Önbelleği temizle",
+  "app.clearCacheMsg": "Bu işlem uygulamanın kayıtlı web dosyalarını siler ve uygulamayı yeniden başlatır. Sunucunuz, kayıtlı girişiniz ve ayarlarınız korunur.",
+  "app.clearCacheOk": "Temizle ve yeniden başlat",
+  "help.diagnostics": "Tanılama Bilgilerini Kopyala",
+  "help.diagCopied": "Tanılama bilgileri kopyalandı",
+  "help.diagCopiedMsg": "Bunları hata raporunuza yapıştırın. Parola, kullanıcı adı veya sunucu adresi içermez.",
+  "help.openReport": "Hata raporunu aç"
 }

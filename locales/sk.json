@@ -140,5 +140,13 @@
   "update.upToDate": "Máte najnovšiu verziu",
   "update.upToDateMsg": "ABS Desktop App {version} je najnovšia verzia.",
   "update.failed": "Aktualizácie sa nepodarilo skontrolovať",
-  "update.failedMsg": "Skontrolujte internetové pripojenie a skúste to znova."
+  "update.failedMsg": "Skontrolujte internetové pripojenie a skúste to znova.",
+  "app.clearCache": "Vymazať vyrovnávaciu pamäť a reštartovať…",
+  "app.clearCacheTitle": "Vymazať vyrovnávaciu pamäť",
+  "app.clearCacheMsg": "Týmto sa vyprázdnia uložené webové súbory aplikácie a aplikácia sa reštartuje. Váš server, uložené prihlásenie a nastavenia zostanú zachované.",
+  "app.clearCacheOk": "Vymazať a reštartovať",
+  "help.diagnostics": "Kopírovať diagnostiku",
+  "help.diagCopied": "Diagnostika skopírovaná",
+  "help.diagCopiedMsg": "Vložte ju do hlásenia o chybe. Neobsahuje žiadne heslá, používateľské mená ani adresu servera.",
+  "help.openReport": "Otvoriť hlásenie o chybe"
 }

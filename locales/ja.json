@@ -140,5 +140,13 @@
   "update.upToDate": "最新の状態です",
   "update.upToDateMsg": "ABS Desktop App {version} は最新バージョンです。",
   "update.failed": "アップデートを確認できませんでした",
-  "update.failedMsg": "インターネット接続を確認して、もう一度お試しください。"
+  "update.failedMsg": "インターネット接続を確認して、もう一度お試しください。",
+  "app.clearCache": "キャッシュを消去して再起動…",
+  "app.clearCacheTitle": "キャッシュの消去",
+  "app.clearCacheMsg": "アプリに保存された Web ファイルを消去し、アプリを再起動します。サーバー、保存したログイン情報、設定はそのまま残ります。",
+  "app.clearCacheOk": "消去して再起動",
+  "help.diagnostics": "診断情報をコピー",
+  "help.diagCopied": "診断情報をコピーしました",
+  "help.diagCopiedMsg": "バグ報告に貼り付けてください。パスワード、ユーザー名、サーバーアドレスは含まれていません。",
+  "help.openReport": "バグ報告を開く"
 }

@@ -140,5 +140,13 @@
   "update.upToDate": "You're up to date",
   "update.upToDateMsg": "ABS Desktop App {version} is the newest version.",
   "update.failed": "Couldn't check for updates",
-  "update.failedMsg": "Check your internet connection and try again."
+  "update.failedMsg": "Check your internet connection and try again.",
+  "app.clearCache": "Clear Cache and Restart…",
+  "app.clearCacheTitle": "Clear cache",
+  "app.clearCacheMsg": "This empties the app's stored web files and restarts it. Your server, saved login and settings are kept.",
+  "app.clearCacheOk": "Clear and restart",
+  "help.diagnostics": "Copy Diagnostics",
+  "help.diagCopied": "Diagnostics copied",
+  "help.diagCopiedMsg": "Paste them into your bug report. They contain no passwords, usernames or server address.",
+  "help.openReport": "Open bug report"
 }

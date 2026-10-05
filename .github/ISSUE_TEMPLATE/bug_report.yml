@@ -24,14 +24,18 @@ body:
         1. Open ...
         2. Click ...
         3. See ...
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: In ABS-DA choose **Help → Copy Diagnostics** and paste here (no passwords or server address are included).
+      render: text
   - type: input
     id: version
     attributes:
       label: ABS-DA version
-      description: App → About
-      placeholder: "2.0.0"
-    validations:
-      required: true
+      description: App → About (skip if you pasted Diagnostics above)
+      placeholder: "2.2.0"
   - type: dropdown
     id: build
     attributes:

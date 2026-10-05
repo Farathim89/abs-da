@@ -140,5 +140,13 @@
   "update.upToDate": "יש לך את הגרסה העדכנית ביותר",
   "update.upToDateMsg": "ABS Desktop App {version} היא הגרסה העדכנית ביותר.",
   "update.failed": "לא ניתן לבדוק אם יש עדכונים",
-  "update.failedMsg": "בדוק את החיבור לאינטרנט ונסה שוב."
+  "update.failedMsg": "בדוק את החיבור לאינטרנט ונסה שוב.",
+  "app.clearCache": "נקה מטמון והפעל מחדש…",
+  "app.clearCacheTitle": "ניקוי מטמון",
+  "app.clearCacheMsg": "פעולה זו מרוקנת את קובצי האינטרנט השמורים של האפליקציה ומפעילה אותה מחדש. השרת, ההתחברות השמורה וההגדרות שלך יישמרו.",
+  "app.clearCacheOk": "נקה והפעל מחדש",
+  "help.diagnostics": "העתק נתוני אבחון",
+  "help.diagCopied": "נתוני האבחון הועתקו",
+  "help.diagCopiedMsg": "הדבק אותם בדיווח הבאג שלך. הם אינם כוללים סיסמאות, שמות משתמש או כתובת שרת.",
+  "help.openReport": "פתח דיווח באג"
 }

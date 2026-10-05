@@ -140,5 +140,13 @@
   "update.upToDate": "Hai la versione più recente",
   "update.upToDateMsg": "ABS Desktop App {version} è la versione più recente.",
   "update.failed": "Impossibile controllare gli aggiornamenti",
-  "update.failedMsg": "Controlla la connessione a Internet e riprova."
+  "update.failedMsg": "Controlla la connessione a Internet e riprova.",
+  "app.clearCache": "Svuota cache e riavvia…",
+  "app.clearCacheTitle": "Svuota cache",
+  "app.clearCacheMsg": "Questa operazione svuota i file web salvati dell’app e la riavvia. Il server, l’accesso salvato e le impostazioni vengono mantenuti.",
+  "app.clearCacheOk": "Svuota e riavvia",
+  "help.diagnostics": "Copia diagnostica",
+  "help.diagCopied": "Diagnostica copiata",
+  "help.diagCopiedMsg": "Incollala nella tua segnalazione di bug. Non contiene password, nomi utente né l’indirizzo del server.",
+  "help.openReport": "Apri segnalazione di bug"
 }

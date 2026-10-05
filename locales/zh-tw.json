@@ -140,5 +140,13 @@
   "update.upToDate": "已是最新版本",
   "update.upToDateMsg": "ABS Desktop App {version} 是最新版本。",
   "update.failed": "無法檢查更新",
-  "update.failedMsg": "請檢查您的網路連線，然後再試一次。"
+  "update.failedMsg": "請檢查您的網路連線，然後再試一次。",
+  "app.clearCache": "清除快取並重新啟動…",
+  "app.clearCacheTitle": "清除快取",
+  "app.clearCacheMsg": "這會清空應用程式儲存的網頁檔案並重新啟動應用程式。您的伺服器、已儲存的登入資訊和設定都會保留。",
+  "app.clearCacheOk": "清除並重新啟動",
+  "help.diagnostics": "複製診斷資訊",
+  "help.diagCopied": "已複製診斷資訊",
+  "help.diagCopiedMsg": "請將其貼到您的錯誤回報中。其中不包含密碼、使用者名稱或伺服器位址。",
+  "help.openReport": "開啟錯誤回報"
 }

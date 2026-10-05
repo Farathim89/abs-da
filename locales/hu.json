@@ -140,5 +140,13 @@
   "update.upToDate": "A legfrissebb verziót használja",
   "update.upToDateMsg": "Az ABS Desktop App {version} a legújabb verzió.",
   "update.failed": "Nem sikerült frissítéseket keresni",
-  "update.failedMsg": "Ellenőrizze az internetkapcsolatot, és próbálja újra."
+  "update.failedMsg": "Ellenőrizze az internetkapcsolatot, és próbálja újra.",
+  "app.clearCache": "Gyorsítótár törlése és újraindítás…",
+  "app.clearCacheTitle": "Gyorsítótár törlése",
+  "app.clearCacheMsg": "Ez kiüríti az alkalmazás tárolt webes fájljait, majd újraindítja. A szerver, a mentett bejelentkezés és a beállítások megmaradnak.",
+  "app.clearCacheOk": "Törlés és újraindítás",
+  "help.diagnostics": "Diagnosztikai adatok másolása",
+  "help.diagCopied": "Diagnosztikai adatok másolva",
+  "help.diagCopiedMsg": "Illessze be őket a hibajelentésbe. Nem tartalmaznak jelszót, felhasználónevet vagy szervercímet.",
+  "help.openReport": "Hibajelentés megnyitása"
 }

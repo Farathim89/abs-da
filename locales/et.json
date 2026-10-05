@@ -140,5 +140,13 @@
   "update.upToDate": "Sul on uusim versioon",
   "update.upToDateMsg": "ABS Desktop App {version} on uusim versioon.",
   "update.failed": "Uuenduste otsimine ebaõnnestus",
-  "update.failedMsg": "Kontrolli internetiühendust ja proovi uuesti."
+  "update.failedMsg": "Kontrolli internetiühendust ja proovi uuesti.",
+  "app.clearCache": "Tühjenda vahemälu ja taaskäivita…",
+  "app.clearCacheTitle": "Tühjenda vahemälu",
+  "app.clearCacheMsg": "See tühjendab rakenduse salvestatud veebifailid ja taaskäivitab selle. Sinu server, salvestatud sisselogimine ja seaded jäävad alles.",
+  "app.clearCacheOk": "Tühjenda ja taaskäivita",
+  "help.diagnostics": "Kopeeri diagnostika",
+  "help.diagCopied": "Diagnostika kopeeritud",
+  "help.diagCopiedMsg": "Kleebi see oma veateatesse. See ei sisalda paroole, kasutajanimesid ega serveri aadressi.",
+  "help.openReport": "Ava veateade"
 }

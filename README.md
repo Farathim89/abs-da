@@ -65,6 +65,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - Friendly "can't reach your server" screen, and a check that the address really is Audiobookshelf
 - Only one copy runs at a time
 - Tells you when a new version is out (an **Update** button in the title bar; nothing installs by itself)
+- Troubleshooting: **App → Clear Cache and Restart…** and **Help → Copy Diagnostics** (for bug reports)
 - Works with Windows contrast themes without breaking sliders or the e-book reader colours
 - Works around Audiobookshelf bug [#4818](https://github.com/advplyr/audiobookshelf/issues/4818)
   (volume slider opening behind the e-book reader)
