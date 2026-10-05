@@ -61,6 +61,14 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - Works around Audiobookshelf bug [#4818](https://github.com/advplyr/audiobookshelf/issues/4818)
   (volume slider opening behind the e-book reader)
 
+## Themes and bookshelves
+
+Pick them in the title bar: **View → Theme** and **View → Bookshelf**. They change live, no reload.
+
+| Midnight + Starry night | Amethyst + Aurora | Forest + Light oak |
+|:---:|:---:|:---:|
+| ![Midnight theme with the Starry night bookshelf](docs/theme-midnight.jpg) | ![Amethyst theme with the Aurora bookshelf](docs/theme-amethyst.jpg) | ![Forest theme with the Light oak bookshelf](docs/theme-forest.jpg) |
+
 ## Privacy
 
 ABS-DA talks only to the server you enter. No analytics, no telemetry, no accounts. Settings live
