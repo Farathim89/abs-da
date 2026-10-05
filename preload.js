@@ -207,6 +207,16 @@ if (location.protocol !== "file:") {
     #${PANEL_ID} .absda-plank { position: absolute; height: 4px; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
     #${PANEL_ID} .absda-book { position: absolute; width: 9px; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
 
+    #${PANEL_ID} .absda-sizes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    #${PANEL_ID} .absda-size { display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      gap: 2px; height: 58px; padding: 6px 4px; border-radius: 6px; cursor: pointer; color: inherit; font: inherit;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); transition: border-color .12s, background-color .12s; }
+    #${PANEL_ID} .absda-size:hover { border-color: rgba(255,255,255,.45); background: rgba(255,255,255,.09); }
+    #${PANEL_ID} .absda-size.on { border: 2px solid var(--tb-logo, #f0a848); }
+    #${PANEL_ID} .absda-size b { line-height: 1; font-weight: 600; color: #fff; }
+    #${PANEL_ID} .absda-size span { font-size: 11px; color: rgba(255,255,255,.75); }
+    #${PANEL_ID} .absda-size.on span { color: var(--tb-logo, #f0a848); }
+
     /* Search: a magnifier icon that opens into a rounded search field. */
     #appbar .absda-search { transition: width .2s ease; }
     #appbar .absda-search:not(.absda-open) { width: 36px !important; cursor: pointer; }
@@ -326,6 +336,18 @@ if (location.protocol !== "file:") {
   function renderPanel(panel) {
     const scroll = panel.scrollTop;
     panel.textContent = "";
+    panel.append(Object.assign(el("h3"), { textContent: "Text size" }));
+    const sizes = el("div", "absda-sizes");
+    looks.sizes.forEach((s, i) => {
+      const b = el("button", "absda-size" + (looks.textSize === s.id ? " on" : ""));
+      b.type = "button";
+      b.title = `${s.label} (${s.percent}%)`;
+      b.append(el("b", "", `font-size:${13 + i * 3}px`), Object.assign(el("span"), { textContent: s.label }));
+      b.firstChild.textContent = "A";
+      b.addEventListener("click", () => setLook("text", s.id));
+      sizes.append(b);
+    });
+    panel.append(sizes);
     panel.append(Object.assign(el("h3"), { textContent: "Theme" }));
     const tg = el("div", "absda-grid");
     looks.themes.forEach((t) => tg.append(themeTile(t)));
@@ -348,7 +370,11 @@ if (location.protocol !== "file:") {
   async function setLook(kind, id) {
     const next = await ipcRenderer.invoke("desktop:set-look", { kind, id }).catch(() => null);
     const panel = document.getElementById(PANEL_ID);
-    if (next && panel) { looks = next; renderPanel(panel); }
+    if (next && panel) {
+      looks = next;
+      renderPanel(panel);
+      if (kind === "text") setTimeout(() => placePanel(panel), 50);   // the page was resized
+    }
   }
 
   function placePanel(panel) {

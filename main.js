@@ -454,9 +454,21 @@ function navigate(direction, contents) {
 }
 
 // ---- view actions (used by the menu and the keyboard shortcuts) -----------
+// ---- text size (zoom of the web app), remembered between starts ------------
+const TEXT_SIZES = [["Small", 0.9], ["Normal", 1], ["Large", 1.15], ["Larger", 1.3], ["Largest", 1.5]];
+const textSize = () => (Number(config.textSize) > 0 ? Number(config.textSize) : 1);
+function applyTextSize(contents) {
+  if (!contents.isDestroyed() && isServerUrl(contents.getURL())) contents.setZoomFactor(textSize());
+}
+function setTextSize(f) {
+  f = Math.round(Math.max(0.7, Math.min(2, f)) * 100) / 100;
+  config = { ...config, textSize: f };
+  writeJson(dataFile("config.json"), config);
+  for (const c of webContents.getAllWebContents()) applyTextSize(c);
+}
+// Ctrl +/-/0 and Ctrl+mouse wheel: 10% steps.
 function zoom(step) {
-  const c = wc();
-  c.setZoomLevel(step === 0 ? 0 : Math.max(-3, Math.min(5, c.getZoomLevel() + step * 0.5)));
+  setTextSize(step === 0 ? 1 : textSize() + step * 0.1);
 }
 function toggleFullScreen() {
   win.setFullScreen(!win.isFullScreen());
@@ -996,10 +1008,17 @@ function buildMenu() {
     {
       label: "View",
       submenu: [
-        { label: "Zoom In", ...shortcut("Ctrl+="), click: () => zoom(1) },
-        { label: "Zoom Out", ...shortcut("Ctrl+-"), click: () => zoom(-1) },
-        { label: "Actual Size", ...shortcut("Ctrl+0"), click: () => zoom(0) },
+        { label: "Bigger", ...shortcut("Ctrl+="), click: () => zoom(1) },
+        { label: "Smaller", ...shortcut("Ctrl+-"), click: () => zoom(-1) },
+        { label: "Normal Size", ...shortcut("Ctrl+0"), click: () => zoom(0) },
         { type: "separator" },
+        {
+          label: "Text size",
+          submenu: TEXT_SIZES.map(([name, f]) => ({
+            label: `${name} (${Math.round(f * 100)}%)`, type: "checkbox",
+            checked: Math.abs(textSize() - f) < 0.001, click: () => setTextSize(f),
+          })),
+        },
         { label: "Theme", submenu: themeMenuItems() },
         { label: "Bookshelf", submenu: shelfMenuItems() },
         { type: "separator" },
@@ -1137,20 +1156,23 @@ function looksState() {
     else if (id !== "none" && woodTexture) image = t.tint ? `linear-gradient(${t.tint}, ${t.tint}), ${woodTexture}` : woodTexture;
     return { id, label: a.label, group: groups[a.group] || a.group, image, plank: a.plank || t.shelf || ABS_PLANK };
   });
-  return { theme: themeId(), shelf: shelfArtId(), themes, shelves };
+  const sizes = TEXT_SIZES.map(([label, f]) => ({ id: String(f), label, percent: Math.round(f * 100) }));
+  return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves };
 }
 ipcMain.handle("desktop:get-looks", (e) => (fromServerPage(e) ? looksState() : null));
 ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
   if (!fromServerPage(e)) return null;
   if (kind === "theme" && THEMES[id]) setTheme(id);
   if (kind === "shelf" && SHELF_ARTS[id]) setShelfArt(id);
+  if (kind === "text" && TEXT_SIZES.some(([, f]) => String(f) === id)) setTextSize(Number(id));
   return looksState();
 });
 
 // ---- app lifecycle ---------------------------------------------------------
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
-  contents.on("dom-ready", () => applyPageCss(contents, true));
+  contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
+  contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.
   contents.on("did-finish-load", async () => {
     if (woodTexture || !isServerUrl(contents.getURL())) return;

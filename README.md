@@ -53,7 +53,9 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - **Settings and Upload open in their own window**, so the page you're on and what's playing stay put
 - **17 bookshelf arts**: woods, stone, materials and scenes (starry night, aurora, ocean), all
   drawn in code
-- Mouse back/forward buttons, `Alt+←` / `Alt+→`, `F5` reload, `F11` fullscreen, zoom
+- **Text size** (Small → Largest) in the paintbrush panel or **View → Text size**; `Ctrl` `+`/`-`/`0` and
+  Ctrl+mouse wheel work too, and your size is remembered
+- Mouse back/forward buttons, `Alt+←` / `Alt+→`, `F5` reload, `F11` fullscreen
 - Links to other websites open in your normal browser
 - Single sign-on (OpenID: Authentik, Keycloak, Authelia…) — the login provider's page opens
   inside the app and brings you back signed in
