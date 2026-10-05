@@ -343,6 +343,10 @@ function applyWindowColors() {
     win.setBackgroundColor(t.title.bg);
   }
   if (view) view.setBackgroundColor((t.colors && t.colors.primary) || BG);
+  if (settingsWin && !settingsWin.isDestroyed()) {
+    settingsWin.setTitleBarOverlay({ color: t.title.bg, symbolColor: t.title.fg, height: TITLE_H });
+    settingsWin.setBackgroundColor(t.title.bg);
+  }
 }
 
 // Re-apply the current theme to every open page (live, no reload).
@@ -395,12 +399,12 @@ function loadServer() {
 function goHome() {
   if (config.webUrl) loadServer(); else showConnectPage("setup");
 }
-function navigate(direction) {
+function navigate(direction, contents) {
   if (!view) return;
   const now = Date.now();
   if (now - lastNavAt < 350) return;   // side buttons can arrive twice (mouse event + app-command)
   lastNavAt = now;
-  const h = wc().navigationHistory;
+  const h = (contents || wc()).navigationHistory;
   if (direction < 0 && h.canGoBack()) h.goBack();
   if (direction > 0 && h.canGoForward()) h.goForward();
 }
@@ -621,6 +625,7 @@ function createWindow() {
     saveWindowState();
     if (isQuitting || !closeToTray() || !tray) return;
     e.preventDefault();
+    if (settingsWin && !settingsWin.isDestroyed()) settingsWin.close();
     win.hide();
     if (!config.trayHintShown) {
       tray.displayBalloon({
@@ -656,30 +661,15 @@ function createWindow() {
     win.webContents.send("titlebar:title", title);
   });
 
-  // Your server stays in the app; links to other sites open in your browser.
-  // Exception: single sign-on (OpenID). Your server redirects to its login provider
-  // (Authentik, Keycloak, Authelia…); that login runs in the app until it sends you back.
-  let ssoLogin = false;
-  let navStart = "";   // where the current page load began (before any redirects)
-  contents.on("did-start-navigation", (e) => {
-    if (e.isMainFrame && !e.isSameDocument && !e.url.startsWith("about:")) navStart = e.url;
-  });
-  contents.on("will-redirect", (e) => {
-    if (e.isMainFrame && isServerUrl(navStart) && !isServerUrl(e.url)) ssoLogin = true;
-  });
-  contents.on("did-navigate", (_e, url) => { if (isServerUrl(url)) ssoLogin = false; });
-  contents.on("will-navigate", (e, url) => {
-    if (!isServerUrl(url) && !(ssoLogin && /^https?:/i.test(url))) {
-      e.preventDefault();
-      openExternal(url);
-    }
-  });
-  contents.setWindowOpenHandler(({ url }) => {
-    if (isServerUrl(url)) {
-      return { action: "allow", overrideBrowserWindowOptions: { icon: ICON, backgroundColor: BG, autoHideMenuBar: true } };
-    }
-    openExternal(url);
-    return { action: "deny" };
+  guardLinks(contents);
+
+  // Settings pages open in their own window, so this page (and the player) stay put.
+  // (Clicks on settings links are caught in preload.js; this catches the rest.)
+  contents.on("did-navigate-in-page", (_e, url, isMainFrame) => {
+    if (!isMainFrame || !isSettingsUrl(url)) return;
+    openSettings(url);
+    if (contents.navigationHistory.canGoBack()) contents.navigationHistory.goBack();
+    else routeMain("/");
   });
 
   // Server unreachable → friendly page with Retry / Change server.
@@ -711,6 +701,127 @@ function createWindow() {
   if (config.webUrl) loadServer(); else showConnectPage("setup");
 }
 
+// Your server stays in the app; links to other sites open in your browser.
+// Exception: single sign-on (OpenID). Your server redirects to its login provider
+// (Authentik, Keycloak, Authelia…); that login runs in the app until it sends you back.
+function guardLinks(contents) {
+  let ssoLogin = false;
+  let navStart = "";   // where the current page load began (before any redirects)
+  contents.on("did-start-navigation", (e) => {
+    if (e.isMainFrame && !e.isSameDocument && !e.url.startsWith("about:")) navStart = e.url;
+  });
+  contents.on("will-redirect", (e) => {
+    if (e.isMainFrame && isServerUrl(navStart) && !isServerUrl(e.url)) ssoLogin = true;
+  });
+  contents.on("did-navigate", (_e, url) => { if (isServerUrl(url)) ssoLogin = false; });
+  contents.on("will-navigate", (e, url) => {
+    if (!isServerUrl(url) && !(ssoLogin && /^https?:/i.test(url))) {
+      e.preventDefault();
+      openExternal(url);
+    }
+  });
+  contents.setWindowOpenHandler(({ url }) => {
+    if (isServerUrl(url)) {
+      return { action: "allow", overrideBrowserWindowOptions: { icon: ICON, backgroundColor: BG, autoHideMenuBar: true } };
+    }
+    openExternal(url);
+    return { action: "deny" };
+  });
+}
+
+// ---- settings window ---------------------------------------------------------
+// The web app's settings (everything under /config: server settings, libraries,
+// users, stats…) open in a window of their own on top of the app, instead of
+// replacing the page you're on.
+let settingsWin = null;
+
+// The web app's path for a page, e.g. "/config/libraries" (without the /audiobookshelf base).
+function appPath(url) {
+  try {
+    const root = new URL(config.webUrl).pathname.replace(/\/+$/, "");
+    const u = new URL(url);
+    const p = u.pathname.startsWith(root + "/") || u.pathname === root ? u.pathname.slice(root.length) : u.pathname;
+    return (p || "/") + u.search;
+  } catch { return "/"; }
+}
+const isSettingsUrl = (url) => isServerUrl(url) && /^\/config(\/|$|\?)/.test(appPath(url));
+
+// Show a page of the web app in the main window, without reloading it.
+function routeMain(p) {
+  if (!view) return;
+  wc().executeJavaScript(`window.$nuxt && $nuxt.$router.push(${JSON.stringify(p)}).catch(() => {})`).catch(() => {});
+}
+
+// Our own title strip for the settings window (the web app's top bar is hidden there).
+const SETTINGS_CSS = `
+  #absda-settings-bar { position: fixed; top: 0; left: 0; right: 0; height: ${TITLE_H}px; z-index: 2147483000;
+    display: flex; align-items: center; gap: 10px; padding: 0 16px; background: var(--tb-bg, #1b1b1b);
+    color: var(--tb-fg, #e5e5e5); font: 500 14px "Segoe UI", system-ui, sans-serif; user-select: none;
+    -webkit-app-region: drag; }
+  #absda-settings-bar svg { width: 18px; height: 18px; color: var(--tb-logo, #f0a848); }
+  div:has(> #appbar) { height: ${TITLE_H}px !important; visibility: hidden !important; }
+  #page-wrapper { height: calc(100% - ${TITLE_H}px) !important; }
+  #page-wrapper .fixed.top-16 { top: ${TITLE_H}px !important; }
+`;
+const SETTINGS_BAR_JS = `(() => {
+  if (document.getElementById("absda-settings-bar")) return;
+  const bar = document.createElement("div");
+  bar.id = "absda-settings-bar";
+  bar.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 00-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 00-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 001.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 001.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" transform="translate(-1 0)"/></svg><span>Settings</span>';
+  document.body.appendChild(bar);
+})()`;
+
+function openSettings(url) {
+  if (settingsWin && !settingsWin.isDestroyed()) {
+    // Already open: go to the asked-for settings page and bring it forward.
+    settingsWin.webContents.executeJavaScript(
+      `window.$nuxt && $nuxt.$router.push(${JSON.stringify(appPath(url))}).catch(() => {})`).catch(() => {});
+    if (settingsWin.isMinimized()) settingsWin.restore();
+    settingsWin.focus();
+    return;
+  }
+  const t = currentTheme();
+  const b = win.getBounds();
+  const width = Math.max(760, Math.min(1200, b.width - 80));
+  const height = Math.max(520, Math.min(860, b.height - 60));
+  settingsWin = new BrowserWindow({
+    parent: win,
+    x: Math.round(b.x + (b.width - width) / 2),
+    y: Math.round(b.y + (b.height - height) / 2),
+    width, height, minWidth: 720, minHeight: 480,
+    title: "Settings",
+    icon: ICON,
+    backgroundColor: t.title.bg,
+    show: false,
+    titleBarStyle: "hidden",
+    titleBarOverlay: { color: t.title.bg, symbolColor: t.title.fg, height: TITLE_H },
+    webPreferences: { preload: PRELOAD, contextIsolation: true, nodeIntegration: false, sandbox: true },
+  });
+  const sc = settingsWin.webContents;
+  guardLinks(sc);
+  settingsWin.on("page-title-updated", (e) => e.preventDefault());
+  settingsWin.once("ready-to-show", () => settingsWin.show());
+  settingsWin.on("closed", () => { settingsWin = null; });
+  sc.on("dom-ready", () => {
+    sc.insertCSS(SETTINGS_CSS).catch(() => {});
+    sc.executeJavaScript(SETTINGS_BAR_JS).catch(() => {});
+  });
+  // Leaving settings (e.g. a link to a book or the home page) → show that in the main window.
+  // (The login page is part of opening settings: the web app passes through it to
+  // check your sign-in, then continues to the settings page.)
+  const leave = (url) => {
+    if (!isServerUrl(url) || isSettingsUrl(url)) return;
+    const p = appPath(url);
+    if (/^\/login(\/|$|\?)/.test(p)) return;
+    routeMain(p);
+    settingsWin.close();
+    win.focus();
+  };
+  sc.on("did-navigate-in-page", (_e, url, isMainFrame) => { if (isMainFrame) leave(url); });
+  sc.on("did-navigate", (_e, url) => leave(url));
+  sc.loadURL(url);
+}
+
 // ---- menu (opened from the title bar) --------------------------------------
 const REPO_URL = "https://github.com/Farathim89/abs-da";
 
@@ -735,11 +846,13 @@ async function showAbout() {
 const shortcut = (accelerator) => ({ accelerator, registerAccelerator: false });
 
 // View → Theme: one tick-item per theme, "Windows contrast colours" set apart at the end.
+// (Ticks, not radio buttons: Windows treats each separated group as its own radio
+// group and would tick the first item of every group.)
 function themeMenuItems() {
   const items = [];
   for (const [id, t] of Object.entries(THEMES)) {
     if (t.contrast) items.push({ type: "separator" });
-    items.push({ label: t.label, type: "radio", checked: themeId() === id, click: () => setTheme(id) });
+    items.push({ label: t.label, type: "checkbox", checked: themeId() === id, click: () => setTheme(id) });
   }
   return items;
 }
@@ -752,7 +865,7 @@ function shelfMenuItems() {
   for (const [id, a] of Object.entries(SHELF_ARTS)) {
     if (lastGroup && a.group !== lastGroup) items.push({ type: "separator" });
     lastGroup = a.group;
-    items.push({ label: a.label, type: "radio", checked: shelfArtId() === id, click: () => setShelfArt(id) });
+    items.push({ label: a.label, type: "checkbox", checked: shelfArtId() === id, click: () => setShelfArt(id) });
   }
   return items;
 }
@@ -888,7 +1001,9 @@ ipcMain.handle("titlebar:menu", (e, { index, x, y } = {}) => new Promise((resolv
 }));
 
 // Mouse back/forward buttons reported by the page (see preload.js).
-ipcMain.on("desktop:nav", (_e, direction) => navigate(direction === -1 ? -1 : 1));
+// (In the settings window the side buttons move through the settings pages.)
+ipcMain.on("desktop:nav", (e, direction) =>
+  navigate(direction === -1 ? -1 : 1, settingsWin && e.sender === settingsWin.webContents ? e.sender : null));
 
 // ---- "Remember me" on your server's login page (see preload.js) -----------
 const fromServerPage = (e) => {
@@ -916,6 +1031,47 @@ ipcMain.on("desktop:login-submitted", (e, creds) => {
   if (!fromServerPage(e) || !creds) return;
   if (!creds.remember) { forgetLogin(); return; }
   if (creds.username) pendingLogin = { username: String(creds.username), password: String(creds.password || "") };
+});
+
+// Which window a server page is in: "main" (the app) or "settings".
+ipcMain.handle("desktop:window-kind", (e) => {
+  if (!fromServerPage(e)) return null;
+  return view && e.sender === wc() ? "main" : "settings";
+});
+
+// A settings link was clicked in the main window.
+ipcMain.on("desktop:open-settings", (e, url) => {
+  if (fromServerPage(e) && view && e.sender === wc() && isSettingsUrl(String(url))) openSettings(String(url));
+});
+
+// ---- the paintbrush "Looks" panel in the web app's top bar ------------------
+// Everything it needs to draw small previews of each theme and bookshelf.
+const ABS_PLANK = "linear-gradient(180deg, #95775a 0%, #674625 17%, #674625 88%, #473019 100%)";
+function looksState() {
+  const t = currentTheme();
+  const themes = Object.entries(THEMES).map(([id, th]) => {
+    const c = th.colors || {};
+    return {
+      id, label: th.label, contrast: !!th.contrast,
+      title: th.title.bg, page: c.primary || BG, panel: c.bg || "#373838",
+      accent: th.title.logo, plank: th.shelf || ABS_PLANK,
+    };
+  });
+  const groups = { wood: "Wood", stone: "Stone", material: "Materials", scene: "Scenes", none: "Plain" };
+  const shelves = Object.entries(SHELF_ARTS).map(([id, a]) => {
+    let image = null;
+    if (a.svg) image = artUrl(a);
+    else if (id !== "none" && woodTexture) image = t.tint ? `linear-gradient(${t.tint}, ${t.tint}), ${woodTexture}` : woodTexture;
+    return { id, label: a.label, group: groups[a.group] || a.group, image, plank: a.plank || t.shelf || ABS_PLANK };
+  });
+  return { theme: themeId(), shelf: shelfArtId(), themes, shelves };
+}
+ipcMain.handle("desktop:get-looks", (e) => (fromServerPage(e) ? looksState() : null));
+ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
+  if (!fromServerPage(e)) return null;
+  if (kind === "theme" && THEMES[id]) setTheme(id);
+  if (kind === "shelf" && SHELF_ARTS[id]) setShelfArt(id);
+  return looksState();
 });
 
 // ---- app lifecycle ---------------------------------------------------------
