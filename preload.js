@@ -220,6 +220,15 @@ if (location.protocol !== "file:") {
     #appbar .absda-search input:hover { background: rgba(255,255,255,.1) !important; }
     #appbar .absda-search input:focus { background: rgba(0,0,0,.28) !important; border-color: var(--tb-logo, #f0a848) !important; }
 
+    /* Side menu: a thick theme-coloured bar, a soft highlight and an underlined label on the open tab. */
+    #siderail-buttons-container a > div.absolute.left-0 {
+      width: 5px !important; background: var(--tb-logo, #f0a848) !important; border-radius: 0 4px 4px 0; }
+    #siderail-buttons-container a:has(> div.absolute.left-0:not([style*="none"])) {
+      background: rgba(255,255,255,.09) !important; }
+    #siderail-buttons-container a:has(> div.absolute.left-0:not([style*="none"])) p {
+      font-weight: 600; text-decoration: underline; text-decoration-color: var(--tb-logo, #f0a848);
+      text-decoration-thickness: 2px; text-underline-offset: 5px; }
+
     /* Top-bar icons: a soft rounded highlight on hover (and on the paintbrush while its panel is open). */
     #appbar a.w-8.h-8, #absda-looks-btn, #appbar .absda-search:not(.absda-open) {
       border-radius: 8px; transition: background-color .15s, color .15s; }

@@ -156,6 +156,32 @@ const THEMES = {
       "black-400": "#34304c", "black-500": "#221f33", "black-600": "#161423", "black-700": "#100e19",
     },
   },
+  // Easier to see: pure black, white text, yellow highlights, strong outlines.
+  highcontrast: {
+    label: "High contrast",
+    title: { bg: "#000000", fg: "#ffffff", hover: "#3a3a3a", logo: "#ffd400" },
+    tint: "rgba(0, 0, 0, 0.55)",
+    shelf: "linear-gradient(180deg, #ffffff 0%, #c8c8c8 17%, #c8c8c8 88%, #8a8a8a 100%)",
+    scroll: "#ffffff",
+    page: "linear-gradient(#000000, #000000)",
+    colors: {
+      primary: "#000000", bg: "#000000", accent: "#ffd400",
+      "black-50": "#ffffff", "black-100": "#e6e6e6", "black-200": "#c8c8c8", "black-300": "#9a9a9a",
+      "black-400": "#2a2a2a", "black-500": "#161616", "black-600": "#0a0a0a", "black-700": "#000000",
+      // The web app's grey text, made bright.
+      "gray-200": "#ffffff", "gray-300": "#ffffff", "gray-400": "#f0f0f0", "gray-500": "#dcdcdc", "gray-600": "#c4c4c4",
+    },
+    css: `
+      input, textarea, select { border-color: #ffffff !important; }
+      :focus-visible { outline: 3px solid #ffd400 !important; outline-offset: 2px !important; }
+      #siderail-buttons-container a { border-bottom-color: #4a4a4a !important; }
+      #appbar { border-bottom: 1px solid #4a4a4a; }
+      .globalSearchMenu, .librariesDropdownMenu, [role="menu"], [role="listbox"] { border-color: #ffffff !important; }
+      html:root body #appbar div:has(> ul.librariesDropdownMenu) > button,
+      html:root body #appbar a[href$="/account"],
+      html:root body #appbar .absda-search input { border-color: #ffffff !important; background: #000000 !important; }
+    `,
+  },
   contrast: { label: "Windows contrast colours", contrast: true, title: DEFAULT_TITLE },
 };
 
@@ -204,6 +230,7 @@ function themeCss(id) {
     parts.push(`#bookshelf { scrollbar-color: ${t.scroll} rgba(0, 0, 0, 0) !important; }`);
   }
   if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`);
+  if (t.css) parts.push(t.css);
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
   // The connect / can't-reach screen (connect.css) follows the theme too.

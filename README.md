@@ -47,7 +47,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   what's playing, Play/Pause, skip back/forward, previous/next chapter and a **sleep timer**
 - **Start with Windows** (in the tray)
 - Keyboard **media keys** and the **Windows media controls** show the book and cover
-- **6 themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst) plus *Windows contrast
+- **7 themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**
 - **Settings and Upload open in their own window**, so the page you're on and what's playing stay put
