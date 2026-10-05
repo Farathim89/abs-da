@@ -206,7 +206,44 @@ if (location.protocol !== "file:") {
     #${PANEL_ID} .absda-side { position: absolute; left: 0; top: 9px; bottom: 0; width: 15px; }
     #${PANEL_ID} .absda-plank { position: absolute; height: 4px; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
     #${PANEL_ID} .absda-book { position: absolute; width: 9px; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
+
+    /* Search: a magnifier icon that opens into a rounded search field. */
+    #appbar .absda-search { transition: width .2s ease; }
+    #appbar .absda-search:not(.absda-open) { width: 36px !important; cursor: pointer; }
+    #appbar .absda-search:not(.absda-open) input { opacity: 0; pointer-events: none; }
+    #appbar .absda-search:not(.absda-open) button { left: 0; justify-content: center; padding: 0; color: inherit; }
+    #appbar .absda-search:not(.absda-open) button .material-symbols { font-size: 1.6rem !important; }
+    #appbar .absda-search:not(.absda-open):hover button { color: rgb(229 231 235); }
+    #appbar .absda-search input { background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.14) !important;
+      border-radius: 999px !important; padding-left: 14px !important; padding-right: 34px !important;
+      transition: background-color .15s, border-color .15s, opacity .15s; }
+    #appbar .absda-search input:hover { background: rgba(255,255,255,.1) !important; }
+    #appbar .absda-search input:focus { background: rgba(0,0,0,.28) !important; border-color: var(--tb-logo, #f0a848) !important; }
+
+    /* Library picker: a clear box with a ▾ arrow, so it's obvious it's a menu. */
+    #appbar div:has(> ul.librariesDropdownMenu) > button {
+      background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.18) !important;
+      border-radius: 6px !important; color: rgb(229 231 235) !important; transition: background-color .15s, border-color .15s; }
+    #appbar div:has(> ul.librariesDropdownMenu) > button:hover {
+      background: rgba(255,255,255,.11) !important; border-color: rgba(255,255,255,.32) !important; }
+    #appbar div:has(> ul.librariesDropdownMenu:not([style*="none"])) > button { border-color: var(--tb-logo, #f0a848) !important; }
+    #appbar ul.librariesDropdownMenu { margin-top: 4px !important; border-radius: 6px !important; }
+    @media (min-width: 640px) {
+      #appbar div:has(> ul.librariesDropdownMenu) > button { padding-right: 28px !important; }
+      #appbar div:has(> ul.librariesDropdownMenu) > button::after {
+        content: ""; position: absolute; right: 9px; top: 50%; width: 12px; height: 12px; margin-top: -6px;
+        background-color: currentColor; opacity: .75; transition: transform .15s;
+        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7.4 8.6L12 13.2l4.6-4.6L18 10l-6 6-6-6z'/%3E%3C/svg%3E") center / contain no-repeat; }
+      #appbar div:has(> ul.librariesDropdownMenu:not([style*="none"])) > button::after { transform: rotate(180deg); }
+    }
   `;
+  function ensureStyle() {
+    if (document.getElementById("absda-looks-css")) return;
+    const style = document.createElement("style");
+    style.id = "absda-looks-css";
+    style.textContent = LOOKS_CSS;
+    document.head.append(style);
+  }
 
   let looks = null;   // what the panel shows (from the app)
   const el = (tag, cls, style) => {
@@ -338,12 +375,7 @@ if (location.protocol !== "file:") {
     const stats = document.querySelector('#appbar a[href$="/config/stats"]');
     const anchor = stats || document.querySelector('#appbar a[href$="/upload"]');
     if (!anchor) return;   // not signed in / no top bar on this page
-    if (!document.getElementById("absda-looks-css")) {
-      const style = el("style");
-      style.id = "absda-looks-css";
-      style.textContent = LOOKS_CSS;
-      document.head.append(style);
-    }
+    ensureStyle();
     const btn = el("button", anchor.className);   // same size and spacing as its neighbours
     btn.id = BRUSH_ID;
     btn.type = "button";
@@ -354,6 +386,47 @@ if (location.protocol !== "file:") {
     btn.addEventListener("mouseleave", hideTip);
     if (stats) stats.after(btn); else anchor.before(btn);
   }
+
+  // The top bar's search field becomes an icon; clicking it (or Ctrl+F) opens the field.
+  // It closes again when you click away, unless there's text in it.
+  function searchParts() {
+    const form = document.querySelector('#appbar form[role="search"]');
+    const box = form && form.parentElement;
+    const input = form && form.querySelector("input");
+    return box && input ? { box, input } : null;
+  }
+  function openSearch() {
+    const s = searchParts();
+    if (!s) return;
+    s.box.classList.add("absda-open");
+    s.input.focus();
+    s.input.select();
+  }
+  function ensureSearch() {
+    if (windowKind !== "main") return;
+    const s = searchParts();
+    if (!s || s.box.classList.contains("absda-search")) return;
+    ensureStyle();
+    const { box, input } = s;
+    box.classList.add("absda-search");
+    if (input.value) box.classList.add("absda-open");
+    box.addEventListener("mousedown", (e) => {
+      if (box.classList.contains("absda-open")) return;
+      e.preventDefault();
+      openSearch();
+    });
+    input.addEventListener("focus", () => box.classList.add("absda-open"));
+    input.addEventListener("blur", () => setTimeout(() => {
+      const cur = searchParts();
+      if (cur && document.activeElement !== cur.input && !cur.input.value) cur.box.classList.remove("absda-open");
+    }, 250));
+  }
+  document.addEventListener("keydown", (e) => {
+    if (windowKind === "main" && e.ctrlKey && !e.shiftKey && !e.altKey && e.key.toLowerCase() === "f" && searchParts()) {
+      e.preventDefault();
+      openSearch();
+    }
+  }, true);
 
   // Close the panel on Esc, a click outside it, or a page change.
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePanel(); }, true);
@@ -376,6 +449,7 @@ if (location.protocol !== "file:") {
     timer = setTimeout(() => {
       setupLoginForm();
       ensureLooksButton();
+      ensureSearch();
       if (location.pathname !== lastPath) { lastPath = location.pathname; closePanel(); }
     }, 150);
     clearTimeout(frameTimer);

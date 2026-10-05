@@ -244,15 +244,25 @@ function writeJson(file, data) {
 }
 
 // ---- remember window size / position --------------------------------------
+// First start: 1280×720, but never more than 85% of the screen (with Windows display
+// scaling a laptop screen can be only ~1280×700 usable), centred. A remembered size
+// that's too big for the screen it opens on (e.g. a smaller monitor) is shrunk the same way.
 function loadWindowState() {
   const s = readJson(dataFile("window-state.json"), {});
-  const state = { width: s.width || 1280, height: s.height || 820, maximized: !!s.maximized };
-  // Only restore the position if it's still on a connected screen.
   const onScreen = Number.isFinite(s.x) && Number.isFinite(s.y) && screen.getAllDisplays().some((d) => {
     const a = d.workArea;
     return s.x >= a.x - 40 && s.y >= a.y - 40 && s.x < a.x + a.width - 120 && s.y < a.y + a.height - 120;
   });
-  if (onScreen) { state.x = s.x; state.y = s.y; }
+  const area = (onScreen ? screen.getDisplayNearestPoint({ x: s.x, y: s.y }) : screen.getPrimaryDisplay()).workArea;
+  const width = Math.min(s.width || 1280, Math.round(area.width * (s.width ? 1 : 0.85)));
+  const height = Math.min(s.height || 720, Math.round(area.height * (s.height ? 1 : 0.85)));
+  const state = { width, height, maximized: !!s.maximized };
+  if (onScreen) {
+    // Keep it fully on the screen.
+    state.x = Math.min(Math.max(s.x, area.x), area.x + area.width - width);
+    state.y = Math.min(Math.max(s.y, area.y), area.y + area.height - height);
+  }
+  // No position → Electron centres the window.
   return state;
 }
 function saveWindowState() {
@@ -782,12 +792,15 @@ function openSettings(url) {
   }
   const t = currentTheme();
   const b = win.getBounds();
-  const width = Math.max(760, Math.min(1200, b.width - 80));
-  const height = Math.max(520, Math.min(860, b.height - 60));
+  // Your last size for it (or a bit smaller than the main window), always fitting the screen.
+  const area = screen.getDisplayMatching(b).workArea;
+  const saved = config.settingsSize || {};
+  const width = Math.min(area.width, Math.max(720, saved.width || Math.min(1200, b.width - 80)));
+  const height = Math.min(area.height, Math.max(480, saved.height || Math.min(860, b.height - 60)));
   settingsWin = new BrowserWindow({
     parent: win,
-    x: Math.round(b.x + (b.width - width) / 2),
-    y: Math.round(b.y + (b.height - height) / 2),
+    x: Math.round(Math.min(Math.max(b.x + (b.width - width) / 2, area.x), area.x + area.width - width)),
+    y: Math.round(Math.min(Math.max(b.y + (b.height - height) / 2, area.y), area.y + area.height - height)),
     width, height, minWidth: 720, minHeight: 480,
     title: "Settings",
     icon: ICON,
@@ -801,6 +814,11 @@ function openSettings(url) {
   guardLinks(sc);
   settingsWin.on("page-title-updated", (e) => e.preventDefault());
   settingsWin.once("ready-to-show", () => settingsWin.show());
+  settingsWin.on("close", () => {
+    const { width: w, height: h } = settingsWin.getNormalBounds();
+    config = { ...config, settingsSize: { width: w, height: h } };
+    writeJson(dataFile("config.json"), config);
+  });
   settingsWin.on("closed", () => { settingsWin = null; });
   sc.on("dom-ready", () => {
     sc.insertCSS(SETTINGS_CSS).catch(() => {});
