@@ -220,6 +220,20 @@ if (location.protocol !== "file:") {
     #appbar .absda-search input:hover { background: rgba(255,255,255,.1) !important; }
     #appbar .absda-search input:focus { background: rgba(0,0,0,.28) !important; border-color: var(--tb-logo, #f0a848) !important; }
 
+    /* Top-bar icons: a soft rounded highlight on hover (and on the paintbrush while its panel is open). */
+    #appbar a.w-8.h-8, #absda-looks-btn, #appbar .absda-search:not(.absda-open) {
+      border-radius: 8px; transition: background-color .15s, color .15s; }
+    #appbar a.w-8.h-8, #absda-looks-btn { width: 36px !important; height: 36px !important; margin: 0 2px !important; }
+    #appbar a.w-8.h-8:hover, #absda-looks-btn:hover, #absda-looks-btn.absda-active,
+    #appbar .absda-search:not(.absda-open):hover { background: rgba(255,255,255,.1); color: rgb(243 244 246); }
+    #absda-looks-btn.absda-active { color: var(--tb-logo, #f0a848); }
+
+    /* Account button: same box style as the library picker. */
+    #appbar a[href$="/account"] {
+      background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.18) !important;
+      border-radius: 6px !important; transition: background-color .15s, border-color .15s; }
+    #appbar a[href$="/account"]:hover { background: rgba(255,255,255,.11) !important; border-color: rgba(255,255,255,.32) !important; }
+
     /* Library picker: a clear box with a ▾ arrow, so it's obvious it's a menu. */
     #appbar div:has(> ul.librariesDropdownMenu) > button {
       background: rgba(255,255,255,.07) !important; border: 1px solid rgba(255,255,255,.18) !important;
@@ -340,6 +354,8 @@ if (location.protocol !== "file:") {
   function closePanel() {
     const p = document.getElementById(PANEL_ID);
     if (p) p.remove();
+    const btn = document.getElementById(BRUSH_ID);
+    if (btn) btn.classList.remove("absda-active");
   }
 
   async function togglePanel() {
@@ -352,6 +368,8 @@ if (location.protocol !== "file:") {
     renderPanel(panel);
     document.body.append(panel);
     placePanel(panel);
+    const btn = document.getElementById(BRUSH_ID);
+    if (btn) btn.classList.add("absda-active");
   }
 
   function showTip() {
