@@ -9,6 +9,18 @@ desktop.getTitle().then(setTitle);
 desktop.onTitle(setTitle);
 desktop.onFocus((focused) => document.body.classList.toggle("blurred", !focused));
 
+// Menu button names in the app's language (the order matches main.js buildMenu).
+const MENU_KEYS = ["menu.app", "menu.edit", "menu.view", "menu.navigate", "menu.help"];
+function setLabels(s) {
+  if (!s) return;
+  document.querySelectorAll(".menus button").forEach((btn) => {
+    const key = MENU_KEYS[Number(btn.dataset.menu)];
+    if (s[key]) btn.textContent = s[key];
+  });
+}
+desktop.getStrings().then(setLabels);
+desktop.onStrings(setLabels);
+
 // Each button opens its menu just below itself.
 document.querySelectorAll(".menus button").forEach((btn) => {
   btn.addEventListener("click", async () => {

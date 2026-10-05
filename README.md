@@ -50,7 +50,10 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - **7 themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**
-- **Settings and Upload open in their own window**, so the page you're on and what's playing stay put
+- **Settings and Upload open as an overlay** over the app (close with ✕, Esc or a click outside),
+  so the page you're on and what's playing stay put
+- **Speaks your language**: menus, tray and dialogs follow the language you use in Audiobookshelf
+  (or **View → Language**). English and Swedish so far — adding one is easy, see `i18n.js`
 - **17 bookshelf arts**: woods, stone, materials and scenes (starry night, aurora, ocean), all
   drawn in code
 - **Text size** (Small → Largest) in the paintbrush panel or **View → Text size**; `Ctrl` `+`/`-`/`0` and

@@ -33,6 +33,7 @@
       "preload.js",
       "server.js",
       "shelf-art.js",
+      "i18n.js",
       "connect.html",
       "connect.css",
       "connect.js",

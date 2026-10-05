@@ -17,6 +17,9 @@ if (location.protocol === "file:") {
     getTitle: () => ipcRenderer.invoke("titlebar:get-title"),
     onTitle: (cb) => ipcRenderer.on("titlebar:title", (_e, title) => cb(title)),
     onFocus: (cb) => ipcRenderer.on("titlebar:focus", (_e, focused) => cb(focused)),
+    // texts in the app's language (see i18n.js)
+    getStrings: () => ipcRenderer.invoke("desktop:strings"),
+    onStrings: (cb) => ipcRenderer.on("desktop:strings", (_e, s) => cb(s)),
   });
 }
 
@@ -31,6 +34,30 @@ if (location.protocol !== "file:") {
   const SERVER_ID = "abs-desktop-server";
   let wiredForm = null;
   let rememberChoice = true;
+
+  // Texts in the app's language (English until they arrive). When the language
+  // changes, our added bits are removed and drawn again with the new words.
+  let S = {};
+  const T = (key, fallback) => S[key] || fallback;
+  function applyStrings(s) {
+    if (!s) return;
+    S = s;
+    for (const id of [BOX_ID, SERVER_ID, "absda-looks-tip"]) {
+      const n = document.getElementById(id);
+      if (n) (id === BOX_ID ? n.closest("label") || n : n).remove();
+    }
+    const btn = document.getElementById("absda-looks-btn");
+    if (btn) btn.setAttribute("aria-label", T("looks.tip", "Theme & bookshelf"));
+    if (document.getElementById("absda-looks-panel")) {
+      ipcRenderer.invoke("desktop:get-looks").then((l) => {
+        const p = document.getElementById("absda-looks-panel");
+        if (l && p) { looks = l; renderPanel(p); }
+      }).catch(() => {});
+    }
+    if (typeof schedule === "function") schedule();
+  }
+  ipcRenderer.invoke("desktop:strings").then(applyStrings).catch(() => {});
+  ipcRenderer.on("desktop:strings", (_e, s) => applyStrings(s));
 
   const isLoginPage = () => /\/login\/?$/i.test(location.pathname);
   const field = (name) => document.querySelector(`input[name="${name}"]`);
@@ -53,7 +80,7 @@ if (location.protocol !== "file:") {
     box.checked = rememberChoice;
     box.style.cssText = "width:16px;height:16px;margin:0;cursor:pointer;accent-color:#f0a848;";
     box.addEventListener("change", () => { rememberChoice = box.checked; });
-    row.append(box, document.createTextNode("Remember me"));
+    row.append(box, document.createTextNode(T("login.remember", "Remember me")));
     // Put it just above the Submit button.
     const btn = form.querySelector('button[type="submit"]');
     const anchor = btn ? (btn.parentElement && btn.parentElement !== form ? btn.parentElement : btn) : null;
@@ -73,13 +100,13 @@ if (location.protocol !== "file:") {
     host.style.cssText = "color:#e5e5e5;";
     const change = document.createElement("a");
     change.href = "#";
-    change.textContent = "Change";
+    change.textContent = T("login.change", "Change");
     change.style.cssText = "color:#f0a848;text-decoration:underline;cursor:pointer;";
     change.addEventListener("click", (e) => {
       e.preventDefault();
       ipcRenderer.send("desktop:change-server");
     });
-    line.append("Server:", host, "·", change);
+    line.append(T("login.server", "Server:"), host, "·", change);
     card.prepend(line);
   }
 
@@ -154,7 +181,69 @@ if (location.protocol !== "file:") {
   ipcRenderer.invoke("desktop:window-kind").then((k) => { windowKind = k; schedule(); }).catch(() => {});
 
   // -------------------------------------------------------------------------
-  // Settings open in their own window: catch clicks on links to the settings
+  // Settings overlay. In the app: a dimmed backdrop while it's open (a click on
+  // it closes the overlay). In the overlay: a header with the page name and ✕.
+  // -------------------------------------------------------------------------
+  const DIM_ID = "absda-dim";
+  const HEAD_ID = "absda-settings-bar";
+  ipcRenderer.on("desktop:overlay", (_e, open) => {
+    let dim = document.getElementById(DIM_ID);
+    if (!open) { if (dim) dim.remove(); return; }
+    if (dim) return;
+    dim = document.createElement("div");
+    dim.id = DIM_ID;
+    dim.style.cssText = "position:fixed;inset:0;z-index:2147483600;background:rgba(0,0,0,.62);cursor:pointer;";
+    dim.addEventListener("mousedown", (e) => { e.preventDefault(); ipcRenderer.send("desktop:close-settings"); });
+    document.body.append(dim);
+  });
+
+  const GEAR_D = "M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 00-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 00-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 001.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 001.7-1l2.5 1 2-3.5zM12 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z";
+  const UPLOAD_D = "M5 20h14v-2H5v2zm7-16l-6 6h4v6h4v-6h4l-6-6z";
+  const HEAD_CSS = `
+    #${HEAD_ID} { position: fixed; top: 0; left: 0; right: 0; height: 44px; z-index: 2147483000;
+      display: flex; align-items: center; gap: 10px; padding: 0 8px 0 16px; background: var(--tb-bg, #1b1b1b);
+      color: var(--tb-fg, #e5e5e5); font: 600 15px "Segoe UI", system-ui, sans-serif; user-select: none;
+      border-bottom: 1px solid rgba(255,255,255,.12); }
+    #${HEAD_ID} svg { width: 20px; height: 20px; color: var(--tb-logo, #f0a848); flex: none; }
+    #${HEAD_ID} span { flex: 1; }
+    #${HEAD_ID} button { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      border: 0; border-radius: 8px; background: none; color: inherit; font-size: 20px; line-height: 1; cursor: pointer; }
+    #${HEAD_ID} button:hover { background: rgba(255,255,255,.12); }
+  `;
+  function ensureOverlayHead() {
+    if (windowKind !== "settings" || !document.body) return;
+    const upload = /\/upload(\/|$)/.test(location.pathname);
+    const label = upload ? T("win.upload", "Upload") : T("win.settings", "Settings");
+    let head = document.getElementById(HEAD_ID);
+    if (!head) {
+      if (!document.getElementById("absda-head-css")) {
+        const style = document.createElement("style");
+        style.id = "absda-head-css";
+        style.textContent = HEAD_CSS;
+        document.head.append(style);
+      }
+      head = document.createElement("div");
+      head.id = HEAD_ID;
+      head.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path/></svg><span></span><button type="button">✕</button>';
+      head.querySelector("button").addEventListener("click", () => ipcRenderer.send("desktop:close-settings"));
+      document.body.append(head);
+    }
+    head.querySelector("path").setAttribute("d", upload ? UPLOAD_D : GEAR_D);
+    if (head.querySelector("span").textContent !== label) head.querySelector("span").textContent = label;
+    head.querySelector("button").title = T("win.close", "Close");
+  }
+  // Esc closes the overlay — unless one of the web app's own pop-ups is open (Esc closes that first).
+  document.addEventListener("keydown", (e) => {
+    if (windowKind !== "settings" || e.key !== "Escape") return;
+    const popup = [...document.querySelectorAll(".modal")].some((m) => {
+      const s = getComputedStyle(m);
+      return s.display !== "none" && s.visibility !== "hidden" && Number(s.opacity) > 0.01;
+    });
+    if (!popup) ipcRenderer.send("desktop:close-settings");
+  });
+
+  // -------------------------------------------------------------------------
+  // Settings open in the overlay: catch clicks on links to the settings
   // pages (/config…) in the main window before the web app handles them.
   // -------------------------------------------------------------------------
   document.addEventListener("click", (e) => {
@@ -336,7 +425,7 @@ if (location.protocol !== "file:") {
   function renderPanel(panel) {
     const scroll = panel.scrollTop;
     panel.textContent = "";
-    panel.append(Object.assign(el("h3"), { textContent: "Text size" }));
+    panel.append(Object.assign(el("h3"), { textContent: T("looks.textSize", "Text size") }));
     const sizes = el("div", "absda-sizes");
     looks.sizes.forEach((s, i) => {
       const b = el("button", "absda-size" + (looks.textSize === s.id ? " on" : ""));
@@ -348,11 +437,11 @@ if (location.protocol !== "file:") {
       sizes.append(b);
     });
     panel.append(sizes);
-    panel.append(Object.assign(el("h3"), { textContent: "Theme" }));
+    panel.append(Object.assign(el("h3"), { textContent: T("looks.theme", "Theme") }));
     const tg = el("div", "absda-grid");
     looks.themes.forEach((t) => tg.append(themeTile(t)));
     panel.append(tg);
-    panel.append(Object.assign(el("h3"), { textContent: "Bookshelf" }));
+    panel.append(Object.assign(el("h3"), { textContent: T("looks.bookshelf", "Bookshelf") }));
     let group = null;
     let grid = null;
     for (const s of looks.shelves) {
@@ -412,7 +501,7 @@ if (location.protocol !== "file:") {
     if (!btn || document.getElementById(PANEL_ID) || document.getElementById(TIP_ID)) return;
     const tip = el("div");
     tip.id = TIP_ID;
-    tip.textContent = "Theme & bookshelf";
+    tip.textContent = T("looks.tip", "Theme & bookshelf");
     document.body.append(tip);
     const r = btn.getBoundingClientRect();
     tip.style.top = `${Math.round(r.bottom + 6)}px`;
@@ -432,7 +521,7 @@ if (location.protocol !== "file:") {
     const btn = el("button", anchor.className);   // same size and spacing as its neighbours
     btn.id = BRUSH_ID;
     btn.type = "button";
-    btn.setAttribute("aria-label", "Theme & bookshelf");
+    btn.setAttribute("aria-label", T("looks.tip", "Theme & bookshelf"));
     btn.innerHTML = BRUSH_SVG;
     btn.addEventListener("click", (e) => { e.preventDefault(); togglePanel(); });
     btn.addEventListener("mouseenter", showTip);
@@ -503,6 +592,7 @@ if (location.protocol !== "file:") {
       setupLoginForm();
       ensureLooksButton();
       ensureSearch();
+      ensureOverlayHead();
       if (location.pathname !== lastPath) { lastPath = location.pathname; closePanel(); }
     }, 150);
     clearTimeout(frameTimer);

@@ -31,7 +31,7 @@ async function fetchTimeout(url, ms = 8000) {
 }
 
 // Check the address really is an Audiobookshelf server and find where its
-// web app lives. Returns { ok: true, webUrl } or { ok: false, error }.
+// web app lives. Returns { ok: true, webUrl } or { ok: false, code, error } (code: "unreachable" | "notAbs").
 async function probeServer(base) {
   let reachable = false;
   let isAbs = false;
@@ -46,11 +46,11 @@ async function probeServer(base) {
     } catch {}
   }
   if (!reachable) {
-    return { ok: false, error: "Couldn't reach that address. Check the server is running and the address and port are right." };
+    return { ok: false, code: "unreachable", error: "Couldn't reach that address. Check the server is running and the address and port are right." };
   }
   if (!isAbs) {
     // A different app on the same host is an easy mix-up (wrong port).
-    return { ok: false, error: "That address answered, but it isn't an Audiobookshelf server. Wrong port? Audiobookshelf's default is 13378." };
+    return { ok: false, code: "notAbs", error: "That address answered, but it isn't an Audiobookshelf server. Wrong port? Audiobookshelf's default is 13378." };
   }
 
   // Newer servers serve the web app under /audiobookshelf/, older ones at the root.

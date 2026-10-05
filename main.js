@@ -21,6 +21,7 @@ const path = require("path");
 const fs = require("fs");
 const { normalizeServer, probeServer } = require("./server");
 const { SHELF_ARTS, artUrl } = require("./shelf-art");
+const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 
 // ---------------------------------------------------------------------------
 // Settings folder: next to the .exe for the portable build, %APPDATA% when installed.
@@ -387,10 +388,7 @@ function applyWindowColors() {
     win.setBackgroundColor(t.title.bg);
   }
   if (view) view.setBackgroundColor((t.colors && t.colors.primary) || BG);
-  if (settingsWin && !settingsWin.isDestroyed()) {
-    settingsWin.setTitleBarOverlay({ color: t.title.bg, symbolColor: t.title.fg, height: TITLE_H });
-    settingsWin.setBackgroundColor(t.title.bg);
-  }
+  if (settingsView) settingsView.setBackgroundColor((t.colors && t.colors.primary) || BG);
 }
 
 // Re-apply the current theme to every open page (live, no reload).
@@ -454,8 +452,41 @@ function navigate(direction, contents) {
 }
 
 // ---- view actions (used by the menu and the keyboard shortcuts) -----------
+// ---- language of the desktop parts (menus, tray, dialogs, panel…) -----------
+// Follows the language you use in Audiobookshelf (read from the web app), or the
+// one picked in View → Language. Before you've signed in: Windows' language.
+const uiLang = () => pickLang(config.langChoice && config.langChoice !== "auto"
+  ? config.langChoice
+  : (config.webLang || app.getLocale()));
+const tr = (key, vars) => translator(uiLang())(key, vars);
+
+// Tell every page (title bar, connect screen, the web app's extras) the new words.
+function onLangChanged() {
+  const s = stringsFor(uiLang());
+  for (const c of webContents.getAllWebContents()) if (!c.isDestroyed()) c.send("desktop:strings", s);
+  updateTrayTooltip();
+}
+function setLangChoice(choice) {
+  config = { ...config, langChoice: choice };
+  writeJson(dataFile("config.json"), config);
+  onLangChanged();
+}
+// Ask the web app which language it's showing (it can change on the Account page).
+async function readWebLang(contents) {
+  if (!contents || contents.isDestroyed() || !isServerUrl(contents.getURL())) return;
+  try {
+    const code = await contents.executeJavaScript(
+      "(window.$nuxt && $nuxt.$languageCodes && $nuxt.$languageCodes.current) || ''");
+    if (!code || code === config.webLang) return;
+    const before = uiLang();
+    config = { ...config, webLang: code };
+    writeJson(dataFile("config.json"), config);
+    if (uiLang() !== before) onLangChanged();
+  } catch {}
+}
+
 // ---- text size (zoom of the web app), remembered between starts ------------
-const TEXT_SIZES = [["Small", 0.9], ["Normal", 1], ["Large", 1.15], ["Larger", 1.3], ["Largest", 1.5]];
+const TEXT_SIZES = [["small", 0.9], ["normal", 1], ["large", 1.15], ["larger", 1.3], ["largest", 1.5]];
 const textSize = () => (Number(config.textSize) > 0 ? Number(config.textSize) : 1);
 function applyTextSize(contents) {
   if (!contents.isDestroyed() && isServerUrl(contents.getURL())) contents.setZoomFactor(textSize());
@@ -581,7 +612,7 @@ function sleepCommand(minutes) {
 
 function sleepLabel(s) {
   if (!s.sleep) return "";
-  return s.sleepType === "chapter" ? "Sleep at end of chapter" : `Sleep in ${Math.max(1, Math.ceil(s.sleepLeft / 60))} min`;
+  return s.sleepType === "chapter" ? tr("tray.sleepChapter") : tr("tray.sleepIn", { n: Math.max(1, Math.ceil(s.sleepLeft / 60)) });
 }
 
 async function updateTrayTooltip() {
@@ -599,31 +630,31 @@ async function showTrayMenu() {
   if (s.active) {
     if (s.title) items.push({ label: (s.title + (s.artist ? " — " + s.artist : "")).slice(0, 60), enabled: false });
     items.push(
-      { label: s.playing ? "Pause" : "Play", click: () => playerCommand("toggle") },
-      { label: "Jump back", click: () => playerCommand("back") },
-      { label: "Jump forward", click: () => playerCommand("forward") },
-      { label: "Previous chapter", click: () => playerCommand("prevChapter") },
-      { label: "Next chapter", click: () => playerCommand("nextChapter") },
+      { label: s.playing ? tr("tray.pause") : tr("tray.play"), click: () => playerCommand("toggle") },
+      { label: tr("tray.back"), click: () => playerCommand("back") },
+      { label: tr("tray.forward"), click: () => playerCommand("forward") },
+      { label: tr("tray.prevChapter"), click: () => playerCommand("prevChapter") },
+      { label: tr("tray.nextChapter"), click: () => playerCommand("nextChapter") },
       { type: "separator" },
       {
-        label: s.sleep ? `Sleep timer — ${sleepLabel(s)}` : "Sleep timer",
+        label: s.sleep ? tr("tray.sleepWith", { when: sleepLabel(s) }) : tr("tray.sleep"),
         submenu: [
-          ...[15, 30, 45, 60, 90].map((min) => ({ label: `${min} minutes`, click: () => sleepCommand(min) })),
+          ...[15, 30, 45, 60, 90].map((min) => ({ label: tr("tray.minutes", { n: min }), click: () => sleepCommand(min) })),
           { type: "separator" },
-          { label: "End of chapter", enabled: s.hasChapters, click: () => sleepCommand("chapter") },
+          { label: tr("tray.endOfChapter"), enabled: s.hasChapters, click: () => sleepCommand("chapter") },
           { type: "separator" },
-          { label: "Cancel sleep timer", enabled: s.sleep, click: () => sleepCommand("cancel") },
+          { label: tr("tray.cancelSleep"), enabled: s.sleep, click: () => sleepCommand("cancel") },
         ],
       },
       { type: "separator" },
     );
   } else {
-    items.push({ label: "Nothing playing", enabled: false }, { type: "separator" });
+    items.push({ label: tr("tray.nothingPlaying"), enabled: false }, { type: "separator" });
   }
   items.push(
-    { label: "Show ABS Desktop App", click: showWindow },
+    { label: tr("tray.show"), click: showWindow },
     { type: "separator" },
-    { label: "Quit", click: () => app.quit() },
+    { label: tr("tray.quit"), click: () => app.quit() },
   );
   tray.popUpContextMenu(Menu.buildFromTemplate(items));
 }
@@ -643,6 +674,7 @@ function layout() {
   const { width, height } = win.getContentBounds();
   const top = win.isFullScreen() ? 0 : TITLE_H;
   view.setBounds({ x: 0, y: top, width, height: Math.max(0, height - top) });
+  if (settingsView) settingsView.setBounds(settingsBounds());
 }
 
 function createWindow() {
@@ -681,13 +713,12 @@ function createWindow() {
     saveWindowState();
     if (isQuitting || !closeToTray() || !tray) return;
     e.preventDefault();
-    if (settingsWin && !settingsWin.isDestroyed()) settingsWin.close();
     win.hide();
     if (!config.trayHintShown) {
       tray.displayBalloon({
         iconType: "info",
-        title: "Still running",
-        content: "ABS Desktop App keeps playing in the tray. Right-click the tray icon to quit.",
+        title: tr("tray.stillRunning"),
+        content: tr("tray.stillRunningMsg"),
       });
       config = { ...config, trayHintShown: true };
       writeJson(dataFile("config.json"), config);
@@ -695,7 +726,7 @@ function createWindow() {
   });
   win.on("focus", () => {
     win.webContents.send("titlebar:focus", true);
-    if (view) wc().focus();
+    if (view) { wc().focus(); readWebLang(wc()); }
   });
   win.on("blur", () => win.webContents.send("titlebar:focus", false));
 
@@ -736,6 +767,7 @@ function createWindow() {
 
   // After connecting/retrying, forget the local page so Back doesn't return to it.
   contents.on("did-finish-load", () => {
+    setTimeout(() => readWebLang(contents), 2500);   // once the web app has loaded its language
     if (clearHistoryOnLoad && isServerUrl(contents.getURL())) {
       clearHistoryOnLoad = false;
       contents.navigationHistory.clear();
@@ -750,7 +782,11 @@ function createWindow() {
 
   // Track page changes (the web app is single-page, so in-page changes count too).
   contents.on("did-navigate", (_e, url) => onServerPage(url));
-  contents.on("did-navigate-in-page", (_e, url, isMainFrame) => { if (isMainFrame) onServerPage(url); });
+  contents.on("did-navigate-in-page", (_e, url, isMainFrame) => {
+    if (!isMainFrame) return;
+    onServerPage(url);
+    readWebLang(contents);   // e.g. you just changed the language on the Account page
+  });
 
   if (!app.isPackaged) contents.on("did-navigate", (_e, url) => console.log("[nav]", url));
 
@@ -785,11 +821,12 @@ function guardLinks(contents) {
   });
 }
 
-// ---- settings window ---------------------------------------------------------
+// ---- settings overlay ------------------------------------------------------
 // The web app's settings (everything under /config: server settings, libraries,
-// users, stats…) and the Upload page open in a window of their own on top of the
-// app, instead of replacing the page you're on.
-let settingsWin = null;
+// users, stats…) and the Upload page open in a panel over the app, inside the
+// same window, instead of replacing the page you're on. The app behind is dimmed;
+// close with ✕, Esc or a click on the dimmed area.
+let settingsView = null;
 
 // The web app's path for a page, e.g. "/config/libraries" (without the /audiobookshelf base).
 function appPath(url) {
@@ -802,109 +839,80 @@ function appPath(url) {
 }
 const isSettingsUrl = (url) => isServerUrl(url) && /^\/(config|upload)(\/|$|\?)/.test(appPath(url));
 
-// Title and icon for the settings window's strip, by page.
-const GEAR_PATH = "M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 00-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 00-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 001.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 001.7-1l2.5 1 2-3.5zM12 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z";
-const UPLOAD_PATH = "M5 20h14v-2H5v2zm7-16l-6 6h4v6h4v-6h4l-6-6z";
-const settingsLook = (url) => (/^\/upload/.test(appPath(url))
-  ? { label: "Upload", icon: UPLOAD_PATH }
-  : { label: "Settings", icon: GEAR_PATH });
-
 // Show a page of the web app in the main window, without reloading it.
 function routeMain(p) {
   if (!view) return;
   wc().executeJavaScript(`window.$nuxt && $nuxt.$router.push(${JSON.stringify(p)}).catch(() => {})`).catch(() => {});
 }
 
-// Our own title strip for the settings window (the web app's top bar is hidden there).
-const SETTINGS_CSS = `
-  #absda-settings-bar { position: fixed; top: 0; left: 0; right: 0; height: ${TITLE_H}px; z-index: 2147483000;
-    display: flex; align-items: center; gap: 10px; padding: 0 16px; background: var(--tb-bg, #1b1b1b);
-    color: var(--tb-fg, #e5e5e5); font: 500 14px "Segoe UI", system-ui, sans-serif; user-select: none;
-    -webkit-app-region: drag; }
-  #absda-settings-bar svg { width: 18px; height: 18px; color: var(--tb-logo, #f0a848); }
-  div:has(> #appbar) { height: ${TITLE_H}px !important; visibility: hidden !important; }
-  #page-wrapper { height: calc(100% - ${TITLE_H}px) !important; }
-  #page-wrapper .fixed.top-16 { top: ${TITLE_H}px !important; }
-  /* The app's side menu (Home, Library…) isn't needed here (e.g. on Upload). */
-  div:has(> #siderail-buttons-container) { display: none !important; }
-  #app-content.has-siderail { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; left: 0 !important; }
-`;
-const settingsBarJs = ({ label, icon }) => `(() => {
-  let bar = document.getElementById("absda-settings-bar");
-  if (!bar) {
-    bar = document.createElement("div");
-    bar.id = "absda-settings-bar";
-    bar.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path/></svg><span></span>';
-    document.body.appendChild(bar);
-  }
-  bar.querySelector("path").setAttribute("d", ${JSON.stringify(icon)});
-  bar.querySelector("span").textContent = ${JSON.stringify(label)};
-})()`;
-function updateSettingsBar() {
-  if (!settingsWin || settingsWin.isDestroyed()) return;
-  const look = settingsLook(settingsWin.webContents.getURL());
-  settingsWin.setTitle(look.label);
-  settingsWin.webContents.executeJavaScript(settingsBarJs(look)).catch(() => {});
+// The panel: centred over the app with a margin all round (it follows the window size).
+function settingsBounds() {
+  const { width, height } = win.getContentBounds();
+  const top = win.isFullScreen() ? 0 : TITLE_H;
+  const areaH = Math.max(0, height - top);
+  const w = Math.min(1280, Math.max(320, width - 2 * Math.max(24, Math.round(width * 0.04))));
+  const h = Math.max(240, areaH - 2 * Math.max(20, Math.round(areaH * 0.04)));
+  return { x: Math.round((width - w) / 2), y: top + Math.round((areaH - h) / 2), width: w, height: h };
 }
 
+// Inside the panel: the web app's top bar and side menu are hidden; our header
+// (title + ✕, added by preload.js) sits on top; a thin frame outlines the panel.
+const SETTINGS_BAR_H = 44;
+const SETTINGS_CSS = `
+  div:has(> #appbar) { height: ${SETTINGS_BAR_H}px !important; visibility: hidden !important; }
+  #page-wrapper { height: calc(100% - ${SETTINGS_BAR_H}px) !important; }
+  #page-wrapper .fixed.top-16 { top: ${SETTINGS_BAR_H}px !important; }
+  div:has(> #siderail-buttons-container) { display: none !important; }
+  #app-content.has-siderail { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; left: 0 !important; }
+  html::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 2147483001;
+    border: 1px solid rgba(255, 255, 255, .22); }
+`;
+
 function openSettings(url) {
-  if (settingsWin && !settingsWin.isDestroyed()) {
-    // Already open: go to the asked-for settings page and bring it forward.
-    settingsWin.webContents.executeJavaScript(
+  if (!win || !view) return;
+  if (settingsView) {
+    // Already open: go to the asked-for page.
+    settingsView.webContents.executeJavaScript(
       `window.$nuxt && $nuxt.$router.push(${JSON.stringify(appPath(url))}).catch(() => {})`).catch(() => {});
-    if (settingsWin.isMinimized()) settingsWin.restore();
-    settingsWin.focus();
+    settingsView.webContents.focus();
     return;
   }
   const t = currentTheme();
-  const b = win.getBounds();
-  // Your last size for it (or a bit smaller than the main window), always fitting the screen.
-  const area = screen.getDisplayMatching(b).workArea;
-  const saved = config.settingsSize || {};
-  const width = Math.min(area.width, Math.max(720, saved.width || Math.min(1200, b.width - 80)));
-  const height = Math.min(area.height, Math.max(480, saved.height || Math.min(860, b.height - 60)));
-  settingsWin = new BrowserWindow({
-    parent: win,
-    x: Math.round(Math.min(Math.max(b.x + (b.width - width) / 2, area.x), area.x + area.width - width)),
-    y: Math.round(Math.min(Math.max(b.y + (b.height - height) / 2, area.y), area.y + area.height - height)),
-    width, height, minWidth: 720, minHeight: 480,
-    title: settingsLook(url).label,
-    icon: ICON,
-    backgroundColor: t.title.bg,
-    show: false,
-    titleBarStyle: "hidden",
-    titleBarOverlay: { color: t.title.bg, symbolColor: t.title.fg, height: TITLE_H },
-    webPreferences: { preload: PRELOAD, contextIsolation: true, nodeIntegration: false, sandbox: true },
+  settingsView = new WebContentsView({
+    // backgroundThrottling off like the app's own view, so it always draws at once.
+    webPreferences: { preload: PRELOAD, contextIsolation: true, nodeIntegration: false, sandbox: true, backgroundThrottling: false },
   });
-  const sc = settingsWin.webContents;
+  settingsView.setBackgroundColor((t.colors && t.colors.primary) || BG);
+  win.contentView.addChildView(settingsView);   // on top of the app
+  settingsView.setBounds(settingsBounds());
+  const sc = settingsView.webContents;
   guardLinks(sc);
-  settingsWin.on("page-title-updated", (e) => e.preventDefault());
-  settingsWin.once("ready-to-show", () => settingsWin.show());
-  settingsWin.on("close", () => {
-    const { width: w, height: h } = settingsWin.getNormalBounds();
-    config = { ...config, settingsSize: { width: w, height: h } };
-    writeJson(dataFile("config.json"), config);
-  });
-  settingsWin.on("closed", () => { settingsWin = null; });
-  sc.on("dom-ready", () => {
-    sc.insertCSS(SETTINGS_CSS).catch(() => {});
-    updateSettingsBar();
-  });
-  sc.on("did-navigate-in-page", (_e, _url, isMainFrame) => { if (isMainFrame) updateSettingsBar(); });
-  // Leaving settings (e.g. a link to a book or the home page) → show that in the main window.
+  sc.on("before-input-event", onShortcut);
+  sc.on("dom-ready", () => sc.insertCSS(SETTINGS_CSS).catch(() => {}));
+  // Leaving settings (e.g. a link to a book or the home page) → show that in the app.
   // (The login page is part of opening settings: the web app passes through it to
   // check your sign-in, then continues to the settings page.)
-  const leave = (url) => {
-    if (!isServerUrl(url) || isSettingsUrl(url)) return;
-    const p = appPath(url);
+  const leave = (u) => {
+    if (!isServerUrl(u) || isSettingsUrl(u)) return;
+    const p = appPath(u);
     if (/^\/login(\/|$|\?)/.test(p)) return;
     routeMain(p);
-    settingsWin.close();
-    win.focus();
+    closeSettings();
   };
-  sc.on("did-navigate-in-page", (_e, url, isMainFrame) => { if (isMainFrame) leave(url); });
-  sc.on("did-navigate", (_e, url) => leave(url));
+  sc.on("did-navigate-in-page", (_e, u, isMainFrame) => { if (isMainFrame) leave(u); });
+  sc.on("did-navigate", (_e, u) => leave(u));
   sc.loadURL(url);
+  sc.focus();
+  wc().send("desktop:overlay", true);   // dim the app behind (preload.js)
+}
+
+function closeSettings() {
+  if (!settingsView) return;
+  const v = settingsView;
+  settingsView = null;
+  if (win && !win.isDestroyed()) win.contentView.removeChildView(v);
+  try { v.webContents.close(); } catch {}
+  if (view) { wc().send("desktop:overlay", false); wc().focus(); }
 }
 
 // ---- menu (opened from the title bar) --------------------------------------
@@ -913,14 +921,12 @@ const REPO_URL = "https://github.com/Farathim89/abs-da";
 async function showAbout() {
   const { response } = await dialog.showMessageBox(win, {
     type: "info",
-    title: "About",
+    title: tr("about.title"),
     message: `ABS Desktop App (ABS-DA) ${app.getVersion()}`,
     detail:
-      "An unofficial Windows desktop app for Audiobookshelf.\n" +
-      "Free software under the GNU GPL v3 — made by Farathim as a gift to the community.\n" +
-      "Audiobookshelf is made by advplyr and contributors.\n\n" +
-      `Server: ${config.server || "not set"}\nElectron ${process.versions.electron}`,
-    buttons: ["OK", "GitHub page"],
+      `${tr("about.tagline")}\n${tr("about.license")}\n${tr("about.credit")}\n\n` +
+      `${tr("about.server", { server: config.server || tr("about.notSet") })}\nElectron ${process.versions.electron}`,
+    buttons: [tr("about.ok"), tr("about.github")],
     defaultId: 0,
     cancelId: 0,
   });
@@ -937,7 +943,7 @@ function themeMenuItems() {
   const items = [];
   for (const [id, t] of Object.entries(THEMES)) {
     if (t.contrast) items.push({ type: "separator" });
-    items.push({ label: t.label, type: "checkbox", checked: themeId() === id, click: () => setTheme(id) });
+    items.push({ label: tr("theme." + id), type: "checkbox", checked: themeId() === id, click: () => setTheme(id) });
   }
   return items;
 }
@@ -950,29 +956,41 @@ function shelfMenuItems() {
   for (const [id, a] of Object.entries(SHELF_ARTS)) {
     if (lastGroup && a.group !== lastGroup) items.push({ type: "separator" });
     lastGroup = a.group;
-    items.push({ label: a.label, type: "checkbox", checked: shelfArtId() === id, click: () => setShelfArt(id) });
+    items.push({ label: tr("shelf." + id), type: "checkbox", checked: shelfArtId() === id, click: () => setShelfArt(id) });
   }
   return items;
 }
 
-// Built fresh each time it opens, so the Theme tick is always current.
+// View → Language: follow Audiobookshelf, or pick one.
+function languageMenuItems() {
+  const choice = config.langChoice || "auto";
+  return [
+    { label: tr("view.langAuto"), type: "checkbox", checked: choice === "auto", click: () => setLangChoice("auto") },
+    { type: "separator" },
+    ...LANGUAGES.map((code) => ({
+      label: translator(code)("lang.name"), type: "checkbox", checked: choice === code, click: () => setLangChoice(code),
+    })),
+  ];
+}
+
+// Built fresh each time it opens, so the ticks (and the language) are always current.
 // The order of the top-level menus must match the buttons in titlebar.html.
 function buildMenu() {
   return Menu.buildFromTemplate([
     {
-      label: "App",
+      label: tr("menu.app"),
       submenu: [
-        { label: "Home", ...shortcut("Alt+Home"), click: goHome },
-        { label: "Change Server…", click: () => showConnectPage("change") },
+        { label: tr("app.home"), ...shortcut("Alt+Home"), click: goHome },
+        { label: tr("app.changeServer"), click: () => showConnectPage("change") },
         {
-          label: "Forget Saved Login",
+          label: tr("app.forgetLogin"),
           click: () => {
             forgetLogin();
-            dialog.showMessageBox(win, { type: "info", title: "Saved login", message: "Your saved login was removed.", buttons: ["OK"] });
+            dialog.showMessageBox(win, { type: "info", title: tr("app.forgotTitle"), message: tr("app.forgotMsg"), buttons: [tr("about.ok")] });
           },
         },
         {
-          label: "Keep running in tray when closed",
+          label: tr("app.keepInTray"),
           type: "checkbox",
           checked: closeToTray(),
           click: (item) => {
@@ -981,69 +999,70 @@ function buildMenu() {
           },
         },
         {
-          label: app.isPackaged ? "Start with Windows (in the tray)" : "Start with Windows (installed app only)",
+          label: app.isPackaged ? tr("app.startWithWindows") : tr("app.startWithWindowsDev"),
           type: "checkbox",
           enabled: app.isPackaged,
           checked: startsWithWindows(),
           click: (item) => setStartWithWindows(item.checked),
         },
         { type: "separator" },
-        { label: "Reload", ...shortcut("F5"), click: () => wc().reload() },
+        { label: tr("app.reload"), ...shortcut("F5"), click: () => wc().reload() },
         { type: "separator" },
-        { label: "Exit", click: () => app.quit() },
+        { label: tr("app.exit"), click: () => app.quit() },
       ],
     },
     {
-      label: "Edit",
+      label: tr("menu.edit"),
       submenu: [
-        { label: "Undo", ...shortcut("Ctrl+Z"), click: () => wc().undo() },
-        { label: "Redo", ...shortcut("Ctrl+Y"), click: () => wc().redo() },
+        { label: tr("edit.undo"), ...shortcut("Ctrl+Z"), click: () => wc().undo() },
+        { label: tr("edit.redo"), ...shortcut("Ctrl+Y"), click: () => wc().redo() },
         { type: "separator" },
-        { label: "Cut", ...shortcut("Ctrl+X"), click: () => wc().cut() },
-        { label: "Copy", ...shortcut("Ctrl+C"), click: () => wc().copy() },
-        { label: "Paste", ...shortcut("Ctrl+V"), click: () => wc().paste() },
-        { label: "Select All", ...shortcut("Ctrl+A"), click: () => wc().selectAll() },
+        { label: tr("edit.cut"), ...shortcut("Ctrl+X"), click: () => wc().cut() },
+        { label: tr("edit.copy"), ...shortcut("Ctrl+C"), click: () => wc().copy() },
+        { label: tr("edit.paste"), ...shortcut("Ctrl+V"), click: () => wc().paste() },
+        { label: tr("edit.selectAll"), ...shortcut("Ctrl+A"), click: () => wc().selectAll() },
       ],
     },
     {
-      label: "View",
+      label: tr("menu.view"),
       submenu: [
-        { label: "Bigger", ...shortcut("Ctrl+="), click: () => zoom(1) },
-        { label: "Smaller", ...shortcut("Ctrl+-"), click: () => zoom(-1) },
-        { label: "Normal Size", ...shortcut("Ctrl+0"), click: () => zoom(0) },
+        { label: tr("view.bigger"), ...shortcut("Ctrl+="), click: () => zoom(1) },
+        { label: tr("view.smaller"), ...shortcut("Ctrl+-"), click: () => zoom(-1) },
+        { label: tr("view.normalSize"), ...shortcut("Ctrl+0"), click: () => zoom(0) },
         { type: "separator" },
         {
-          label: "Text size",
+          label: tr("view.textSize"),
           submenu: TEXT_SIZES.map(([name, f]) => ({
-            label: `${name} (${Math.round(f * 100)}%)`, type: "checkbox",
+            label: `${tr("size." + name)} (${Math.round(f * 100)}%)`, type: "checkbox",
             checked: Math.abs(textSize() - f) < 0.001, click: () => setTextSize(f),
           })),
         },
-        { label: "Theme", submenu: themeMenuItems() },
-        { label: "Bookshelf", submenu: shelfMenuItems() },
+        { label: tr("view.theme"), submenu: themeMenuItems() },
+        { label: tr("view.bookshelf"), submenu: shelfMenuItems() },
+        { label: tr("view.language"), submenu: languageMenuItems() },
         { type: "separator" },
-        { label: "Full Screen", ...shortcut("F11"), click: toggleFullScreen },
+        { label: tr("view.fullScreen"), ...shortcut("F11"), click: toggleFullScreen },
       ],
     },
     {
-      label: "Navigate",
+      label: tr("menu.navigate"),
       submenu: [
-        { label: "Back", ...shortcut("Alt+Left"), click: () => navigate(-1) },
-        { label: "Forward", ...shortcut("Alt+Right"), click: () => navigate(1) },
+        { label: tr("nav.back"), ...shortcut("Alt+Left"), click: () => navigate(-1) },
+        { label: tr("nav.forward"), ...shortcut("Alt+Right"), click: () => navigate(1) },
       ],
     },
     {
-      label: "Help",
+      label: tr("menu.help"),
       submenu: [
-        { label: "Open in Browser", click: () => openExternal(wc().getURL()) },
-        { label: "Audiobookshelf Documentation", click: () => openExternal("https://www.audiobookshelf.org/docs") },
+        { label: tr("help.openInBrowser"), click: () => openExternal(wc().getURL()) },
+        { label: tr("help.docs"), click: () => openExternal("https://www.audiobookshelf.org/docs") },
         { type: "separator" },
-        { label: "Report a Problem / Suggest an Idea", click: () => openExternal(`${REPO_URL}/issues/new/choose`) },
-        { label: "ABS-DA on GitHub", click: () => openExternal(REPO_URL) },
+        { label: tr("help.report"), click: () => openExternal(`${REPO_URL}/issues/new/choose`) },
+        { label: tr("help.github"), click: () => openExternal(REPO_URL) },
         { type: "separator" },
-        { label: "Toggle Developer Tools", ...shortcut("Ctrl+Shift+I"), click: toggleDevTools },
+        { label: tr("help.devTools"), ...shortcut("Ctrl+Shift+I"), click: toggleDevTools },
         { type: "separator" },
-        { label: "About ABS Desktop App", click: showAbout },
+        { label: tr("help.about"), click: showAbout },
       ],
     },
   ]);
@@ -1067,11 +1086,11 @@ ipcMain.handle("desktop:get-config", (e) =>
 );
 
 ipcMain.handle("desktop:connect", async (e, input) => {
-  if (!fromLocalPage(e)) return { ok: false, error: "Not allowed." };
+  if (!fromLocalPage(e)) return { ok: false, error: tr("connect.err.notAllowed") };
   const base = normalizeServer(input);
-  if (!base) return { ok: false, error: "That doesn't look like a server address." };
+  if (!base) return { ok: false, error: tr("connect.err.badAddress") };
   const res = await probeServer(base);
-  if (!res.ok) return res;
+  if (!res.ok) return { ok: false, error: tr("connect.err." + res.code) };
   config = { ...config, server: base, webUrl: res.webUrl };   // keep other settings (theme)
   writeJson(dataFile("config.json"), config);
   setImmediate(loadServer);   // reply first, then leave the connect page
@@ -1093,9 +1112,9 @@ ipcMain.handle("titlebar:menu", (e, { index, x, y } = {}) => new Promise((resolv
 }));
 
 // Mouse back/forward buttons reported by the page (see preload.js).
-// (In the settings window the side buttons move through the settings pages.)
+// (In the settings overlay the side buttons move through the settings pages.)
 ipcMain.on("desktop:nav", (e, direction) =>
-  navigate(direction === -1 ? -1 : 1, settingsWin && e.sender === settingsWin.webContents ? e.sender : null));
+  navigate(direction === -1 ? -1 : 1, settingsView && e.sender === settingsView.webContents ? e.sender : null));
 
 // ---- "Remember me" on your server's login page (see preload.js) -----------
 const fromServerPage = (e) => {
@@ -1125,11 +1144,17 @@ ipcMain.on("desktop:login-submitted", (e, creds) => {
   if (creds.username) pendingLogin = { username: String(creds.username), password: String(creds.password || "") };
 });
 
+// The desktop texts in the current language (title bar, connect screen, the web app's extras).
+ipcMain.handle("desktop:strings", (e) => (fromLocalPage(e) || fromServerPage(e) ? stringsFor(uiLang()) : null));
+
 // Which window a server page is in: "main" (the app) or "settings".
 ipcMain.handle("desktop:window-kind", (e) => {
   if (!fromServerPage(e)) return null;
   return view && e.sender === wc() ? "main" : "settings";
 });
+
+// ✕ / Esc in the settings overlay, or a click on the dimmed app behind it.
+ipcMain.on("desktop:close-settings", (e) => { if (fromServerPage(e)) closeSettings(); });
 
 // A settings link was clicked in the main window.
 ipcMain.on("desktop:open-settings", (e, url) => {
@@ -1144,19 +1169,18 @@ function looksState() {
   const themes = Object.entries(THEMES).map(([id, th]) => {
     const c = th.colors || {};
     return {
-      id, label: th.label, contrast: !!th.contrast,
+      id, label: tr("theme." + id), contrast: !!th.contrast,
       title: th.title.bg, page: c.primary || BG, panel: c.bg || "#373838",
       accent: th.title.logo, plank: th.shelf || ABS_PLANK,
     };
   });
-  const groups = { wood: "Wood", stone: "Stone", material: "Materials", scene: "Scenes", none: "Plain" };
   const shelves = Object.entries(SHELF_ARTS).map(([id, a]) => {
     let image = null;
     if (a.svg) image = artUrl(a);
     else if (id !== "none" && woodTexture) image = t.tint ? `linear-gradient(${t.tint}, ${t.tint}), ${woodTexture}` : woodTexture;
-    return { id, label: a.label, group: groups[a.group] || a.group, image, plank: a.plank || t.shelf || ABS_PLANK };
+    return { id, label: tr("shelf." + id), group: tr("group." + a.group), image, plank: a.plank || t.shelf || ABS_PLANK };
   });
-  const sizes = TEXT_SIZES.map(([label, f]) => ({ id: String(f), label, percent: Math.round(f * 100) }));
+  const sizes = TEXT_SIZES.map(([name, f]) => ({ id: String(f), label: tr("size." + name), percent: Math.round(f * 100) }));
   return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves };
 }
 ipcMain.handle("desktop:get-looks", (e) => (fromServerPage(e) ? looksState() : null));
