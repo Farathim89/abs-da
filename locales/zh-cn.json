@@ -148,5 +148,7 @@
   "help.diagnostics": "复制诊断信息",
   "help.diagCopied": "诊断信息已复制",
   "help.diagCopiedMsg": "请将其粘贴到你的错误报告中。其中不包含密码、用户名或服务器地址。",
-  "help.openReport": "打开错误报告"
+  "help.openReport": "打开错误报告",
+  "data.notWritableTitle": "无法在此处保存设置",
+  "data.notWritableMsg": "ABS Desktop App 无法写入此文件夹：\n{folder}\n\n请将 .exe 文件移到你可以写入的文件夹（例如“文档”或 C:\\Tools），然后重新启动。"
 }

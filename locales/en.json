@@ -148,5 +148,7 @@
   "help.diagnostics": "Copy Diagnostics",
   "help.diagCopied": "Diagnostics copied",
   "help.diagCopiedMsg": "Paste them into your bug report. They contain no passwords, usernames or server address.",
-  "help.openReport": "Open bug report"
+  "help.openReport": "Open bug report",
+  "data.notWritableTitle": "Can't save settings here",
+  "data.notWritableMsg": "ABS Desktop App can't write to this folder:\n{folder}\n\nMove the .exe to a folder you can write to (for example Documents or C:\\Tools) and start it again."
 }

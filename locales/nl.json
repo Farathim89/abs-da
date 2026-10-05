@@ -148,5 +148,7 @@
   "help.diagnostics": "Diagnosegegevens kopiëren",
   "help.diagCopied": "Diagnosegegevens gekopieerd",
   "help.diagCopiedMsg": "Plak ze in je bugmelding. Ze bevatten geen wachtwoorden, gebruikersnamen of serveradres.",
-  "help.openReport": "Bugmelding openen"
+  "help.openReport": "Bugmelding openen",
+  "data.notWritableTitle": "Kan instellingen hier niet opslaan",
+  "data.notWritableMsg": "ABS Desktop App kan niet naar deze map schrijven:\n{folder}\n\nVerplaats het .exe-bestand naar een map waarin je kunt schrijven (bijvoorbeeld Documenten of C:\\Tools) en start het opnieuw."
 }

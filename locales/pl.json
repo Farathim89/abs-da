@@ -148,5 +148,7 @@
   "help.diagnostics": "Kopiuj diagnostykę",
   "help.diagCopied": "Skopiowano diagnostykę",
   "help.diagCopiedMsg": "Wklej ją do zgłoszenia błędu. Nie zawiera haseł, nazw użytkowników ani adresu serwera.",
-  "help.openReport": "Otwórz zgłoszenie błędu"
+  "help.openReport": "Otwórz zgłoszenie błędu",
+  "data.notWritableTitle": "Nie można tu zapisać ustawień",
+  "data.notWritableMsg": "ABS Desktop App nie może zapisywać w tym folderze:\n{folder}\n\nPrzenieś plik .exe do folderu, w którym możesz zapisywać (na przykład Dokumenty lub C:\\Tools), i uruchom go ponownie."
 }

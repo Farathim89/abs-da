@@ -148,5 +148,7 @@
   "help.diagnostics": "Tanılama Bilgilerini Kopyala",
   "help.diagCopied": "Tanılama bilgileri kopyalandı",
   "help.diagCopiedMsg": "Bunları hata raporunuza yapıştırın. Parola, kullanıcı adı veya sunucu adresi içermez.",
-  "help.openReport": "Hata raporunu aç"
+  "help.openReport": "Hata raporunu aç",
+  "data.notWritableTitle": "Ayarlar buraya kaydedilemiyor",
+  "data.notWritableMsg": "ABS Desktop App bu klasöre yazamıyor:\n{folder}\n\n.exe dosyasını yazabileceğiniz bir klasöre (örneğin Belgeler veya C:\\Tools) taşıyın ve yeniden başlatın."
 }

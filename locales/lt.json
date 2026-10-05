@@ -148,5 +148,7 @@
   "help.diagnostics": "Kopijuoti diagnostiką",
   "help.diagCopied": "Diagnostika nukopijuota",
   "help.diagCopiedMsg": "Įklijuokite ją į pranešimą apie klaidą. Joje nėra slaptažodžių, naudotojų vardų ar serverio adreso.",
-  "help.openReport": "Atidaryti pranešimą apie klaidą"
+  "help.openReport": "Atidaryti pranešimą apie klaidą",
+  "data.notWritableTitle": "Čia nepavyksta išsaugoti nustatymų",
+  "data.notWritableMsg": "ABS Desktop App negali rašyti į šį aplanką:\n{folder}\n\nPerkelkite .exe failą į aplanką, į kurį galite rašyti (pavyzdžiui, Dokumentai arba C:\\Tools), ir paleiskite jį iš naujo."
 }

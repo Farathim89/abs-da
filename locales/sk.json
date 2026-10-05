@@ -148,5 +148,7 @@
   "help.diagnostics": "Kopírovať diagnostiku",
   "help.diagCopied": "Diagnostika skopírovaná",
   "help.diagCopiedMsg": "Vložte ju do hlásenia o chybe. Neobsahuje žiadne heslá, používateľské mená ani adresu servera.",
-  "help.openReport": "Otvoriť hlásenie o chybe"
+  "help.openReport": "Otvoriť hlásenie o chybe",
+  "data.notWritableTitle": "Nastavenia sa sem nedajú uložiť",
+  "data.notWritableMsg": "ABS Desktop App nemôže zapisovať do tohto priečinka:\n{folder}\n\nPresuňte súbor .exe do priečinka, do ktorého môžete zapisovať (napríklad Dokumenty alebo C:\\Tools), a spustite ho znova."
 }

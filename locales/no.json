@@ -148,5 +148,7 @@
   "help.diagnostics": "Kopier diagnostikk",
   "help.diagCopied": "Diagnostikk kopiert",
   "help.diagCopiedMsg": "Lim den inn i feilrapporten din. Den inneholder ingen passord, brukernavn eller serveradresse.",
-  "help.openReport": "Åpne feilrapport"
+  "help.openReport": "Åpne feilrapport",
+  "data.notWritableTitle": "Kan ikke lagre innstillinger her",
+  "data.notWritableMsg": "ABS Desktop App kan ikke skrive til denne mappen:\n{folder}\n\nFlytt .exe-filen til en mappe du kan skrive til (for eksempel Dokumenter eller C:\\Tools), og start den på nytt."
 }

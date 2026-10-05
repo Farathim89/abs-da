@@ -29,12 +29,23 @@ const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 // Versions before 2.0 were called "Audiobookshelf Player" — carry their settings
 // (server, saved login, theme, window size) over once, so upgrading is seamless.
 // ---------------------------------------------------------------------------
+let dataFolderProblem = null;   // portable: a data folder we can't write to (see whenReady)
 if (process.env.PORTABLE_EXECUTABLE_DIR) {
   const dir = process.env.PORTABLE_EXECUTABLE_DIR;
   const oldDir = path.join(dir, "abs-player-data");
   const newDir = path.join(dir, "abs-da-data");
   try { if (!fs.existsSync(newDir) && fs.existsSync(oldDir)) fs.renameSync(oldDir, newDir); } catch {}
-  app.setPath("userData", newDir);
+  // The folder next to the .exe must be writable (not a protected folder or a locked USB stick).
+  try {
+    fs.mkdirSync(newDir, { recursive: true });
+    const probe = path.join(newDir, ".write-test");
+    fs.writeFileSync(probe, "ok");
+    fs.unlinkSync(probe);
+    app.setPath("userData", newDir);
+  } catch {
+    dataFolderProblem = newDir;
+    app.setPath("userData", path.join(require("os").tmpdir(), "abs-da-data-portable"));   // just to show the message
+  }
 } else {
   const newDir = app.getPath("userData");
   const oldDir = path.join(app.getPath("appData"), "Audiobookshelf Player");
@@ -770,6 +781,7 @@ function createWindow() {
   // After connecting/retrying, forget the local page so Back doesn't return to it.
   contents.on("did-finish-load", () => {
     setTimeout(() => readWebLang(contents), 2500);   // once the web app has loaded its language
+    checkPageStyles(contents);
     if (clearHistoryOnLoad && isServerUrl(contents.getURL())) {
       clearHistoryOnLoad = false;
       contents.navigationHistory.clear();
@@ -939,7 +951,36 @@ function closeSettings() {
 // ---- menu (opened from the title bar) --------------------------------------
 const REPO_URL = "https://github.com/Farathim89/abs-da";
 
-// ---- troubleshooting: clear cache, copy diagnostics --------------------------
+// ---- troubleshooting: auto-repair, clear cache, copy diagnostics -------------
+// Auto-repair: if the web app's styles didn't take effect after loading (e.g. a
+// damaged copy in the cache shows the style sheet as text), empty the cache and
+// reload — once per start. Test: the web app's "hidden" class must hide things.
+let autoRepaired = false;
+const STYLES_OK_JS = `(() => { const t = document.createElement("div"); t.className = "hidden";
+  document.body.appendChild(t); const ok = getComputedStyle(t).display === "none"; t.remove(); return ok; })()`;
+async function clearWebCache() {
+  const ses = session.defaultSession;
+  try { await ses.clearCache(); } catch {}
+  try { await ses.clearCodeCaches({}); } catch {}
+  try { await ses.clearStorageData({ storages: ["serviceworkers", "cachestorage", "shadercache"] }); } catch {}
+}
+function checkPageStyles(contents) {
+  const looksBroken = async () => {
+    if (contents.isDestroyed() || !isServerUrl(contents.getURL())) return false;
+    try { return !(await contents.executeJavaScript(STYLES_OK_JS)); } catch { return false; }
+  };
+  setTimeout(async () => {
+    // Ask twice, a moment apart, so a slow page isn't mistaken for a broken one.
+    if (autoRepaired || !(await looksBroken())) return;
+    await new Promise((r) => setTimeout(r, 2500));
+    if (autoRepaired || !(await looksBroken())) return;
+    autoRepaired = true;
+    console.warn("Page styles missing — clearing the cache and reloading once.");
+    await clearWebCache();
+    if (!contents.isDestroyed()) contents.reloadIgnoringCache();
+  }, 1500);
+}
+
 // App → Clear Cache and Restart…: empties the stored web files (cache, service
 // workers, code cache) but keeps your server, saved login, sign-in and settings.
 async function clearCacheAndRestart() {
@@ -953,10 +994,7 @@ async function clearCacheAndRestart() {
     cancelId: 1,
   });
   if (response !== 0) return;
-  const ses = session.defaultSession;
-  try { await ses.clearCache(); } catch {}
-  try { await ses.clearCodeCaches({}); } catch {}
-  try { await ses.clearStorageData({ storages: ["serviceworkers", "cachestorage", "shadercache"] }); } catch {}
+  await clearWebCache();
   // Portable: restart the .exe you started (not the unpacked copy in Temp).
   const exe = process.env.PORTABLE_EXECUTABLE_FILE;
   app.relaunch(exe ? { execPath: exe, args: [] } : undefined);
@@ -993,6 +1031,7 @@ async function copyDiagnostics() {
     lines.push("Server: not set up yet");
   }
   if (view) lines.push(`Current page: ${appPath(wc().getURL())}`);
+  lines.push(`Auto-repair this start: ${autoRepaired ? "yes (cache was cleared)" : "not needed"}`);
   const text = lines.join("\n");
   clipboard.writeText(text);
   const { response } = await dialog.showMessageBox(win, {
@@ -1411,6 +1450,17 @@ app.on("before-quit", () => { isQuitting = true; });
 
 app.whenReady().then(() => {
   if (!gotLock) return;
+  if (dataFolderProblem) {
+    dialog.showMessageBoxSync({
+      type: "error",
+      title: tr("data.notWritableTitle"),
+      message: tr("data.notWritableTitle"),
+      detail: tr("data.notWritableMsg", { folder: dataFolderProblem }),
+      buttons: [tr("about.ok")],
+    });
+    app.quit();
+    return;
+  }
   config = readJson(dataFile("config.json"), {});
   refreshStartWithWindows();
   hardenSession();

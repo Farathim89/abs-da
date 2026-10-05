@@ -148,5 +148,7 @@
   "help.diagnostics": "Copiar diagnóstico",
   "help.diagCopied": "Diagnóstico copiado",
   "help.diagCopiedMsg": "Cole no seu relatório de bug. Ele não contém senhas, nomes de usuário nem o endereço do servidor.",
-  "help.openReport": "Abrir relatório de bug"
+  "help.openReport": "Abrir relatório de bug",
+  "data.notWritableTitle": "Não é possível salvar as configurações aqui",
+  "data.notWritableMsg": "O ABS Desktop App não consegue gravar nesta pasta:\n{folder}\n\nMova o arquivo .exe para uma pasta em que você possa gravar (por exemplo, Documentos ou C:\\Tools) e inicie-o novamente."
 }

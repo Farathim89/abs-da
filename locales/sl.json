@@ -148,5 +148,7 @@
   "help.diagnostics": "Kopiraj diagnostiko",
   "help.diagCopied": "Diagnostika kopirana",
   "help.diagCopiedMsg": "Prilepite jo v poročilo o napaki. Ne vsebuje gesel, uporabniških imen ali naslova strežnika.",
-  "help.openReport": "Odpri poročilo o napaki"
+  "help.openReport": "Odpri poročilo o napaki",
+  "data.notWritableTitle": "Nastavitev tukaj ni mogoče shraniti",
+  "data.notWritableMsg": "ABS Desktop App ne more pisati v to mapo:\n{folder}\n\nPremaknite datoteko .exe v mapo, v katero lahko pišete (na primer Dokumenti ali C:\\Tools), in jo znova zaženite."
 }

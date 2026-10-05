@@ -148,5 +148,7 @@
   "help.diagnostics": "Diagnosedaten kopieren",
   "help.diagCopied": "Diagnosedaten kopiert",
   "help.diagCopiedMsg": "Füge sie in deinen Fehlerbericht ein. Sie enthalten keine Passwörter, Benutzernamen und keine Serveradresse.",
-  "help.openReport": "Fehlerbericht öffnen"
+  "help.openReport": "Fehlerbericht öffnen",
+  "data.notWritableTitle": "Einstellungen können hier nicht gespeichert werden",
+  "data.notWritableMsg": "ABS Desktop App kann nicht in diesen Ordner schreiben:\n{folder}\n\nVerschiebe die .exe in einen Ordner, in den du schreiben kannst (zum Beispiel Dokumente oder C:\\Tools), und starte sie erneut."
 }

@@ -148,5 +148,7 @@
   "help.diagnostics": "Kopiraj dijagnostiku",
   "help.diagCopied": "Dijagnostika kopirana",
   "help.diagCopiedMsg": "Zalijepite je u prijavu pogreške. Ne sadrži lozinke, korisnička imena ni adresu poslužitelja.",
-  "help.openReport": "Otvori prijavu pogreške"
+  "help.openReport": "Otvori prijavu pogreške",
+  "data.notWritableTitle": "Postavke se ovdje ne mogu spremiti",
+  "data.notWritableMsg": "ABS Desktop App ne može pisati u ovu mapu:\n{folder}\n\nPremjestite datoteku .exe u mapu u koju možete pisati (na primjer Dokumenti ili C:\\Tools) i ponovno je pokrenite."
 }

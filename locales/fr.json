@@ -148,5 +148,7 @@
   "help.diagnostics": "Copier les diagnostics",
   "help.diagCopied": "Diagnostics copiés",
   "help.diagCopiedMsg": "Collez-les dans votre rapport de bug. Ils ne contiennent aucun mot de passe, nom d’utilisateur ni adresse de serveur.",
-  "help.openReport": "Ouvrir le rapport de bug"
+  "help.openReport": "Ouvrir le rapport de bug",
+  "data.notWritableTitle": "Impossible d’enregistrer les paramètres ici",
+  "data.notWritableMsg": "ABS Desktop App ne peut pas écrire dans ce dossier :\n{folder}\n\nDéplacez le fichier .exe dans un dossier où vous pouvez écrire (par exemple Documents ou C:\\Tools), puis relancez-le."
 }

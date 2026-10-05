@@ -148,5 +148,7 @@
   "help.diagnostics": "診断情報をコピー",
   "help.diagCopied": "診断情報をコピーしました",
   "help.diagCopiedMsg": "バグ報告に貼り付けてください。パスワード、ユーザー名、サーバーアドレスは含まれていません。",
-  "help.openReport": "バグ報告を開く"
+  "help.openReport": "バグ報告を開く",
+  "data.notWritableTitle": "ここには設定を保存できません",
+  "data.notWritableMsg": "ABS Desktop App はこのフォルダーに書き込めません:\n{folder}\n\n.exe ファイルを書き込み可能なフォルダー（例: ドキュメント や C:\\Tools）に移動してから、もう一度起動してください。"
 }
