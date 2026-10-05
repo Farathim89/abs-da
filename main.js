@@ -15,7 +15,7 @@
 
 const {
   app, BrowserWindow, WebContentsView, Menu, Tray, ipcMain, shell, dialog,
-  screen, session, safeStorage, webContents,
+  screen, session, safeStorage, webContents, net, Notification,
 } = require("electron");
 const path = require("path");
 const fs = require("fs");
@@ -465,6 +465,7 @@ function onLangChanged() {
   const s = stringsFor(uiLang());
   for (const c of webContents.getAllWebContents()) if (!c.isDestroyed()) c.send("desktop:strings", s);
   updateTrayTooltip();
+  sendUpdateToTitleBar();
 }
 function setLangChoice(choice) {
   config = { ...config, langChoice: choice };
@@ -937,6 +938,99 @@ function closeSettings() {
 // ---- menu (opened from the title bar) --------------------------------------
 const REPO_URL = "https://github.com/Farathim89/abs-da";
 
+// ---- update check -----------------------------------------------------------
+// Asks GitHub for the newest ABS-DA release (nothing personal is sent, nothing is
+// installed). If it's newer: an "Update x.y.z" pill in the title bar, a one-time
+// Windows notification, and Help → Download update. Automatic checks can be
+// turned off (App → Check for updates automatically); Help → Check for Updates…
+// always works.
+const RELEASES_API = "https://api.github.com/repos/Farathim89/abs-da/releases/latest";
+let latestRelease = null;   // { version, url } when GitHub has a newer version
+const autoUpdateCheck = () => config.updateCheck !== false;
+
+// "2.10.0" vs "2.9.1" → true when a is newer than b.
+function isNewer(a, b) {
+  const pa = String(a).split(".").map((n) => parseInt(n, 10) || 0);
+  const pb = String(b).split(".").map((n) => parseInt(n, 10) || 0);
+  for (let i = 0; i < 3; i++) if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0);
+  return false;
+}
+
+function sendUpdateToTitleBar() {
+  if (!win || win.isDestroyed()) return;
+  win.webContents.send("titlebar:update", latestRelease
+    ? { label: tr("update.pill", { version: latestRelease.version }),
+        tip: tr("update.newMsg", { version: latestRelease.version, current: app.getVersion() }) }
+    : null);
+}
+
+function openUpdatePage() {
+  openExternal(latestRelease ? latestRelease.url : `${REPO_URL}/releases/latest`);
+}
+
+async function showUpdateDialog() {
+  const { response } = await dialog.showMessageBox(win, {
+    type: "info",
+    title: tr("update.newTitle"),
+    message: tr("update.newTitle"),
+    detail: tr("update.newMsg", { version: latestRelease.version, current: app.getVersion() }),
+    buttons: [tr("update.download"), tr("update.later")],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response === 0) openUpdatePage();
+}
+
+// manual = from Help → Check for Updates… (then always say what was found).
+async function checkForUpdates(manual) {
+  try {
+    const res = await net.fetch(RELEASES_API, { headers: { Accept: "application/vnd.github+json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const rel = await res.json();
+    const version = String(rel.tag_name || "").replace(/^v/i, "");
+    if (version && isNewer(version, app.getVersion())) {
+      latestRelease = { version, url: rel.html_url || `${REPO_URL}/releases/latest` };
+      sendUpdateToTitleBar();
+      if (manual) {
+        showUpdateDialog();
+      } else if (config.updateNotified !== version && Notification.isSupported()) {
+        // Tell once per new version.
+        config = { ...config, updateNotified: version };
+        writeJson(dataFile("config.json"), config);
+        const n = new Notification({
+          title: tr("update.newTitle"),
+          body: tr("update.newMsg", { version, current: app.getVersion() }),
+          icon: ICON,
+        });
+        n.on("click", openUpdatePage);
+        n.show();
+      }
+    } else {
+      latestRelease = null;
+      sendUpdateToTitleBar();
+      if (manual) {
+        dialog.showMessageBox(win, {
+          type: "info", title: tr("update.upToDate"), message: tr("update.upToDate"),
+          detail: tr("update.upToDateMsg", { version: app.getVersion() }), buttons: [tr("about.ok")],
+        });
+      }
+    }
+  } catch {
+    if (manual) {
+      dialog.showMessageBox(win, {
+        type: "warning", title: tr("update.failed"), message: tr("update.failed"),
+        detail: tr("update.failedMsg"), buttons: [tr("about.ok")],
+      });
+    }
+  }
+}
+
+// Automatic checks: shortly after start, then twice a day.
+function startUpdateChecks() {
+  setTimeout(() => { if (autoUpdateCheck()) checkForUpdates(false); }, 10000);
+  setInterval(() => { if (autoUpdateCheck()) checkForUpdates(false); }, 12 * 60 * 60 * 1000);
+}
+
 async function showAbout() {
   const { response } = await dialog.showMessageBox(win, {
     type: "info",
@@ -1024,6 +1118,16 @@ function buildMenu() {
           checked: startsWithWindows(),
           click: (item) => setStartWithWindows(item.checked),
         },
+        {
+          label: tr("update.auto"),
+          type: "checkbox",
+          checked: autoUpdateCheck(),
+          click: (item) => {
+            config = { ...config, updateCheck: item.checked };
+            writeJson(dataFile("config.json"), config);
+            if (item.checked) checkForUpdates(false);
+          },
+        },
         { type: "separator" },
         { label: tr("app.reload"), ...shortcut("F5"), click: () => wc().reload() },
         { type: "separator" },
@@ -1078,6 +1182,7 @@ function buildMenu() {
         { type: "separator" },
         { label: tr("help.report"), click: () => openExternal(`${REPO_URL}/issues/new/choose`) },
         { label: tr("help.github"), click: () => openExternal(REPO_URL) },
+        { label: tr("update.check"), click: () => checkForUpdates(true) },
         { type: "separator" },
         { label: tr("help.devTools"), ...shortcut("Ctrl+Shift+I"), click: toggleDevTools },
         { type: "separator" },
@@ -1175,6 +1280,9 @@ ipcMain.handle("desktop:window-kind", (e) => {
 // ✕ / Esc in the settings overlay, or a click on the dimmed app behind it.
 ipcMain.on("desktop:close-settings", (e) => { if (fromServerPage(e)) closeSettings(); });
 
+// The "Update x.y.z" pill in the title bar.
+ipcMain.on("desktop:open-update", (e) => { if (fromLocalPage(e)) openUpdatePage(); });
+
 // A settings link was clicked in the main window.
 ipcMain.on("desktop:open-settings", (e, url) => {
   if (fromServerPage(e) && view && e.sender === wc() && isSettingsUrl(String(url))) openSettings(String(url));
@@ -1238,6 +1346,7 @@ app.whenReady().then(() => {
   Menu.setApplicationMenu(null);   // no Windows menu bar — the menus live in our title bar
   createWindow();
   createTray();
+  startUpdateChecks();
 });
 
 app.on("window-all-closed", () => app.quit());

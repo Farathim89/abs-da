@@ -129,5 +129,16 @@
   "shelf.stars": "Noite estrelada",
   "shelf.aurora": "Aurora boreal",
   "shelf.ocean": "Oceano",
-  "shelf.none": "Nenhuma (lisa)"
+  "shelf.none": "Nenhuma (lisa)",
+  "update.check": "Verificar atualizações…",
+  "update.auto": "Verificar atualizações automaticamente",
+  "update.pill": "Atualização {version}",
+  "update.newTitle": "Atualização disponível",
+  "update.newMsg": "O ABS Desktop App {version} está disponível (você tem a {current}).",
+  "update.download": "Baixar",
+  "update.later": "Mais tarde",
+  "update.upToDate": "Você está com a versão mais recente",
+  "update.upToDateMsg": "O ABS Desktop App {version} é a versão mais recente.",
+  "update.failed": "Não foi possível verificar atualizações",
+  "update.failedMsg": "Verifique sua conexão com a internet e tente novamente."
 }

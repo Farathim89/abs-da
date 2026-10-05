@@ -129,5 +129,16 @@
   "shelf.stars": "Zvezdnata noč",
   "shelf.aurora": "Severni sij",
   "shelf.ocean": "Ocean",
-  "shelf.none": "Brez (ravno)"
+  "shelf.none": "Brez (ravno)",
+  "update.check": "Preveri posodobitve…",
+  "update.auto": "Samodejno preverjaj posodobitve",
+  "update.pill": "Posodobitev {version}",
+  "update.newTitle": "Na voljo je posodobitev",
+  "update.newMsg": "Na voljo je ABS Desktop App {version} (imate {current}).",
+  "update.download": "Prenesi",
+  "update.later": "Pozneje",
+  "update.upToDate": "Imate najnovejšo različico",
+  "update.upToDateMsg": "ABS Desktop App {version} je najnovejša različica.",
+  "update.failed": "Posodobitev ni bilo mogoče preveriti",
+  "update.failedMsg": "Preverite internetno povezavo in poskusite znova."
 }

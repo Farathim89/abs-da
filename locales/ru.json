@@ -129,5 +129,16 @@
   "shelf.stars": "Звёздная ночь",
   "shelf.aurora": "Северное сияние",
   "shelf.ocean": "Океан",
-  "shelf.none": "Нет (плоский)"
+  "shelf.none": "Нет (плоский)",
+  "update.check": "Проверить обновления…",
+  "update.auto": "Проверять обновления автоматически",
+  "update.pill": "Обновление {version}",
+  "update.newTitle": "Доступно обновление",
+  "update.newMsg": "Доступна версия ABS Desktop App {version} (у вас {current}).",
+  "update.download": "Скачать",
+  "update.later": "Позже",
+  "update.upToDate": "У вас последняя версия",
+  "update.upToDateMsg": "ABS Desktop App {version} — самая новая версия.",
+  "update.failed": "Не удалось проверить обновления",
+  "update.failedMsg": "Проверьте подключение к интернету и повторите попытку."
 }

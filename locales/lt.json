@@ -129,5 +129,16 @@
   "shelf.stars": "Žvaigždėta naktis",
   "shelf.aurora": "Šiaurės pašvaistė",
   "shelf.ocean": "Vandenynas",
-  "shelf.none": "Nėra (plokščia)"
+  "shelf.none": "Nėra (plokščia)",
+  "update.check": "Ieškoti naujinimų…",
+  "update.auto": "Automatiškai ieškoti naujinimų",
+  "update.pill": "Naujinimas {version}",
+  "update.newTitle": "Yra naujinimas",
+  "update.newMsg": "Išleista ABS Desktop App {version} (jūsų versija – {current}).",
+  "update.download": "Atsisiųsti",
+  "update.later": "Vėliau",
+  "update.upToDate": "Naudojate naujausią versiją",
+  "update.upToDateMsg": "ABS Desktop App {version} yra naujausia versija.",
+  "update.failed": "Nepavyko patikrinti naujinimų",
+  "update.failedMsg": "Patikrinkite interneto ryšį ir bandykite dar kartą."
 }

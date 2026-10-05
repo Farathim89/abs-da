@@ -129,5 +129,16 @@
   "shelf.stars": "ליל כוכבים",
   "shelf.aurora": "זוהר קוטבי",
   "shelf.ocean": "אוקיינוס",
-  "shelf.none": "ללא (שטוח)"
+  "shelf.none": "ללא (שטוח)",
+  "update.check": "בדוק אם יש עדכונים…",
+  "update.auto": "בדוק אם יש עדכונים באופן אוטומטי",
+  "update.pill": "עדכון {version}",
+  "update.newTitle": "יש עדכון זמין",
+  "update.newMsg": "ABS Desktop App {version} זמין (הגרסה שלך היא {current}).",
+  "update.download": "הורד",
+  "update.later": "מאוחר יותר",
+  "update.upToDate": "יש לך את הגרסה העדכנית ביותר",
+  "update.upToDateMsg": "ABS Desktop App {version} היא הגרסה העדכנית ביותר.",
+  "update.failed": "לא ניתן לבדוק אם יש עדכונים",
+  "update.failedMsg": "בדוק את החיבור לאינטרנט ונסה שוב."
 }

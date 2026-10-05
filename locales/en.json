@@ -129,5 +129,16 @@
   "shelf.stars": "Starry night",
   "shelf.aurora": "Aurora",
   "shelf.ocean": "Ocean",
-  "shelf.none": "None (flat)"
+  "shelf.none": "None (flat)",
+  "update.check": "Check for Updates…",
+  "update.auto": "Check for updates automatically",
+  "update.pill": "Update {version}",
+  "update.newTitle": "Update available",
+  "update.newMsg": "ABS Desktop App {version} is available (you have {current}).",
+  "update.download": "Download",
+  "update.later": "Later",
+  "update.upToDate": "You're up to date",
+  "update.upToDateMsg": "ABS Desktop App {version} is the newest version.",
+  "update.failed": "Couldn't check for updates",
+  "update.failedMsg": "Check your internet connection and try again."
 }

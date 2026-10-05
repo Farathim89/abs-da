@@ -129,5 +129,16 @@
   "shelf.stars": "ليلة مرصعة بالنجوم",
   "shelf.aurora": "الشفق القطبي",
   "shelf.ocean": "المحيط",
-  "shelf.none": "بدون (مسطح)"
+  "shelf.none": "بدون (مسطح)",
+  "update.check": "التحقق من وجود تحديثات…",
+  "update.auto": "التحقق من وجود تحديثات تلقائيًا",
+  "update.pill": "تحديث {version}",
+  "update.newTitle": "يتوفر تحديث",
+  "update.newMsg": "يتوفر ABS Desktop App {version} (لديك {current}).",
+  "update.download": "تنزيل",
+  "update.later": "لاحقًا",
+  "update.upToDate": "لديك أحدث إصدار",
+  "update.upToDateMsg": "ABS Desktop App {version} هو أحدث إصدار.",
+  "update.failed": "تعذّر التحقق من وجود تحديثات",
+  "update.failedMsg": "تحقق من اتصالك بالإنترنت وحاول مرة أخرى."
 }

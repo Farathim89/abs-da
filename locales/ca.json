@@ -129,5 +129,16 @@
   "shelf.stars": "Nit estelada",
   "shelf.aurora": "Aurora boreal",
   "shelf.ocean": "Oceà",
-  "shelf.none": "Cap (llisa)"
+  "shelf.none": "Cap (llisa)",
+  "update.check": "Cerca actualitzacions…",
+  "update.auto": "Cerca actualitzacions automàticament",
+  "update.pill": "Actualització {version}",
+  "update.newTitle": "Hi ha una actualització disponible",
+  "update.newMsg": "ABS Desktop App {version} ja està disponible (teniu la {current}).",
+  "update.download": "Baixa",
+  "update.later": "Més tard",
+  "update.upToDate": "Teniu la versió més recent",
+  "update.upToDateMsg": "ABS Desktop App {version} és la versió més recent.",
+  "update.failed": "No s’han pogut cercar actualitzacions",
+  "update.failedMsg": "Comproveu la connexió a internet i torneu-ho a provar."
 }

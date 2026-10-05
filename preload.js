@@ -20,6 +20,9 @@ if (location.protocol === "file:") {
     // texts in the app's language (see i18n.js)
     getStrings: () => ipcRenderer.invoke("desktop:strings"),
     onStrings: (cb) => ipcRenderer.on("desktop:strings", (_e, s) => cb(s)),
+    // update check (title bar pill)
+    onUpdate: (cb) => ipcRenderer.on("titlebar:update", (_e, u) => cb(u)),
+    openUpdate: () => ipcRenderer.send("desktop:open-update"),
   });
 }
 

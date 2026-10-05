@@ -129,5 +129,16 @@
   "shelf.stars": "Notte stellata",
   "shelf.aurora": "Aurora boreale",
   "shelf.ocean": "Oceano",
-  "shelf.none": "Nessuna (piatta)"
+  "shelf.none": "Nessuna (piatta)",
+  "update.check": "Controlla aggiornamenti…",
+  "update.auto": "Controlla automaticamente gli aggiornamenti",
+  "update.pill": "Aggiornamento {version}",
+  "update.newTitle": "Aggiornamento disponibile",
+  "update.newMsg": "ABS Desktop App {version} è disponibile (hai la {current}).",
+  "update.download": "Scarica",
+  "update.later": "Più tardi",
+  "update.upToDate": "Hai la versione più recente",
+  "update.upToDateMsg": "ABS Desktop App {version} è la versione più recente.",
+  "update.failed": "Impossibile controllare gli aggiornamenti",
+  "update.failedMsg": "Controlla la connessione a Internet e riprova."
 }

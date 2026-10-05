@@ -129,5 +129,16 @@
   "shelf.stars": "Зорная ноч",
   "shelf.aurora": "Палярнае ззянне",
   "shelf.ocean": "Акіян",
-  "shelf.none": "Няма (плоская)"
+  "shelf.none": "Няма (плоская)",
+  "update.check": "Праверыць абнаўленні…",
+  "update.auto": "Правяраць абнаўленні аўтаматычна",
+  "update.pill": "Абнаўленне {version}",
+  "update.newTitle": "Даступна абнаўленне",
+  "update.newMsg": "Даступна версія ABS Desktop App {version} (у вас {current}).",
+  "update.download": "Спампаваць",
+  "update.later": "Пазней",
+  "update.upToDate": "У вас апошняя версія",
+  "update.upToDateMsg": "ABS Desktop App {version} — найноўшая версія.",
+  "update.failed": "Не ўдалося праверыць абнаўленні",
+  "update.failedMsg": "Праверце падключэнне да інтэрнэту і паспрабуйце яшчэ раз."
 }

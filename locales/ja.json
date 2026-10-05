@@ -129,5 +129,16 @@
   "shelf.stars": "星空",
   "shelf.aurora": "オーロラ",
   "shelf.ocean": "海",
-  "shelf.none": "なし（フラット）"
+  "shelf.none": "なし（フラット）",
+  "update.check": "アップデートを確認…",
+  "update.auto": "アップデートを自動的に確認する",
+  "update.pill": "アップデート {version}",
+  "update.newTitle": "アップデートがあります",
+  "update.newMsg": "ABS Desktop App {version} が利用可能です（現在のバージョン: {current}）。",
+  "update.download": "ダウンロード",
+  "update.later": "後で",
+  "update.upToDate": "最新の状態です",
+  "update.upToDateMsg": "ABS Desktop App {version} は最新バージョンです。",
+  "update.failed": "アップデートを確認できませんでした",
+  "update.failedMsg": "インターネット接続を確認して、もう一度お試しください。"
 }

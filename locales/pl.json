@@ -129,5 +129,16 @@
   "shelf.stars": "Gwiaździsta noc",
   "shelf.aurora": "Zorza polarna",
   "shelf.ocean": "Ocean",
-  "shelf.none": "Brak (płaska)"
+  "shelf.none": "Brak (płaska)",
+  "update.check": "Sprawdź aktualizacje…",
+  "update.auto": "Automatycznie sprawdzaj aktualizacje",
+  "update.pill": "Aktualizacja {version}",
+  "update.newTitle": "Dostępna aktualizacja",
+  "update.newMsg": "Dostępna jest wersja ABS Desktop App {version} (masz {current}).",
+  "update.download": "Pobierz",
+  "update.later": "Później",
+  "update.upToDate": "Masz najnowszą wersję",
+  "update.upToDateMsg": "ABS Desktop App {version} to najnowsza wersja.",
+  "update.failed": "Nie udało się sprawdzić aktualizacji",
+  "update.failedMsg": "Sprawdź połączenie z internetem i spróbuj ponownie."
 }

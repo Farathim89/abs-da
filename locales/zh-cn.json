@@ -129,5 +129,16 @@
   "shelf.stars": "星空",
   "shelf.aurora": "极光",
   "shelf.ocean": "海洋",
-  "shelf.none": "无（平面）"
+  "shelf.none": "无（平面）",
+  "update.check": "检查更新…",
+  "update.auto": "自动检查更新",
+  "update.pill": "更新 {version}",
+  "update.newTitle": "有可用更新",
+  "update.newMsg": "ABS Desktop App {version} 已发布（你当前的版本是 {current}）。",
+  "update.download": "下载",
+  "update.later": "稍后",
+  "update.upToDate": "已是最新版本",
+  "update.upToDateMsg": "ABS Desktop App {version} 是最新版本。",
+  "update.failed": "无法检查更新",
+  "update.failedMsg": "请检查你的网络连接，然后重试。"
 }

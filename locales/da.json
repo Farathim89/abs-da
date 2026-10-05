@@ -129,5 +129,16 @@
   "shelf.stars": "Stjernenat",
   "shelf.aurora": "Nordlys",
   "shelf.ocean": "Hav",
-  "shelf.none": "Ingen (flad)"
+  "shelf.none": "Ingen (flad)",
+  "update.check": "Søg efter opdateringer…",
+  "update.auto": "Søg efter opdateringer automatisk",
+  "update.pill": "Opdatering {version}",
+  "update.newTitle": "Opdatering tilgængelig",
+  "update.newMsg": "ABS Desktop App {version} er tilgængelig (du har {current}).",
+  "update.download": "Hent",
+  "update.later": "Senere",
+  "update.upToDate": "Du har den nyeste version",
+  "update.upToDateMsg": "ABS Desktop App {version} er den nyeste version.",
+  "update.failed": "Kunne ikke søge efter opdateringer",
+  "update.failedMsg": "Kontrollér din internetforbindelse, og prøv igen."
 }

@@ -129,5 +129,16 @@
   "shelf.stars": "Hviezdna noc",
   "shelf.aurora": "Polárna žiara",
   "shelf.ocean": "Oceán",
-  "shelf.none": "Žiadna (plochá)"
+  "shelf.none": "Žiadna (plochá)",
+  "update.check": "Skontrolovať aktualizácie…",
+  "update.auto": "Automaticky kontrolovať aktualizácie",
+  "update.pill": "Aktualizácia {version}",
+  "update.newTitle": "K dispozícii je aktualizácia",
+  "update.newMsg": "K dispozícii je ABS Desktop App {version} (máte {current}).",
+  "update.download": "Stiahnuť",
+  "update.later": "Neskôr",
+  "update.upToDate": "Máte najnovšiu verziu",
+  "update.upToDateMsg": "ABS Desktop App {version} je najnovšia verzia.",
+  "update.failed": "Aktualizácie sa nepodarilo skontrolovať",
+  "update.failedMsg": "Skontrolujte internetové pripojenie a skúste to znova."
 }

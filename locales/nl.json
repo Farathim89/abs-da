@@ -129,5 +129,16 @@
   "shelf.stars": "Sterrennacht",
   "shelf.aurora": "Noorderlicht",
   "shelf.ocean": "Oceaan",
-  "shelf.none": "Geen (vlak)"
+  "shelf.none": "Geen (vlak)",
+  "update.check": "Controleren op updates…",
+  "update.auto": "Automatisch controleren op updates",
+  "update.pill": "Update {version}",
+  "update.newTitle": "Update beschikbaar",
+  "update.newMsg": "ABS Desktop App {version} is beschikbaar (je hebt {current}).",
+  "update.download": "Downloaden",
+  "update.later": "Later",
+  "update.upToDate": "Je bent helemaal bij",
+  "update.upToDateMsg": "ABS Desktop App {version} is de nieuwste versie.",
+  "update.failed": "Kan niet controleren op updates",
+  "update.failedMsg": "Controleer je internetverbinding en probeer het opnieuw."
 }

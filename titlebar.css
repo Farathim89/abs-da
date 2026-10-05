@@ -62,6 +62,24 @@ html, body {
   text-overflow: ellipsis;
 }
 
+/* "Update 2.2.0" — shown only when a newer version is out; opens the download page. */
+.update {
+  -webkit-app-region: no-drag;
+  flex: none;
+  margin-right: 8px;
+  padding: 3px 10px;
+  border: 1px solid var(--tb-logo);
+  border-radius: 999px;
+  background: none;
+  color: var(--tb-logo);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.update:hover { background: var(--tb-hover); }
+.update.hidden { display: none; }
+
 /* Dim when the window isn't focused, like normal Windows title bars. */
 body.blurred .logo,
 body.blurred .menus button,

@@ -129,5 +129,16 @@
   "shelf.stars": "Csillagos éjszaka",
   "shelf.aurora": "Sarki fény",
   "shelf.ocean": "Óceán",
-  "shelf.none": "Nincs (sima)"
+  "shelf.none": "Nincs (sima)",
+  "update.check": "Frissítések keresése…",
+  "update.auto": "Frissítések automatikus keresése",
+  "update.pill": "Frissítés {version}",
+  "update.newTitle": "Frissítés érhető el",
+  "update.newMsg": "Megjelent az ABS Desktop App {version} (a jelenlegi verzió: {current}).",
+  "update.download": "Letöltés",
+  "update.later": "Később",
+  "update.upToDate": "A legfrissebb verziót használja",
+  "update.upToDateMsg": "Az ABS Desktop App {version} a legújabb verzió.",
+  "update.failed": "Nem sikerült frissítéseket keresni",
+  "update.failedMsg": "Ellenőrizze az internetkapcsolatot, és próbálja újra."
 }

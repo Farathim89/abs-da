@@ -129,5 +129,16 @@
   "shelf.stars": "Yıldızlı gece",
   "shelf.aurora": "Kutup ışıkları",
   "shelf.ocean": "Okyanus",
-  "shelf.none": "Yok (düz)"
+  "shelf.none": "Yok (düz)",
+  "update.check": "Güncellemeleri Denetle…",
+  "update.auto": "Güncellemeleri otomatik olarak denetle",
+  "update.pill": "Güncelleme {version}",
+  "update.newTitle": "Güncelleme mevcut",
+  "update.newMsg": "ABS Desktop App {version} yayımlandı (sizdeki sürüm: {current}).",
+  "update.download": "İndir",
+  "update.later": "Daha sonra",
+  "update.upToDate": "En güncel sürümü kullanıyorsunuz",
+  "update.upToDateMsg": "ABS Desktop App {version} en yeni sürümdür.",
+  "update.failed": "Güncellemeler denetlenemedi",
+  "update.failedMsg": "İnternet bağlantınızı kontrol edip tekrar deneyin."
 }

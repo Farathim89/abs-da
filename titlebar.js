@@ -21,6 +21,14 @@ function setLabels(s) {
 desktop.getStrings().then(setLabels);
 desktop.onStrings(setLabels);
 
+// "Update 2.2.0" pill: shown when the app found a newer release on GitHub.
+const updateBtn = document.getElementById("update");
+desktop.onUpdate((u) => {
+  updateBtn.classList.toggle("hidden", !u);
+  if (u) { updateBtn.textContent = u.label; updateBtn.title = u.tip || ""; }
+});
+updateBtn.addEventListener("click", () => desktop.openUpdate());
+
 // Each button opens its menu just below itself.
 document.querySelectorAll(".menus button").forEach((btn) => {
   btn.addEventListener("click", async () => {

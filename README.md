@@ -64,6 +64,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   inside the app and brings you back signed in
 - Friendly "can't reach your server" screen, and a check that the address really is Audiobookshelf
 - Only one copy runs at a time
+- Tells you when a new version is out (an **Update** button in the title bar; nothing installs by itself)
 - Works with Windows contrast themes without breaking sliders or the e-book reader colours
 - Works around Audiobookshelf bug [#4818](https://github.com/advplyr/audiobookshelf/issues/4818)
   (volume slider opening behind the e-book reader)
@@ -80,8 +81,10 @@ bookshelf (or use **View → Theme** / **View → Bookshelf**). They change live
 ## Privacy
 
 This program will not transfer any information to other networked systems unless specifically
-requested by the user or the person installing or operating it. ABS-DA only connects to the
-Audiobookshelf server you enter — no analytics, no telemetry, no accounts. Settings live in
+requested by the user or the person installing or operating it. ABS-DA connects to the
+Audiobookshelf server you enter, and — to tell you about new versions — asks GitHub for the latest
+ABS-DA release (no personal data is sent; turn it off with **App → Check for updates
+automatically**). No analytics, no telemetry, no accounts. Settings live in
 `%APPDATA%\ABS Desktop App` (or `abs-da-data` next to the portable exe). Your server's own
 privacy rules are set by whoever runs it.
 

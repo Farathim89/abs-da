@@ -129,5 +129,16 @@
   "shelf.stars": "Tähistaevas",
   "shelf.aurora": "Virmalised",
   "shelf.ocean": "Ookean",
-  "shelf.none": "Puudub (sile)"
+  "shelf.none": "Puudub (sile)",
+  "update.check": "Otsi uuendusi…",
+  "update.auto": "Otsi uuendusi automaatselt",
+  "update.pill": "Uuendus {version}",
+  "update.newTitle": "Uuendus saadaval",
+  "update.newMsg": "ABS Desktop App {version} on saadaval (sinu versioon on {current}).",
+  "update.download": "Laadi alla",
+  "update.later": "Hiljem",
+  "update.upToDate": "Sul on uusim versioon",
+  "update.upToDateMsg": "ABS Desktop App {version} on uusim versioon.",
+  "update.failed": "Uuenduste otsimine ebaõnnestus",
+  "update.failedMsg": "Kontrolli internetiühendust ja proovi uuesti."
 }

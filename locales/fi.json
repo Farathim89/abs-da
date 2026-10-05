@@ -129,5 +129,16 @@
   "shelf.stars": "Tähtiyö",
   "shelf.aurora": "Revontulet",
   "shelf.ocean": "Meri",
-  "shelf.none": "Ei mitään (tasainen)"
+  "shelf.none": "Ei mitään (tasainen)",
+  "update.check": "Tarkista päivitykset…",
+  "update.auto": "Tarkista päivitykset automaattisesti",
+  "update.pill": "Päivitys {version}",
+  "update.newTitle": "Päivitys saatavilla",
+  "update.newMsg": "ABS Desktop App {version} on saatavilla (sinulla on {current}).",
+  "update.download": "Lataa",
+  "update.later": "Myöhemmin",
+  "update.upToDate": "Käytössäsi on uusin versio",
+  "update.upToDateMsg": "ABS Desktop App {version} on uusin versio.",
+  "update.failed": "Päivitysten tarkistus epäonnistui",
+  "update.failedMsg": "Tarkista internetyhteys ja yritä uudelleen."
 }

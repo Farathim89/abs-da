@@ -129,5 +129,16 @@
   "shelf.stars": "Đêm đầy sao",
   "shelf.aurora": "Cực quang",
   "shelf.ocean": "Đại dương",
-  "shelf.none": "Không có (phẳng)"
+  "shelf.none": "Không có (phẳng)",
+  "update.check": "Kiểm tra cập nhật…",
+  "update.auto": "Tự động kiểm tra cập nhật",
+  "update.pill": "Cập nhật {version}",
+  "update.newTitle": "Có bản cập nhật",
+  "update.newMsg": "Đã có ABS Desktop App {version} (bạn đang dùng {current}).",
+  "update.download": "Tải xuống",
+  "update.later": "Để sau",
+  "update.upToDate": "Bạn đang dùng phiên bản mới nhất",
+  "update.upToDateMsg": "ABS Desktop App {version} là phiên bản mới nhất.",
+  "update.failed": "Không thể kiểm tra cập nhật",
+  "update.failedMsg": "Hãy kiểm tra kết nối internet và thử lại."
 }
