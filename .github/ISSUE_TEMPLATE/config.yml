@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Problem with Audiobookshelf itself
+    url: https://github.com/advplyr/audiobookshelf/issues
+    about: If it also happens in a normal web browser, it belongs to the Audiobookshelf project.
+  - name: Audiobookshelf Discord
+    url: https://discord.gg/HQgCbd6E75
+    about: Chat with the Audiobookshelf community.

@@ -712,14 +712,23 @@ function createWindow() {
 }
 
 // ---- menu (opened from the title bar) --------------------------------------
-function showAbout() {
-  dialog.showMessageBox(win, {
+const REPO_URL = "https://github.com/Farathim89/abs-da";
+
+async function showAbout() {
+  const { response } = await dialog.showMessageBox(win, {
     type: "info",
     title: "About",
-    message: `ABS Desktop App ${app.getVersion()}`,
-    detail: `Desktop app for your Audiobookshelf server.\n\nServer: ${config.server || "not set"}\nElectron ${process.versions.electron}`,
-    buttons: ["OK"],
+    message: `ABS Desktop App (ABS-DA) ${app.getVersion()}`,
+    detail:
+      "An unofficial Windows desktop app for Audiobookshelf.\n" +
+      "Free software under the GNU GPL v3 — made by Farathim as a gift to the community.\n" +
+      "Audiobookshelf is made by advplyr and contributors.\n\n" +
+      `Server: ${config.server || "not set"}\nElectron ${process.versions.electron}`,
+    buttons: ["OK", "GitHub page"],
+    defaultId: 0,
+    cancelId: 0,
   });
+  if (response === 1) openExternal(REPO_URL);
 }
 
 // Shortcuts are shown in the menu but handled by onShortcut, so they never fire twice.
@@ -823,6 +832,9 @@ function buildMenu() {
       submenu: [
         { label: "Open in Browser", click: () => openExternal(wc().getURL()) },
         { label: "Audiobookshelf Documentation", click: () => openExternal("https://www.audiobookshelf.org/docs") },
+        { type: "separator" },
+        { label: "Report a Problem / Suggest an Idea", click: () => openExternal(`${REPO_URL}/issues/new/choose`) },
+        { label: "ABS-DA on GitHub", click: () => openExternal(REPO_URL) },
         { type: "separator" },
         { label: "Toggle Developer Tools", ...shortcut("Ctrl+Shift+I"), click: toggleDevTools },
         { type: "separator" },

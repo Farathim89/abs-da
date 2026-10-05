@@ -14,7 +14,7 @@ login, media keys and more.
 
 ## Download
 
-Get the latest version from the **Releases** page:
+Get the latest version from the **[Releases](https://github.com/Farathim89/abs-da/releases)** page:
 
 | File | What it is |
 |------|------------|
@@ -94,7 +94,8 @@ run `build.cmd` as administrator once (it caches the signing toolkit); after tha
 
 ## Contributing
 
-Bug reports, ideas and pull requests are welcome — open an issue.
+Bug reports, ideas and pull requests are welcome — [open an issue](https://github.com/Farathim89/abs-da/issues/new/choose)
+(or use **Help → Report a Problem** in the app).
 
 ## License
 

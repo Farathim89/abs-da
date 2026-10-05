@@ -12,6 +12,14 @@
   },
   "author": "Farathim",
   "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/Farathim89/abs-da",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Farathim89/abs-da.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Farathim89/abs-da/issues"
+  },
   "devDependencies": {
     "electron": "^32.0.0",
     "electron-builder": "^25.0.0"

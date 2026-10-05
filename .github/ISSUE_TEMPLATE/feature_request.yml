@@ -1,0 +1,22 @@
+name: Feature request
+description: An idea to make ABS-DA better
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas are welcome! ABS-DA adds desktop features around the official Audiobookshelf web app.
+        For changes to Audiobookshelf itself (library, player screens, server), please ask the
+        [Audiobookshelf project](https://github.com/advplyr/audiobookshelf/discussions).
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What would you like ABS-DA to do?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help?
+      description: What are you trying to do that's hard right now?

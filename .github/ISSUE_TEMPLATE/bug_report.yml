@@ -1,0 +1,74 @@
+name: Bug report
+description: Something in ABS-DA doesn't work as it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve ABS-DA!
+        **Does the same problem happen in your normal web browser too?** Then it's an Audiobookshelf
+        issue — please report it to the [Audiobookshelf project](https://github.com/advplyr/audiobookshelf/issues) instead.
+        Please don't post your server address, usernames or passwords here.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. See ...
+  - type: input
+    id: version
+    attributes:
+      label: ABS-DA version
+      description: App → About
+      placeholder: "2.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: build
+    attributes:
+      label: Installer or portable?
+      options:
+        - Installer (ABS-DA-Setup)
+        - Portable (ABS-DA-Portable)
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: Audiobookshelf server version
+      description: Settings → bottom of the left menu
+      placeholder: "2.37.1"
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 24H2"
+  - type: dropdown
+    id: login
+    attributes:
+      label: How do you sign in?
+      options:
+        - Username and password
+        - Single sign-on (OpenID)
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Does it also happen in a web browser?
+      options:
+        - "No, only in ABS-DA"
+        - "Yes, also in the browser"
+        - "Haven't checked"
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag images here (hide your server address if it's visible).
