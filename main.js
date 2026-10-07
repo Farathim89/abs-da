@@ -207,6 +207,9 @@ const THEMES = {
       #siderail-buttons-container a { border-bottom-color: #4a4a4a !important; }
       #appbar { border-bottom: 1px solid #4a4a4a; }
       .globalSearchMenu, .librariesDropdownMenu, [role="menu"], [role="listbox"] { border-color: #ffffff !important; }
+      html:root body [cy-id="seriesLengthMarker"], html:root body [cy-id="booksInSeries"], html:root body [cy-id="seriesSequenceList"],
+      html:root body [cy-id="seriesSequence"], html:root body [cy-id="podcastEpisodeNumber"], html:root body [cy-id="numEpisodes"] {
+        background-color: #000000 !important; color: #ffffff !important; outline: 2px solid #ffffff; }
       html:root body #appbar div:has(> ul.librariesDropdownMenu) > button,
       html:root body #appbar a[href$="/account"],
       html:root body #appbar .absda-search input { border-color: #ffffff !important; background: #000000 !important; }
@@ -298,8 +301,18 @@ function themeCss(id) {
   }
   if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`);
   if (t.colors && config.toastThemed !== false) parts.push(toastCss(t.colors.bg, t.title.logo, t.toast));
+  if (t.colors && t.colors.success) {
+    // Cover badges: the gold "number of books" on series and the brown "#1–3" on
+    // collapsed series take the theme's action colour (white numbers stay readable).
+    parts.push(`[cy-id="seriesLengthMarker"], [cy-id="booksInSeries"] { background-color: ${t.colors.success} !important; }
+      [cy-id="seriesSequenceList"] { background-color: color-mix(in srgb, ${t.colors.success} 70%, black) !important; }`);
+  }
   if (t.colors && t.colors.accent) {
     parts.push(heatmapCss(t.colors.accent));
+    // Shelf labels under covers ("Continue Listening", series names): gold text and
+    // border → a light tint of the theme's accent.
+    parts.push(`.shinyBlack { color: color-mix(in srgb, ${t.title.logo} 45%, white) !important;
+      border-color: color-mix(in srgb, ${t.title.logo} 60%, transparent) !important; }`);
     // The web app's yellow accent (Stats chart line and dots, progress bars on covers)
     // takes the theme's accent colour.
     parts.push(`html:root { --color-yellow-400: ${t.title.logo} !important; --color-yellow-300: ${t.title.logo} !important; }`);
