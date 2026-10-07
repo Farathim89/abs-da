@@ -302,6 +302,9 @@ function themeCss(id) {
   if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`);
   if (t.colors && config.toastThemed !== false) parts.push(toastCss(t.colors.bg, t.title.logo, t.toast));
   if (t.colors && t.colors.success) {
+    // "Info" buttons (Read, …) and info text: a lighter shade of the action colour, so
+    // Play and Read belong together but stay different (and INFO in Logs stays readable).
+    parts.push(`html:root { --color-info: color-mix(in srgb, ${t.colors.success} 78%, white) !important; }`);
     // Cover badges: the gold "number of books" on series and the brown "#1–3" on
     // collapsed series take the theme's action colour (white numbers stay readable).
     parts.push(`[cy-id="seriesLengthMarker"], [cy-id="booksInSeries"] { background-color: ${t.colors.success} !important; }
