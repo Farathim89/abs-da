@@ -247,6 +247,24 @@ function toastCss(panel, accent, status) {
     ${T} .Vue-Toastification__progress-bar { background: var(--absda-toast) !important; }`;
 }
 
+// Hue (0–360°) of a "#rrggbb" colour.
+function hexHue(hex) {
+  const n = parseInt(String(hex).slice(1), 16);
+  const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+  if (!d) return 0;
+  const h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+}
+// The listening-activity calendar (Stats) colours its days in fixed GitHub greens
+// (inline styles). Turn those greens to the theme's accent hue; the grey "no
+// listening" days and the light→dark steps stay as they are.
+function heatmapCss(accent) {
+  const shift = Math.round(hexHue(accent) - 135);   // the greens sit around 135°
+  if (Math.abs(shift) < 12) return "";
+  return `[class~="rounded-xs"][style*="outline-offset"] { filter: hue-rotate(${shift}deg) !important; }`;
+}
+
 // The CSS added to every page for a theme.
 function themeCss(id) {
   const t = THEMES[id];
@@ -280,6 +298,12 @@ function themeCss(id) {
   }
   if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`);
   if (t.colors && config.toastThemed !== false) parts.push(toastCss(t.colors.bg, t.title.logo, t.toast));
+  if (t.colors && t.colors.accent) {
+    parts.push(heatmapCss(t.colors.accent));
+    // The web app's yellow accent (Stats chart line and dots, progress bars on covers)
+    // takes the theme's accent colour.
+    parts.push(`html:root { --color-yellow-400: ${t.title.logo} !important; --color-yellow-300: ${t.title.logo} !important; }`);
+  }
   if (t.css) parts.push(t.css);
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
