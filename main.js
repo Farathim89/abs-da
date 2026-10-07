@@ -191,6 +191,8 @@ const THEMES = {
     shelf: "linear-gradient(180deg, #ffffff 0%, #c8c8c8 17%, #c8c8c8 88%, #8a8a8a 100%)",
     scroll: "#ffffff",
     page: "linear-gradient(#000000, #000000)",
+    // Notifications: extra-bright type colours (the white outline is in `css` below).
+    toast: { success: "#00e676", error: "#ff5252", warning: "#ffd400", info: "#40c4ff", default: "#ffd400" },
     colors: {
       primary: "#000000", bg: "#000000", accent: "#ffd400",
       "black-50": "#ffffff", "black-100": "#e6e6e6", "black-200": "#c8c8c8", "black-300": "#9a9a9a",
@@ -204,6 +206,7 @@ const THEMES = {
       #siderail-buttons-container a { border-bottom-color: #4a4a4a !important; }
       #appbar { border-bottom: 1px solid #4a4a4a; }
       .globalSearchMenu, .librariesDropdownMenu, [role="menu"], [role="listbox"] { border-color: #ffffff !important; }
+      html:root body .Vue-Toastification__toast { border: 2px solid #ffffff !important; border-left: 8px solid var(--absda-toast) !important; }
       html:root body #appbar div:has(> ul.librariesDropdownMenu) > button,
       html:root body #appbar a[href$="/account"],
       html:root body #appbar .absda-search input { border-color: #ffffff !important; background: #000000 !important; }
@@ -223,6 +226,22 @@ async function readWoodTexture(contents) {
     );
     if (v && v.startsWith("url(")) woodTexture = v;
   } catch {}
+}
+
+// Pop-up notifications ("Library … created", errors…): the theme's panel colour with a
+// coloured stripe, icon and progress bar per type, instead of bright full-colour blocks.
+function toastCss(panel, accent, status) {
+  const s = { success: "#43b581", error: "#e5534b", warning: "#d9a03f", info: accent, default: accent, ...status };
+  const T = ".Vue-Toastification__toast";
+  return `
+    ${T} { background: ${panel} !important; color: #f3f4f6 !important;
+      border: 1px solid rgba(255, 255, 255, .12) !important; border-left: 6px solid var(--absda-toast) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .45) !important; }
+    ${["success", "error", "warning", "info", "default"].map((k) => `${T}--${k} { --absda-toast: ${s[k]}; }`).join("\n    ")}
+    ${T} > svg, ${T} .Vue-Toastification__icon { color: var(--absda-toast) !important; fill: currentColor !important; }
+    ${T} .Vue-Toastification__close-button { color: rgba(255, 255, 255, .55) !important; opacity: 1 !important; }
+    ${T} .Vue-Toastification__close-button:hover { color: #fff !important; }
+    ${T} .Vue-Toastification__progress-bar { background: var(--absda-toast) !important; }`;
 }
 
 // The CSS added to every page for a theme.
@@ -257,6 +276,7 @@ function themeCss(id) {
     parts.push(`#bookshelf { scrollbar-color: ${t.scroll} rgba(0, 0, 0, 0) !important; }`);
   }
   if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`);
+  if (t.colors) parts.push(toastCss(t.colors.bg, t.title.logo, t.toast));
   if (t.css) parts.push(t.css);
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
