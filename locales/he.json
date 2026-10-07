@@ -154,5 +154,14 @@
   "app.hwAccel": "השתמש בהאצת חומרה",
   "app.restartTitle": "נדרשת הפעלה מחדש",
   "app.restartMsg": "השינוי ייכנס לתוקף לאחר הפעלה מחדש של ABS Desktop App. להפעיל מחדש עכשיו?",
-  "app.restartNow": "הפעל מחדש עכשיו"
+  "app.restartNow": "הפעל מחדש עכשיו",
+  "update.installNow": "התקן עכשיו",
+  "update.notes": "הערות גרסה",
+  "update.installMsg": "\"התקן עכשיו\" מוריד את העדכון, בודק אותו ומפעיל מחדש את ABS Desktop App בגרסה החדשה. ההגדרות וההתחברות שלך יישמרו.",
+  "update.downloading": "מוריד {percent}%",
+  "update.installing": "מתקין…",
+  "update.installFailed": "לא ניתן להתקין את העדכון",
+  "update.installFailedMsg": "לא בוצע שום שינוי. נסה שוב מאוחר יותר, או הורד אותו מדף הגרסה.",
+  "update.verifyFailed": "הקובץ שהורד לא תאם את סכום הביקורת שפורסם, ולכן הוא נמחק ולא בוצע שום שינוי.",
+  "update.done": "עודכן לגרסה {version} (מ-{from})."
 }

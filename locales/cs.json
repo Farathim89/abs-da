@@ -154,5 +154,14 @@
   "app.hwAccel": "Používat hardwarovou akceleraci",
   "app.restartTitle": "Je nutný restart",
   "app.restartMsg": "Změna se projeví po restartu aplikace ABS Desktop App. Restartovat nyní?",
-  "app.restartNow": "Restartovat nyní"
+  "app.restartNow": "Restartovat nyní",
+  "update.installNow": "Nainstalovat nyní",
+  "update.notes": "Poznámky k verzi",
+  "update.installMsg": "„Nainstalovat nyní“ stáhne aktualizaci, ověří ji a restartuje ABS Desktop App v nové verzi. Vaše nastavení a přihlášení zůstanou zachovány.",
+  "update.downloading": "Stahování {percent} %",
+  "update.installing": "Instalace…",
+  "update.installFailed": "Aktualizaci se nepodařilo nainstalovat",
+  "update.installFailedMsg": "Nic se nezměnilo. Zkuste to později znovu, nebo ji stáhněte ze stránky vydání.",
+  "update.verifyFailed": "Stažený soubor neodpovídal zveřejněnému kontrolnímu součtu, proto byl smazán a nic se nezměnilo.",
+  "update.done": "Aktualizováno na verzi {version} (z {from})."
 }

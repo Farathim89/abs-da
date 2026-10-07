@@ -154,5 +154,14 @@
   "app.hwAccel": "استخدام تسريع الأجهزة",
   "app.restartTitle": "يلزم إعادة التشغيل",
   "app.restartMsg": "سيسري التغيير بعد إعادة تشغيل ABS Desktop App. هل تريد إعادة التشغيل الآن؟",
-  "app.restartNow": "إعادة التشغيل الآن"
+  "app.restartNow": "إعادة التشغيل الآن",
+  "update.installNow": "التثبيت الآن",
+  "update.notes": "ملاحظات الإصدار",
+  "update.installMsg": "يؤدي «التثبيت الآن» إلى تنزيل التحديث والتحقق منه ثم إعادة تشغيل ABS Desktop App بالإصدار الجديد. سيتم الاحتفاظ بإعداداتك وتسجيل الدخول.",
+  "update.downloading": "جارٍ التنزيل {percent}%",
+  "update.installing": "جارٍ التثبيت…",
+  "update.installFailed": "تعذّر تثبيت التحديث",
+  "update.installFailedMsg": "لم يتم تغيير أي شيء. حاول مرة أخرى لاحقًا، أو نزّله من صفحة الإصدار.",
+  "update.verifyFailed": "لم يتطابق الملف الذي تم تنزيله مع المجموع الاختباري المنشور، لذا تم حذفه ولم يتم تغيير أي شيء.",
+  "update.done": "تم التحديث إلى الإصدار {version} (من {from})."
 }

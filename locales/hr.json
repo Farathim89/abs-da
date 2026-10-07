@@ -154,5 +154,14 @@
   "app.hwAccel": "Upotrijebi hardversko ubrzanje",
   "app.restartTitle": "Potrebno je ponovno pokretanje",
   "app.restartMsg": "Promjena će stupiti na snagu nakon ponovnog pokretanja aplikacije ABS Desktop App. Želite li je ponovno pokrenuti sada?",
-  "app.restartNow": "Ponovno pokreni sada"
+  "app.restartNow": "Ponovno pokreni sada",
+  "update.installNow": "Instaliraj sada",
+  "update.notes": "Napomene o izdanju",
+  "update.installMsg": "„Instaliraj sada” preuzima ažuriranje, provjerava ga i ponovno pokreće ABS Desktop App u novoj verziji. Vaše postavke i prijava ostaju sačuvani.",
+  "update.downloading": "Preuzimanje {percent} %",
+  "update.installing": "Instaliranje…",
+  "update.installFailed": "Ažuriranje nije moguće instalirati",
+  "update.installFailedMsg": "Ništa nije promijenjeno. Pokušajte ponovno kasnije ili ga preuzmite sa stranice izdanja.",
+  "update.verifyFailed": "Preuzeta datoteka ne odgovara objavljenom kontrolnom zbroju pa je izbrisana i ništa nije promijenjeno.",
+  "update.done": "Ažurirano na verziju {version} (s {from})."
 }

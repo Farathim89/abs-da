@@ -154,5 +154,14 @@
   "app.hwAccel": "Hardwareversnelling gebruiken",
   "app.restartTitle": "Opnieuw starten vereist",
   "app.restartMsg": "De wijziging wordt actief nadat ABS Desktop App opnieuw is gestart. Nu opnieuw starten?",
-  "app.restartNow": "Nu opnieuw starten"
+  "app.restartNow": "Nu opnieuw starten",
+  "update.installNow": "Nu installeren",
+  "update.notes": "Releasenotes",
+  "update.installMsg": "‘Nu installeren’ downloadt de update, controleert hem en start ABS Desktop App opnieuw met de nieuwe versie. Je instellingen en login blijven behouden.",
+  "update.downloading": "Downloaden {percent}%",
+  "update.installing": "Installeren…",
+  "update.installFailed": "De update kon niet worden geïnstalleerd",
+  "update.installFailedMsg": "Er is niets gewijzigd. Probeer het later opnieuw of download hem van de releasepagina.",
+  "update.verifyFailed": "Het gedownloade bestand kwam niet overeen met de gepubliceerde vingerafdruk. Het is daarom verwijderd en er is niets gewijzigd.",
+  "update.done": "Bijgewerkt naar versie {version} (was {from})."
 }

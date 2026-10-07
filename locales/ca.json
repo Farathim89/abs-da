@@ -154,5 +154,14 @@
   "app.hwAccel": "Utilitza l’acceleració per maquinari",
   "app.restartTitle": "Cal reiniciar",
   "app.restartMsg": "El canvi s’aplicarà quan es reiniciï ABS Desktop App. Voleu reiniciar ara?",
-  "app.restartNow": "Reinicia ara"
+  "app.restartNow": "Reinicia ara",
+  "update.installNow": "Instal·la ara",
+  "update.notes": "Notes de la versió",
+  "update.installMsg": "«Instal·la ara» baixa l’actualització, la comprova i reinicia ABS Desktop App amb la versió nova. Es conserven els paràmetres i l’inici de sessió.",
+  "update.downloading": "Baixant {percent} %",
+  "update.installing": "S’està instal·lant…",
+  "update.installFailed": "No s’ha pogut instal·lar l’actualització",
+  "update.installFailedMsg": "No s’ha canviat res. Torneu-ho a provar més tard o baixeu-la des de la pàgina de la versió.",
+  "update.verifyFailed": "El fitxer baixat no coincidia amb la suma de verificació publicada, de manera que s’ha suprimit i no s’ha canviat res.",
+  "update.done": "S’ha actualitzat a la versió {version} (des de la {from})."
 }

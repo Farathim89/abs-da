@@ -71,7 +71,9 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   inside the app and brings you back signed in
 - Friendly "can't reach your server" screen, and a check that the address really is Audiobookshelf
 - Only one copy runs at a time
-- Tells you when a new version is out (an **Update** button in the title bar; nothing installs by itself)
+- **One-click updates**: when a new version is out, an **Update** button appears in the title bar;
+  **Install now** downloads it, checks it against the fingerprint GitHub publishes, installs it and
+  restarts — for both the installer and the portable version. Nothing installs without your click
 - Troubleshooting: repairs a page that loaded without its styles by itself; **App → Clear Cache and
   Restart…** and **Help → Copy Diagnostics** (for bug reports); the portable tells you if its folder
   isn't writable; **App → Use hardware acceleration** can be turned off if pages draw strangely

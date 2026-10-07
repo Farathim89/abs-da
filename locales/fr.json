@@ -154,5 +154,14 @@
   "app.hwAccel": "Utiliser l’accélération matérielle",
   "app.restartTitle": "Redémarrage nécessaire",
   "app.restartMsg": "La modification prendra effet après le redémarrage d’ABS Desktop App. Redémarrer maintenant ?",
-  "app.restartNow": "Redémarrer maintenant"
+  "app.restartNow": "Redémarrer maintenant",
+  "update.installNow": "Installer maintenant",
+  "update.notes": "Notes de version",
+  "update.installMsg": "« Installer maintenant » télécharge la mise à jour, la vérifie et redémarre ABS Desktop App avec la nouvelle version. Vos paramètres et votre connexion sont conservés.",
+  "update.downloading": "Téléchargement {percent} %",
+  "update.installing": "Installation…",
+  "update.installFailed": "Impossible d’installer la mise à jour",
+  "update.installFailedMsg": "Rien n’a été modifié. Réessayez plus tard ou téléchargez-la depuis la page de la version.",
+  "update.verifyFailed": "Le fichier téléchargé ne correspondait pas à l’empreinte publiée. Il a donc été supprimé et rien n’a été modifié.",
+  "update.done": "Mise à jour vers la version {version} effectuée (depuis la {from})."
 }

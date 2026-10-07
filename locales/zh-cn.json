@@ -154,5 +154,14 @@
   "app.hwAccel": "使用硬件加速",
   "app.restartTitle": "需要重启",
   "app.restartMsg": "此更改将在 ABS Desktop App 重启后生效。要立即重启吗？",
-  "app.restartNow": "立即重启"
+  "app.restartNow": "立即重启",
+  "update.installNow": "立即安装",
+  "update.notes": "发行说明",
+  "update.installMsg": "“立即安装”会下载更新、进行校验，然后以新版本重启 ABS Desktop App。你的设置和登录信息都会保留。",
+  "update.downloading": "正在下载 {percent}%",
+  "update.installing": "正在安装…",
+  "update.installFailed": "无法安装更新",
+  "update.installFailedMsg": "未做任何更改。请稍后重试，或从发布页面下载。",
+  "update.verifyFailed": "下载的文件与公布的校验值不符，因此已将其删除，未做任何更改。",
+  "update.done": "已更新到版本 {version}（原版本 {from}）。"
 }

@@ -154,5 +154,14 @@
   "app.hwAccel": "Hardveres gyorsítás használata",
   "app.restartTitle": "Újraindítás szükséges",
   "app.restartMsg": "A módosítás az ABS Desktop App újraindítása után lép életbe. Újraindítja most?",
-  "app.restartNow": "Újraindítás most"
+  "app.restartNow": "Újraindítás most",
+  "update.installNow": "Telepítés most",
+  "update.notes": "Kiadási megjegyzések",
+  "update.installMsg": "A „Telepítés most” letölti a frissítést, ellenőrzi, majd az új verzióval újraindítja az ABS Desktop App alkalmazást. A beállítások és a bejelentkezés megmaradnak.",
+  "update.downloading": "Letöltés: {percent}%",
+  "update.installing": "Telepítés…",
+  "update.installFailed": "Nem sikerült telepíteni a frissítést",
+  "update.installFailedMsg": "Semmi sem változott. Próbálja újra később, vagy töltse le a kiadási oldalról.",
+  "update.verifyFailed": "A letöltött fájl nem egyezett a közzétett ellenőrzőösszeggel, ezért törölve lett, és semmi sem változott.",
+  "update.done": "Frissítve erre a verzióra: {version} (korábbi: {from})."
 }

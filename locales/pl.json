@@ -154,5 +154,14 @@
   "app.hwAccel": "Używaj akceleracji sprzętowej",
   "app.restartTitle": "Wymagane ponowne uruchomienie",
   "app.restartMsg": "Zmiana zacznie obowiązywać po ponownym uruchomieniu ABS Desktop App. Uruchomić ponownie teraz?",
-  "app.restartNow": "Uruchom ponownie teraz"
+  "app.restartNow": "Uruchom ponownie teraz",
+  "update.installNow": "Zainstaluj teraz",
+  "update.notes": "Informacje o wersji",
+  "update.installMsg": "„Zainstaluj teraz” pobiera aktualizację, sprawdza ją i uruchamia ponownie ABS Desktop App w nowej wersji. Twoje ustawienia i logowanie zostaną zachowane.",
+  "update.downloading": "Pobieranie {percent}%",
+  "update.installing": "Instalowanie…",
+  "update.installFailed": "Nie udało się zainstalować aktualizacji",
+  "update.installFailedMsg": "Nic nie zostało zmienione. Spróbuj ponownie później lub pobierz ją ze strony wydania.",
+  "update.verifyFailed": "Pobrany plik nie zgadzał się z opublikowaną sumą kontrolną, więc został usunięty i nic nie zostało zmienione.",
+  "update.done": "Zaktualizowano do wersji {version} (z {from})."
 }

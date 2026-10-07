@@ -154,5 +154,14 @@
   "app.hwAccel": "Sử dụng tăng tốc phần cứng",
   "app.restartTitle": "Cần khởi động lại",
   "app.restartMsg": "Thay đổi sẽ có hiệu lực sau khi ABS Desktop App khởi động lại. Khởi động lại ngay?",
-  "app.restartNow": "Khởi động lại ngay"
+  "app.restartNow": "Khởi động lại ngay",
+  "update.installNow": "Cài đặt ngay",
+  "update.notes": "Ghi chú phát hành",
+  "update.installMsg": "“Cài đặt ngay” sẽ tải bản cập nhật xuống, kiểm tra và khởi động lại ABS Desktop App với phiên bản mới. Các cài đặt và thông tin đăng nhập của bạn vẫn được giữ nguyên.",
+  "update.downloading": "Đang tải xuống {percent}%",
+  "update.installing": "Đang cài đặt…",
+  "update.installFailed": "Không thể cài đặt bản cập nhật",
+  "update.installFailedMsg": "Không có gì thay đổi. Hãy thử lại sau hoặc tải xuống từ trang phát hành.",
+  "update.verifyFailed": "Tệp đã tải xuống không khớp với mã băm đã công bố nên đã bị xóa và không có gì thay đổi.",
+  "update.done": "Đã cập nhật lên phiên bản {version} (từ {from})."
 }

@@ -154,5 +154,14 @@
   "app.hwAccel": "Usar aceleração de hardware",
   "app.restartTitle": "Reinicialização necessária",
   "app.restartMsg": "A alteração terá efeito depois que o ABS Desktop App for reiniciado. Reiniciar agora?",
-  "app.restartNow": "Reiniciar agora"
+  "app.restartNow": "Reiniciar agora",
+  "update.installNow": "Instalar agora",
+  "update.notes": "Notas da versão",
+  "update.installMsg": "“Instalar agora” baixa a atualização, verifica e reinicia o ABS Desktop App na nova versão. Suas configurações e seu login são mantidos.",
+  "update.downloading": "Baixando {percent}%",
+  "update.installing": "Instalando…",
+  "update.installFailed": "Não foi possível instalar a atualização",
+  "update.installFailedMsg": "Nada foi alterado. Tente novamente mais tarde ou baixe-a na página da versão.",
+  "update.verifyFailed": "O arquivo baixado não correspondeu à soma de verificação publicada, por isso foi excluído e nada foi alterado.",
+  "update.done": "Atualizado para a versão {version} (era a {from})."
 }

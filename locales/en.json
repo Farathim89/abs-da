@@ -154,5 +154,14 @@
   "app.hwAccel": "Use hardware acceleration",
   "app.restartTitle": "Restart needed",
   "app.restartMsg": "The change takes effect after ABS Desktop App restarts. Restart now?",
-  "app.restartNow": "Restart now"
+  "app.restartNow": "Restart now",
+  "update.installNow": "Install now",
+  "update.notes": "Release notes",
+  "update.installMsg": "Install now downloads it, checks it and restarts ABS Desktop App on the new version. Your settings and login are kept.",
+  "update.downloading": "Downloading {percent}%",
+  "update.installing": "Installing…",
+  "update.installFailed": "The update couldn't be installed",
+  "update.installFailedMsg": "Nothing was changed. Try again later, or download it from the release page.",
+  "update.verifyFailed": "The downloaded file didn't match the published fingerprint, so it was deleted and nothing was changed.",
+  "update.done": "Updated to version {version} (from {from})."
 }

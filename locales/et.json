@@ -154,5 +154,14 @@
   "app.hwAccel": "Kasuta riistvaralist kiirendust",
   "app.restartTitle": "Vajalik on taaskäivitus",
   "app.restartMsg": "Muudatus jõustub pärast seda, kui ABS Desktop App on taaskäivitatud. Kas taaskäivitada kohe?",
-  "app.restartNow": "Taaskäivita kohe"
+  "app.restartNow": "Taaskäivita kohe",
+  "update.installNow": "Installi kohe",
+  "update.notes": "Väljalaskemärkmed",
+  "update.installMsg": "„Installi kohe“ laadib uuenduse alla, kontrollib seda ja taaskäivitab rakenduse ABS Desktop App uue versiooniga. Sinu seaded ja sisselogimine jäävad alles.",
+  "update.downloading": "Allalaadimine {percent}%",
+  "update.installing": "Installimine…",
+  "update.installFailed": "Uuendust ei õnnestunud installida",
+  "update.installFailedMsg": "Midagi ei muudetud. Proovi hiljem uuesti või laadi see alla väljalaske lehelt.",
+  "update.verifyFailed": "Allalaaditud fail ei vastanud avaldatud kontrollsummale, seega see kustutati ja midagi ei muudetud.",
+  "update.done": "Uuendatud versioonile {version} (varem {from})."
 }

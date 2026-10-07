@@ -154,5 +154,14 @@
   "app.hwAccel": "Uporabi strojno pospeševanje",
   "app.restartTitle": "Potreben je vnovični zagon",
   "app.restartMsg": "Sprememba bo začela veljati po vnovičnem zagonu aplikacije ABS Desktop App. Ali jo želite znova zagnati zdaj?",
-  "app.restartNow": "Znova zaženi zdaj"
+  "app.restartNow": "Znova zaženi zdaj",
+  "update.installNow": "Namesti zdaj",
+  "update.notes": "Opombe ob izdaji",
+  "update.installMsg": "»Namesti zdaj« prenese posodobitev, jo preveri in znova zažene ABS Desktop App v novi različici. Vaše nastavitve in prijava se ohranijo.",
+  "update.downloading": "Prenašanje {percent} %",
+  "update.installing": "Nameščanje…",
+  "update.installFailed": "Posodobitve ni bilo mogoče namestiti",
+  "update.installFailedMsg": "Nič ni bilo spremenjeno. Poskusite znova pozneje ali jo prenesite s strani izdaje.",
+  "update.verifyFailed": "Prenesena datoteka se ni ujemala z objavljeno kontrolno vsoto, zato je bila izbrisana in nič ni bilo spremenjeno.",
+  "update.done": "Posodobljeno na različico {version} (prej {from})."
 }

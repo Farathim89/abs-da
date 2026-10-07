@@ -154,5 +154,14 @@
   "app.hwAccel": "Brug hardwareacceleration",
   "app.restartTitle": "Genstart påkrævet",
   "app.restartMsg": "Ændringen træder i kraft, når ABS Desktop App genstartes. Vil du genstarte nu?",
-  "app.restartNow": "Genstart nu"
+  "app.restartNow": "Genstart nu",
+  "update.installNow": "Installér nu",
+  "update.notes": "Udgivelsesnoter",
+  "update.installMsg": "»Installér nu« henter opdateringen, kontrollerer den og genstarter ABS Desktop App med den nye version. Dine indstillinger og dit login bevares.",
+  "update.downloading": "Henter {percent} %",
+  "update.installing": "Installerer…",
+  "update.installFailed": "Opdateringen kunne ikke installeres",
+  "update.installFailedMsg": "Intet blev ændret. Prøv igen senere, eller hent den fra udgivelsessiden.",
+  "update.verifyFailed": "Den hentede fil passede ikke med det offentliggjorte fingeraftryk, så den blev slettet, og intet blev ændret.",
+  "update.done": "Opdateret til version {version} (fra {from})."
 }

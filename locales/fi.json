@@ -154,5 +154,14 @@
   "app.hwAccel": "Käytä laitteistokiihdytystä",
   "app.restartTitle": "Uudelleenkäynnistys tarvitaan",
   "app.restartMsg": "Muutos tulee voimaan, kun ABS Desktop App käynnistetään uudelleen. Käynnistetäänkö uudelleen nyt?",
-  "app.restartNow": "Käynnistä uudelleen nyt"
+  "app.restartNow": "Käynnistä uudelleen nyt",
+  "update.installNow": "Asenna nyt",
+  "update.notes": "Julkaisutiedot",
+  "update.installMsg": "”Asenna nyt” lataa päivityksen, tarkistaa sen ja käynnistää sovelluksen ABS Desktop App uudelleen uutena versiona. Asetuksesi ja kirjautumisesi säilyvät.",
+  "update.downloading": "Ladataan {percent} %",
+  "update.installing": "Asennetaan…",
+  "update.installFailed": "Päivitystä ei voitu asentaa",
+  "update.installFailedMsg": "Mitään ei muutettu. Yritä myöhemmin uudelleen tai lataa päivitys julkaisusivulta.",
+  "update.verifyFailed": "Ladattu tiedosto ei vastannut julkaistua tarkistussummaa, joten se poistettiin eikä mitään muutettu.",
+  "update.done": "Päivitetty versioon {version} (aiempi {from})."
 }

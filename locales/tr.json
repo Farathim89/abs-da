@@ -154,5 +154,14 @@
   "app.hwAccel": "Donanım hızlandırmayı kullan",
   "app.restartTitle": "Yeniden başlatma gerekli",
   "app.restartMsg": "Değişiklik, ABS Desktop App yeniden başlatıldıktan sonra geçerli olur. Şimdi yeniden başlatılsın mı?",
-  "app.restartNow": "Şimdi yeniden başlat"
+  "app.restartNow": "Şimdi yeniden başlat",
+  "update.installNow": "Şimdi yükle",
+  "update.notes": "Sürüm notları",
+  "update.installMsg": "“Şimdi yükle” güncellemeyi indirir, doğrular ve ABS Desktop App'i yeni sürümle yeniden başlatır. Ayarlarınız ve girişiniz korunur.",
+  "update.downloading": "İndiriliyor %{percent}",
+  "update.installing": "Yükleniyor…",
+  "update.installFailed": "Güncelleme yüklenemedi",
+  "update.installFailedMsg": "Hiçbir şey değiştirilmedi. Daha sonra tekrar deneyin veya sürüm sayfasından indirin.",
+  "update.verifyFailed": "İndirilen dosya yayımlanan sağlama toplamıyla eşleşmediği için silindi ve hiçbir şey değiştirilmedi.",
+  "update.done": "{version} sürümüne güncellendi (önceki sürüm: {from})."
 }

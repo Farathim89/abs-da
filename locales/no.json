@@ -154,5 +154,14 @@
   "app.hwAccel": "Bruk maskinvareakselerasjon",
   "app.restartTitle": "Omstart kreves",
   "app.restartMsg": "Endringen trer i kraft når ABS Desktop App er startet på nytt. Vil du starte på nytt nå?",
-  "app.restartNow": "Start på nytt nå"
+  "app.restartNow": "Start på nytt nå",
+  "update.installNow": "Installer nå",
+  "update.notes": "Utgivelsesnotater",
+  "update.installMsg": "«Installer nå» laster ned oppdateringen, kontrollerer den og starter ABS Desktop App på nytt med den nye versjonen. Innstillingene og påloggingen din beholdes.",
+  "update.downloading": "Laster ned {percent} %",
+  "update.installing": "Installerer…",
+  "update.installFailed": "Kunne ikke installere oppdateringen",
+  "update.installFailedMsg": "Ingenting ble endret. Prøv igjen senere, eller last den ned fra utgivelsessiden.",
+  "update.verifyFailed": "Den nedlastede filen samsvarte ikke med det publiserte fingeravtrykket, så den ble slettet og ingenting ble endret.",
+  "update.done": "Oppdatert til versjon {version} (fra {from})."
 }

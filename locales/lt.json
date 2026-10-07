@@ -154,5 +154,14 @@
   "app.hwAccel": "Naudoti aparatinį spartinimą",
   "app.restartTitle": "Reikia paleisti iš naujo",
   "app.restartMsg": "Pakeitimas įsigalios, kai ABS Desktop App bus paleista iš naujo. Paleisti iš naujo dabar?",
-  "app.restartNow": "Paleisti iš naujo dabar"
+  "app.restartNow": "Paleisti iš naujo dabar",
+  "update.installNow": "Įdiegti dabar",
+  "update.notes": "Laidos informacija",
+  "update.installMsg": "„Įdiegti dabar“ atsisiųs naujinimą, jį patikrins ir iš naujo paleis ABS Desktop App su nauja versija. Jūsų nustatymai ir prisijungimas išliks.",
+  "update.downloading": "Atsisiunčiama {percent} %",
+  "update.installing": "Diegiama…",
+  "update.installFailed": "Nepavyko įdiegti naujinimo",
+  "update.installFailedMsg": "Niekas nepakeista. Bandykite vėliau arba atsisiųskite jį iš laidos puslapio.",
+  "update.verifyFailed": "Atsisiųstas failas neatitiko paskelbtos kontrolinės sumos, todėl jis ištrintas ir niekas nepakeista.",
+  "update.done": "Atnaujinta į versiją {version} (buvo {from})."
 }

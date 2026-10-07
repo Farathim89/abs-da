@@ -725,6 +725,13 @@ function createWindow() {
   win.loadFile(path.join(__dirname, "titlebar.html"));
   win.once("ready-to-show", () => {
     if (startHidden) return;   // started with Windows → stay in the tray
+    if (process.env.ABSDA_TEST_OFFSCREEN) {
+      // For automated tests only: open far off-screen without taking focus, so the
+      // person at the PC isn't disturbed (the window still draws for screenshots).
+      win.setPosition(-20000, -20000);
+      win.showInactive();
+      return;
+    }
     win.show();
     wc().focus();
   });
@@ -1085,15 +1092,22 @@ async function copyDiagnostics() {
   if (response === 1) openExternal(`${REPO_URL}/issues/new?template=bug_report.yml`);
 }
 
-// ---- update check -----------------------------------------------------------
-// Asks GitHub for the newest ABS-DA release (nothing personal is sent, nothing is
-// installed). If it's newer: an "Update x.y.z" pill in the title bar, a one-time
-// Windows notification, and Help → Download update. Automatic checks can be
-// turned off (App → Check for updates automatically); Help → Check for Updates…
-// always works.
+// ---- updates ----------------------------------------------------------------
+// Asks GitHub for the newest ABS-DA release (nothing personal is sent). If it's
+// newer: an "Update x.y.z" pill in the title bar and a one-time Windows
+// notification. Clicking either offers one-click install:
+//  - installed app: downloads the new Setup and runs it silently, then restarts;
+//  - portable: downloads the new portable .exe into the same folder, swaps it for
+//    the old one once the app has closed, and starts it (abs-da-data is kept).
+// Every download is checked against the SHA-256 fingerprint GitHub publishes for
+// the file; on a mismatch it's deleted and nothing changes. Nothing installs
+// without a click. Automatic checks can be turned off (App → Check for updates
+// automatically); Help → Check for Updates… always works.
 const RELEASES_API = "https://api.github.com/repos/Farathim89/abs-da/releases/latest";
-let latestRelease = null;   // { version, url } when GitHub has a newer version
+let latestRelease = null;   // { version, url, asset } when GitHub has a newer version
+let updateBusy = false;     // downloading / installing right now
 const autoUpdateCheck = () => config.updateCheck !== false;
+const appKind = () => (process.env.PORTABLE_EXECUTABLE_FILE ? "portable" : app.isPackaged ? "installed" : "dev");
 
 // "2.10.0" vs "2.9.1" → true when a is newer than b.
 function isNewer(a, b) {
@@ -1103,10 +1117,25 @@ function isNewer(a, b) {
   return false;
 }
 
-function sendUpdateToTitleBar() {
+// The release file this copy of the app can update itself with (null = can't).
+function pickAsset(assets) {
+  const want = appKind() === "portable" ? /^ABS-DA-Portable-[\d.]+\.exe$/i
+    : appKind() === "installed" ? /^ABS-DA-Setup-[\d.]+\.exe$/i : null;
+  const a = want && (assets || []).find((x) => want.test(x.name));
+  if (!a) return null;
+  return {
+    name: a.name,
+    url: a.browser_download_url,
+    size: a.size,
+    sha256: String(a.digest || "").replace(/^sha256:/i, "").toLowerCase() || null,
+  };
+}
+
+// Title bar pill: "Update 2.3.0", or the download progress while installing.
+function sendUpdateToTitleBar(progressText) {
   if (!win || win.isDestroyed()) return;
   win.webContents.send("titlebar:update", latestRelease
-    ? { label: tr("update.pill", { version: latestRelease.version }),
+    ? { label: progressText || tr("update.pill", { version: latestRelease.version }),
         tip: tr("update.newMsg", { version: latestRelease.version, current: app.getVersion() }) }
     : null);
 }
@@ -1115,28 +1144,142 @@ function openUpdatePage() {
   openExternal(latestRelease ? latestRelease.url : `${REPO_URL}/releases/latest`);
 }
 
+// "Update available" — with Install now when this copy can update itself.
 async function showUpdateDialog() {
+  if (!latestRelease || updateBusy) return;
+  showWindow();
+  const canInstall = !!latestRelease.asset;
+  const buttons = canInstall
+    ? [tr("update.installNow"), tr("update.notes"), tr("update.later")]
+    : [tr("update.download"), tr("update.later")];
   const { response } = await dialog.showMessageBox(win, {
     type: "info",
     title: tr("update.newTitle"),
     message: tr("update.newTitle"),
-    detail: tr("update.newMsg", { version: latestRelease.version, current: app.getVersion() }),
-    buttons: [tr("update.download"), tr("update.later")],
+    detail: tr("update.newMsg", { version: latestRelease.version, current: app.getVersion() }) +
+      (canInstall ? "\n\n" + tr("update.installMsg") : ""),
+    buttons,
     defaultId: 0,
-    cancelId: 1,
+    cancelId: buttons.length - 1,
   });
-  if (response === 0) openUpdatePage();
+  if (canInstall && response === 0) installUpdate();
+  else if ((canInstall && response === 1) || (!canInstall && response === 0)) openUpdatePage();
+}
+
+// Download to `dest` with progress in the title bar; returns the file's SHA-256.
+async function downloadFile(url, dest, size) {
+  const res = await net.fetch(url);
+  if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+  const total = Number(res.headers.get("content-length")) || size || 0;
+  const hash = require("crypto").createHash("sha256");
+  const out = fs.createWriteStream(dest);
+  const reader = res.body.getReader();
+  let got = 0;
+  let lastPct = -1;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = Buffer.from(value);
+      hash.update(chunk);
+      if (!out.write(chunk)) await new Promise((r) => out.once("drain", r));
+      got += chunk.length;
+      const pct = total ? Math.floor((got / total) * 100) : 0;
+      if (pct !== lastPct) { lastPct = pct; sendUpdateToTitleBar(tr("update.downloading", { percent: pct })); }
+    }
+  } finally {
+    await new Promise((r) => out.end(r));
+  }
+  if (size && got !== size) throw new Error(`size ${got} ≠ ${size}`);
+  return hash.digest("hex");
+}
+
+// Start a program that outlives this app. The portable's launcher closes everything
+// the app started when it quits, so Windows (WMI) is asked to start it independently.
+const psQuote = (str) => "'" + String(str).replace(/'/g, "''") + "'";
+const psEncoded = (script) => Buffer.from(script, "utf16le").toString("base64");
+function launchIndependent(commandLine) {
+  const inner = "$r = Invoke-CimMethod -ClassName Win32_Process -MethodName Create" +
+    " -Arguments @{ CommandLine = " + psQuote(commandLine) + " }; exit [int]$r.ReturnValue";
+  // If WMI can't start it, start it directly (fine for the installed app).
+  const direct = () => require("child_process").spawn(commandLine, [],
+    { shell: true, detached: true, stdio: "ignore", windowsHide: true }).unref();
+  return new Promise((resolve) => {
+    const p = require("child_process").spawn("powershell.exe",
+      ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", psEncoded(inner)],
+      { windowsHide: true, stdio: "ignore" });
+    const t = setTimeout(() => { direct(); resolve(); }, 15000);
+    p.on("exit", (code) => { clearTimeout(t); if (code !== 0) direct(); resolve(); });
+    p.on("error", () => { clearTimeout(t); direct(); resolve(); });
+  });
+}
+
+async function installUpdate() {
+  if (!latestRelease || !latestRelease.asset || updateBusy) return;
+  updateBusy = true;
+  const { asset, version } = latestRelease;
+  const portable = appKind() === "portable";
+  const dir = portable ? process.env.PORTABLE_EXECUTABLE_DIR : path.join(os.tmpdir(), "abs-da-update");
+  const target = path.join(dir, asset.name);
+  const part = target + ".download";
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+    const sha = await downloadFile(asset.url, part, asset.size);
+    if (asset.sha256 && sha !== asset.sha256) {
+      try { fs.unlinkSync(part); } catch {}
+      throw Object.assign(new Error("checksum mismatch"), { verify: true });
+    }
+    try { fs.unlinkSync(target); } catch {}
+    fs.renameSync(part, target);
+    sendUpdateToTitleBar(tr("update.installing"));
+    config = { ...config, updatedFrom: app.getVersion() };
+    writeJson(dataFile("config.json"), config);
+
+    if (portable) {
+      // A small hidden PowerShell waits for this app to close, removes the old .exe
+      // (once Windows lets go of it) and starts the new one.
+      const old = process.env.PORTABLE_EXECUTABLE_FILE;
+      const script =
+        `$old = ${psQuote(old)}; $new = ${psQuote(target)};` +
+        "for ($i = 0; $i -lt 120; $i++) { if ($old -ieq $new) { break };" +
+        " try { Remove-Item -LiteralPath $old -Force -ErrorAction Stop; break } catch { Start-Sleep -Milliseconds 500 } };" +
+        "Start-Process -FilePath $new";
+      await launchIndependent(
+        "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand " + psEncoded(script));
+    } else {
+      // Silent install of the new Setup; it starts the app again when done.
+      await launchIndependent(`"${target}" /S --updated --force-run`);
+    }
+    isQuitting = true;
+    setTimeout(() => app.quit(), 300);
+  } catch (err) {
+    updateBusy = false;
+    try { fs.unlinkSync(part); } catch {}
+    sendUpdateToTitleBar();
+    const verify = err && err.verify;
+    const { response } = await dialog.showMessageBox(win, {
+      type: "warning",
+      title: tr("update.installFailed"),
+      message: tr("update.installFailed"),
+      detail: verify ? tr("update.verifyFailed") : tr("update.installFailedMsg"),
+      buttons: [tr("update.notes"), tr("about.ok")],
+      defaultId: 1,
+      cancelId: 1,
+    });
+    if (response === 0) openUpdatePage();
+  }
 }
 
 // manual = from Help → Check for Updates… (then always say what was found).
 async function checkForUpdates(manual) {
+  if (updateBusy) return;
   try {
     const res = await net.fetch(RELEASES_API, { headers: { Accept: "application/vnd.github+json" } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const rel = await res.json();
     const version = String(rel.tag_name || "").replace(/^v/i, "");
     if (version && isNewer(version, app.getVersion())) {
-      latestRelease = { version, url: rel.html_url || `${REPO_URL}/releases/latest` };
+      latestRelease = { version, url: rel.html_url || `${REPO_URL}/releases/latest`, asset: pickAsset(rel.assets) };
       sendUpdateToTitleBar();
       if (manual) {
         showUpdateDialog();
@@ -1149,7 +1292,7 @@ async function checkForUpdates(manual) {
           body: tr("update.newMsg", { version, current: app.getVersion() }),
           icon: ICON,
         });
-        n.on("click", openUpdatePage);
+        n.on("click", showUpdateDialog);
         n.show();
       }
     } else {
@@ -1172,8 +1315,20 @@ async function checkForUpdates(manual) {
   }
 }
 
-// Automatic checks: shortly after start, then twice a day.
+// Automatic checks: shortly after start, then twice a day. Also: after an update,
+// say so once, and tidy up a downloaded installer.
 function startUpdateChecks() {
+  if (config.updatedFrom && config.updatedFrom !== app.getVersion()) {
+    const from = config.updatedFrom;
+    config = { ...config, updatedFrom: null };
+    writeJson(dataFile("config.json"), config);
+    if (Notification.isSupported()) {
+      new Notification({ title: "ABS Desktop App", body: tr("update.done", { version: app.getVersion(), from }), icon: ICON }).show();
+    }
+    if (appKind() === "installed") {
+      try { fs.rmSync(path.join(os.tmpdir(), "abs-da-update"), { recursive: true, force: true }); } catch {}
+    }
+  }
   setTimeout(() => { if (autoUpdateCheck()) checkForUpdates(false); }, 10000);
   setInterval(() => { if (autoUpdateCheck()) checkForUpdates(false); }, 12 * 60 * 60 * 1000);
 }
@@ -1436,7 +1591,7 @@ ipcMain.handle("desktop:window-kind", (e) => {
 ipcMain.on("desktop:close-settings", (e) => { if (fromServerPage(e)) closeSettings(); });
 
 // The "Update x.y.z" pill in the title bar.
-ipcMain.on("desktop:open-update", (e) => { if (fromLocalPage(e)) openUpdatePage(); });
+ipcMain.on("desktop:open-update", (e) => { if (fromLocalPage(e)) showUpdateDialog(); });
 
 // A settings link was clicked in the main window.
 ipcMain.on("desktop:open-settings", (e, url) => {

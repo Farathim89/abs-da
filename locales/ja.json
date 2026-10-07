@@ -154,5 +154,14 @@
   "app.hwAccel": "ハードウェア アクセラレーションを使用する",
   "app.restartTitle": "再起動が必要です",
   "app.restartMsg": "変更は ABS Desktop App の再起動後に有効になります。今すぐ再起動しますか？",
-  "app.restartNow": "今すぐ再起動"
+  "app.restartNow": "今すぐ再起動",
+  "update.installNow": "今すぐインストール",
+  "update.notes": "リリースノート",
+  "update.installMsg": "「今すぐインストール」を選ぶと、アップデートをダウンロードして確認し、新しいバージョンで ABS Desktop App を再起動します。設定とログイン情報はそのまま残ります。",
+  "update.downloading": "ダウンロード中 {percent}%",
+  "update.installing": "インストール中…",
+  "update.installFailed": "アップデートをインストールできませんでした",
+  "update.installFailedMsg": "何も変更されていません。後でもう一度お試しいただくか、リリースページからダウンロードしてください。",
+  "update.verifyFailed": "ダウンロードしたファイルが公開されているチェックサムと一致しなかったため、削除しました。何も変更されていません。",
+  "update.done": "バージョン {version} にアップデートしました（{from} から）。"
 }
