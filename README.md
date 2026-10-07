@@ -90,6 +90,18 @@ bookshelf (or use **View → Theme** / **View → Bookshelf**). They change live
 |:---:|:---:|:---:|
 | ![Midnight theme with the Starry night bookshelf](docs/theme-midnight.jpg) | ![Amethyst theme with the Aurora bookshelf](docs/theme-amethyst.jpg) | ![Forest theme with the Light oak bookshelf](docs/theme-forest.jpg) |
 
+## One-click updates
+
+When a new version is out, an **Update** button appears in the title bar:
+
+![The Update button in the title bar](docs/update-button.jpg)
+
+Click it, then **Install now**. ABS-DA downloads the new version, checks it against the
+fingerprint GitHub publishes, installs it and restarts, keeping your settings and login.
+This works for both the installer and the portable version.
+
+![The Update available window with Install now, Release notes and Later](docs/update-dialog.png)
+
 ## Privacy
 
 This program will not transfer any information to other networked systems unless specifically
