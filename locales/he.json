@@ -177,5 +177,8 @@
   "notif.pauseHover": "השהה כשהעכבר מעליהן",
   "notif.themed": "השתמש בצבעי ערכת הנושא",
   "notif.test": "הצג הודעת בדיקה",
-  "notif.testMsg": "כך נראות ההודעות."
+  "notif.testMsg": "כך נראות ההודעות.",
+  "app.desktopShortcut": "צור קיצור דרך בשולחן העבודה",
+  "app.shortcutDone": "קיצור דרך אל ABS Desktop App נמצא עכשיו בשולחן העבודה שלך. הוא ימשיך לפעול גם אחרי עדכונים.",
+  "app.shortcutFailed": "לא ניתן היה ליצור את קיצור הדרך."
 }

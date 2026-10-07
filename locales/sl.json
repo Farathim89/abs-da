@@ -177,5 +177,8 @@
   "notif.pauseHover": "Ustavi, ko je miška nad obvestilom",
   "notif.themed": "Uporabi barve teme",
   "notif.test": "Prikaži preizkusno obvestilo",
-  "notif.testMsg": "Tako so videti obvestila."
+  "notif.testMsg": "Tako so videti obvestila.",
+  "app.desktopShortcut": "Ustvari bližnjico na namizju",
+  "app.shortcutDone": "Na namizju je zdaj bližnjica do aplikacije ABS Desktop App. Delovala bo tudi po posodobitvah.",
+  "app.shortcutFailed": "Bližnjice ni bilo mogoče ustvariti."
 }

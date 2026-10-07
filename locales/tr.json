@@ -177,5 +177,8 @@
   "notif.pauseHover": "Fare üzerindeyken duraklat",
   "notif.themed": "Tema renklerini kullan",
   "notif.test": "Test bildirimi göster",
-  "notif.testMsg": "Bildirimler böyle görünür."
+  "notif.testMsg": "Bildirimler böyle görünür.",
+  "app.desktopShortcut": "Masaüstü Kısayolu Oluştur",
+  "app.shortcutDone": "ABS Desktop App kısayolu artık masaüstünüzde. Güncellemelerden sonra da çalışmaya devam eder.",
+  "app.shortcutFailed": "Kısayol oluşturulamadı."
 }

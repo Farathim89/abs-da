@@ -177,5 +177,8 @@
   "notif.pauseHover": "Tạm dừng khi rê chuột lên",
   "notif.themed": "Dùng màu của chủ đề",
   "notif.test": "Hiện thông báo thử",
-  "notif.testMsg": "Thông báo sẽ trông như thế này."
+  "notif.testMsg": "Thông báo sẽ trông như thế này.",
+  "app.desktopShortcut": "Tạo lối tắt trên màn hình nền",
+  "app.shortcutDone": "Lối tắt đến ABS Desktop App đã có trên màn hình nền của bạn. Lối tắt vẫn hoạt động sau khi cập nhật.",
+  "app.shortcutFailed": "Không thể tạo lối tắt."
 }

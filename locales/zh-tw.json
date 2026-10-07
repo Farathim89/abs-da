@@ -177,5 +177,8 @@
   "notif.pauseHover": "滑鼠停留時暫停",
   "notif.themed": "使用主題色彩",
   "notif.test": "顯示測試通知",
-  "notif.testMsg": "通知看起來就像這樣。"
+  "notif.testMsg": "通知看起來就像這樣。",
+  "app.desktopShortcut": "建立桌面捷徑",
+  "app.shortcutDone": "ABS Desktop App 的捷徑已新增到桌面。更新後仍可繼續使用。",
+  "app.shortcutFailed": "無法建立捷徑。"
 }

@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pristabdyti užvedus pelę",
   "notif.themed": "Naudoti temos spalvas",
   "notif.test": "Rodyti bandomąjį pranešimą",
-  "notif.testMsg": "Taip atrodo pranešimai."
+  "notif.testMsg": "Taip atrodo pranešimai.",
+  "app.desktopShortcut": "Sukurti nuorodą darbalaukyje",
+  "app.shortcutDone": "Jūsų darbalaukyje dabar yra ABS Desktop App nuoroda. Ji veiks ir po naujinimų.",
+  "app.shortcutFailed": "Nepavyko sukurti nuorodos."
 }

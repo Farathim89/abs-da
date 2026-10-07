@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pausa en passar-hi el ratolí",
   "notif.themed": "Utilitza els colors del tema",
   "notif.test": "Mostra una notificació de prova",
-  "notif.testMsg": "Així es veuen les notificacions."
+  "notif.testMsg": "Així es veuen les notificacions.",
+  "app.desktopShortcut": "Crea una drecera a l’escriptori",
+  "app.shortcutDone": "Ara hi ha una drecera a ABS Desktop App a l’escriptori. Continuarà funcionant després de les actualitzacions.",
+  "app.shortcutFailed": "No s’ha pogut crear la drecera."
 }

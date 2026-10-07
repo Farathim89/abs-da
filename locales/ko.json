@@ -177,5 +177,8 @@
   "notif.pauseHover": "마우스를 올리면 일시정지",
   "notif.themed": "테마 색상 사용",
   "notif.test": "테스트 알림 표시",
-  "notif.testMsg": "알림은 이렇게 표시됩니다."
+  "notif.testMsg": "알림은 이렇게 표시됩니다.",
+  "app.desktopShortcut": "바탕 화면에 바로 가기 만들기",
+  "app.shortcutDone": "바탕 화면에 ABS Desktop App 바로 가기가 만들어졌습니다. 업데이트 후에도 계속 작동합니다.",
+  "app.shortcutFailed": "바로 가기를 만들 수 없습니다."
 }

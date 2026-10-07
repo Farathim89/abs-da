@@ -177,5 +177,8 @@
   "notif.pauseHover": "إيقاف مؤقت عند تمرير المؤشر",
   "notif.themed": "استخدام ألوان النمط",
   "notif.test": "عرض إشعار تجريبي",
-  "notif.testMsg": "هكذا تبدو الإشعارات."
+  "notif.testMsg": "هكذا تبدو الإشعارات.",
+  "app.desktopShortcut": "إنشاء اختصار على سطح المكتب",
+  "app.shortcutDone": "يوجد الآن اختصار إلى ABS Desktop App على سطح المكتب. وسيظل يعمل بعد التحديثات.",
+  "app.shortcutFailed": "تعذّر إنشاء الاختصار."
 }

@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pausa när musen är över",
   "notif.themed": "Använd temats färger",
   "notif.test": "Visa en testavisering",
-  "notif.testMsg": "Så här ser aviseringar ut."
+  "notif.testMsg": "Så här ser aviseringar ut.",
+  "app.desktopShortcut": "Skapa genväg på skrivbordet",
+  "app.shortcutDone": "En genväg till ABS Desktop App finns nu på skrivbordet. Den fortsätter fungera efter uppdateringar.",
+  "app.shortcutFailed": "Genvägen kunde inte skapas."
 }

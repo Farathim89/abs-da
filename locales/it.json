@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pausa al passaggio del mouse",
   "notif.themed": "Usa i colori del tema",
   "notif.test": "Mostra una notifica di prova",
-  "notif.testMsg": "Ecco come appaiono le notifiche."
+  "notif.testMsg": "Ecco come appaiono le notifiche.",
+  "app.desktopShortcut": "Crea collegamento sul desktop",
+  "app.shortcutDone": "Sul desktop ora c’è un collegamento ad ABS Desktop App. Continuerà a funzionare anche dopo gli aggiornamenti.",
+  "app.shortcutFailed": "Impossibile creare il collegamento."
 }

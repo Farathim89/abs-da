@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pozastaviť pri ukázaní myšou",
   "notif.themed": "Použiť farby témy",
   "notif.test": "Zobraziť testovacie oznámenie",
-  "notif.testMsg": "Takto vyzerajú oznámenia."
+  "notif.testMsg": "Takto vyzerajú oznámenia.",
+  "app.desktopShortcut": "Vytvoriť odkaz na pracovnej ploche",
+  "app.shortcutDone": "Na pracovnej ploche je teraz odkaz na aplikáciu ABS Desktop App. Bude fungovať aj po aktualizáciách.",
+  "app.shortcutFailed": "Odkaz sa nepodarilo vytvoriť."
 }

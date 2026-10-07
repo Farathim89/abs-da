@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pauziraj dok je miš iznad",
   "notif.themed": "Koristi boje teme",
   "notif.test": "Prikaži probnu obavijest",
-  "notif.testMsg": "Ovako izgledaju obavijesti."
+  "notif.testMsg": "Ovako izgledaju obavijesti.",
+  "app.desktopShortcut": "Stvori prečac na radnoj površini",
+  "app.shortcutDone": "Na radnoj površini sada se nalazi prečac za ABS Desktop App. Nastavit će raditi i nakon ažuriranja.",
+  "app.shortcutFailed": "Prečac nije moguće stvoriti."
 }

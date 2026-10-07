@@ -177,5 +177,8 @@
   "notif.pauseHover": "Sæt på pause, når musen er over",
   "notif.themed": "Brug temaets farver",
   "notif.test": "Vis en testmeddelelse",
-  "notif.testMsg": "Sådan ser meddelelser ud."
+  "notif.testMsg": "Sådan ser meddelelser ud.",
+  "app.desktopShortcut": "Opret genvej på skrivebordet",
+  "app.shortcutDone": "Der er nu en genvej til ABS Desktop App på dit skrivebord. Den virker fortsat efter opdateringer.",
+  "app.shortcutFailed": "Genvejen kunne ikke oprettes."
 }

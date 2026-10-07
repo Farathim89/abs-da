@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pausar al pasar el ratón",
   "notif.themed": "Usar los colores del tema",
   "notif.test": "Mostrar una notificación de prueba",
-  "notif.testMsg": "Así se ven las notificaciones."
+  "notif.testMsg": "Así se ven las notificaciones.",
+  "app.desktopShortcut": "Crear acceso directo en el escritorio",
+  "app.shortcutDone": "Ya tienes un acceso directo a ABS Desktop App en el escritorio. Seguirá funcionando después de las actualizaciones.",
+  "app.shortcutFailed": "No se pudo crear el acceso directo."
 }

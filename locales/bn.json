@@ -177,5 +177,8 @@
   "notif.pauseHover": "মাউস রাখলে থামান",
   "notif.themed": "থিমের রং ব্যবহার করুন",
   "notif.test": "একটি পরীক্ষামূলক বিজ্ঞপ্তি দেখান",
-  "notif.testMsg": "বিজ্ঞপ্তি এভাবে দেখায়।"
+  "notif.testMsg": "বিজ্ঞপ্তি এভাবে দেখায়।",
+  "app.desktopShortcut": "ডেস্কটপে শর্টকাট তৈরি করুন",
+  "app.shortcutDone": "ABS Desktop App-এর একটি শর্টকাট এখন আপনার ডেস্কটপে আছে। আপডেটের পরেও এটি কাজ করবে।",
+  "app.shortcutFailed": "শর্টকাট তৈরি করা যায়নি।"
 }

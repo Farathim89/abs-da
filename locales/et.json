@@ -177,5 +177,8 @@
   "notif.pauseHover": "Peata, kui hiir on peal",
   "notif.themed": "Kasuta teema värve",
   "notif.test": "Näita testteatist",
-  "notif.testMsg": "Nii näevad teatised välja."
+  "notif.testMsg": "Nii näevad teatised välja.",
+  "app.desktopShortcut": "Loo töölauale otsetee",
+  "app.shortcutDone": "Sinu töölaual on nüüd otsetee rakendusele ABS Desktop App. See töötab ka pärast värskendusi.",
+  "app.shortcutFailed": "Otseteed ei õnnestunud luua."
 }

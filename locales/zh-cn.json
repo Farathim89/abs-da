@@ -177,5 +177,8 @@
   "notif.pauseHover": "鼠标悬停时暂停",
   "notif.themed": "使用主题颜色",
   "notif.test": "显示测试通知",
-  "notif.testMsg": "通知就是这个样子。"
+  "notif.testMsg": "通知就是这个样子。",
+  "app.desktopShortcut": "创建桌面快捷方式",
+  "app.shortcutDone": "ABS Desktop App 的快捷方式已添加到桌面。更新后仍可继续使用。",
+  "app.shortcutFailed": "无法创建快捷方式。"
 }

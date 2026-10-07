@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pause while hovering",
   "notif.themed": "Use theme colours",
   "notif.test": "Show a test notification",
-  "notif.testMsg": "This is how notifications look."
+  "notif.testMsg": "This is how notifications look.",
+  "app.desktopShortcut": "Create Desktop Shortcut",
+  "app.shortcutDone": "A shortcut to ABS Desktop App is now on your desktop. It keeps working after updates.",
+  "app.shortcutFailed": "The shortcut couldn't be created."
 }

@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pausar ao passar o mouse",
   "notif.themed": "Usar as cores do tema",
   "notif.test": "Mostrar uma notificação de teste",
-  "notif.testMsg": "É assim que as notificações aparecem."
+  "notif.testMsg": "É assim que as notificações aparecem.",
+  "app.desktopShortcut": "Criar atalho na área de trabalho",
+  "app.shortcutDone": "Um atalho para o ABS Desktop App agora está na sua área de trabalho. Ele continua funcionando após as atualizações.",
+  "app.shortcutFailed": "Não foi possível criar o atalho."
 }

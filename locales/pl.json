@@ -177,5 +177,8 @@
   "notif.pauseHover": "Wstrzymuj po najechaniu myszą",
   "notif.themed": "Używaj kolorów motywu",
   "notif.test": "Pokaż testowe powiadomienie",
-  "notif.testMsg": "Tak wyglądają powiadomienia."
+  "notif.testMsg": "Tak wyglądają powiadomienia.",
+  "app.desktopShortcut": "Utwórz skrót na pulpicie",
+  "app.shortcutDone": "Na pulpicie jest teraz skrót do ABS Desktop App. Będzie działać również po aktualizacjach.",
+  "app.shortcutFailed": "Nie udało się utworzyć skrótu."
 }

@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pause au survol de la souris",
   "notif.themed": "Utiliser les couleurs du thème",
   "notif.test": "Afficher une notification de test",
-  "notif.testMsg": "Voici à quoi ressemblent les notifications."
+  "notif.testMsg": "Voici à quoi ressemblent les notifications.",
+  "app.desktopShortcut": "Créer un raccourci sur le Bureau",
+  "app.shortcutDone": "Un raccourci vers ABS Desktop App est maintenant sur votre Bureau. Il continuera de fonctionner après les mises à jour.",
+  "app.shortcutFailed": "Impossible de créer le raccourci."
 }

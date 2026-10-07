@@ -177,5 +177,8 @@
   "notif.pauseHover": "Pozastavit při najetí myší",
   "notif.themed": "Použít barvy tématu",
   "notif.test": "Zobrazit testovací oznámení",
-  "notif.testMsg": "Takto vypadají oznámení."
+  "notif.testMsg": "Takto vypadají oznámení.",
+  "app.desktopShortcut": "Vytvořit zástupce na ploše",
+  "app.shortcutDone": "Na ploše je teď zástupce aplikace ABS Desktop App. Bude fungovat i po aktualizacích.",
+  "app.shortcutFailed": "Zástupce se nepodařilo vytvořit."
 }

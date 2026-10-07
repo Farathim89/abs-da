@@ -177,5 +177,8 @@
   "notif.pauseHover": "マウスを重ねている間は一時停止",
   "notif.themed": "テーマの色を使用",
   "notif.test": "テスト通知を表示",
-  "notif.testMsg": "通知はこのように表示されます。"
+  "notif.testMsg": "通知はこのように表示されます。",
+  "app.desktopShortcut": "デスクトップにショートカットを作成",
+  "app.shortcutDone": "ABS Desktop App のショートカットをデスクトップに作成しました。アップデート後もそのまま使えます。",
+  "app.shortcutFailed": "ショートカットを作成できませんでした。"
 }

@@ -27,8 +27,12 @@ Get the latest version from the **[Releases](https://github.com/Farathim89/abs-d
 > `Documents\ABS-DA`, put the `.exe` in it and start it from there. The app keeps its settings and
 > login in an `abs-da-data` folder next to the `.exe`, so this keeps everything together and easy
 > to move or delete. Avoid running it straight from Downloads or the Desktop, and avoid synced
-> (OneDrive/Dropbox) or read-only folders. To update, replace the `.exe` in that folder; your
-> settings stay.
+> (OneDrive/Dropbox) or read-only folders.
+>
+> **Shortcuts:** use **App → Create Desktop Shortcut**, or pin it to the taskbar. One-click updates
+> put the new version in place of the old file, so shortcuts keep working. (The first update renames
+> `ABS-DA-Portable-<version>.exe` to plain `ABS-DA-Portable.exe` once, and moves the app's own
+> desktop shortcut along; a name you gave the file yourself is kept.)
 
 Windows may show **"Windows protected your PC"** the first time, because the app isn't
 code-signed. Click **More info → Run anyway**.

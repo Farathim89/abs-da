@@ -1315,6 +1315,33 @@ async function downloadFile(url, dest, size) {
   return hash.digest("hex");
 }
 
+// ---- desktop shortcut (portable) ----------------------------------------------
+// App → Create Desktop Shortcut. The app keeps "its" shortcut pointing at the right
+// .exe, also when an update renames the file once.
+const desktopShortcutPath = () => path.join(app.getPath("desktop"), "ABS Desktop App.lnk");
+function createDesktopShortcut() {
+  const exe = process.env.PORTABLE_EXECUTABLE_FILE;
+  if (!exe) return;
+  const ok = shell.writeShortcutLink(desktopShortcutPath(), "replace", {
+    target: exe, cwd: path.dirname(exe), icon: exe, iconIndex: 0,
+    description: "ABS Desktop App", appUserModelId: APP_ID,
+  });
+  dialog.showMessageBox(win, {
+    type: ok ? "info" : "warning", title: tr("app.desktopShortcut"), message: tr("app.desktopShortcut"),
+    detail: ok ? tr("app.shortcutDone") : tr("app.shortcutFailed"), buttons: [tr("about.ok")],
+  });
+}
+function repointDesktopShortcut(oldExe, newExe) {
+  if (oldExe === newExe) return;
+  try {
+    const lnk = desktopShortcutPath();
+    if (!fs.existsSync(lnk)) return;
+    const cur = shell.readShortcutLink(lnk);
+    if (String(cur.target).toLowerCase() !== String(oldExe).toLowerCase()) return;   // not ours / points elsewhere
+    shell.writeShortcutLink(lnk, "update", { target: newExe, icon: newExe, iconIndex: 0, cwd: path.dirname(newExe) });
+  } catch {}
+}
+
 // Start a program that outlives this app. The portable's launcher closes everything
 // the app started when it quits, so Windows (WMI) is asked to start it independently.
 const psQuote = (str) => "'" + String(str).replace(/'/g, "''") + "'";
@@ -1341,7 +1368,9 @@ async function installUpdate() {
   const { asset, version } = latestRelease;
   const portable = appKind() === "portable";
   const dir = portable ? process.env.PORTABLE_EXECUTABLE_DIR : path.join(os.tmpdir(), "abs-da-update");
-  const target = path.join(dir, asset.name);
+  // Portable: download beside the app under a hidden name, then put it in place of the
+  // old .exe (see below). Installer: keep the release's own file name in Temp.
+  const target = portable ? path.join(dir, ".abs-da-update.exe") : path.join(dir, asset.name);
   const part = target + ".download";
   try {
     fs.mkdirSync(dir, { recursive: true });
@@ -1357,14 +1386,22 @@ async function installUpdate() {
     writeJson(dataFile("config.json"), config);
 
     if (portable) {
-      // A small hidden PowerShell waits for this app to close, removes the old .exe
-      // (once Windows lets go of it) and starts the new one.
+      // The new version takes the old file's place, so shortcuts, taskbar pins and
+      // "Start with Windows" keep working. Only the default versioned name
+      // ("ABS-DA-Portable-2.3.2.exe") becomes the plain "ABS-DA-Portable.exe" (once);
+      // a name you chose yourself is kept.
       const old = process.env.PORTABLE_EXECUTABLE_FILE;
+      const final = /^ABS-DA-Portable-[\d.]+\.exe$/i.test(path.basename(old)) ? path.join(dir, "ABS-DA-Portable.exe") : old;
+      repointDesktopShortcut(old, final);
+      // A small hidden PowerShell waits for this app to close (Windows lets go of the
+      // old .exe), moves the new one into place and starts it.
       const script =
-        `$old = ${psQuote(old)}; $new = ${psQuote(target)};` +
-        "for ($i = 0; $i -lt 120; $i++) { if ($old -ieq $new) { break };" +
-        " try { Remove-Item -LiteralPath $old -Force -ErrorAction Stop; break } catch { Start-Sleep -Milliseconds 500 } };" +
-        "Start-Process -FilePath $new";
+        `$old = ${psQuote(old)}; $new = ${psQuote(target)}; $final = ${psQuote(final)};` +
+        "for ($i = 0; $i -lt 120; $i++) { try {" +
+        " if (($old -ine $final) -and (Test-Path -LiteralPath $old)) { Remove-Item -LiteralPath $old -Force -ErrorAction Stop };" +
+        " Move-Item -LiteralPath $new -Destination $final -Force -ErrorAction Stop; break" +
+        " } catch { Start-Sleep -Milliseconds 500 } };" +
+        "Start-Process -FilePath $final";
       await launchIndependent(
         "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand " + psEncoded(script));
     } else {
@@ -1518,6 +1555,7 @@ function buildMenu() {
       submenu: [
         { label: tr("app.home"), ...shortcut("Alt+Home"), click: goHome },
         { label: tr("app.changeServer"), click: () => showConnectPage("change") },
+        ...(appKind() === "portable" ? [{ label: tr("app.desktopShortcut"), click: createDesktopShortcut }] : []),
         {
           label: tr("app.forgetLogin"),
           click: () => {
