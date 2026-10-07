@@ -163,5 +163,19 @@
   "update.installFailed": "The update couldn't be installed",
   "update.installFailedMsg": "Nothing was changed. Try again later, or download it from the release page.",
   "update.verifyFailed": "The downloaded file didn't match the published fingerprint, so it was deleted and nothing was changed.",
-  "update.done": "Updated to version {version} (from {from})."
+  "update.done": "Updated to version {version} (from {from}).",
+  "view.notifications": "Notifications",
+  "notif.duration": "How long they stay",
+  "notif.short": "Short (3 s)",
+  "notif.normal": "Normal (5 s)",
+  "notif.long": "Long (10 s)",
+  "notif.untilClosed": "Until I close them",
+  "notif.position": "Where they appear",
+  "notif.topRight": "Top right",
+  "notif.bottomRight": "Bottom right",
+  "notif.topCenter": "Top centre",
+  "notif.pauseHover": "Pause while hovering",
+  "notif.themed": "Use theme colours",
+  "notif.test": "Show a test notification",
+  "notif.testMsg": "This is how notifications look."
 }

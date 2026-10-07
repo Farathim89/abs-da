@@ -163,5 +163,19 @@
   "update.installFailed": "无法安装更新",
   "update.installFailedMsg": "未做任何更改。请稍后重试，或从发布页面下载。",
   "update.verifyFailed": "下载的文件与公布的校验值不符，因此已将其删除，未做任何更改。",
-  "update.done": "已更新到版本 {version}（原版本 {from}）。"
+  "update.done": "已更新到版本 {version}（原版本 {from}）。",
+  "view.notifications": "通知",
+  "notif.duration": "显示时长",
+  "notif.short": "短（3 秒）",
+  "notif.normal": "正常（5 秒）",
+  "notif.long": "长（10 秒）",
+  "notif.untilClosed": "直到我关闭",
+  "notif.position": "显示位置",
+  "notif.topRight": "右上角",
+  "notif.bottomRight": "右下角",
+  "notif.topCenter": "顶部居中",
+  "notif.pauseHover": "鼠标悬停时暂停",
+  "notif.themed": "使用主题颜色",
+  "notif.test": "显示测试通知",
+  "notif.testMsg": "通知就是这个样子。"
 }

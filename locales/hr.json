@@ -163,5 +163,19 @@
   "update.installFailed": "Ažuriranje nije moguće instalirati",
   "update.installFailedMsg": "Ništa nije promijenjeno. Pokušajte ponovno kasnije ili ga preuzmite sa stranice izdanja.",
   "update.verifyFailed": "Preuzeta datoteka ne odgovara objavljenom kontrolnom zbroju pa je izbrisana i ništa nije promijenjeno.",
-  "update.done": "Ažurirano na verziju {version} (s {from})."
+  "update.done": "Ažurirano na verziju {version} (s {from}).",
+  "view.notifications": "Obavijesti",
+  "notif.duration": "Koliko dugo ostaju",
+  "notif.short": "Kratko (3 s)",
+  "notif.normal": "Normalno (5 s)",
+  "notif.long": "Dugo (10 s)",
+  "notif.untilClosed": "Dok ih ne zatvorim",
+  "notif.position": "Gdje se prikazuju",
+  "notif.topRight": "Gore desno",
+  "notif.bottomRight": "Dolje desno",
+  "notif.topCenter": "Gore u sredini",
+  "notif.pauseHover": "Pauziraj dok je miš iznad",
+  "notif.themed": "Koristi boje teme",
+  "notif.test": "Prikaži probnu obavijest",
+  "notif.testMsg": "Ovako izgledaju obavijesti."
 }

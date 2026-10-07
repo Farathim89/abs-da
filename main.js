@@ -109,7 +109,8 @@ const ABS_CSS_FIXES = `
 // The Audiobookshelf web app takes its colours from CSS variables (--color-primary
 // = page background, --color-bg = panels, --color-black-* = grays for borders/
 // hover/inputs, --color-accent), so a theme just overrides those. `title` colours
-// the custom title bar and Windows' minimise/maximise/close buttons.
+// the custom title bar and Windows' minimise/maximise/close buttons. `success` is the
+// action colour (Save / Scan Library buttons, on/off switches); red and orange stay as they are.
 //
 // With a Windows Contrast Theme on, Windows swaps every colour for the contrast
 // theme's colours (sliders like volume and the seek bar vanish). All themes
@@ -127,7 +128,7 @@ const THEMES = {
     scroll: "#46598a",
     page: "linear-gradient(to right bottom, #1c2536, #121826)",
     colors: {
-      primary: "#121826", bg: "#1c2536", accent: "#5aa9ff",
+      primary: "#121826", bg: "#1c2536", accent: "#5aa9ff", success: "#2f6fc4",
       "black-50": "#b6bfd0", "black-100": "#6b7790", "black-200": "#556078", "black-300": "#3e485d",
       "black-400": "#2c3446", "black-500": "#1b2232", "black-600": "#111724", "black-700": "#0c111b",
     },
@@ -153,7 +154,7 @@ const THEMES = {
     scroll: "#4e6b49",
     page: "linear-gradient(to right bottom, #1f2b24, #141c17)",
     colors: {
-      primary: "#141c17", bg: "#1f2b24", accent: "#74d68a",
+      primary: "#141c17", bg: "#1f2b24", accent: "#74d68a", success: "#3e8f55",
       "black-50": "#b8c6bc", "black-100": "#6c8072", "black-200": "#55675a", "black-300": "#3f4e44",
       "black-400": "#2d3a31", "black-500": "#1c251f", "black-600": "#121914", "black-700": "#0c120e",
     },
@@ -165,7 +166,7 @@ const THEMES = {
     shelf: "linear-gradient(180deg, #a07a55 0%, #6b4a2c 17%, #6b4a2c 88%, #45301b 100%)",
     page: "linear-gradient(to right bottom, #2a221d, #1c1714)",
     colors: {
-      primary: "#1c1714", bg: "#2a221d", accent: "#e6a85c",
+      primary: "#1c1714", bg: "#2a221d", accent: "#e6a85c", success: "#a86f35",
       "black-50": "#cbbfb5", "black-100": "#7d6f65", "black-200": "#645850", "black-300": "#4c423b",
       "black-400": "#382f2a", "black-500": "#241e1a", "black-600": "#17130f", "black-700": "#110d0b",
     },
@@ -178,7 +179,7 @@ const THEMES = {
     scroll: "#6a5596",
     page: "linear-gradient(to right bottom, #27233a, #1b1828)",
     colors: {
-      primary: "#1b1828", bg: "#27233a", accent: "#b58cff",
+      primary: "#1b1828", bg: "#27233a", accent: "#b58cff", success: "#7350c0",
       "black-50": "#c4bfda", "black-100": "#78729c", "black-200": "#5e5982", "black-300": "#474263",
       "black-400": "#34304c", "black-500": "#221f33", "black-600": "#161423", "black-700": "#100e19",
     },
@@ -192,9 +193,9 @@ const THEMES = {
     scroll: "#ffffff",
     page: "linear-gradient(#000000, #000000)",
     // Notifications: extra-bright type colours (the white outline is in `css` below).
-    toast: { success: "#00e676", error: "#ff5252", warning: "#ffd400", info: "#40c4ff", default: "#ffd400" },
+    toast: { success: "#00e676", error: "#ff5252", warning: "#ffd400", info: "#40c4ff", default: "#ffd400", outline: "#ffffff" },
     colors: {
-      primary: "#000000", bg: "#000000", accent: "#ffd400",
+      primary: "#000000", bg: "#000000", accent: "#ffd400", success: "#008a3e",
       "black-50": "#ffffff", "black-100": "#e6e6e6", "black-200": "#c8c8c8", "black-300": "#9a9a9a",
       "black-400": "#2a2a2a", "black-500": "#161616", "black-600": "#0a0a0a", "black-700": "#000000",
       // The web app's grey text, made bright.
@@ -206,7 +207,6 @@ const THEMES = {
       #siderail-buttons-container a { border-bottom-color: #4a4a4a !important; }
       #appbar { border-bottom: 1px solid #4a4a4a; }
       .globalSearchMenu, .librariesDropdownMenu, [role="menu"], [role="listbox"] { border-color: #ffffff !important; }
-      html:root body .Vue-Toastification__toast { border: 2px solid #ffffff !important; border-left: 8px solid var(--absda-toast) !important; }
       html:root body #appbar div:has(> ul.librariesDropdownMenu) > button,
       html:root body #appbar a[href$="/account"],
       html:root body #appbar .absda-search input { border-color: #ffffff !important; background: #000000 !important; }
@@ -230,12 +230,15 @@ async function readWoodTexture(contents) {
 
 // Pop-up notifications ("Library … created", errors…): the theme's panel colour with a
 // coloured stripe, icon and progress bar per type, instead of bright full-colour blocks.
+// (View → Notifications → Use theme colours turns this off.)
 function toastCss(panel, accent, status) {
   const s = { success: "#43b581", error: "#e5534b", warning: "#d9a03f", info: accent, default: accent, ...status };
   const T = ".Vue-Toastification__toast";
+  const border = s.outline
+    ? `border: 2px solid ${s.outline} !important; border-left: 8px solid var(--absda-toast) !important;`
+    : "border: 1px solid rgba(255, 255, 255, .12) !important; border-left: 6px solid var(--absda-toast) !important;";
   return `
-    ${T} { background: ${panel} !important; color: #f3f4f6 !important;
-      border: 1px solid rgba(255, 255, 255, .12) !important; border-left: 6px solid var(--absda-toast) !important;
+    ${T} { background: ${panel} !important; color: #f3f4f6 !important; ${border}
       box-shadow: 0 8px 24px rgba(0, 0, 0, .45) !important; }
     ${["success", "error", "warning", "info", "default"].map((k) => `${T}--${k} { --absda-toast: ${s[k]}; }`).join("\n    ")}
     ${T} > svg, ${T} .Vue-Toastification__icon { color: var(--absda-toast) !important; fill: currentColor !important; }
@@ -276,7 +279,7 @@ function themeCss(id) {
     parts.push(`#bookshelf { scrollbar-color: ${t.scroll} rgba(0, 0, 0, 0) !important; }`);
   }
   if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`);
-  if (t.colors) parts.push(toastCss(t.colors.bg, t.title.logo, t.toast));
+  if (t.colors && config.toastThemed !== false) parts.push(toastCss(t.colors.bg, t.title.logo, t.toast));
   if (t.css) parts.push(t.css);
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
@@ -523,6 +526,64 @@ async function readWebLang(contents) {
     writeJson(dataFile("config.json"), config);
     if (uiLang() !== before) onLangChanged();
   } catch {}
+}
+
+// ---- pop-up notifications (View → Notifications) ------------------------------
+// How long they stay, pausing while hovered, and where they appear — set on the
+// web app's notification system in every page (the app itself and the overlay).
+const TOAST_DURATIONS = [["short", 3000], ["normal", 5000], ["long", 10000], ["untilClosed", 0]];
+const TOAST_POSITIONS = [["topRight", "top-right"], ["bottomRight", "bottom-right"], ["topCenter", "top-center"]];
+const toastDuration = () => (TOAST_DURATIONS.some(([, ms]) => ms === config.toastDuration) ? config.toastDuration : 5000);
+const toastPosition = () => (TOAST_POSITIONS.some(([, p]) => p === config.toastPosition) ? config.toastPosition : "top-right");
+function applyToastSettings(contents, attempt = 0) {
+  if (!contents || contents.isDestroyed() || !isServerUrl(contents.getURL())) return;
+  const pause = config.toastPauseHover !== false;
+  const opts = JSON.stringify({
+    timeout: toastDuration() || false,   // false = stays until closed
+    pauseOnHover: pause,
+    pauseOnFocusLoss: pause,
+    position: toastPosition(),
+  });
+  contents.executeJavaScript(
+    `(() => { const t = window.$nuxt && $nuxt.$toast; if (t && t.updateDefaults) { t.updateDefaults(${opts}); return true; } return false; })()`)
+    .then((ok) => { if (!ok && attempt < 10) setTimeout(() => applyToastSettings(contents, attempt + 1), 1500); })
+    .catch(() => {});
+}
+function setToastSetting(key, value) {
+  config = { ...config, [key]: value };
+  writeJson(dataFile("config.json"), config);
+  if (key === "toastThemed") reapplyTheme();
+  else for (const c of webContents.getAllWebContents()) applyToastSettings(c);
+}
+function showTestToast() {
+  if (!view) return;
+  const contents = settingsView ? settingsView.webContents : wc();
+  contents.executeJavaScript(
+    `window.$nuxt && $nuxt.$toast && $nuxt.$toast.success(${JSON.stringify(tr("notif.testMsg"))})`).catch(() => {});
+}
+function notificationMenuItems() {
+  return [
+    {
+      label: tr("notif.duration"),
+      submenu: TOAST_DURATIONS.map(([key, ms]) => ({
+        label: tr("notif." + key), type: "checkbox", checked: toastDuration() === ms,
+        click: () => setToastSetting("toastDuration", ms),
+      })),
+    },
+    {
+      label: tr("notif.position"),
+      submenu: TOAST_POSITIONS.map(([key, pos]) => ({
+        label: tr("notif." + key), type: "checkbox", checked: toastPosition() === pos,
+        click: () => setToastSetting("toastPosition", pos),
+      })),
+    },
+    { label: tr("notif.pauseHover"), type: "checkbox", checked: config.toastPauseHover !== false,
+      click: (item) => setToastSetting("toastPauseHover", item.checked) },
+    { label: tr("notif.themed"), type: "checkbox", checked: config.toastThemed !== false,
+      click: (item) => setToastSetting("toastThemed", item.checked) },
+    { type: "separator" },
+    { label: tr("notif.test"), click: showTestToast },
+  ];
 }
 
 // ---- text size (zoom of the web app), remembered between starts ------------
@@ -1491,6 +1552,7 @@ function buildMenu() {
         },
         { label: tr("view.theme"), submenu: themeMenuItems() },
         { label: tr("view.bookshelf"), submenu: shelfMenuItems() },
+        { label: tr("view.notifications"), submenu: notificationMenuItems() },
         { label: tr("view.language"), submenu: languageMenuItems() },
         { type: "separator" },
         { label: tr("view.fullScreen"), ...shortcut("F11"), click: toggleFullScreen },
@@ -1653,6 +1715,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
+  contents.on("did-finish-load", () => applyToastSettings(contents));
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.
   contents.on("did-finish-load", async () => {

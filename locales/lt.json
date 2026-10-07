@@ -163,5 +163,19 @@
   "update.installFailed": "Nepavyko įdiegti naujinimo",
   "update.installFailedMsg": "Niekas nepakeista. Bandykite vėliau arba atsisiųskite jį iš laidos puslapio.",
   "update.verifyFailed": "Atsisiųstas failas neatitiko paskelbtos kontrolinės sumos, todėl jis ištrintas ir niekas nepakeista.",
-  "update.done": "Atnaujinta į versiją {version} (buvo {from})."
+  "update.done": "Atnaujinta į versiją {version} (buvo {from}).",
+  "view.notifications": "Pranešimai",
+  "notif.duration": "Kiek laiko rodyti",
+  "notif.short": "Trumpai (3 s)",
+  "notif.normal": "Įprastai (5 s)",
+  "notif.long": "Ilgai (10 s)",
+  "notif.untilClosed": "Kol uždarysiu",
+  "notif.position": "Kur rodyti",
+  "notif.topRight": "Viršuje dešinėje",
+  "notif.bottomRight": "Apačioje dešinėje",
+  "notif.topCenter": "Viršuje centre",
+  "notif.pauseHover": "Pristabdyti užvedus pelę",
+  "notif.themed": "Naudoti temos spalvas",
+  "notif.test": "Rodyti bandomąjį pranešimą",
+  "notif.testMsg": "Taip atrodo pranešimai."
 }

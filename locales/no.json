@@ -163,5 +163,19 @@
   "update.installFailed": "Kunne ikke installere oppdateringen",
   "update.installFailedMsg": "Ingenting ble endret. Prøv igjen senere, eller last den ned fra utgivelsessiden.",
   "update.verifyFailed": "Den nedlastede filen samsvarte ikke med det publiserte fingeravtrykket, så den ble slettet og ingenting ble endret.",
-  "update.done": "Oppdatert til versjon {version} (fra {from})."
+  "update.done": "Oppdatert til versjon {version} (fra {from}).",
+  "view.notifications": "Varsler",
+  "notif.duration": "Hvor lenge de vises",
+  "notif.short": "Kort (3 sek.)",
+  "notif.normal": "Normal (5 sek.)",
+  "notif.long": "Lang (10 sek.)",
+  "notif.untilClosed": "Til jeg lukker dem",
+  "notif.position": "Hvor de vises",
+  "notif.topRight": "Øverst til høyre",
+  "notif.bottomRight": "Nederst til høyre",
+  "notif.topCenter": "Øverst i midten",
+  "notif.pauseHover": "Sett på pause når musen er over",
+  "notif.themed": "Bruk fargene fra temaet",
+  "notif.test": "Vis et testvarsel",
+  "notif.testMsg": "Slik ser varsler ut."
 }

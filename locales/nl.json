@@ -163,5 +163,19 @@
   "update.installFailed": "De update kon niet worden geïnstalleerd",
   "update.installFailedMsg": "Er is niets gewijzigd. Probeer het later opnieuw of download hem van de releasepagina.",
   "update.verifyFailed": "Het gedownloade bestand kwam niet overeen met de gepubliceerde vingerafdruk. Het is daarom verwijderd en er is niets gewijzigd.",
-  "update.done": "Bijgewerkt naar versie {version} (was {from})."
+  "update.done": "Bijgewerkt naar versie {version} (was {from}).",
+  "view.notifications": "Meldingen",
+  "notif.duration": "Hoelang ze zichtbaar blijven",
+  "notif.short": "Kort (3 sec.)",
+  "notif.normal": "Normaal (5 sec.)",
+  "notif.long": "Lang (10 sec.)",
+  "notif.untilClosed": "Tot ik ze sluit",
+  "notif.position": "Waar ze verschijnen",
+  "notif.topRight": "Rechtsboven",
+  "notif.bottomRight": "Rechtsonder",
+  "notif.topCenter": "Midden boven",
+  "notif.pauseHover": "Pauzeren als de muis erop staat",
+  "notif.themed": "Themakleuren gebruiken",
+  "notif.test": "Testmelding tonen",
+  "notif.testMsg": "Zo zien meldingen eruit."
 }

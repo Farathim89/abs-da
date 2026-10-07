@@ -163,5 +163,19 @@
   "update.installFailed": "Nem sikerült telepíteni a frissítést",
   "update.installFailedMsg": "Semmi sem változott. Próbálja újra később, vagy töltse le a kiadási oldalról.",
   "update.verifyFailed": "A letöltött fájl nem egyezett a közzétett ellenőrzőösszeggel, ezért törölve lett, és semmi sem változott.",
-  "update.done": "Frissítve erre a verzióra: {version} (korábbi: {from})."
+  "update.done": "Frissítve erre a verzióra: {version} (korábbi: {from}).",
+  "view.notifications": "Értesítések",
+  "notif.duration": "Megjelenítés időtartama",
+  "notif.short": "Rövid (3 mp)",
+  "notif.normal": "Normál (5 mp)",
+  "notif.long": "Hosszú (10 mp)",
+  "notif.untilClosed": "Amíg be nem zárom",
+  "notif.position": "Megjelenés helye",
+  "notif.topRight": "Jobbra fent",
+  "notif.bottomRight": "Jobbra lent",
+  "notif.topCenter": "Középen fent",
+  "notif.pauseHover": "Szünet, amíg az egér felette van",
+  "notif.themed": "A téma színeinek használata",
+  "notif.test": "Tesztértesítés megjelenítése",
+  "notif.testMsg": "Így néznek ki az értesítések."
 }

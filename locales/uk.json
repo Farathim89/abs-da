@@ -163,5 +163,19 @@
   "update.installFailed": "Не вдалося встановити оновлення",
   "update.installFailedMsg": "Нічого не змінено. Спробуйте пізніше або завантажте його зі сторінки випуску.",
   "update.verifyFailed": "Завантажений файл не збігся з опублікованою контрольною сумою, тому його видалено, і нічого не змінено.",
-  "update.done": "Оновлено до версії {version} (з {from})."
+  "update.done": "Оновлено до версії {version} (з {from}).",
+  "view.notifications": "Сповіщення",
+  "notif.duration": "Як довго показувати",
+  "notif.short": "Коротко (3 с)",
+  "notif.normal": "Звичайно (5 с)",
+  "notif.long": "Довго (10 с)",
+  "notif.untilClosed": "Доки не закрию",
+  "notif.position": "Де показувати",
+  "notif.topRight": "Праворуч угорі",
+  "notif.bottomRight": "Праворуч унизу",
+  "notif.topCenter": "Угорі посередині",
+  "notif.pauseHover": "Призупиняти під курсором миші",
+  "notif.themed": "Використовувати кольори теми",
+  "notif.test": "Показати тестове сповіщення",
+  "notif.testMsg": "Ось так виглядають сповіщення."
 }

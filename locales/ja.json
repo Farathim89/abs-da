@@ -163,5 +163,19 @@
   "update.installFailed": "アップデートをインストールできませんでした",
   "update.installFailedMsg": "何も変更されていません。後でもう一度お試しいただくか、リリースページからダウンロードしてください。",
   "update.verifyFailed": "ダウンロードしたファイルが公開されているチェックサムと一致しなかったため、削除しました。何も変更されていません。",
-  "update.done": "バージョン {version} にアップデートしました（{from} から）。"
+  "update.done": "バージョン {version} にアップデートしました（{from} から）。",
+  "view.notifications": "通知",
+  "notif.duration": "表示時間",
+  "notif.short": "短い（3秒）",
+  "notif.normal": "標準（5秒）",
+  "notif.long": "長い（10秒）",
+  "notif.untilClosed": "閉じるまで",
+  "notif.position": "表示位置",
+  "notif.topRight": "右上",
+  "notif.bottomRight": "右下",
+  "notif.topCenter": "上部中央",
+  "notif.pauseHover": "マウスを重ねている間は一時停止",
+  "notif.themed": "テーマの色を使用",
+  "notif.test": "テスト通知を表示",
+  "notif.testMsg": "通知はこのように表示されます。"
 }

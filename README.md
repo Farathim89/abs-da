@@ -56,7 +56,10 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - Keyboard **media keys** and the **Windows media controls** show the book and cover
 - **7 themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
-  bar (with small previews) or from **View → Theme**
+  bar (with small previews) or from **View → Theme**. Buttons, switches and pop-up notifications
+  follow the theme too
+- **View → Notifications**: how long pop-up notifications stay (3 s / 5 s / 10 s / until closed),
+  where they appear, pause while hovering, theme or original colours
 - **Settings, Upload and Account open as an overlay** over the app (close with ✕, Esc or a click outside),
   so the page you're on and what's playing stay put
 - **Speaks your language**: menus, tray and dialogs follow the language you use in Audiobookshelf

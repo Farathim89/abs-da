@@ -163,5 +163,19 @@
   "update.installFailed": "無法安裝更新",
   "update.installFailedMsg": "未進行任何變更。請稍後再試，或從發行頁面下載。",
   "update.verifyFailed": "下載的檔案與公布的雜湊值不符，因此已將其刪除，未進行任何變更。",
-  "update.done": "已更新至版本 {version}（原版本為 {from}）。"
+  "update.done": "已更新至版本 {version}（原版本為 {from}）。",
+  "view.notifications": "通知",
+  "notif.duration": "顯示時間",
+  "notif.short": "短（3 秒）",
+  "notif.normal": "正常（5 秒）",
+  "notif.long": "長（10 秒）",
+  "notif.untilClosed": "直到我關閉",
+  "notif.position": "顯示位置",
+  "notif.topRight": "右上角",
+  "notif.bottomRight": "右下角",
+  "notif.topCenter": "上方置中",
+  "notif.pauseHover": "滑鼠停留時暫停",
+  "notif.themed": "使用主題色彩",
+  "notif.test": "顯示測試通知",
+  "notif.testMsg": "通知看起來就像這樣。"
 }

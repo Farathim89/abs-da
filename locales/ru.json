@@ -163,5 +163,19 @@
   "update.installFailed": "Не удалось установить обновление",
   "update.installFailedMsg": "Ничего не изменено. Повторите попытку позже или скачайте его со страницы выпуска.",
   "update.verifyFailed": "Скачанный файл не совпал с опубликованной контрольной суммой, поэтому он удалён, и ничего не изменено.",
-  "update.done": "Обновлено до версии {version} (с {from})."
+  "update.done": "Обновлено до версии {version} (с {from}).",
+  "view.notifications": "Уведомления",
+  "notif.duration": "Время показа",
+  "notif.short": "Коротко (3 сек.)",
+  "notif.normal": "Обычно (5 сек.)",
+  "notif.long": "Долго (10 сек.)",
+  "notif.untilClosed": "Пока не закрою",
+  "notif.position": "Где показывать",
+  "notif.topRight": "Справа вверху",
+  "notif.bottomRight": "Справа внизу",
+  "notif.topCenter": "Сверху по центру",
+  "notif.pauseHover": "Пауза при наведении мыши",
+  "notif.themed": "Использовать цвета темы",
+  "notif.test": "Показать тестовое уведомление",
+  "notif.testMsg": "Так выглядят уведомления."
 }

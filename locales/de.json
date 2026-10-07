@@ -163,5 +163,19 @@
   "update.installFailed": "Das Update konnte nicht installiert werden",
   "update.installFailedMsg": "Es wurde nichts geändert. Versuche es später erneut oder lade es von der Release-Seite herunter.",
   "update.verifyFailed": "Die heruntergeladene Datei stimmte nicht mit der veröffentlichten Prüfsumme überein. Sie wurde daher gelöscht und es wurde nichts geändert.",
-  "update.done": "Auf Version {version} aktualisiert (von {from})."
+  "update.done": "Auf Version {version} aktualisiert (von {from}).",
+  "view.notifications": "Benachrichtigungen",
+  "notif.duration": "Anzeigedauer",
+  "notif.short": "Kurz (3 Sek.)",
+  "notif.normal": "Normal (5 Sek.)",
+  "notif.long": "Lang (10 Sek.)",
+  "notif.untilClosed": "Bis ich sie schließe",
+  "notif.position": "Position",
+  "notif.topRight": "Oben rechts",
+  "notif.bottomRight": "Unten rechts",
+  "notif.topCenter": "Oben mittig",
+  "notif.pauseHover": "Unter dem Mauszeiger anhalten",
+  "notif.themed": "Farben des Farbschemas verwenden",
+  "notif.test": "Testbenachrichtigung anzeigen",
+  "notif.testMsg": "So sehen Benachrichtigungen aus."
 }

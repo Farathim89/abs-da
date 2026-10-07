@@ -163,5 +163,19 @@
   "update.installFailed": "No se pudo instalar la actualización",
   "update.installFailedMsg": "No se ha cambiado nada. Inténtalo de nuevo más tarde o descárgala desde la página de la versión.",
   "update.verifyFailed": "El archivo descargado no coincidía con la suma de comprobación publicada, así que se ha eliminado y no se ha cambiado nada.",
-  "update.done": "Actualizado a la versión {version} (desde la {from})."
+  "update.done": "Actualizado a la versión {version} (desde la {from}).",
+  "view.notifications": "Notificaciones",
+  "notif.duration": "Duración",
+  "notif.short": "Corta (3 s)",
+  "notif.normal": "Normal (5 s)",
+  "notif.long": "Larga (10 s)",
+  "notif.untilClosed": "Hasta que las cierre",
+  "notif.position": "Posición",
+  "notif.topRight": "Arriba a la derecha",
+  "notif.bottomRight": "Abajo a la derecha",
+  "notif.topCenter": "Arriba en el centro",
+  "notif.pauseHover": "Pausar al pasar el ratón",
+  "notif.themed": "Usar los colores del tema",
+  "notif.test": "Mostrar una notificación de prueba",
+  "notif.testMsg": "Así se ven las notificaciones."
 }

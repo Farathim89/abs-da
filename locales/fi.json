@@ -163,5 +163,19 @@
   "update.installFailed": "Päivitystä ei voitu asentaa",
   "update.installFailedMsg": "Mitään ei muutettu. Yritä myöhemmin uudelleen tai lataa päivitys julkaisusivulta.",
   "update.verifyFailed": "Ladattu tiedosto ei vastannut julkaistua tarkistussummaa, joten se poistettiin eikä mitään muutettu.",
-  "update.done": "Päivitetty versioon {version} (aiempi {from})."
+  "update.done": "Päivitetty versioon {version} (aiempi {from}).",
+  "view.notifications": "Ilmoitukset",
+  "notif.duration": "Kuinka kauan ne näkyvät",
+  "notif.short": "Lyhyt (3 s)",
+  "notif.normal": "Normaali (5 s)",
+  "notif.long": "Pitkä (10 s)",
+  "notif.untilClosed": "Kunnes suljen ne",
+  "notif.position": "Missä ne näkyvät",
+  "notif.topRight": "Oikeassa yläkulmassa",
+  "notif.bottomRight": "Oikeassa alakulmassa",
+  "notif.topCenter": "Ylhäällä keskellä",
+  "notif.pauseHover": "Pysäytä, kun hiiri on päällä",
+  "notif.themed": "Käytä teeman värejä",
+  "notif.test": "Näytä testi-ilmoitus",
+  "notif.testMsg": "Tältä ilmoitukset näyttävät."
 }

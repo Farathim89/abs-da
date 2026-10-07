@@ -163,5 +163,19 @@
   "update.installFailed": "Güncelleme yüklenemedi",
   "update.installFailedMsg": "Hiçbir şey değiştirilmedi. Daha sonra tekrar deneyin veya sürüm sayfasından indirin.",
   "update.verifyFailed": "İndirilen dosya yayımlanan sağlama toplamıyla eşleşmediği için silindi ve hiçbir şey değiştirilmedi.",
-  "update.done": "{version} sürümüne güncellendi (önceki sürüm: {from})."
+  "update.done": "{version} sürümüne güncellendi (önceki sürüm: {from}).",
+  "view.notifications": "Bildirimler",
+  "notif.duration": "Görünme süresi",
+  "notif.short": "Kısa (3 sn)",
+  "notif.normal": "Normal (5 sn)",
+  "notif.long": "Uzun (10 sn)",
+  "notif.untilClosed": "Ben kapatana kadar",
+  "notif.position": "Konum",
+  "notif.topRight": "Sağ üst",
+  "notif.bottomRight": "Sağ alt",
+  "notif.topCenter": "Üst orta",
+  "notif.pauseHover": "Fare üzerindeyken duraklat",
+  "notif.themed": "Tema renklerini kullan",
+  "notif.test": "Test bildirimi göster",
+  "notif.testMsg": "Bildirimler böyle görünür."
 }

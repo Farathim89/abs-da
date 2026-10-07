@@ -163,5 +163,19 @@
   "update.installFailed": "Uppdateringen kunde inte installeras",
   "update.installFailedMsg": "Inget ändrades. Försök igen senare, eller ladda ner den från versionssidan.",
   "update.verifyFailed": "Den nedladdade filen stämde inte med det publicerade fingeravtrycket, så den raderades och inget ändrades.",
-  "update.done": "Uppdaterad till version {version} (från {from})."
+  "update.done": "Uppdaterad till version {version} (från {from}).",
+  "view.notifications": "Aviseringar",
+  "notif.duration": "Hur länge de visas",
+  "notif.short": "Kort (3 s)",
+  "notif.normal": "Normal (5 s)",
+  "notif.long": "Lång (10 s)",
+  "notif.untilClosed": "Tills jag stänger dem",
+  "notif.position": "Var de visas",
+  "notif.topRight": "Uppe till höger",
+  "notif.bottomRight": "Nere till höger",
+  "notif.topCenter": "Uppe i mitten",
+  "notif.pauseHover": "Pausa när musen är över",
+  "notif.themed": "Använd temats färger",
+  "notif.test": "Visa en testavisering",
+  "notif.testMsg": "Så här ser aviseringar ut."
 }

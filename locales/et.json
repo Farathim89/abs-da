@@ -163,5 +163,19 @@
   "update.installFailed": "Uuendust ei õnnestunud installida",
   "update.installFailedMsg": "Midagi ei muudetud. Proovi hiljem uuesti või laadi see alla väljalaske lehelt.",
   "update.verifyFailed": "Allalaaditud fail ei vastanud avaldatud kontrollsummale, seega see kustutati ja midagi ei muudetud.",
-  "update.done": "Uuendatud versioonile {version} (varem {from})."
+  "update.done": "Uuendatud versioonile {version} (varem {from}).",
+  "view.notifications": "Teatised",
+  "notif.duration": "Kui kaua neid näidatakse",
+  "notif.short": "Lühike (3 s)",
+  "notif.normal": "Tavaline (5 s)",
+  "notif.long": "Pikk (10 s)",
+  "notif.untilClosed": "Kuni need sulgen",
+  "notif.position": "Kus neid näidatakse",
+  "notif.topRight": "Üleval paremal",
+  "notif.bottomRight": "All paremal",
+  "notif.topCenter": "Üleval keskel",
+  "notif.pauseHover": "Peata, kui hiir on peal",
+  "notif.themed": "Kasuta teema värve",
+  "notif.test": "Näita testteatist",
+  "notif.testMsg": "Nii näevad teatised välja."
 }

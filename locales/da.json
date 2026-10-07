@@ -163,5 +163,19 @@
   "update.installFailed": "Opdateringen kunne ikke installeres",
   "update.installFailedMsg": "Intet blev ændret. Prøv igen senere, eller hent den fra udgivelsessiden.",
   "update.verifyFailed": "Den hentede fil passede ikke med det offentliggjorte fingeraftryk, så den blev slettet, og intet blev ændret.",
-  "update.done": "Opdateret til version {version} (fra {from})."
+  "update.done": "Opdateret til version {version} (fra {from}).",
+  "view.notifications": "Meddelelser",
+  "notif.duration": "Hvor længe de vises",
+  "notif.short": "Kort (3 sek.)",
+  "notif.normal": "Normal (5 sek.)",
+  "notif.long": "Lang (10 sek.)",
+  "notif.untilClosed": "Indtil jeg lukker dem",
+  "notif.position": "Hvor de vises",
+  "notif.topRight": "Øverst til højre",
+  "notif.bottomRight": "Nederst til højre",
+  "notif.topCenter": "Øverst i midten",
+  "notif.pauseHover": "Sæt på pause, når musen er over",
+  "notif.themed": "Brug temaets farver",
+  "notif.test": "Vis en testmeddelelse",
+  "notif.testMsg": "Sådan ser meddelelser ud."
 }

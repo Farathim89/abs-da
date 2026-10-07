@@ -163,5 +163,19 @@
   "update.installFailed": "Не ўдалося ўсталяваць абнаўленне",
   "update.installFailedMsg": "Нічога не зменена. Паспрабуйце пазней або спампуйце яго са старонкі выпуску.",
   "update.verifyFailed": "Спампаваны файл не адпавядае апублікаванай кантрольнай суме, таму ён выдалены, і нічога не зменена.",
-  "update.done": "Абноўлена да версіі {version} (з {from})."
+  "update.done": "Абноўлена да версіі {version} (з {from}).",
+  "view.notifications": "Апавяшчэнні",
+  "notif.duration": "Як доўга паказваць",
+  "notif.short": "Коратка (3 с)",
+  "notif.normal": "Звычайна (5 с)",
+  "notif.long": "Доўга (10 с)",
+  "notif.untilClosed": "Пакуль не закрыю",
+  "notif.position": "Дзе паказваць",
+  "notif.topRight": "Уверсе справа",
+  "notif.bottomRight": "Унізе справа",
+  "notif.topCenter": "Уверсе пасярэдзіне",
+  "notif.pauseHover": "Прыпыняць пры навядзенні мышы",
+  "notif.themed": "Выкарыстоўваць колеры тэмы",
+  "notif.test": "Паказаць тэставае апавяшчэнне",
+  "notif.testMsg": "Так выглядаюць апавяшчэнні."
 }

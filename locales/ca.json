@@ -163,5 +163,19 @@
   "update.installFailed": "No s’ha pogut instal·lar l’actualització",
   "update.installFailedMsg": "No s’ha canviat res. Torneu-ho a provar més tard o baixeu-la des de la pàgina de la versió.",
   "update.verifyFailed": "El fitxer baixat no coincidia amb la suma de verificació publicada, de manera que s’ha suprimit i no s’ha canviat res.",
-  "update.done": "S’ha actualitzat a la versió {version} (des de la {from})."
+  "update.done": "S’ha actualitzat a la versió {version} (des de la {from}).",
+  "view.notifications": "Notificacions",
+  "notif.duration": "Durada",
+  "notif.short": "Curta (3 s)",
+  "notif.normal": "Normal (5 s)",
+  "notif.long": "Llarga (10 s)",
+  "notif.untilClosed": "Fins que les tanqui",
+  "notif.position": "Posició",
+  "notif.topRight": "A dalt a la dreta",
+  "notif.bottomRight": "A baix a la dreta",
+  "notif.topCenter": "A dalt al centre",
+  "notif.pauseHover": "Pausa en passar-hi el ratolí",
+  "notif.themed": "Utilitza els colors del tema",
+  "notif.test": "Mostra una notificació de prova",
+  "notif.testMsg": "Així es veuen les notificacions."
 }

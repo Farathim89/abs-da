@@ -163,5 +163,19 @@
   "update.installFailed": "לא ניתן להתקין את העדכון",
   "update.installFailedMsg": "לא בוצע שום שינוי. נסה שוב מאוחר יותר, או הורד אותו מדף הגרסה.",
   "update.verifyFailed": "הקובץ שהורד לא תאם את סכום הביקורת שפורסם, ולכן הוא נמחק ולא בוצע שום שינוי.",
-  "update.done": "עודכן לגרסה {version} (מ-{from})."
+  "update.done": "עודכן לגרסה {version} (מ-{from}).",
+  "view.notifications": "הודעות",
+  "notif.duration": "משך התצוגה",
+  "notif.short": "קצר (3 שניות)",
+  "notif.normal": "רגיל (5 שניות)",
+  "notif.long": "ארוך (10 שניות)",
+  "notif.untilClosed": "עד שאסגור אותן",
+  "notif.position": "מיקום",
+  "notif.topRight": "למעלה מימין",
+  "notif.bottomRight": "למטה מימין",
+  "notif.topCenter": "למעלה במרכז",
+  "notif.pauseHover": "השהה כשהעכבר מעליהן",
+  "notif.themed": "השתמש בצבעי ערכת הנושא",
+  "notif.test": "הצג הודעת בדיקה",
+  "notif.testMsg": "כך נראות ההודעות."
 }

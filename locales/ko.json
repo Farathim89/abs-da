@@ -163,5 +163,19 @@
   "update.installFailed": "업데이트를 설치하지 못했습니다",
   "update.installFailedMsg": "변경된 내용은 없습니다. 나중에 다시 시도하거나 릴리스 페이지에서 다운로드하세요.",
   "update.verifyFailed": "다운로드한 파일이 게시된 체크섬과 일치하지 않아 삭제했습니다. 변경된 내용은 없습니다.",
-  "update.done": "버전 {version}(으)로 업데이트했습니다(이전 버전: {from})."
+  "update.done": "버전 {version}(으)로 업데이트했습니다(이전 버전: {from}).",
+  "view.notifications": "알림",
+  "notif.duration": "표시 시간",
+  "notif.short": "짧게 (3초)",
+  "notif.normal": "보통 (5초)",
+  "notif.long": "길게 (10초)",
+  "notif.untilClosed": "닫을 때까지",
+  "notif.position": "표시 위치",
+  "notif.topRight": "오른쪽 위",
+  "notif.bottomRight": "오른쪽 아래",
+  "notif.topCenter": "위쪽 가운데",
+  "notif.pauseHover": "마우스를 올리면 일시정지",
+  "notif.themed": "테마 색상 사용",
+  "notif.test": "테스트 알림 표시",
+  "notif.testMsg": "알림은 이렇게 표시됩니다."
 }

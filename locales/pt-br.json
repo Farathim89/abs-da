@@ -163,5 +163,19 @@
   "update.installFailed": "Não foi possível instalar a atualização",
   "update.installFailedMsg": "Nada foi alterado. Tente novamente mais tarde ou baixe-a na página da versão.",
   "update.verifyFailed": "O arquivo baixado não correspondeu à soma de verificação publicada, por isso foi excluído e nada foi alterado.",
-  "update.done": "Atualizado para a versão {version} (era a {from})."
+  "update.done": "Atualizado para a versão {version} (era a {from}).",
+  "view.notifications": "Notificações",
+  "notif.duration": "Duração",
+  "notif.short": "Curta (3 s)",
+  "notif.normal": "Normal (5 s)",
+  "notif.long": "Longa (10 s)",
+  "notif.untilClosed": "Até eu fechá-las",
+  "notif.position": "Posição",
+  "notif.topRight": "Canto superior direito",
+  "notif.bottomRight": "Canto inferior direito",
+  "notif.topCenter": "Centro superior",
+  "notif.pauseHover": "Pausar ao passar o mouse",
+  "notif.themed": "Usar as cores do tema",
+  "notif.test": "Mostrar uma notificação de teste",
+  "notif.testMsg": "É assim que as notificações aparecem."
 }

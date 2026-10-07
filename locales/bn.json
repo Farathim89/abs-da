@@ -163,5 +163,19 @@
   "update.installFailed": "আপডেট ইনস্টল করা যায়নি",
   "update.installFailedMsg": "কিছুই পরিবর্তন করা হয়নি। পরে আবার চেষ্টা করুন, অথবা রিলিজ পেজ থেকে ডাউনলোড করুন।",
   "update.verifyFailed": "ডাউনলোড করা ফাইলটি প্রকাশিত চেকসামের সঙ্গে মেলেনি, তাই এটি মুছে ফেলা হয়েছে এবং কিছুই পরিবর্তন করা হয়নি।",
-  "update.done": "সংস্করণ {version}-এ আপডেট হয়েছে ({from} থেকে)।"
+  "update.done": "সংস্করণ {version}-এ আপডেট হয়েছে ({from} থেকে)।",
+  "view.notifications": "বিজ্ঞপ্তি",
+  "notif.duration": "কতক্ষণ দেখাবে",
+  "notif.short": "সংক্ষিপ্ত (3 সেকেন্ড)",
+  "notif.normal": "স্বাভাবিক (5 সেকেন্ড)",
+  "notif.long": "দীর্ঘ (10 সেকেন্ড)",
+  "notif.untilClosed": "আমি বন্ধ না করা পর্যন্ত",
+  "notif.position": "কোথায় দেখাবে",
+  "notif.topRight": "উপরে ডানে",
+  "notif.bottomRight": "নিচে ডানে",
+  "notif.topCenter": "উপরে মাঝখানে",
+  "notif.pauseHover": "মাউস রাখলে থামান",
+  "notif.themed": "থিমের রং ব্যবহার করুন",
+  "notif.test": "একটি পরীক্ষামূলক বিজ্ঞপ্তি দেখান",
+  "notif.testMsg": "বিজ্ঞপ্তি এভাবে দেখায়।"
 }

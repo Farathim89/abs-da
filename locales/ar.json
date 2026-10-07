@@ -163,5 +163,19 @@
   "update.installFailed": "تعذّر تثبيت التحديث",
   "update.installFailedMsg": "لم يتم تغيير أي شيء. حاول مرة أخرى لاحقًا، أو نزّله من صفحة الإصدار.",
   "update.verifyFailed": "لم يتطابق الملف الذي تم تنزيله مع المجموع الاختباري المنشور، لذا تم حذفه ولم يتم تغيير أي شيء.",
-  "update.done": "تم التحديث إلى الإصدار {version} (من {from})."
+  "update.done": "تم التحديث إلى الإصدار {version} (من {from}).",
+  "view.notifications": "الإشعارات",
+  "notif.duration": "مدة الظهور",
+  "notif.short": "قصيرة (3 ثوانٍ)",
+  "notif.normal": "عادية (5 ثوانٍ)",
+  "notif.long": "طويلة (10 ثوانٍ)",
+  "notif.untilClosed": "حتى أغلقها",
+  "notif.position": "مكان الظهور",
+  "notif.topRight": "أعلى اليمين",
+  "notif.bottomRight": "أسفل اليمين",
+  "notif.topCenter": "أعلى الوسط",
+  "notif.pauseHover": "إيقاف مؤقت عند تمرير المؤشر",
+  "notif.themed": "استخدام ألوان النمط",
+  "notif.test": "عرض إشعار تجريبي",
+  "notif.testMsg": "هكذا تبدو الإشعارات."
 }

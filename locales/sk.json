@@ -163,5 +163,19 @@
   "update.installFailed": "Aktualizáciu sa nepodarilo nainštalovať",
   "update.installFailedMsg": "Nič sa nezmenilo. Skúste to neskôr znova alebo ju stiahnite zo stránky vydania.",
   "update.verifyFailed": "Stiahnutý súbor sa nezhodoval so zverejneným kontrolným súčtom, preto bol odstránený a nič sa nezmenilo.",
-  "update.done": "Aktualizované na verziu {version} (z {from})."
+  "update.done": "Aktualizované na verziu {version} (z {from}).",
+  "view.notifications": "Oznámenia",
+  "notif.duration": "Ako dlho zostanú",
+  "notif.short": "Krátko (3 s)",
+  "notif.normal": "Normálne (5 s)",
+  "notif.long": "Dlho (10 s)",
+  "notif.untilClosed": "Kým ich nezavriem",
+  "notif.position": "Kde sa zobrazia",
+  "notif.topRight": "Vpravo hore",
+  "notif.bottomRight": "Vpravo dole",
+  "notif.topCenter": "Hore v strede",
+  "notif.pauseHover": "Pozastaviť pri ukázaní myšou",
+  "notif.themed": "Použiť farby témy",
+  "notif.test": "Zobraziť testovacie oznámenie",
+  "notif.testMsg": "Takto vyzerajú oznámenia."
 }

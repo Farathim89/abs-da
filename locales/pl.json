@@ -163,5 +163,19 @@
   "update.installFailed": "Nie udało się zainstalować aktualizacji",
   "update.installFailedMsg": "Nic nie zostało zmienione. Spróbuj ponownie później lub pobierz ją ze strony wydania.",
   "update.verifyFailed": "Pobrany plik nie zgadzał się z opublikowaną sumą kontrolną, więc został usunięty i nic nie zostało zmienione.",
-  "update.done": "Zaktualizowano do wersji {version} (z {from})."
+  "update.done": "Zaktualizowano do wersji {version} (z {from}).",
+  "view.notifications": "Powiadomienia",
+  "notif.duration": "Czas wyświetlania",
+  "notif.short": "Krótko (3 s)",
+  "notif.normal": "Normalnie (5 s)",
+  "notif.long": "Długo (10 s)",
+  "notif.untilClosed": "Dopóki ich nie zamknę",
+  "notif.position": "Miejsce wyświetlania",
+  "notif.topRight": "U góry po prawej",
+  "notif.bottomRight": "Na dole po prawej",
+  "notif.topCenter": "U góry pośrodku",
+  "notif.pauseHover": "Wstrzymuj po najechaniu myszą",
+  "notif.themed": "Używaj kolorów motywu",
+  "notif.test": "Pokaż testowe powiadomienie",
+  "notif.testMsg": "Tak wyglądają powiadomienia."
 }

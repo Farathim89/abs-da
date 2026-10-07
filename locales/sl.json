@@ -163,5 +163,19 @@
   "update.installFailed": "Posodobitve ni bilo mogoče namestiti",
   "update.installFailedMsg": "Nič ni bilo spremenjeno. Poskusite znova pozneje ali jo prenesite s strani izdaje.",
   "update.verifyFailed": "Prenesena datoteka se ni ujemala z objavljeno kontrolno vsoto, zato je bila izbrisana in nič ni bilo spremenjeno.",
-  "update.done": "Posodobljeno na različico {version} (prej {from})."
+  "update.done": "Posodobljeno na različico {version} (prej {from}).",
+  "view.notifications": "Obvestila",
+  "notif.duration": "Kako dolgo ostanejo",
+  "notif.short": "Kratko (3 s)",
+  "notif.normal": "Običajno (5 s)",
+  "notif.long": "Dolgo (10 s)",
+  "notif.untilClosed": "Dokler jih ne zaprem",
+  "notif.position": "Kje se prikažejo",
+  "notif.topRight": "Zgoraj desno",
+  "notif.bottomRight": "Spodaj desno",
+  "notif.topCenter": "Zgoraj na sredini",
+  "notif.pauseHover": "Ustavi, ko je miška nad obvestilom",
+  "notif.themed": "Uporabi barve teme",
+  "notif.test": "Prikaži preizkusno obvestilo",
+  "notif.testMsg": "Tako so videti obvestila."
 }

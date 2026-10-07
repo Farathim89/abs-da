@@ -163,5 +163,19 @@
   "update.installFailed": "Không thể cài đặt bản cập nhật",
   "update.installFailedMsg": "Không có gì thay đổi. Hãy thử lại sau hoặc tải xuống từ trang phát hành.",
   "update.verifyFailed": "Tệp đã tải xuống không khớp với mã băm đã công bố nên đã bị xóa và không có gì thay đổi.",
-  "update.done": "Đã cập nhật lên phiên bản {version} (từ {from})."
+  "update.done": "Đã cập nhật lên phiên bản {version} (từ {from}).",
+  "view.notifications": "Thông báo",
+  "notif.duration": "Thời gian hiển thị",
+  "notif.short": "Ngắn (3 giây)",
+  "notif.normal": "Bình thường (5 giây)",
+  "notif.long": "Dài (10 giây)",
+  "notif.untilClosed": "Cho đến khi tôi đóng",
+  "notif.position": "Vị trí hiển thị",
+  "notif.topRight": "Trên cùng bên phải",
+  "notif.bottomRight": "Dưới cùng bên phải",
+  "notif.topCenter": "Trên cùng ở giữa",
+  "notif.pauseHover": "Tạm dừng khi rê chuột lên",
+  "notif.themed": "Dùng màu của chủ đề",
+  "notif.test": "Hiện thông báo thử",
+  "notif.testMsg": "Thông báo sẽ trông như thế này."
 }

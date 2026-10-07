@@ -163,5 +163,19 @@
   "update.installFailed": "Impossible d’installer la mise à jour",
   "update.installFailedMsg": "Rien n’a été modifié. Réessayez plus tard ou téléchargez-la depuis la page de la version.",
   "update.verifyFailed": "Le fichier téléchargé ne correspondait pas à l’empreinte publiée. Il a donc été supprimé et rien n’a été modifié.",
-  "update.done": "Mise à jour vers la version {version} effectuée (depuis la {from})."
+  "update.done": "Mise à jour vers la version {version} effectuée (depuis la {from}).",
+  "view.notifications": "Notifications",
+  "notif.duration": "Durée d’affichage",
+  "notif.short": "Courte (3 s)",
+  "notif.normal": "Normale (5 s)",
+  "notif.long": "Longue (10 s)",
+  "notif.untilClosed": "Jusqu’à ce que je les ferme",
+  "notif.position": "Emplacement",
+  "notif.topRight": "En haut à droite",
+  "notif.bottomRight": "En bas à droite",
+  "notif.topCenter": "En haut au centre",
+  "notif.pauseHover": "Pause au survol de la souris",
+  "notif.themed": "Utiliser les couleurs du thème",
+  "notif.test": "Afficher une notification de test",
+  "notif.testMsg": "Voici à quoi ressemblent les notifications."
 }
