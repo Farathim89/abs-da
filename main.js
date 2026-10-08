@@ -843,6 +843,9 @@ function layout() {
   const top = win.isFullScreen() ? 0 : TITLE_H;
   view.setBounds({ x: 0, y: top, width, height: Math.max(0, height - top) });
   if (settingsView) settingsView.setBounds(settingsBounds());
+  // Menus close when the window changes size; a message box just follows it.
+  if (uiOpen && uiOpen.kind === "menu") closeUi();
+  if (uiOpen) uiView.setBounds({ x: 0, y: 0, width, height });
 }
 
 function createWindow() {
@@ -903,7 +906,10 @@ function createWindow() {
     win.webContents.send("titlebar:focus", true);
     if (view) { wc().focus(); readWebLang(wc()); }
   });
-  win.on("blur", () => win.webContents.send("titlebar:focus", false));
+  win.on("blur", () => {
+    win.webContents.send("titlebar:focus", false);
+    if (uiOpen && uiOpen.kind === "menu") closeUi();   // like Windows' own menus
+  });
 
   // The Audiobookshelf web app, in a panel under the title bar.
   // backgroundThrottling off: when the window is hidden in the tray, the web app's
@@ -1146,7 +1152,7 @@ function checkPageStyles(contents) {
 // App → Clear Cache and Restart…: empties the stored web files (cache, service
 // workers, code cache) but keeps your server, saved login, sign-in and settings.
 async function clearCacheAndRestart() {
-  const { response } = await dialog.showMessageBox(win, {
+  const { response } = await showDialog({
     type: "question",
     title: tr("app.clearCacheTitle"),
     message: tr("app.clearCacheTitle"),
@@ -1172,7 +1178,7 @@ function restartApp() {
 async function setHardwareAcceleration(on) {
   config = { ...config, hardwareAcceleration: on };
   writeJson(dataFile("config.json"), config);
-  const { response } = await dialog.showMessageBox(win, {
+  const { response } = await showDialog({
     type: "question",
     title: tr("app.restartTitle"),
     message: tr("app.restartTitle"),
@@ -1228,7 +1234,7 @@ async function copyDiagnostics() {
   lines.push(`Auto-repair this start: ${autoRepaired ? "yes (cache was cleared)" : "not needed"}`);
   const text = lines.join("\n");
   clipboard.writeText(text);
-  const { response } = await dialog.showMessageBox(win, {
+  const { response } = await showDialog({
     type: "info",
     title: tr("help.diagCopied"),
     message: tr("help.diagCopied"),
@@ -1300,7 +1306,7 @@ async function showUpdateDialog() {
   const buttons = canInstall
     ? [tr("update.installNow"), tr("update.notes"), tr("update.later")]
     : [tr("update.download"), tr("update.later")];
-  const { response } = await dialog.showMessageBox(win, {
+  const { response } = await showDialog({
     type: "info",
     title: tr("update.newTitle"),
     message: tr("update.newTitle"),
@@ -1353,7 +1359,7 @@ function createDesktopShortcut() {
     target: exe, cwd: path.dirname(exe), icon: exe, iconIndex: 0,
     description: "ABS Desktop App", appUserModelId: APP_ID,
   });
-  dialog.showMessageBox(win, {
+  showDialog({
     type: ok ? "info" : "warning", title: tr("app.desktopShortcut"), message: tr("app.desktopShortcut"),
     detail: ok ? tr("app.shortcutDone") : tr("app.shortcutFailed"), buttons: [tr("about.ok")],
   });
@@ -1442,7 +1448,7 @@ async function installUpdate() {
     try { fs.unlinkSync(part); } catch {}
     sendUpdateToTitleBar();
     const verify = err && err.verify;
-    const { response } = await dialog.showMessageBox(win, {
+    const { response } = await showDialog({
       type: "warning",
       title: tr("update.installFailed"),
       message: tr("update.installFailed"),
@@ -1484,7 +1490,7 @@ async function checkForUpdates(manual) {
       latestRelease = null;
       sendUpdateToTitleBar();
       if (manual) {
-        dialog.showMessageBox(win, {
+        showDialog({
           type: "info", title: tr("update.upToDate"), message: tr("update.upToDate"),
           detail: tr("update.upToDateMsg", { version: app.getVersion() }), buttons: [tr("about.ok")],
         });
@@ -1492,7 +1498,7 @@ async function checkForUpdates(manual) {
     }
   } catch {
     if (manual) {
-      dialog.showMessageBox(win, {
+      showDialog({
         type: "warning", title: tr("update.failed"), message: tr("update.failed"),
         detail: tr("update.failedMsg"), buttons: [tr("about.ok")],
       });
@@ -1519,7 +1525,7 @@ function startUpdateChecks() {
 }
 
 async function showAbout() {
-  const { response } = await dialog.showMessageBox(win, {
+  const { response } = await showDialog({
     type: "info",
     title: tr("about.title"),
     message: `ABS Desktop App (ABS-DA) ${app.getVersion()}`,
@@ -1575,8 +1581,9 @@ function languageMenuItems() {
 
 // Built fresh each time it opens, so the ticks (and the language) are always current.
 // The order of the top-level menus must match the buttons in titlebar.html.
-function buildMenu() {
-  return Menu.buildFromTemplate([
+// (Drawn by ui.html, not Windows; same item format as Electron menu templates.)
+function menuTemplate() {
+  return ([
     {
       label: tr("menu.app"),
       submenu: [
@@ -1587,7 +1594,7 @@ function buildMenu() {
           label: tr("app.forgetLogin"),
           click: () => {
             forgetLogin();
-            dialog.showMessageBox(win, { type: "info", title: tr("app.forgotTitle"), message: tr("app.forgotMsg"), buttons: [tr("about.ok")] });
+            showDialog({ type: "info", title: tr("app.forgotTitle"), message: tr("app.forgotMsg"), buttons: [tr("about.ok")] });
           },
         },
         {
@@ -1727,12 +1734,123 @@ ipcMain.handle("desktop:retry", (e) => {
 // Title bar: current page title, and opening one of the menus under its button.
 ipcMain.handle("titlebar:get-title", (e) => (fromLocalPage(e) && view ? wc().getTitle() : ""));
 
-ipcMain.handle("titlebar:menu", (e, { index, x, y } = {}) => new Promise((resolve) => {
-  if (!fromLocalPage(e)) return resolve();
-  const item = buildMenu().items[index];
-  if (!item || !item.submenu) return resolve();
-  item.submenu.popup({ window: win, x: Math.round(x), y: Math.round(y), callback: () => resolve() });
-}));
+ipcMain.handle("titlebar:menu", (e, { index, rects } = {}) => {
+  if (!win || e.sender !== win.webContents || !Array.isArray(rects)) return;
+  return showMenus(Number(index) || 0, rects);
+});
+
+// ---- themed menus and message boxes ------------------------------------------
+// Windows' own menus and message boxes can't take the theme's colours, so ui.html
+// draws them in a see-through layer over the whole window (shown only while one is
+// open). Message boxes take the same options as dialog.showMessageBox and wait their
+// turn; if the layer can't load, Windows' own message box is used.
+let uiView = null;
+let uiLoaded = null;      // Promise<boolean>: ui.html is ready
+let uiOpen = null;        // { kind: "menu", resolve, items } | { kind: "dialog", resolve, cancelId }
+const dialogQueue = [];
+
+function ensureUi() {
+  if (uiView) return uiLoaded;
+  uiView = new WebContentsView({ webPreferences: { preload: PRELOAD, contextIsolation: true, nodeIntegration: false, sandbox: true } });
+  uiView.setBackgroundColor("#00000000");
+  uiView.setVisible(false);
+  win.contentView.addChildView(uiView);
+  uiView.webContents.on("will-navigate", (ev) => ev.preventDefault());
+  uiLoaded = uiView.webContents.loadFile(path.join(__dirname, "ui.html")).then(() => true, () => false);
+  return uiLoaded;
+}
+function showUiLayer() {
+  const { width, height } = win.getContentBounds();
+  uiView.setBounds({ x: 0, y: 0, width, height });
+  win.contentView.addChildView(uiView);   // (again) on top of everything
+  uiView.setVisible(true);
+  uiView.webContents.focus();
+}
+function closeUi(result) {
+  const open = uiOpen;
+  if (!open) return;
+  uiOpen = null;
+  if (uiView) { uiView.webContents.send("ui:clear"); uiView.setVisible(false); }
+  if (win && !win.isDestroyed()) {
+    win.webContents.send("titlebar:menu-open", -1);
+    (settingsView ? settingsView.webContents : view ? wc() : win.webContents).focus();
+  }
+  open.resolve(result);
+  setImmediate(pumpDialogs);
+}
+
+// Title-bar menus: the template turned into plain data (+ the click handlers kept here).
+function menuData(template, handlers) {
+  const accel = (a) => (a ? String(a).replace(/\bLeft\b/, "←").replace(/\bRight\b/, "→") : "");
+  const walk = (items) => items.filter((it) => it && it.visible !== false).map((it) => {
+    if (it.type === "separator") return { type: "separator" };
+    const id = handlers.push(it) - 1;
+    return {
+      id, label: String(it.label || ""), enabled: it.enabled !== false, checked: !!it.checked, accel: accel(it.accelerator),
+      type: it.submenu ? "submenu" : it.type === "checkbox" ? "checkbox" : "normal",
+      submenu: it.submenu ? walk(it.submenu) : undefined,
+    };
+  });
+  return template.map((top) => ({ label: top.label, items: walk(top.submenu || []) }));
+}
+async function showMenus(index, rects) {
+  if (uiOpen || !(await ensureUi()) || uiOpen) return;
+  const handlers = [];
+  const menus = menuData(menuTemplate(), handlers);
+  return new Promise((resolve) => {
+    uiOpen = { kind: "menu", resolve, handlers };
+    showUiLayer();
+    uiView.webContents.send("ui:menu", { menus, index, rects });
+  });
+}
+const fromUi = (e) => uiView && e.sender === uiView.webContents;
+ipcMain.on("ui:menu-switch", (e, index) => {
+  if (fromUi(e) && uiOpen && uiOpen.kind === "menu") win.webContents.send("titlebar:menu-open", index);
+});
+ipcMain.on("ui:menu-click", (e, id) => {
+  if (!fromUi(e) || !uiOpen || uiOpen.kind !== "menu") return;
+  const item = uiOpen.handlers[id];
+  closeUi();
+  // Like an Electron menu item: a checkbox flips before its click handler runs.
+  if (item && item.enabled !== false && typeof item.click === "function") {
+    setImmediate(() => item.click({ checked: item.type === "checkbox" ? !item.checked : !!item.checked }));
+  }
+});
+ipcMain.on("ui:close", (e) => { if (fromUi(e) && uiOpen && uiOpen.kind === "menu") closeUi(); });
+
+// Message boxes: showDialog({ type, title, message, detail, buttons, defaultId, cancelId })
+// → Promise<{ response }>, like dialog.showMessageBox(win, …).
+function showDialog(opts) {
+  return new Promise((resolve) => {
+    dialogQueue.push({ opts, resolve });
+    pumpDialogs();
+  });
+}
+async function pumpDialogs() {
+  if (uiOpen || !dialogQueue.length) return;
+  if (!win || win.isDestroyed()) {
+    while (dialogQueue.length) dialogQueue.shift().resolve({ response: 0 });
+    return;
+  }
+  const ok = await ensureUi();
+  if (uiOpen || !dialogQueue.length) return;
+  const { opts, resolve } = dialogQueue.shift();
+  if (!ok) { dialog.showMessageBox(win, opts).then(resolve, () => resolve({ response: 0 })); return; }
+  const buttons = (opts.buttons && opts.buttons.length ? opts.buttons : [tr("about.ok")]).map(String);
+  const clamp = (i, d) => (Number.isInteger(i) && i >= 0 && i < buttons.length ? i : d);
+  const data = {
+    type: opts.type || "info", message: String(opts.message || opts.title || ""), detail: String(opts.detail || ""),
+    buttons, defaultId: clamp(opts.defaultId, 0), cancelId: clamp(opts.cancelId, 0),
+  };
+  uiOpen = { kind: "dialog", resolve: (response) => resolve({ response }), cancelId: data.cancelId };
+  if (!win.isVisible() || win.isMinimized()) showWindow();
+  showUiLayer();
+  uiView.webContents.send("ui:dialog", data);
+}
+ipcMain.on("ui:dialog-result", (e, i) => {
+  if (!fromUi(e) || !uiOpen || uiOpen.kind !== "dialog") return;
+  closeUi(Number.isInteger(i) ? i : uiOpen.cancelId);
+});
 
 // Mouse back/forward buttons reported by the page (see preload.js).
 // (In the settings overlay the side buttons move through the settings pages.)

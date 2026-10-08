@@ -1,0 +1,137 @@
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+/* Menus and message boxes. Colours come from the current theme (main.js injects
+   --tb-* and --cn-* values); these are the defaults (Audiobookshelf theme). */
+:root {
+  --tb-fg: #e5e5e5;
+  --tb-logo: #f0a848;
+  --cn-card: #2e2d2b;
+  --cn-border: #4a4744;
+  --panel: var(--cn-card);
+  --text: var(--tb-fg);
+  --accent: var(--tb-logo);
+  --line: rgba(255, 255, 255, .14);
+  --hi: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font: 13px "Segoe UI", system-ui, sans-serif;
+  color: var(--text);
+  user-select: none;
+}
+
+#root { position: fixed; inset: 0; }
+
+/* ---- menus ---------------------------------------------------------------- */
+.hot { position: fixed; }   /* invisible areas over the title-bar menu buttons */
+
+.menu {
+  position: fixed;
+  min-width: 230px;
+  max-width: 420px;
+  padding: 4px;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .55);
+  scrollbar-width: thin;
+  scrollbar-color: var(--cn-border) transparent;
+  animation: pop .08s ease-out;
+}
+@keyframes pop { from { opacity: 0; transform: translateY(-3px); } }
+
+.item {
+  display: grid;
+  grid-template-columns: 22px 1fr auto 14px;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+  padding: 3px 8px 3px 4px;
+  border-radius: 5px;
+  white-space: nowrap;
+  cursor: default;
+}
+.item.active { background: var(--hi); }
+.item.disabled { opacity: .45; }
+.item .check { display: flex; justify-content: center; color: var(--accent); }
+.item .check svg { width: 14px; height: 14px; }
+.item .label { overflow: hidden; text-overflow: ellipsis; padding-right: 18px; }
+.item .accel { opacity: .6; font-size: 12px; }
+.item .arrow { opacity: .7; font-size: 10px; text-align: right; }
+.sep { height: 1px; margin: 4px 8px; background: var(--line); }
+
+/* ---- message boxes -------------------------------------------------------- */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, .5);
+  animation: fade .12s ease-out;
+}
+@keyframes fade { from { opacity: 0; } }
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(520px, 100%);
+  max-height: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  border-radius: 10px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .6);
+  animation: grow .12s ease-out;
+}
+@keyframes grow { from { opacity: 0; transform: scale(.97); } }
+.dialog.warning { border-top-color: #fb8c00; }
+.dialog.error { border-top-color: #ff5252; }
+
+.dialog .head { display: flex; gap: 14px; align-items: flex-start; padding: 20px 22px 0; }
+.dialog .icon { flex: none; width: 30px; height: 30px; color: var(--accent); }
+.dialog.warning .icon { color: #fb8c00; }
+.dialog.error .icon { color: #ff5252; }
+.dialog .message { font-size: 16px; font-weight: 600; line-height: 1.35; padding-top: 4px; overflow-wrap: anywhere; }
+.dialog .detail {
+  margin: 10px 22px 0 66px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  opacity: .85;
+  user-select: text;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cn-border) transparent;
+}
+.dialog .buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 20px 22px 18px; }
+.dialog button {
+  min-width: 88px;
+  padding: 7px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .06);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dialog button:hover { background: rgba(255, 255, 255, .12); }
+.dialog button.default { background: var(--accent); border-color: var(--accent); color: #111; }
+.dialog button.default:hover { background: color-mix(in srgb, var(--accent) 85%, white); }
+.dialog button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+/* View → Theme → Windows contrast colours: use the system's own colours.
+   (ui.js sets .themed when the app's theme colours are in use instead.) */
+@media (forced-colors: active) {
+  html:not(.themed) .menu, html:not(.themed) .dialog { border: 1px solid CanvasText; }
+  html:not(.themed) .item.active { background: Highlight; color: HighlightText; forced-color-adjust: none; }
+}

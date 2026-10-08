@@ -1,7 +1,7 @@
 {
   "name": "abs-da",
   "productName": "ABS Desktop App",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "ABS-DA: an unofficial Windows desktop app for Audiobookshelf — player, e-book reader and admin tools",
   "main": "main.js",
   "scripts": {
@@ -41,6 +41,9 @@
       "titlebar.html",
       "titlebar.css",
       "titlebar.js",
+      "ui.html",
+      "ui.css",
+      "ui.js",
       "build/icon.ico",
       "LICENSE"
     ],

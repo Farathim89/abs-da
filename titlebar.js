@@ -29,15 +29,22 @@ desktop.onUpdate((u) => {
 });
 updateBtn.addEventListener("click", () => desktop.openUpdate());
 
-// Each button opens its menu just below itself.
-document.querySelectorAll(".menus button").forEach((btn) => {
+// Each button opens its menu just below itself. The menus are drawn over the window
+// (ui.html), which needs to know where all the buttons are to switch between them.
+const menuButtons = [...document.querySelectorAll(".menus button")];
+const setOpen = (index) => menuButtons.forEach((b, i) => b.classList.toggle("open", i === index));
+desktop.onMenuOpen(setOpen);
+menuButtons.forEach((btn) => {
   btn.addEventListener("click", async () => {
-    const r = btn.getBoundingClientRect();
-    btn.classList.add("open");
+    const rects = menuButtons.map((b) => {
+      const r = b.getBoundingClientRect();
+      return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+    });
+    setOpen(Number(btn.dataset.menu));
     try {
-      await desktop.showMenu(Number(btn.dataset.menu), r.left, r.bottom);
+      await desktop.showMenu(Number(btn.dataset.menu), rects);
     } finally {
-      btn.classList.remove("open");
+      setOpen(-1);
     }
   });
 });

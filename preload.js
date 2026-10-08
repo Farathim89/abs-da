@@ -13,7 +13,8 @@ if (location.protocol === "file:") {
     connect: (server) => ipcRenderer.invoke("desktop:connect", server),
     retry: () => ipcRenderer.invoke("desktop:retry"),
     // custom title bar
-    showMenu: (index, x, y) => ipcRenderer.invoke("titlebar:menu", { index, x, y }),
+    showMenu: (index, rects) => ipcRenderer.invoke("titlebar:menu", { index, rects }),
+    onMenuOpen: (cb) => ipcRenderer.on("titlebar:menu-open", (_e, index) => cb(index)),
     getTitle: () => ipcRenderer.invoke("titlebar:get-title"),
     onTitle: (cb) => ipcRenderer.on("titlebar:title", (_e, title) => cb(title)),
     onFocus: (cb) => ipcRenderer.on("titlebar:focus", (_e, focused) => cb(focused)),
@@ -23,6 +24,16 @@ if (location.protocol === "file:") {
     // update check (title bar pill)
     onUpdate: (cb) => ipcRenderer.on("titlebar:update", (_e, u) => cb(u)),
     openUpdate: () => ipcRenderer.send("desktop:open-update"),
+    // themed menus and message boxes (ui.html)
+    ui: {
+      onMenu: (cb) => ipcRenderer.on("ui:menu", (_e, m) => cb(m)),
+      onDialog: (cb) => ipcRenderer.on("ui:dialog", (_e, d) => cb(d)),
+      onClear: (cb) => ipcRenderer.on("ui:clear", () => cb()),
+      menuClick: (id) => ipcRenderer.send("ui:menu-click", id),
+      menuSwitch: (index) => ipcRenderer.send("ui:menu-switch", index),
+      close: () => ipcRenderer.send("ui:close"),
+      dialogResult: (i) => ipcRenderer.send("ui:dialog-result", i),
+    },
   });
 }
 
