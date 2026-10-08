@@ -188,5 +188,7 @@
   "scan.allStarted": "Alustati {n} raamatukogu skannimist",
   "scan.done": "„{name}“ skannimine lõpetatud: {result}",
   "scan.allDone": "{n} raamatukogu skannimine lõpetatud",
-  "scan.failed": "„{name}“ skannimine ebaõnnestus"
+  "scan.failed": "„{name}“ skannimine ebaõnnestus",
+  "temp.title": "See on ajutine koopia",
+  "temp.msg": "ABS Desktop App käivitati ajutisest kaustast, kuhu kaasaskantav versioon end lahti pakib:\n{folder}\n\nSee koopia ei kasuta sinu seadeid ja võib igal hetkel kaduda. Käivita selle asemel ABS-DA-Portable.exe tema enda kaustast (või otsetee kaudu)."
 }

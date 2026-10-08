@@ -188,5 +188,7 @@
   "scan.allStarted": "Pokrenuto skeniranje knjižnica: {n}",
   "scan.done": "Skeniranje „{name}” završeno: {result}",
   "scan.allDone": "Skeniranje knjižnica završeno: {n}",
-  "scan.failed": "Skeniranje „{name}” nije uspjelo"
+  "scan.failed": "Skeniranje „{name}” nije uspjelo",
+  "temp.title": "Ovo je privremena kopija",
+  "temp.msg": "ABS Desktop App pokrenut je iz privremene mape u koju se raspakirava prijenosna verzija:\n{folder}\n\nOva kopija ne koristi vaše postavke i može nestati u bilo kojem trenutku. Umjesto toga pokrenite ABS-DA-Portable.exe iz njegove mape (ili prečacem)."
 }

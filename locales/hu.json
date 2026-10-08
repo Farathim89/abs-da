@@ -188,5 +188,7 @@
   "scan.allStarted": "{n} könyvtár szkennelése elindult",
   "scan.done": "„{name}” szkennelése kész: {result}",
   "scan.allDone": "{n} könyvtár szkennelése kész",
-  "scan.failed": "„{name}” szkennelése sikertelen"
+  "scan.failed": "„{name}” szkennelése sikertelen",
+  "temp.title": "Ez egy ideiglenes másolat",
+  "temp.msg": "Az ABS Desktop App egy ideiglenes mappából indult, ahová a hordozható verzió kicsomagolja magát:\n{folder}\n\nEz a másolat nem a te beállításaidat használja, és bármikor eltűnhet. Inkább az ABS-DA-Portable.exe fájlt indítsd a saját mappájából (vagy a parancsikonnal)."
 }

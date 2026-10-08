@@ -188,5 +188,7 @@
   "scan.allStarted": "Skanning startad för {n} bibliotek",
   "scan.done": "Skanning av ”{name}” klar: {result}",
   "scan.allDone": "Skanning klar för {n} bibliotek",
-  "scan.failed": "Skanning av ”{name}” misslyckades"
+  "scan.failed": "Skanning av ”{name}” misslyckades",
+  "temp.title": "Det här är en tillfällig kopia",
+  "temp.msg": "ABS Desktop App startades från en tillfällig mapp som den portabla versionen packar upp sig i:\n{folder}\n\nDen här kopian använder inte dina inställningar och kan försvinna när som helst. Starta i stället ABS-DA-Portable.exe från dess egen mapp (eller med din genväg)."
 }

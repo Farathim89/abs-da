@@ -188,5 +188,7 @@
   "scan.allStarted": "Scan gestart voor {n} bibliotheken",
   "scan.done": "Scan van ‘{name}’ voltooid: {result}",
   "scan.allDone": "Scan voltooid voor {n} bibliotheken",
-  "scan.failed": "Scan van ‘{name}’ mislukt"
+  "scan.failed": "Scan van ‘{name}’ mislukt",
+  "temp.title": "Dit is een tijdelijke kopie",
+  "temp.msg": "ABS Desktop App is gestart vanuit een tijdelijke map waarin de portable versie zichzelf uitpakt:\n{folder}\n\nDeze kopie gebruikt je instellingen niet en kan elk moment verdwijnen. Start in plaats daarvan ABS-DA-Portable.exe vanuit zijn eigen map (of met je snelkoppeling)."
 }

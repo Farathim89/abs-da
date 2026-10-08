@@ -188,5 +188,7 @@
   "scan.allStarted": "{n} kütüphanede tarama başlatıldı",
   "scan.done": "“{name}” taraması tamamlandı: {result}",
   "scan.allDone": "{n} kütüphanede tarama tamamlandı",
-  "scan.failed": "“{name}” taraması başarısız oldu"
+  "scan.failed": "“{name}” taraması başarısız oldu",
+  "temp.title": "Bu geçici bir kopya",
+  "temp.msg": "ABS Desktop App, taşınabilir sürümün kendini açtığı geçici bir klasörden başlatıldı:\n{folder}\n\nBu kopya ayarlarınızı kullanmaz ve her an kaybolabilir. Bunun yerine ABS-DA-Portable.exe dosyasını kendi klasöründen (veya kısayolunuzla) başlatın."
 }

@@ -188,5 +188,7 @@
   "scan.allStarted": "Đã bắt đầu quét {n} thư viện",
   "scan.done": "Đã quét xong “{name}”: {result}",
   "scan.allDone": "Đã quét xong {n} thư viện",
-  "scan.failed": "Quét “{name}” thất bại"
+  "scan.failed": "Quét “{name}” thất bại",
+  "temp.title": "Đây là bản sao tạm thời",
+  "temp.msg": "ABS Desktop App đã được khởi động từ một thư mục tạm mà bản portable tự giải nén vào:\n{folder}\n\nBản sao này không dùng cài đặt của bạn và có thể biến mất bất cứ lúc nào. Hãy khởi động ABS-DA-Portable.exe từ thư mục của nó (hoặc bằng lối tắt)."
 }

@@ -188,5 +188,7 @@
   "scan.allStarted": "已开始扫描 {n} 个库",
   "scan.done": "“{name}”扫描完成：{result}",
   "scan.allDone": "已完成 {n} 个库的扫描",
-  "scan.failed": "“{name}”扫描失败"
+  "scan.failed": "“{name}”扫描失败",
+  "temp.title": "这是一个临时副本",
+  "temp.msg": "ABS Desktop App 是从便携版自行解压到的临时文件夹启动的：\n{folder}\n\n此副本不使用你的设置，并可能随时消失。请改为从 ABS-DA-Portable.exe 所在的文件夹（或通过快捷方式）启动它。"
 }

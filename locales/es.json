@@ -188,5 +188,7 @@
   "scan.allStarted": "Escaneo iniciado en {n} bibliotecas",
   "scan.done": "Escaneo de «{name}» terminado: {result}",
   "scan.allDone": "Escaneo terminado en {n} bibliotecas",
-  "scan.failed": "Falló el escaneo de «{name}»"
+  "scan.failed": "Falló el escaneo de «{name}»",
+  "temp.title": "Esta es una copia temporal",
+  "temp.msg": "ABS Desktop App se inició desde una carpeta temporal en la que se descomprime la versión portable:\n{folder}\n\nEsta copia no usa tu configuración y puede desaparecer en cualquier momento. Inicia ABS-DA-Portable.exe desde su propia carpeta (o con tu acceso directo)."
 }

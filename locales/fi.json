@@ -188,5 +188,7 @@
   "scan.allStarted": "Skannaus aloitettu {n} kirjastossa",
   "scan.done": "Kohteen ”{name}” skannaus valmis: {result}",
   "scan.allDone": "Skannaus valmis {n} kirjastossa",
-  "scan.failed": "Kohteen ”{name}” skannaus epäonnistui"
+  "scan.failed": "Kohteen ”{name}” skannaus epäonnistui",
+  "temp.title": "Tämä on väliaikainen kopio",
+  "temp.msg": "ABS Desktop App käynnistettiin väliaikaisesta kansiosta, johon siirrettävä versio purkaa itsensä:\n{folder}\n\nTämä kopio ei käytä asetuksiasi ja voi kadota milloin tahansa. Käynnistä sen sijaan ABS-DA-Portable.exe sen omasta kansiosta (tai pikakuvakkeella)."
 }

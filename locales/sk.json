@@ -188,5 +188,7 @@
   "scan.allStarted": "Spustené skenovanie knižníc: {n}",
   "scan.done": "Skenovanie „{name}“ dokončené: {result}",
   "scan.allDone": "Skenovanie knižníc dokončené: {n}",
-  "scan.failed": "Skenovanie „{name}“ zlyhalo"
+  "scan.failed": "Skenovanie „{name}“ zlyhalo",
+  "temp.title": "Toto je dočasná kópia",
+  "temp.msg": "ABS Desktop App bola spustená z dočasného priečinka, do ktorého sa rozbaľuje prenosná verzia:\n{folder}\n\nTáto kópia nepoužíva vaše nastavenia a môže kedykoľvek zmiznúť. Namiesto toho spúšťajte ABS-DA-Portable.exe z jeho vlastného priečinka (alebo odkazom)."
 }

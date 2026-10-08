@@ -188,5 +188,7 @@
   "scan.allStarted": "Scan für {n} Bibliotheken gestartet",
   "scan.done": "Scan von „{name}“ abgeschlossen: {result}",
   "scan.allDone": "Scan für {n} Bibliotheken abgeschlossen",
-  "scan.failed": "Scan von „{name}“ fehlgeschlagen"
+  "scan.failed": "Scan von „{name}“ fehlgeschlagen",
+  "temp.title": "Dies ist eine temporäre Kopie",
+  "temp.msg": "ABS Desktop App wurde aus einem temporären Ordner gestartet, in den sich die portable Version entpackt:\n{folder}\n\nDiese Kopie verwendet nicht deine Einstellungen und kann jederzeit verschwinden. Starte stattdessen ABS-DA-Portable.exe aus seinem eigenen Ordner (oder über deine Verknüpfung)."
 }

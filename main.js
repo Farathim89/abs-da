@@ -62,6 +62,39 @@ if (process.env.PORTABLE_EXECUTABLE_DIR) {
   }
 }
 
+// The portable .exe unpacks the app into %TEMP%\<random name> on every start and runs it
+// from there (that is how electron-builder's portable works); the folder is removed when
+// the app closes normally. Started *directly* from such a folder (Windows search, an old
+// pin, the Properties window…) it would run without your settings, as an old version
+// that can vanish any time: say so and stop (see whenReady).
+const exeDir = path.dirname(process.execPath);
+const exeName = path.basename(process.execPath);
+const isUnpackFolder = (dir) => /^[0-9A-Za-z]{20,40}$/.test(path.basename(dir)) &&
+  fs.existsSync(path.join(dir, exeName)) && fs.existsSync(path.join(dir, "resources", "app.asar"));
+const sameDir = (a, b) => {
+  try { return fs.realpathSync.native(a).toLowerCase() === fs.realpathSync.native(b).toLowerCase(); } catch { return false; }
+};
+const startedFromTemp = app.isPackaged && !process.env.PORTABLE_EXECUTABLE_FILE &&
+  sameDir(path.dirname(exeDir), os.tmpdir()) && isUnpackFolder(exeDir);
+
+// Portable: folders left in %TEMP% by copies that were closed by force, or by older
+// versions (about 265 MB each), are removed a little after start. A copy that is still
+// running keeps its .exe locked, so it is skipped.
+function cleanOldUnpackFolders() {
+  if (!process.env.PORTABLE_EXECUTABLE_FILE || !isUnpackFolder(exeDir)) return;
+  const tmp = path.dirname(exeDir);
+  let names = [];
+  try { names = fs.readdirSync(tmp); } catch { return; }
+  for (const name of names) {
+    const dir = path.join(tmp, name);
+    if (name.toLowerCase() === path.basename(exeDir).toLowerCase() || !isUnpackFolder(dir)) continue;
+    try { fs.closeSync(fs.openSync(path.join(dir, exeName), "r+")); } catch { continue; }   // in use
+    const gone = `${dir}.absda-old`;
+    try { fs.renameSync(dir, gone); } catch { continue; }
+    fs.promises.rm(gone, { recursive: true, force: true }).catch(() => {});
+  }
+}
+
 // App → Use hardware acceleration (off = the cure for drawing glitches with some
 // graphics drivers). Must be decided before the app is ready, so read it here.
 try {
@@ -889,6 +922,12 @@ function createWindow() {
     webPreferences,
   });
   if (state.maximized) win.maximize();
+  // Portable: pinning the running app to the taskbar pins ABS-DA-Portable.exe, not the
+  // temporary copy it runs from.
+  if (process.env.PORTABLE_EXECUTABLE_FILE) {
+    const exe = process.env.PORTABLE_EXECUTABLE_FILE;
+    win.setAppDetails({ appId: APP_ID, appIconPath: exe, appIconIndex: 0, relaunchCommand: `"${exe}"`, relaunchDisplayName: "ABS Desktop App" });
+  }
   win.on("page-title-updated", (e) => e.preventDefault());   // window title follows the web app
   win.webContents.on("will-navigate", (e) => e.preventDefault());   // the title bar never navigates
   win.webContents.on("before-input-event", onShortcut);
@@ -2093,7 +2132,19 @@ app.whenReady().then(() => {
     app.quit();
     return;
   }
+  if (startedFromTemp) {
+    dialog.showMessageBoxSync({
+      type: "warning",
+      title: tr("temp.title"),
+      message: tr("temp.title"),
+      detail: tr("temp.msg", { folder: exeDir }),
+      buttons: [tr("about.ok")],
+    });
+    app.quit();
+    return;
+  }
   config = readJson(dataFile("config.json"), {});
+  setTimeout(cleanOldUnpackFolders, 30000);
   refreshStartWithWindows();
   hardenSession();
   Menu.setApplicationMenu(null);   // no Windows menu bar — the menus live in our title bar

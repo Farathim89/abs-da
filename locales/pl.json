@@ -188,5 +188,7 @@
   "scan.allStarted": "Rozpoczęto skanowanie bibliotek: {n}",
   "scan.done": "Skanowanie „{name}” zakończone: {result}",
   "scan.allDone": "Zakończono skanowanie bibliotek: {n}",
-  "scan.failed": "Skanowanie „{name}” nie powiodło się"
+  "scan.failed": "Skanowanie „{name}” nie powiodło się",
+  "temp.title": "To jest kopia tymczasowa",
+  "temp.msg": "ABS Desktop App uruchomiono z folderu tymczasowego, do którego rozpakowuje się wersja przenośna:\n{folder}\n\nTa kopia nie używa Twoich ustawień i może zniknąć w każdej chwili. Zamiast tego uruchom ABS-DA-Portable.exe z jego własnego folderu (lub skrótem)."
 }

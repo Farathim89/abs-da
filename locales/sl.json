@@ -188,5 +188,7 @@
   "scan.allStarted": "Začel se je pregled knjižnic: {n}",
   "scan.done": "Pregled »{name}« končan: {result}",
   "scan.allDone": "Pregled knjižnic končan: {n}",
-  "scan.failed": "Pregled »{name}« ni uspel"
+  "scan.failed": "Pregled »{name}« ni uspel",
+  "temp.title": "To je začasna kopija",
+  "temp.msg": "ABS Desktop App je bil zagnan iz začasne mape, v katero se razpakira prenosna različica:\n{folder}\n\nTa kopija ne uporablja vaših nastavitev in lahko kadar koli izgine. Namesto tega zaženite ABS-DA-Portable.exe iz njegove mape (ali z bližnjico)."
 }

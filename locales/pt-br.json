@@ -188,5 +188,7 @@
   "scan.allStarted": "Verificação iniciada em {n} bibliotecas",
   "scan.done": "Verificação de “{name}” concluída: {result}",
   "scan.allDone": "Verificação concluída em {n} bibliotecas",
-  "scan.failed": "Falha na verificação de “{name}”"
+  "scan.failed": "Falha na verificação de “{name}”",
+  "temp.title": "Esta é uma cópia temporária",
+  "temp.msg": "O ABS Desktop App foi iniciado a partir de uma pasta temporária onde a versão portátil se descompacta:\n{folder}\n\nEsta cópia não usa suas configurações e pode sumir a qualquer momento. Inicie o ABS-DA-Portable.exe a partir da própria pasta dele (ou pelo atalho)."
 }

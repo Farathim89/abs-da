@@ -188,5 +188,7 @@
   "scan.allStarted": "Skanning startet for {n} bibliotek",
   "scan.done": "Skanning av «{name}» ferdig: {result}",
   "scan.allDone": "Skanning ferdig for {n} bibliotek",
-  "scan.failed": "Skanning av «{name}» mislyktes"
+  "scan.failed": "Skanning av «{name}» mislyktes",
+  "temp.title": "Dette er en midlertidig kopi",
+  "temp.msg": "ABS Desktop App ble startet fra en midlertidig mappe som den bærbare versjonen pakker seg ut i:\n{folder}\n\nDenne kopien bruker ikke innstillingene dine og kan forsvinne når som helst. Start heller ABS-DA-Portable.exe fra sin egen mappe (eller med snarveien)."
 }

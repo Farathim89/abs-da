@@ -188,5 +188,7 @@
   "scan.allStarted": "Analyse lancée pour {n} bibliothèques",
   "scan.done": "Analyse de « {name} » terminée : {result}",
   "scan.allDone": "Analyse terminée pour {n} bibliothèques",
-  "scan.failed": "Échec de l’analyse de « {name} »"
+  "scan.failed": "Échec de l’analyse de « {name} »",
+  "temp.title": "Ceci est une copie temporaire",
+  "temp.msg": "ABS Desktop App a été lancé depuis un dossier temporaire dans lequel la version portable se décompresse :\n{folder}\n\nCette copie n’utilise pas vos réglages et peut disparaître à tout moment. Lancez plutôt ABS-DA-Portable.exe depuis son propre dossier (ou avec votre raccourci)."
 }

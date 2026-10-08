@@ -188,5 +188,7 @@
   "scan.allStarted": "Scansione avviata per {n} librerie",
   "scan.done": "Scansione di “{name}” completata: {result}",
   "scan.allDone": "Scansione completata per {n} librerie",
-  "scan.failed": "Scansione di “{name}” non riuscita"
+  "scan.failed": "Scansione di “{name}” non riuscita",
+  "temp.title": "Questa è una copia temporanea",
+  "temp.msg": "ABS Desktop App è stato avviato da una cartella temporanea in cui si decomprime la versione portable:\n{folder}\n\nQuesta copia non usa le tue impostazioni e può sparire in qualsiasi momento. Avvia invece ABS-DA-Portable.exe dalla sua cartella (o con il collegamento)."
 }

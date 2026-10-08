@@ -188,5 +188,7 @@
   "scan.allStarted": "Zahájeno prohledávání knihoven: {n}",
   "scan.done": "Prohledávání „{name}“ dokončeno: {result}",
   "scan.allDone": "Prohledávání knihoven dokončeno: {n}",
-  "scan.failed": "Prohledávání „{name}“ selhalo"
+  "scan.failed": "Prohledávání „{name}“ selhalo",
+  "temp.title": "Toto je dočasná kopie",
+  "temp.msg": "ABS Desktop App byla spuštěna z dočasné složky, do které se rozbaluje přenosná verze:\n{folder}\n\nTato kopie nepoužívá vaše nastavení a může kdykoli zmizet. Spouštějte ABS-DA-Portable.exe z jeho vlastní složky (nebo zástupcem)."
 }
