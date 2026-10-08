@@ -449,6 +449,9 @@ function themeCss(id) {
         --color-slate-300: color-mix(in srgb, ${fg} 80%, #808080) !important;
         --color-slate-400: color-mix(in srgb, ${fg} 60%, #808080) !important; }
       .bg-error { background-color: ${shade(55)} !important; color: #fff !important; }
+      .bg-warning { background-color: ${shade(85)} !important; }
+      .bg-warning, .bg-warning * { color: #141414 !important; }
+      .text-success { color: color-mix(in srgb, ${ok} 60%, white) !important; }
       .bg-red-100:has(> .border-error) { background-color: var(--color-bg) !important; }
       #settings-description a, .default-style a { color: ${tint(70)} !important; }
       #settings-description a:hover, .default-style a:hover { color: ${tint(50)} !important; }
