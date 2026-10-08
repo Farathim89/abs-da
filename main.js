@@ -354,6 +354,18 @@ function themeCss(id) {
     // takes the theme's accent colour.
     parts.push(`html:root { --color-yellow-400: ${t.title.logo} !important; --color-yellow-300: ${t.title.logo} !important; }`);
   }
+  if (!t.contrast) {
+    // The web app's red "error" colour (Delete / Remove buttons, Missing, the "!" on
+    // covers of books with issues, Invalid Cover, the side menu's Issues) takes the
+    // theme's accent. Filled red buttons and badges get a darker shade of it so they
+    // still read as "careful". (Notifications have their own colours; the Logs page
+    // keeps ERROR red so it stays apart from WARN and INFO.)
+    const a = t.title.logo;
+    parts.push(`html:root { --color-error: ${a} !important; }
+      .bg-error { background-color: color-mix(in srgb, ${a} 55%, black) !important; color: #fff !important; }
+      .bg-red-100:has(> .border-error) { background-color: var(--color-bg) !important; }
+      .w-12.text-right.text-error { color: #ff5252 !important; }`);
+  }
   if (t.css) parts.push(t.css);
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
