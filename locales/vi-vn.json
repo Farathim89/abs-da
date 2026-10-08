@@ -182,5 +182,8 @@
   "app.shortcutDone": "Lối tắt đến ABS Desktop App đã có trên màn hình nền của bạn. Lối tắt vẫn hoạt động sau khi cập nhật.",
   "app.shortcutFailed": "Không thể tạo lối tắt.",
   "scan.button": "Quét thư viện",
-  "view.scanButton": "Hiện nút quét (quản trị viên)"
+  "view.scanButton": "Hiện nút quét (quản trị viên)",
+  "scan.library": "Quét “{name}”",
+  "scan.all": "Quét tất cả thư viện",
+  "scan.allStarted": "Đã bắt đầu quét {n} thư viện"
 }

@@ -182,5 +182,8 @@
   "app.shortcutDone": "Sul desktop ora c’è un collegamento ad ABS Desktop App. Continuerà a funzionare anche dopo gli aggiornamenti.",
   "app.shortcutFailed": "Impossibile creare il collegamento.",
   "scan.button": "Scansiona libreria",
-  "view.scanButton": "Mostra il pulsante di scansione (amministratori)"
+  "view.scanButton": "Mostra il pulsante di scansione (amministratori)",
+  "scan.library": "Scansiona “{name}”",
+  "scan.all": "Scansiona tutte le librerie",
+  "scan.allStarted": "Scansione avviata per {n} librerie"
 }

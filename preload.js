@@ -551,6 +551,13 @@ if (location.protocol !== "file:") {
   function applyPrefs(p) { if (p) { prefs = p; ensureScanButton(); } }
   ipcRenderer.invoke("desktop:ui-prefs").then(applyPrefs).catch(() => {});
   ipcRenderer.on("desktop:ui-prefs", (_e, p) => applyPrefs(p));
+  // A scan was chosen in the menu: one turn of the icon.
+  ipcRenderer.on("desktop:scan-started", () => {
+    const btn = document.getElementById(SCAN_ID);
+    if (!btn) return;
+    btn.classList.add("absda-spin");
+    setTimeout(() => btn.classList.remove("absda-spin"), 1200);
+  });
 
   function ensureScanButton() {
     if (windowKind !== "main") return;
@@ -566,12 +573,12 @@ if (location.protocol !== "file:") {
     btn.type = "button";
     btn.setAttribute("aria-label", T("scan.button", "Scan library"));
     btn.innerHTML = SCAN_SVG;
+    // Click → a menu: this library, all libraries, or any single one (built in main.js).
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       hideTip();
-      btn.classList.add("absda-spin");
-      setTimeout(() => btn.classList.remove("absda-spin"), 1200);
-      ipcRenderer.send("desktop:scan-library");
+      const r = btn.getBoundingClientRect();
+      ipcRenderer.send("desktop:scan-menu", { x: r.left, y: r.bottom + 4 });
     });
     btn.addEventListener("mouseenter", showTip);
     btn.addEventListener("mouseleave", hideTip);

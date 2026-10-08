@@ -182,5 +182,8 @@
   "app.shortcutDone": "Um atalho para o ABS Desktop App agora está na sua área de trabalho. Ele continua funcionando após as atualizações.",
   "app.shortcutFailed": "Não foi possível criar o atalho.",
   "scan.button": "Verificar biblioteca",
-  "view.scanButton": "Mostrar botão de verificação (administradores)"
+  "view.scanButton": "Mostrar botão de verificação (administradores)",
+  "scan.library": "Verificar “{name}”",
+  "scan.all": "Verificar todas as bibliotecas",
+  "scan.allStarted": "Verificação iniciada em {n} bibliotecas"
 }

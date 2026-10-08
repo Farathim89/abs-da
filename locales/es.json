@@ -182,5 +182,8 @@
   "app.shortcutDone": "Ya tienes un acceso directo a ABS Desktop App en el escritorio. Seguirá funcionando después de las actualizaciones.",
   "app.shortcutFailed": "No se pudo crear el acceso directo.",
   "scan.button": "Escanear biblioteca",
-  "view.scanButton": "Mostrar botón de escaneo (administradores)"
+  "view.scanButton": "Mostrar botón de escaneo (administradores)",
+  "scan.library": "Escanear «{name}»",
+  "scan.all": "Escanear todas las bibliotecas",
+  "scan.allStarted": "Escaneo iniciado en {n} bibliotecas"
 }

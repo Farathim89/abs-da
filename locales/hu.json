@@ -182,5 +182,8 @@
   "app.shortcutDone": "Az ABS Desktop App parancsikonja mostantól az asztalon van. Frissítések után is működik.",
   "app.shortcutFailed": "A parancsikont nem sikerült létrehozni.",
   "scan.button": "Könyvtár szkennelése",
-  "view.scanButton": "Szkennelés gomb megjelenítése (adminisztrátorok)"
+  "view.scanButton": "Szkennelés gomb megjelenítése (adminisztrátorok)",
+  "scan.library": "„{name}” szkennelése",
+  "scan.all": "Összes könyvtár szkennelése",
+  "scan.allStarted": "{n} könyvtár szkennelése elindult"
 }

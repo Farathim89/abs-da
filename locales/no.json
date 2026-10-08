@@ -182,5 +182,8 @@
   "app.shortcutDone": "Det ligger nå en snarvei til ABS Desktop App på skrivebordet ditt. Den fortsetter å virke etter oppdateringer.",
   "app.shortcutFailed": "Snarveien kunne ikke opprettes.",
   "scan.button": "Skann bibliotek",
-  "view.scanButton": "Vis skanneknapp (administratorer)"
+  "view.scanButton": "Vis skanneknapp (administratorer)",
+  "scan.library": "Skann «{name}»",
+  "scan.all": "Skann alle bibliotek",
+  "scan.allStarted": "Skanning startet for {n} bibliotek"
 }

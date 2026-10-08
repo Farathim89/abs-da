@@ -182,5 +182,8 @@
   "app.shortcutDone": "Er staat nu een snelkoppeling naar ABS Desktop App op je bureaublad. Deze blijft werken na updates.",
   "app.shortcutFailed": "De snelkoppeling kon niet worden gemaakt.",
   "scan.button": "Bibliotheek scannen",
-  "view.scanButton": "Scanknop tonen (beheerders)"
+  "view.scanButton": "Scanknop tonen (beheerders)",
+  "scan.library": "‘{name}’ scannen",
+  "scan.all": "Alle bibliotheken scannen",
+  "scan.allStarted": "Scan gestart voor {n} bibliotheken"
 }

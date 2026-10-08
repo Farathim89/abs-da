@@ -182,5 +182,8 @@
   "app.shortcutDone": "ABS Desktop App kısayolu artık masaüstünüzde. Güncellemelerden sonra da çalışmaya devam eder.",
   "app.shortcutFailed": "Kısayol oluşturulamadı.",
   "scan.button": "Kütüphaneyi tara",
-  "view.scanButton": "Tarama düğmesini göster (yöneticiler)"
+  "view.scanButton": "Tarama düğmesini göster (yöneticiler)",
+  "scan.library": "“{name}” kütüphanesini tara",
+  "scan.all": "Tüm kütüphaneleri tara",
+  "scan.allStarted": "{n} kütüphanede tarama başlatıldı"
 }

@@ -182,5 +182,8 @@
   "app.shortcutDone": "Sinu töölaual on nüüd otsetee rakendusele ABS Desktop App. See töötab ka pärast värskendusi.",
   "app.shortcutFailed": "Otseteed ei õnnestunud luua.",
   "scan.button": "Skanneeri raamatukogu",
-  "view.scanButton": "Näita skannimisnuppu (administraatorid)"
+  "view.scanButton": "Näita skannimisnuppu (administraatorid)",
+  "scan.library": "Skanneeri „{name}“",
+  "scan.all": "Skanneeri kõik raamatukogud",
+  "scan.allStarted": "Alustati {n} raamatukogu skannimist"
 }

@@ -182,5 +182,8 @@
   "app.shortcutDone": "바탕 화면에 ABS Desktop App 바로 가기가 만들어졌습니다. 업데이트 후에도 계속 작동합니다.",
   "app.shortcutFailed": "바로 가기를 만들 수 없습니다.",
   "scan.button": "라이브러리 스캔",
-  "view.scanButton": "스캔 버튼 표시 (관리자)"
+  "view.scanButton": "스캔 버튼 표시 (관리자)",
+  "scan.library": "‘{name}’ 스캔",
+  "scan.all": "모든 라이브러리 스캔",
+  "scan.allStarted": "라이브러리 {n}개 스캔을 시작했습니다"
 }

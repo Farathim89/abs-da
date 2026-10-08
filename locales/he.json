@@ -182,5 +182,8 @@
   "app.shortcutDone": "קיצור דרך אל ABS Desktop App נמצא עכשיו בשולחן העבודה שלך. הוא ימשיך לפעול גם אחרי עדכונים.",
   "app.shortcutFailed": "לא ניתן היה ליצור את קיצור הדרך.",
   "scan.button": "סרוק ספרייה",
-  "view.scanButton": "הצג כפתור סריקה (מנהלים)"
+  "view.scanButton": "הצג כפתור סריקה (מנהלים)",
+  "scan.library": "סרוק את \"{name}\"",
+  "scan.all": "סרוק את כל הספריות",
+  "scan.allStarted": "החלה סריקה של {n} ספריות"
 }

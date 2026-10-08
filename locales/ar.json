@@ -182,5 +182,8 @@
   "app.shortcutDone": "يوجد الآن اختصار إلى ABS Desktop App على سطح المكتب. وسيظل يعمل بعد التحديثات.",
   "app.shortcutFailed": "تعذّر إنشاء الاختصار.",
   "scan.button": "تحقق من المكتبة",
-  "view.scanButton": "إظهار زر التحقق (للمديرين)"
+  "view.scanButton": "إظهار زر التحقق (للمديرين)",
+  "scan.library": "تحقق من «{name}»",
+  "scan.all": "تحقق من كل المكتبات",
+  "scan.allStarted": "بدأ التحقق من المكتبات ({n})"
 }

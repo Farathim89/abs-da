@@ -182,5 +182,8 @@
   "app.shortcutDone": "Na pracovnej ploche je teraz odkaz na aplikáciu ABS Desktop App. Bude fungovať aj po aktualizáciách.",
   "app.shortcutFailed": "Odkaz sa nepodarilo vytvoriť.",
   "scan.button": "Skenovať knižnicu",
-  "view.scanButton": "Zobraziť tlačidlo skenovania (administrátori)"
+  "view.scanButton": "Zobraziť tlačidlo skenovania (administrátori)",
+  "scan.library": "Skenovať „{name}“",
+  "scan.all": "Skenovať všetky knižnice",
+  "scan.allStarted": "Spustené skenovanie knižníc: {n}"
 }

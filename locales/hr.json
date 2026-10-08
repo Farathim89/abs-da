@@ -182,5 +182,8 @@
   "app.shortcutDone": "Na radnoj površini sada se nalazi prečac za ABS Desktop App. Nastavit će raditi i nakon ažuriranja.",
   "app.shortcutFailed": "Prečac nije moguće stvoriti.",
   "scan.button": "Skeniraj knjižnicu",
-  "view.scanButton": "Prikaži gumb za skeniranje (administratori)"
+  "view.scanButton": "Prikaži gumb za skeniranje (administratori)",
+  "scan.library": "Skeniraj „{name}”",
+  "scan.all": "Skeniraj sve knjižnice",
+  "scan.allStarted": "Pokrenuto skeniranje knjižnica: {n}"
 }

@@ -182,5 +182,8 @@
   "app.shortcutDone": "Na namizju je zdaj bližnjica do aplikacije ABS Desktop App. Delovala bo tudi po posodobitvah.",
   "app.shortcutFailed": "Bližnjice ni bilo mogoče ustvariti.",
   "scan.button": "Preglej knjižnico",
-  "view.scanButton": "Prikaži gumb za pregled (administratorji)"
+  "view.scanButton": "Prikaži gumb za pregled (administratorji)",
+  "scan.library": "Preglej »{name}«",
+  "scan.all": "Preglej vse knjižnice",
+  "scan.allStarted": "Začel se je pregled knjižnic: {n}"
 }

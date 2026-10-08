@@ -182,5 +182,8 @@
   "app.shortcutDone": "ABS Desktop App 的快捷方式已添加到桌面。更新后仍可继续使用。",
   "app.shortcutFailed": "无法创建快捷方式。",
   "scan.button": "扫描库",
-  "view.scanButton": "显示扫描按钮（管理员）"
+  "view.scanButton": "显示扫描按钮（管理员）",
+  "scan.library": "扫描“{name}”",
+  "scan.all": "扫描所有库",
+  "scan.allStarted": "已开始扫描 {n} 个库"
 }

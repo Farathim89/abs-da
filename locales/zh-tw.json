@@ -182,5 +182,8 @@
   "app.shortcutDone": "ABS Desktop App 的捷徑已新增到桌面。更新後仍可繼續使用。",
   "app.shortcutFailed": "無法建立捷徑。",
   "scan.button": "掃描庫",
-  "view.scanButton": "顯示掃描按鈕（管理員）"
+  "view.scanButton": "顯示掃描按鈕（管理員）",
+  "scan.library": "掃描「{name}」",
+  "scan.all": "掃描所有庫",
+  "scan.allStarted": "已開始掃描 {n} 個庫"
 }

@@ -182,5 +182,8 @@
   "app.shortcutDone": "Ara hi ha una drecera a ABS Desktop App a l’escriptori. Continuarà funcionant després de les actualitzacions.",
   "app.shortcutFailed": "No s’ha pogut crear la drecera.",
   "scan.button": "Escaneja la biblioteca",
-  "view.scanButton": "Mostra el botó d'escaneig (administradors)"
+  "view.scanButton": "Mostra el botó d'escaneig (administradors)",
+  "scan.library": "Escaneja «{name}»",
+  "scan.all": "Escaneja totes les biblioteques",
+  "scan.allStarted": "S’ha iniciat l’escaneig de {n} biblioteques"
 }

@@ -182,5 +182,8 @@
   "app.shortcutDone": "Työpöydälläsi on nyt ABS Desktop App -pikakuvake. Se toimii myös päivitysten jälkeen.",
   "app.shortcutFailed": "Pikakuvaketta ei voitu luoda.",
   "scan.button": "Skannaa kirjasto",
-  "view.scanButton": "Näytä skannauspainike (järjestelmänvalvojat)"
+  "view.scanButton": "Näytä skannauspainike (järjestelmänvalvojat)",
+  "scan.library": "Skannaa ”{name}”",
+  "scan.all": "Skannaa kaikki kirjastot",
+  "scan.allStarted": "Skannaus aloitettu {n} kirjastossa"
 }

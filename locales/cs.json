@@ -182,5 +182,8 @@
   "app.shortcutDone": "Na ploše je teď zástupce aplikace ABS Desktop App. Bude fungovat i po aktualizacích.",
   "app.shortcutFailed": "Zástupce se nepodařilo vytvořit.",
   "scan.button": "Prohledat knihovnu",
-  "view.scanButton": "Zobrazit tlačítko prohledání (správci)"
+  "view.scanButton": "Zobrazit tlačítko prohledání (správci)",
+  "scan.library": "Prohledat „{name}“",
+  "scan.all": "Prohledat všechny knihovny",
+  "scan.allStarted": "Zahájeno prohledávání knihoven: {n}"
 }

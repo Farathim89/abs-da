@@ -182,5 +182,8 @@
   "app.shortcutDone": "ABS Desktop App のショートカットをデスクトップに作成しました。アップデート後もそのまま使えます。",
   "app.shortcutFailed": "ショートカットを作成できませんでした。",
   "scan.button": "ライブラリーをスキャン",
-  "view.scanButton": "スキャンボタンを表示（管理者）"
+  "view.scanButton": "スキャンボタンを表示（管理者）",
+  "scan.library": "「{name}」をスキャン",
+  "scan.all": "すべてのライブラリーをスキャン",
+  "scan.allStarted": "{n}件のライブラリーのスキャンを開始しました"
 }
