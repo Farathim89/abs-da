@@ -235,7 +235,7 @@ const THEMES = {
     scroll: "#3a3a3a",
     page: "linear-gradient(to right bottom, #111111, #000000)",
     colors: {
-      primary: "#000000", bg: "#111111",
+      primary: "#000000", bg: "#111111", accent: "#f0a848", success: "#b0702c",
       "black-50": "#b5b5b5", "black-100": "#5c5c5c", "black-200": "#474747", "black-300": "#333333",
       "black-400": "#222222", "black-500": "#141414", "black-600": "#0a0a0a", "black-700": "#050505",
     },
@@ -410,9 +410,8 @@ function themeCss(id) {
     // border → a light tint of the theme's accent.
     parts.push(`.shinyBlack { color: color-mix(in srgb, ${t.title.logo} 45%, white) !important;
       border-color: color-mix(in srgb, ${t.title.logo} 60%, transparent) !important; }`);
-    // The web app's yellow accent (Stats chart line and dots, progress bars on covers)
-    // takes the theme's accent colour.
-    parts.push(`html:root { --color-yellow-400: ${t.title.logo} !important; --color-yellow-300: ${t.title.logo} !important; }`);
+    // (The web app's yellow accent — Stats chart, progress bars on covers — is in the
+    // colour-family mapping below.)
   }
   if (!t.contrast) {
     // The web app's red "error" colour (Delete / Remove buttons, Missing, the "!" on
@@ -421,10 +420,43 @@ function themeCss(id) {
     // still read as "careful". (Notifications have their own colours.) On the Logs
     // page ERROR is the accent and WARN a light tint of it, so they stay apart.
     const a = t.title.logo;
-    parts.push(`html:root { --color-error: ${a} !important; }
-      .bg-error { background-color: color-mix(in srgb, ${a} 55%, black) !important; color: #fff !important; }
+    // Every other colour the web app's CSS can paint (a scan of all its loaded styles:
+    // the colour families red / orange / yellow / blue / green / slate in each shade it
+    // uses, incl. hover; plus a few fixed colours) → shades of the theme. Light shades
+    // become light tints of the accent, dark ones dark tints, green the action colour,
+    // blue-grey the theme's own text colour. (The e-book reader's sepia stays sepia.)
+    const ok = (t.colors && t.colors.success) || "var(--color-success)";
+    const fg = t.title.fg;
+    const tint = (p) => `color-mix(in srgb, ${a} ${p}%, white)`;
+    const shade = (p) => `color-mix(in srgb, ${a} ${p}%, black)`;
+    // Themes without their own action / accent colour (Audiobookshelf) still get "info"
+    // (Read buttons, Logs INFO) and the accent in their shades, like the others.
+    if (!(t.colors && t.colors.success)) parts.push(`html:root { --color-info: color-mix(in srgb, var(--color-success) 78%, white) !important; }`);
+    if (!(t.colors && t.colors.accent)) parts.push(`html:root { --color-accent: ${a} !important; }`);
+    parts.push(`html:root {
+        --color-error: ${a} !important;
+        --color-warning: ${tint(45)} !important;
+        --color-red-100: ${tint(25)} !important; --color-red-300: ${tint(60)} !important;
+        --color-red-400: ${a} !important; --color-red-500: ${a} !important;
+        --color-red-600: ${shade(75)} !important; --color-red-800: ${shade(45)} !important;
+        --color-orange-300: ${tint(60)} !important; --color-orange-400: ${tint(85)} !important;
+        --color-yellow-200: ${tint(45)} !important; --color-yellow-300: ${a} !important;
+        --color-yellow-400: ${a} !important; --color-yellow-500: ${shade(85)} !important;
+        --color-blue-200: ${tint(45)} !important; --color-blue-300: ${tint(60)} !important;
+        --color-blue-400: ${tint(70)} !important;
+        --color-green-500: ${ok} !important;
+        --color-slate-200: color-mix(in srgb, ${fg} 90%, #808080) !important;
+        --color-slate-300: color-mix(in srgb, ${fg} 80%, #808080) !important;
+        --color-slate-400: color-mix(in srgb, ${fg} 60%, #808080) !important; }
+      .bg-error { background-color: ${shade(55)} !important; color: #fff !important; }
       .bg-red-100:has(> .border-error) { background-color: var(--color-bg) !important; }
-      .w-12.text-right.text-warning { color: color-mix(in srgb, ${a} 45%, white) !important; }`);
+      #settings-description a, .default-style a { color: ${tint(70)} !important; }
+      #settings-description a:hover, .default-style a:hover { color: ${tint(50)} !important; }
+      .list-group-item.exclude:not(.ghost) { background-color: color-mix(in srgb, ${a} 25%, transparent) !important; }
+      .list-group-item.exclude:not(.ghost):hover { background-color: color-mix(in srgb, ${a} 35%, transparent) !important; }
+      .triangle-right { border-top-color: ${ok} !important; border-left-color: ${ok} !important; }
+      trix-editor .trix-button.trix-active { background: ${tint(35)} !important; }
+      trix-toolbar .trix-input--dialog.validate:invalid { box-shadow: ${a} 0 0 1.5px 1px !important; }`);
   }
   if (t.css) parts.push(t.css);
   const tb = t.title;
