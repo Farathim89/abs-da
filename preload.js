@@ -276,7 +276,7 @@ if (location.protocol !== "file:") {
   const LOOKS_CSS = `
     #${BRUSH_ID} { background: none; border: 0; padding: 0; color: inherit; }
     #${TIP_ID} { position: fixed; z-index: 2147482001; pointer-events: none; padding: 4px 8px; border-radius: 4px;
-      background: #000; color: #fff; font-size: 0.85rem; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+      background: #000; color: #fff; font-size: 0.85rem; white-space: pre; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
     #${PANEL_ID} { position: fixed; z-index: 2147482000; width: min(600px, calc(100vw - 24px));
       max-height: calc(100vh - 84px); overflow-y: auto; padding: 14px 16px 16px; border-radius: 8px;
       background: var(--color-bg, #373838);
@@ -523,11 +523,15 @@ if (location.protocol !== "file:") {
     if (!btn || document.getElementById(PANEL_ID) || document.getElementById(TIP_ID)) return;
     const tip = el("div");
     tip.id = TIP_ID;
+    tip.dataset.for = btn.id;
     tip.textContent = btn.getAttribute("aria-label") || "";
     document.body.append(tip);
+    placeTip(tip, btn);
+  }
+  function placeTip(tip, btn) {
     const r = btn.getBoundingClientRect();
     tip.style.top = `${Math.round(r.bottom + 6)}px`;
-    tip.style.left = `${Math.round(Math.min(window.innerWidth - tip.offsetWidth - 8, r.left + r.width / 2 - tip.offsetWidth / 2))}px`;
+    tip.style.left = `${Math.round(Math.max(8, Math.min(window.innerWidth - tip.offsetWidth - 8, r.left + r.width / 2 - tip.offsetWidth / 2)))}px`;
   }
   function hideTip() {
     const t = document.getElementById(TIP_ID);
@@ -562,6 +566,16 @@ if (location.protocol !== "file:") {
   function applyPrefs(p) { if (p) { prefs = p; ensureScanButton(); } }
   ipcRenderer.invoke("desktop:ui-prefs").then(applyPrefs).catch(() => {});
   ipcRenderer.on("desktop:ui-prefs", (_e, p) => applyPrefs(p));
+
+  // Tooltip: "Scan library", or what is being scanned right now (main.js keeps that in
+  // <html data-absda-scanning>). Follows along live, also while the tooltip is showing.
+  const scanLabel = () => document.documentElement.getAttribute("data-absda-scanning") || T("scan.button", "Scan library");
+  window.addEventListener("DOMContentLoaded", () => new MutationObserver(() => {
+    const btn = document.getElementById(SCAN_ID);
+    if (btn) btn.setAttribute("aria-label", scanLabel());
+    const tip = document.getElementById(TIP_ID);
+    if (tip && btn && tip.dataset.for === SCAN_ID) { tip.textContent = scanLabel(); placeTip(tip, btn); }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-absda-scanning"] }));
 
   // The scan menu, drawn in the page so it follows the theme.
   const SCAN_MENU_ID = "absda-scan-menu";
@@ -609,12 +623,12 @@ if (location.protocol !== "file:") {
     const isAdmin = !!document.querySelector('#appbar a[href$="/config"]');
     const anchor = document.querySelector('#appbar a[href$="/config/stats"]') || document.getElementById(BRUSH_ID);
     if (!prefs.scanButton || !isAdmin || !anchor) { if (existing) existing.remove(); return; }
-    if (existing) { existing.setAttribute("aria-label", T("scan.button", "Scan library")); return; }
+    if (existing) { existing.setAttribute("aria-label", scanLabel()); return; }
     ensureStyle();
     const btn = el("button", anchor.className);
     btn.id = SCAN_ID;
     btn.type = "button";
-    btn.setAttribute("aria-label", T("scan.button", "Scan library"));
+    btn.setAttribute("aria-label", scanLabel());
     btn.innerHTML = SCAN_SVG;
     // Click → a small themed menu: this library, or all libraries.
     btn.addEventListener("click", (e) => {

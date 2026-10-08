@@ -1757,54 +1757,76 @@ function setScanButton(on) {
   writeJson(dataFile("config.json"), config);
   for (const c of webContents.getAllWebContents()) if (!c.isDestroyed()) c.send("desktop:ui-prefs", uiPrefs());
 }
+// Watches Audiobookshelf's live task list in the page. While any library scan runs,
+// <html data-absda-scanning="<what is being scanned>"> makes the scan button spin and
+// gives its tooltip (preload.js). When the scans started from the button are done: one
+// notification with the result (or one for all of them). Returns window.__absdaScan.
+function scanWatchJs() {
+  const text = JSON.stringify({ done: tr("scan.done"), allDone: tr("scan.allDone"), failed: tr("scan.failed") });
+  return `(() => {
+    const s = window.$nuxt && $nuxt.$store; if (!s || !s.state.tasks) return null;
+    const w = window.__absdaScan || (window.__absdaScan = { batches: [] });
+    w.text = ${text};
+    if (w.mark) return w;
+    const fill = (t, v) => Object.entries(v).reduce((a, [k, x]) => a.split("{" + k + "}").join(x), t);
+    const title = (t) => {
+      try { if (t.titleKey && $nuxt.$getString) return $nuxt.$getString(t.titleKey, (t.titleSubs || []).map((x) => String(x).trim())); } catch (e) {}
+      return t.title || "";
+    };
+    // A click counts as "scanning" for a few seconds, until the server's task shows up.
+    w.mark = () => {
+      const now = Date.now();
+      w.batches = w.batches.filter((b) => b.ids.size && (now - b.started < 15000 ||
+        [...b.ids].some((id) => s.getters["tasks/getRunningLibraryScanTask"](id))));
+      const tasks = (s.state.tasks.tasks || []).filter((t) => t.action === "library-scan" && !t.isFinished);
+      const html = document.documentElement;
+      if (now < (w.minUntil || 0) || tasks.length || w.batches.some((b) => now - b.started < 15000)) {
+        html.setAttribute("data-absda-scanning", tasks.map(title).join("\\n"));
+      } else html.removeAttribute("data-absda-scanning");
+    };
+    s.subscribe((m) => {
+      if (!/^tasks\\/(addUpdateTask|setTasks|removeTask)$/.test(m.type)) return;
+      const t = m.type === "tasks/addUpdateTask" ? m.payload : null;
+      const lib = (t && t.data) || {};
+      const b = t && t.action === "library-scan" && t.isFinished && w.batches.find((x) => x.ids.has(lib.libraryId));
+      if (b) {
+        b.ids.delete(lib.libraryId);
+        const name = String(lib.libraryName || "").trim();
+        if (t.isFailed) b.failed.push(name);
+        if (!b.ids.size) {
+          for (const n of b.failed) $nuxt.$toast.error(fill(w.text.failed, { name: n }));
+          const ok = b.total - b.failed.length;
+          if (ok && b.total > 1) $nuxt.$toast.success(fill(w.text.allDone, { n: ok }));
+          else if (ok) {
+            const result = (lib.scanResults && lib.scanResults.text) || "";
+            $nuxt.$toast.success(result ? fill(w.text.done, { name, result }) : fill(w.text.done, { name, result: "" }).replace(/[\\s:：]+$/, ""));
+          }
+        }
+      }
+      w.mark();
+    });
+    w.mark();
+    return w;
+  })()`;
+}
+// From page load on, so scans started elsewhere (Audiobookshelf's own button, a schedule)
+// spin the button too. The web app may still be starting: try again a few times.
+function installScanWatch(contents, attempt = 0) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  contents.executeJavaScript(`!!${scanWatchJs()}`)
+    .then((ok) => { if (!ok && attempt < 10) setTimeout(() => installScanWatch(contents, attempt + 1), 1500); })
+    .catch(() => {});
+}
 // Scan libraries, like Audiobookshelf's own "Scan Library" button (the server itself
 // only allows this for admins). One library → the web app's own message; several →
 // one "Scan started for N libraries".
-// While any library scan runs on the server (Audiobookshelf's live task list), <html>
-// gets data-absda-scanning so the scan button keeps spinning. When the scans started
-// here are done: one notification with the result (or one for all of them).
 function scanLibraries(ids) {
   if (!view || !ids.length) return;
   const many = ids.length > 1 ? JSON.stringify(tr("scan.allStarted", { n: ids.length })) : "null";
-  const text = JSON.stringify({ done: tr("scan.done"), allDone: tr("scan.allDone"), failed: tr("scan.failed") });
   wc().executeJavaScript(`(async () => {
     const s = window.$nuxt && $nuxt.$store; if (!s || !s.getters["user/getIsAdminOrUp"]) return;
     const str = $nuxt.$strings || {};
-    const w = window.__absdaScan || (window.__absdaScan = { batches: [] });
-    w.text = ${text};
-    if (!w.mark) {
-      const fill = (t, v) => Object.entries(v).reduce((a, [k, x]) => a.split("{" + k + "}").join(x), t);
-      const running = () => (s.state.tasks.tasks || []).some((t) => t.action === "library-scan" && !t.isFinished);
-      // A click counts as "scanning" for a few seconds, until the server's task shows up.
-      w.mark = () => {
-        const now = Date.now();
-        w.batches = w.batches.filter((b) => b.ids.size && (now - b.started < 15000 ||
-          [...b.ids].some((id) => s.getters["tasks/getRunningLibraryScanTask"](id))));
-        document.documentElement.toggleAttribute("data-absda-scanning",
-          now < (w.minUntil || 0) || running() || w.batches.some((b) => now - b.started < 15000));
-      };
-      s.subscribe((m) => {
-        if (!/^tasks\\/(addUpdateTask|setTasks|removeTask)$/.test(m.type)) return;
-        const t = m.type === "tasks/addUpdateTask" ? m.payload : null;
-        const lib = (t && t.data) || {};
-        const b = t && t.action === "library-scan" && t.isFinished && w.batches.find((x) => x.ids.has(lib.libraryId));
-        if (b) {
-          b.ids.delete(lib.libraryId);
-          const name = String(lib.libraryName || "").trim();
-          if (t.isFailed) b.failed.push(name);
-          if (!b.ids.size) {
-            for (const n of b.failed) $nuxt.$toast.error(fill(w.text.failed, { name: n }));
-            const ok = b.total - b.failed.length;
-            if (ok && b.total > 1) $nuxt.$toast.success(fill(w.text.allDone, { n: ok }));
-            else if (ok) {
-              const result = (lib.scanResults && lib.scanResults.text) || "";
-              $nuxt.$toast.success(result ? fill(w.text.done, { name, result }) : fill(w.text.done, { name, result: "" }).replace(/[\\s:：]+$/, ""));
-            }
-          }
-        }
-        w.mark();
-      });
-    }
+    const w = ${scanWatchJs()};
     const batch = { ids: new Set(${JSON.stringify(ids)}), total: ${ids.length}, failed: [], started: Date.now() };
     w.batches.push(batch);
     w.minUntil = Date.now() + 1100;   // at least one full turn, even for a quick scan
@@ -1878,7 +1900,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => applyToastSettings(contents));
+  contents.on("did-finish-load", () => { applyToastSettings(contents); installScanWatch(contents); });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.
   contents.on("did-finish-load", async () => {
