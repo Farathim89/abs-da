@@ -1490,11 +1490,14 @@ function createDesktopShortcut() {
 }
 // A taskbar / Start pin made from the .exe itself (Explorer → Pin to taskbar) has no app ID,
 // so Windows shows the pin and the open window as two separate buttons. Give our own pins
-// the app's ID (only shortcuts that point at this app's .exe are touched).
+// the app's ID (only shortcuts that point at this app's .exe are touched) — at start-up,
+// before the window opens — and tell Windows to re-read them, so the taskbar picks it up
+// right away instead of after the next sign-in.
 function fixPinnedShortcuts() {
   if (!app.isPackaged) return;
   const exe = appExe().toLowerCase();
   const base = path.join(app.getPath("appData"), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned");
+  const changed = [];
   for (const sub of ["TaskBar", "StartMenu"]) {
     let names = [];
     try { names = fs.readdirSync(path.join(base, sub)).filter((n) => n.toLowerCase().endsWith(".lnk")); } catch { continue; }
@@ -1502,12 +1505,21 @@ function fixPinnedShortcuts() {
       const lnk = path.join(base, sub, n);
       try {
         const s = shell.readShortcutLink(lnk);
-        if (String(s.target).toLowerCase() === exe && s.appUserModelId !== APP_ID) {
-          shell.writeShortcutLink(lnk, "update", { appUserModelId: APP_ID });
-        }
+        if (String(s.target).toLowerCase() === exe && s.appUserModelId !== APP_ID &&
+            shell.writeShortcutLink(lnk, "update", { appUserModelId: APP_ID })) changed.push(lnk);
       } catch {}
     }
   }
+  if (!changed.length) return;
+  // SHChangeNotify: "this shortcut changed" for each pin, then "associations changed".
+  const script =
+    "Add-Type -Namespace AbsDa -Name Shell -MemberDefinition '[DllImport(\"shell32.dll\", CharSet = CharSet.Unicode)] public static extern void SHChangeNotify(int e, uint f, string a, IntPtr b);';" +
+    changed.map((p) => `[AbsDa.Shell]::SHChangeNotify(0x2000, 5, ${psQuote(p)}, [IntPtr]::Zero);`).join("") +
+    "[AbsDa.Shell]::SHChangeNotify(0x08000000, 0, $null, [IntPtr]::Zero)";
+  try {
+    require("child_process").spawn("powershell.exe", ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", psEncoded(script)],
+      { windowsHide: true, stdio: "ignore", detached: true }).unref();
+  } catch {}
 }
 function repointDesktopShortcut(oldExe, newExe) {
   if (oldExe === newExe) return;
@@ -2255,10 +2267,10 @@ app.whenReady().then(() => {
   refreshStartWithWindows();
   hardenSession();
   Menu.setApplicationMenu(null);   // no Windows menu bar — the menus live in our title bar
+  fixPinnedShortcuts();   // before the window opens, so the taskbar can group it with its pin
   createWindow();
   createTray();
   startUpdateChecks();
-  setTimeout(fixPinnedShortcuts, 5000);
 });
 
 app.on("window-all-closed", () => app.quit());
