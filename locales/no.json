@@ -180,5 +180,7 @@
   "notif.testMsg": "Slik ser varsler ut.",
   "app.desktopShortcut": "Opprett snarvei på skrivebordet",
   "app.shortcutDone": "Det ligger nå en snarvei til ABS Desktop App på skrivebordet ditt. Den fortsetter å virke etter oppdateringer.",
-  "app.shortcutFailed": "Snarveien kunne ikke opprettes."
+  "app.shortcutFailed": "Snarveien kunne ikke opprettes.",
+  "scan.button": "Skann bibliotek",
+  "view.scanButton": "Vis skanneknapp (administratorer)"
 }

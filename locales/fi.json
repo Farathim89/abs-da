@@ -180,5 +180,7 @@
   "notif.testMsg": "Tältä ilmoitukset näyttävät.",
   "app.desktopShortcut": "Luo pikakuvake työpöydälle",
   "app.shortcutDone": "Työpöydälläsi on nyt ABS Desktop App -pikakuvake. Se toimii myös päivitysten jälkeen.",
-  "app.shortcutFailed": "Pikakuvaketta ei voitu luoda."
+  "app.shortcutFailed": "Pikakuvaketta ei voitu luoda.",
+  "scan.button": "Skannaa kirjasto",
+  "view.scanButton": "Näytä skannauspainike (järjestelmänvalvojat)"
 }

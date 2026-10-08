@@ -180,5 +180,7 @@
   "notif.testMsg": "বিজ্ঞপ্তি এভাবে দেখায়।",
   "app.desktopShortcut": "ডেস্কটপে শর্টকাট তৈরি করুন",
   "app.shortcutDone": "ABS Desktop App-এর একটি শর্টকাট এখন আপনার ডেস্কটপে আছে। আপডেটের পরেও এটি কাজ করবে।",
-  "app.shortcutFailed": "শর্টকাট তৈরি করা যায়নি।"
+  "app.shortcutFailed": "শর্টকাট তৈরি করা যায়নি।",
+  "scan.button": "লাইব্রেরি স্ক্যান করুন",
+  "view.scanButton": "স্ক্যান বোতাম দেখান (প্রশাসক)"
 }

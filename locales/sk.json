@@ -180,5 +180,7 @@
   "notif.testMsg": "Takto vyzerajú oznámenia.",
   "app.desktopShortcut": "Vytvoriť odkaz na pracovnej ploche",
   "app.shortcutDone": "Na pracovnej ploche je teraz odkaz na aplikáciu ABS Desktop App. Bude fungovať aj po aktualizáciách.",
-  "app.shortcutFailed": "Odkaz sa nepodarilo vytvoriť."
+  "app.shortcutFailed": "Odkaz sa nepodarilo vytvoriť.",
+  "scan.button": "Skenovať knižnicu",
+  "view.scanButton": "Zobraziť tlačidlo skenovania (administrátori)"
 }

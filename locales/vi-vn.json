@@ -180,5 +180,7 @@
   "notif.testMsg": "Thông báo sẽ trông như thế này.",
   "app.desktopShortcut": "Tạo lối tắt trên màn hình nền",
   "app.shortcutDone": "Lối tắt đến ABS Desktop App đã có trên màn hình nền của bạn. Lối tắt vẫn hoạt động sau khi cập nhật.",
-  "app.shortcutFailed": "Không thể tạo lối tắt."
+  "app.shortcutFailed": "Không thể tạo lối tắt.",
+  "scan.button": "Quét thư viện",
+  "view.scanButton": "Hiện nút quét (quản trị viên)"
 }

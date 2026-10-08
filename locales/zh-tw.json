@@ -180,5 +180,7 @@
   "notif.testMsg": "通知看起來就像這樣。",
   "app.desktopShortcut": "建立桌面捷徑",
   "app.shortcutDone": "ABS Desktop App 的捷徑已新增到桌面。更新後仍可繼續使用。",
-  "app.shortcutFailed": "無法建立捷徑。"
+  "app.shortcutFailed": "無法建立捷徑。",
+  "scan.button": "掃描庫",
+  "view.scanButton": "顯示掃描按鈕（管理員）"
 }

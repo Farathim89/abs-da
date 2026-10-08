@@ -180,5 +180,7 @@
   "notif.testMsg": "Así se ven las notificaciones.",
   "app.desktopShortcut": "Crear acceso directo en el escritorio",
   "app.shortcutDone": "Ya tienes un acceso directo a ABS Desktop App en el escritorio. Seguirá funcionando después de las actualizaciones.",
-  "app.shortcutFailed": "No se pudo crear el acceso directo."
+  "app.shortcutFailed": "No se pudo crear el acceso directo.",
+  "scan.button": "Escanear biblioteca",
+  "view.scanButton": "Mostrar botón de escaneo (administradores)"
 }

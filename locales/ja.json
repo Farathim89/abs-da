@@ -180,5 +180,7 @@
   "notif.testMsg": "通知はこのように表示されます。",
   "app.desktopShortcut": "デスクトップにショートカットを作成",
   "app.shortcutDone": "ABS Desktop App のショートカットをデスクトップに作成しました。アップデート後もそのまま使えます。",
-  "app.shortcutFailed": "ショートカットを作成できませんでした。"
+  "app.shortcutFailed": "ショートカットを作成できませんでした。",
+  "scan.button": "ライブラリーをスキャン",
+  "view.scanButton": "スキャンボタンを表示（管理者）"
 }

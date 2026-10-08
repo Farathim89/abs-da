@@ -180,5 +180,7 @@
   "notif.testMsg": "Sådan ser meddelelser ud.",
   "app.desktopShortcut": "Opret genvej på skrivebordet",
   "app.shortcutDone": "Der er nu en genvej til ABS Desktop App på dit skrivebord. Den virker fortsat efter opdateringer.",
-  "app.shortcutFailed": "Genvejen kunne ikke oprettes."
+  "app.shortcutFailed": "Genvejen kunne ikke oprettes.",
+  "scan.button": "Skan bibliotek",
+  "view.scanButton": "Vis skanningsknap (administratorer)"
 }

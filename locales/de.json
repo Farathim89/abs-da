@@ -180,5 +180,7 @@
   "notif.testMsg": "So sehen Benachrichtigungen aus.",
   "app.desktopShortcut": "Desktopverknüpfung erstellen",
   "app.shortcutDone": "Auf deinem Desktop befindet sich jetzt eine Verknüpfung zu ABS Desktop App. Sie funktioniert auch nach Updates weiter.",
-  "app.shortcutFailed": "Die Verknüpfung konnte nicht erstellt werden."
+  "app.shortcutFailed": "Die Verknüpfung konnte nicht erstellt werden.",
+  "scan.button": "Bibliothek scannen",
+  "view.scanButton": "Scan-Schaltfläche anzeigen (Admins)"
 }

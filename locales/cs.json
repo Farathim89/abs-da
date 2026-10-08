@@ -180,5 +180,7 @@
   "notif.testMsg": "Takto vypadají oznámení.",
   "app.desktopShortcut": "Vytvořit zástupce na ploše",
   "app.shortcutDone": "Na ploše je teď zástupce aplikace ABS Desktop App. Bude fungovat i po aktualizacích.",
-  "app.shortcutFailed": "Zástupce se nepodařilo vytvořit."
+  "app.shortcutFailed": "Zástupce se nepodařilo vytvořit.",
+  "scan.button": "Prohledat knihovnu",
+  "view.scanButton": "Zobrazit tlačítko prohledání (správci)"
 }

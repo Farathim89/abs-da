@@ -180,5 +180,7 @@
   "notif.testMsg": "Nii näevad teatised välja.",
   "app.desktopShortcut": "Loo töölauale otsetee",
   "app.shortcutDone": "Sinu töölaual on nüüd otsetee rakendusele ABS Desktop App. See töötab ka pärast värskendusi.",
-  "app.shortcutFailed": "Otseteed ei õnnestunud luua."
+  "app.shortcutFailed": "Otseteed ei õnnestunud luua.",
+  "scan.button": "Skanneeri raamatukogu",
+  "view.scanButton": "Näita skannimisnuppu (administraatorid)"
 }

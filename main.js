@@ -1631,6 +1631,8 @@ function buildMenu() {
         { label: tr("view.theme"), submenu: themeMenuItems() },
         { label: tr("view.bookshelf"), submenu: shelfMenuItems() },
         { label: tr("view.notifications"), submenu: notificationMenuItems() },
+        { label: tr("view.scanButton"), type: "checkbox", checked: config.scanButton !== false,
+          click: (item) => setScanButton(item.checked) },
         { label: tr("view.language"), submenu: languageMenuItems() },
         { type: "separator" },
         { label: tr("view.fullScreen"), ...shortcut("F11"), click: toggleFullScreen },
@@ -1745,6 +1747,31 @@ ipcMain.handle("desktop:strings", (e) => (fromLocalPage(e) || fromServerPage(e) 
 ipcMain.handle("desktop:window-kind", (e) => {
   if (!fromServerPage(e)) return null;
   return view && e.sender === wc() ? "main" : "settings";
+});
+
+// ---- scan button (admins) — see preload.js ----------------------------------
+const uiPrefs = () => ({ scanButton: config.scanButton !== false });
+ipcMain.handle("desktop:ui-prefs", (e) => (fromServerPage(e) ? uiPrefs() : null));
+function setScanButton(on) {
+  config = { ...config, scanButton: on };
+  writeJson(dataFile("config.json"), config);
+  for (const c of webContents.getAllWebContents()) if (!c.isDestroyed()) c.send("desktop:ui-prefs", uiPrefs());
+}
+// Scan the library being shown, like Audiobookshelf's own "Scan Library" button
+// (the server itself only allows this for admins).
+ipcMain.on("desktop:scan-library", (e) => {
+  if (!fromServerPage(e) || !view || e.sender !== wc()) return;
+  wc().executeJavaScript(`(async () => {
+    const s = window.$nuxt && $nuxt.$store; if (!s) return;
+    const id = s.state.libraries.currentLibraryId;
+    if (!id || !s.getters["user/getIsAdminOrUp"]) return;
+    try {
+      await s.dispatch("libraries/requestLibraryScan", { libraryId: id, force: false });
+      $nuxt.$toast.success(($nuxt.$strings && $nuxt.$strings.ToastLibraryScanStarted) || "Library scan started");
+    } catch (err) {
+      $nuxt.$toast.error(($nuxt.$strings && $nuxt.$strings.ToastLibraryScanFailedToStart) || "Failed to start scan");
+    }
+  })()`).catch(() => {});
 });
 
 // ✕ / Esc in the settings overlay, or a click on the dimmed app behind it.

@@ -180,5 +180,7 @@
   "notif.testMsg": "Bildirimler böyle görünür.",
   "app.desktopShortcut": "Masaüstü Kısayolu Oluştur",
   "app.shortcutDone": "ABS Desktop App kısayolu artık masaüstünüzde. Güncellemelerden sonra da çalışmaya devam eder.",
-  "app.shortcutFailed": "Kısayol oluşturulamadı."
+  "app.shortcutFailed": "Kısayol oluşturulamadı.",
+  "scan.button": "Kütüphaneyi tara",
+  "view.scanButton": "Tarama düğmesini göster (yöneticiler)"
 }

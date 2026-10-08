@@ -335,12 +335,16 @@ if (location.protocol !== "file:") {
       text-decoration-thickness: 2px; text-underline-offset: 5px; }
 
     /* Top-bar icons: a soft rounded highlight on hover (and on the paintbrush while its panel is open). */
-    #appbar a.w-8.h-8, #absda-looks-btn, #appbar .absda-search:not(.absda-open) {
+    #appbar a.w-8.h-8, #absda-looks-btn, #absda-scan-btn, #appbar .absda-search:not(.absda-open) {
       border-radius: 8px; transition: background-color .15s, color .15s; }
-    #appbar a.w-8.h-8, #absda-looks-btn { width: 36px !important; height: 36px !important; margin: 0 2px !important; }
-    #appbar a.w-8.h-8:hover, #absda-looks-btn:hover, #absda-looks-btn.absda-active,
+    #appbar a.w-8.h-8, #absda-looks-btn, #absda-scan-btn { width: 36px !important; height: 36px !important; margin: 0 2px !important; }
+    #absda-scan-btn { background: none; border: 0; padding: 0; color: inherit; }
+    #appbar a.w-8.h-8:hover, #absda-looks-btn:hover, #absda-looks-btn.absda-active, #absda-scan-btn:hover,
     #appbar .absda-search:not(.absda-open):hover { background: rgba(255,255,255,.1); color: rgb(243 244 246); }
     #absda-looks-btn.absda-active { color: var(--tb-logo, #f0a848); }
+    /* Scan button: one turn when clicked. */
+    #absda-scan-btn.absda-spin svg { animation: absda-spin 1.1s ease-in-out; color: var(--tb-logo, #f0a848); }
+    @keyframes absda-spin { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
     /* Account button: same box style as the library picker. */
     #appbar a[href$="/account"] {
@@ -502,12 +506,13 @@ if (location.protocol !== "file:") {
     if (btn) btn.classList.add("absda-active");
   }
 
-  function showTip() {
-    const btn = document.getElementById(BRUSH_ID);
+  // Tooltip under a top-bar button (paintbrush, scan…): shows its aria-label.
+  function showTip(e) {
+    const btn = (e && e.currentTarget) || document.getElementById(BRUSH_ID);
     if (!btn || document.getElementById(PANEL_ID) || document.getElementById(TIP_ID)) return;
     const tip = el("div");
     tip.id = TIP_ID;
-    tip.textContent = T("looks.tip", "Theme & bookshelf");
+    tip.textContent = btn.getAttribute("aria-label") || "";
     document.body.append(tip);
     const r = btn.getBoundingClientRect();
     tip.style.top = `${Math.round(r.bottom + 6)}px`;
@@ -533,6 +538,44 @@ if (location.protocol !== "file:") {
     btn.addEventListener("mouseenter", showTip);
     btn.addEventListener("mouseleave", hideTip);
     if (stats) stats.after(btn); else anchor.before(btn);
+  }
+
+  // -------------------------------------------------------------------------
+  // Scan button (admins only): scans the library you're looking at, the same
+  // way Audiobookshelf's own "Scan Library" button does. View → Show scan button.
+  // -------------------------------------------------------------------------
+  const SCAN_ID = "absda-scan-btn";
+  const SCAN_SVG = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">' +
+    '<path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>';
+  let prefs = { scanButton: true };
+  function applyPrefs(p) { if (p) { prefs = p; ensureScanButton(); } }
+  ipcRenderer.invoke("desktop:ui-prefs").then(applyPrefs).catch(() => {});
+  ipcRenderer.on("desktop:ui-prefs", (_e, p) => applyPrefs(p));
+
+  function ensureScanButton() {
+    if (windowKind !== "main") return;
+    const existing = document.getElementById(SCAN_ID);
+    // Admins only: Audiobookshelf shows the Settings gear only to admins.
+    const isAdmin = !!document.querySelector('#appbar a[href$="/config"]');
+    const anchor = document.querySelector('#appbar a[href$="/config/stats"]') || document.getElementById(BRUSH_ID);
+    if (!prefs.scanButton || !isAdmin || !anchor) { if (existing) existing.remove(); return; }
+    if (existing) { existing.setAttribute("aria-label", T("scan.button", "Scan library")); return; }
+    ensureStyle();
+    const btn = el("button", anchor.className);
+    btn.id = SCAN_ID;
+    btn.type = "button";
+    btn.setAttribute("aria-label", T("scan.button", "Scan library"));
+    btn.innerHTML = SCAN_SVG;
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      hideTip();
+      btn.classList.add("absda-spin");
+      setTimeout(() => btn.classList.remove("absda-spin"), 1200);
+      ipcRenderer.send("desktop:scan-library");
+    });
+    btn.addEventListener("mouseenter", showTip);
+    btn.addEventListener("mouseleave", hideTip);
+    anchor.before(btn);   // left of "Your Stats"
   }
 
   // The top bar's search field becomes an icon; clicking it (or Ctrl+F) opens the field.
@@ -598,6 +641,7 @@ if (location.protocol !== "file:") {
       setupLoginForm();
       ensureLooksButton();
       ensureSearch();
+      ensureScanButton();
       ensureOverlayHead();
       if (location.pathname !== lastPath) { lastPath = location.pathname; closePanel(); }
     }, 150);

@@ -180,5 +180,7 @@
   "notif.testMsg": "通知就是这个样子。",
   "app.desktopShortcut": "创建桌面快捷方式",
   "app.shortcutDone": "ABS Desktop App 的快捷方式已添加到桌面。更新后仍可继续使用。",
-  "app.shortcutFailed": "无法创建快捷方式。"
+  "app.shortcutFailed": "无法创建快捷方式。",
+  "scan.button": "扫描库",
+  "view.scanButton": "显示扫描按钮（管理员）"
 }

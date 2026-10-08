@@ -180,5 +180,7 @@
   "notif.testMsg": "Így néznek ki az értesítések.",
   "app.desktopShortcut": "Parancsikon létrehozása az asztalon",
   "app.shortcutDone": "Az ABS Desktop App parancsikonja mostantól az asztalon van. Frissítések után is működik.",
-  "app.shortcutFailed": "A parancsikont nem sikerült létrehozni."
+  "app.shortcutFailed": "A parancsikont nem sikerült létrehozni.",
+  "scan.button": "Könyvtár szkennelése",
+  "view.scanButton": "Szkennelés gomb megjelenítése (adminisztrátorok)"
 }

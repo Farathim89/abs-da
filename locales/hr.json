@@ -180,5 +180,7 @@
   "notif.testMsg": "Ovako izgledaju obavijesti.",
   "app.desktopShortcut": "Stvori prečac na radnoj površini",
   "app.shortcutDone": "Na radnoj površini sada se nalazi prečac za ABS Desktop App. Nastavit će raditi i nakon ažuriranja.",
-  "app.shortcutFailed": "Prečac nije moguće stvoriti."
+  "app.shortcutFailed": "Prečac nije moguće stvoriti.",
+  "scan.button": "Skeniraj knjižnicu",
+  "view.scanButton": "Prikaži gumb za skeniranje (administratori)"
 }

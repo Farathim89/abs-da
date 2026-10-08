@@ -180,5 +180,7 @@
   "notif.testMsg": "É assim que as notificações aparecem.",
   "app.desktopShortcut": "Criar atalho na área de trabalho",
   "app.shortcutDone": "Um atalho para o ABS Desktop App agora está na sua área de trabalho. Ele continua funcionando após as atualizações.",
-  "app.shortcutFailed": "Não foi possível criar o atalho."
+  "app.shortcutFailed": "Não foi possível criar o atalho.",
+  "scan.button": "Verificar biblioteca",
+  "view.scanButton": "Mostrar botão de verificação (administradores)"
 }

@@ -180,5 +180,7 @@
   "notif.testMsg": "Så här ser aviseringar ut.",
   "app.desktopShortcut": "Skapa genväg på skrivbordet",
   "app.shortcutDone": "En genväg till ABS Desktop App finns nu på skrivbordet. Den fortsätter fungera efter uppdateringar.",
-  "app.shortcutFailed": "Genvägen kunde inte skapas."
+  "app.shortcutFailed": "Genvägen kunde inte skapas.",
+  "scan.button": "Skanna bibliotek",
+  "view.scanButton": "Visa skanningsknapp (administratörer)"
 }

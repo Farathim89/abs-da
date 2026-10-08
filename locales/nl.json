@@ -180,5 +180,7 @@
   "notif.testMsg": "Zo zien meldingen eruit.",
   "app.desktopShortcut": "Snelkoppeling op bureaublad maken",
   "app.shortcutDone": "Er staat nu een snelkoppeling naar ABS Desktop App op je bureaublad. Deze blijft werken na updates.",
-  "app.shortcutFailed": "De snelkoppeling kon niet worden gemaakt."
+  "app.shortcutFailed": "De snelkoppeling kon niet worden gemaakt.",
+  "scan.button": "Bibliotheek scannen",
+  "view.scanButton": "Scanknop tonen (beheerders)"
 }

@@ -180,5 +180,7 @@
   "notif.testMsg": "Taip atrodo pranešimai.",
   "app.desktopShortcut": "Sukurti nuorodą darbalaukyje",
   "app.shortcutDone": "Jūsų darbalaukyje dabar yra ABS Desktop App nuoroda. Ji veiks ir po naujinimų.",
-  "app.shortcutFailed": "Nepavyko sukurti nuorodos."
+  "app.shortcutFailed": "Nepavyko sukurti nuorodos.",
+  "scan.button": "Nuskaityti biblioteką",
+  "view.scanButton": "Rodyti nuskaitymo mygtuką (administratoriai)"
 }

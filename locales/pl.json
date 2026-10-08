@@ -180,5 +180,7 @@
   "notif.testMsg": "Tak wyglądają powiadomienia.",
   "app.desktopShortcut": "Utwórz skrót na pulpicie",
   "app.shortcutDone": "Na pulpicie jest teraz skrót do ABS Desktop App. Będzie działać również po aktualizacjach.",
-  "app.shortcutFailed": "Nie udało się utworzyć skrótu."
+  "app.shortcutFailed": "Nie udało się utworzyć skrótu.",
+  "scan.button": "Skanuj bibliotekę",
+  "view.scanButton": "Pokaż przycisk skanowania (administratorzy)"
 }
