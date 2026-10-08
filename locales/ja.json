@@ -185,5 +185,8 @@
   "view.scanButton": "スキャンボタンを表示（管理者）",
   "scan.library": "「{name}」をスキャン",
   "scan.all": "すべてのライブラリーをスキャン",
-  "scan.allStarted": "{n}件のライブラリーのスキャンを開始しました"
+  "scan.allStarted": "{n}件のライブラリーのスキャンを開始しました",
+  "scan.done": "「{name}」のスキャンが完了しました: {result}",
+  "scan.allDone": "{n}件のライブラリーのスキャンが完了しました",
+  "scan.failed": "「{name}」のスキャンに失敗しました"
 }

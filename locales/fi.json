@@ -185,5 +185,8 @@
   "view.scanButton": "Näytä skannauspainike (järjestelmänvalvojat)",
   "scan.library": "Skannaa ”{name}”",
   "scan.all": "Skannaa kaikki kirjastot",
-  "scan.allStarted": "Skannaus aloitettu {n} kirjastossa"
+  "scan.allStarted": "Skannaus aloitettu {n} kirjastossa",
+  "scan.done": "Kohteen ”{name}” skannaus valmis: {result}",
+  "scan.allDone": "Skannaus valmis {n} kirjastossa",
+  "scan.failed": "Kohteen ”{name}” skannaus epäonnistui"
 }

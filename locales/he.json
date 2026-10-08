@@ -185,5 +185,8 @@
   "view.scanButton": "הצג כפתור סריקה (מנהלים)",
   "scan.library": "סרוק את \"{name}\"",
   "scan.all": "סרוק את כל הספריות",
-  "scan.allStarted": "החלה סריקה של {n} ספריות"
+  "scan.allStarted": "החלה סריקה של {n} ספריות",
+  "scan.done": "הסריקה של \"{name}\" הסתיימה: {result}",
+  "scan.allDone": "הסריקה של {n} ספריות הסתיימה",
+  "scan.failed": "הסריקה של \"{name}\" נכשלה"
 }

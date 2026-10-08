@@ -185,5 +185,8 @@
   "view.scanButton": "Hiện nút quét (quản trị viên)",
   "scan.library": "Quét “{name}”",
   "scan.all": "Quét tất cả thư viện",
-  "scan.allStarted": "Đã bắt đầu quét {n} thư viện"
+  "scan.allStarted": "Đã bắt đầu quét {n} thư viện",
+  "scan.done": "Đã quét xong “{name}”: {result}",
+  "scan.allDone": "Đã quét xong {n} thư viện",
+  "scan.failed": "Quét “{name}” thất bại"
 }

@@ -185,5 +185,8 @@
   "view.scanButton": "Zobrazit tlačítko prohledání (správci)",
   "scan.library": "Prohledat „{name}“",
   "scan.all": "Prohledat všechny knihovny",
-  "scan.allStarted": "Zahájeno prohledávání knihoven: {n}"
+  "scan.allStarted": "Zahájeno prohledávání knihoven: {n}",
+  "scan.done": "Prohledávání „{name}“ dokončeno: {result}",
+  "scan.allDone": "Prohledávání knihoven dokončeno: {n}",
+  "scan.failed": "Prohledávání „{name}“ selhalo"
 }

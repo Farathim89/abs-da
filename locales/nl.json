@@ -185,5 +185,8 @@
   "view.scanButton": "Scanknop tonen (beheerders)",
   "scan.library": "‘{name}’ scannen",
   "scan.all": "Alle bibliotheken scannen",
-  "scan.allStarted": "Scan gestart voor {n} bibliotheken"
+  "scan.allStarted": "Scan gestart voor {n} bibliotheken",
+  "scan.done": "Scan van ‘{name}’ voltooid: {result}",
+  "scan.allDone": "Scan voltooid voor {n} bibliotheken",
+  "scan.failed": "Scan van ‘{name}’ mislukt"
 }

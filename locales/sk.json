@@ -185,5 +185,8 @@
   "view.scanButton": "Zobraziť tlačidlo skenovania (administrátori)",
   "scan.library": "Skenovať „{name}“",
   "scan.all": "Skenovať všetky knižnice",
-  "scan.allStarted": "Spustené skenovanie knižníc: {n}"
+  "scan.allStarted": "Spustené skenovanie knižníc: {n}",
+  "scan.done": "Skenovanie „{name}“ dokončené: {result}",
+  "scan.allDone": "Skenovanie knižníc dokončené: {n}",
+  "scan.failed": "Skenovanie „{name}“ zlyhalo"
 }

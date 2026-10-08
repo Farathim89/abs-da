@@ -185,5 +185,8 @@
   "view.scanButton": "Afficher le bouton d'analyse (admins)",
   "scan.library": "Analyser « {name} »",
   "scan.all": "Analyser toutes les bibliothèques",
-  "scan.allStarted": "Analyse lancée pour {n} bibliothèques"
+  "scan.allStarted": "Analyse lancée pour {n} bibliothèques",
+  "scan.done": "Analyse de « {name} » terminée : {result}",
+  "scan.allDone": "Analyse terminée pour {n} bibliothèques",
+  "scan.failed": "Échec de l’analyse de « {name} »"
 }

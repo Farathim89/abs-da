@@ -185,5 +185,8 @@
   "view.scanButton": "Vis skanningsknap (administratorer)",
   "scan.library": "Skan »{name}«",
   "scan.all": "Skan alle biblioteker",
-  "scan.allStarted": "Skanning startet for {n} biblioteker"
+  "scan.allStarted": "Skanning startet for {n} biblioteker",
+  "scan.done": "Skanning af »{name}« færdig: {result}",
+  "scan.allDone": "Skanning færdig for {n} biblioteker",
+  "scan.failed": "Skanning af »{name}« mislykkedes"
 }

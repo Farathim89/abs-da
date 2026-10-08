@@ -185,5 +185,8 @@
   "view.scanButton": "Mostra el botó d'escaneig (administradors)",
   "scan.library": "Escaneja «{name}»",
   "scan.all": "Escaneja totes les biblioteques",
-  "scan.allStarted": "S’ha iniciat l’escaneig de {n} biblioteques"
+  "scan.allStarted": "S’ha iniciat l’escaneig de {n} biblioteques",
+  "scan.done": "Escaneig de «{name}» acabat: {result}",
+  "scan.allDone": "S’ha acabat l’escaneig de {n} biblioteques",
+  "scan.failed": "Ha fallat l’escaneig de «{name}»"
 }

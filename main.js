@@ -1760,17 +1760,63 @@ function setScanButton(on) {
 // Scan libraries, like Audiobookshelf's own "Scan Library" button (the server itself
 // only allows this for admins). One library → the web app's own message; several →
 // one "Scan started for N libraries".
+// While any library scan runs on the server (Audiobookshelf's live task list), <html>
+// gets data-absda-scanning so the scan button keeps spinning. When the scans started
+// here are done: one notification with the result (or one for all of them).
 function scanLibraries(ids) {
   if (!view || !ids.length) return;
   const many = ids.length > 1 ? JSON.stringify(tr("scan.allStarted", { n: ids.length })) : "null";
-  wc().send("desktop:scan-started");
+  const text = JSON.stringify({ done: tr("scan.done"), allDone: tr("scan.allDone"), failed: tr("scan.failed") });
   wc().executeJavaScript(`(async () => {
     const s = window.$nuxt && $nuxt.$store; if (!s || !s.getters["user/getIsAdminOrUp"]) return;
     const str = $nuxt.$strings || {};
+    const w = window.__absdaScan || (window.__absdaScan = { batches: [] });
+    w.text = ${text};
+    if (!w.mark) {
+      const fill = (t, v) => Object.entries(v).reduce((a, [k, x]) => a.split("{" + k + "}").join(x), t);
+      const running = () => (s.state.tasks.tasks || []).some((t) => t.action === "library-scan" && !t.isFinished);
+      // A click counts as "scanning" for a few seconds, until the server's task shows up.
+      w.mark = () => {
+        const now = Date.now();
+        w.batches = w.batches.filter((b) => b.ids.size && (now - b.started < 15000 ||
+          [...b.ids].some((id) => s.getters["tasks/getRunningLibraryScanTask"](id))));
+        document.documentElement.toggleAttribute("data-absda-scanning",
+          now < (w.minUntil || 0) || running() || w.batches.some((b) => now - b.started < 15000));
+      };
+      s.subscribe((m) => {
+        if (!/^tasks\\/(addUpdateTask|setTasks|removeTask)$/.test(m.type)) return;
+        const t = m.type === "tasks/addUpdateTask" ? m.payload : null;
+        const lib = (t && t.data) || {};
+        const b = t && t.action === "library-scan" && t.isFinished && w.batches.find((x) => x.ids.has(lib.libraryId));
+        if (b) {
+          b.ids.delete(lib.libraryId);
+          const name = String(lib.libraryName || "").trim();
+          if (t.isFailed) b.failed.push(name);
+          if (!b.ids.size) {
+            for (const n of b.failed) $nuxt.$toast.error(fill(w.text.failed, { name: n }));
+            const ok = b.total - b.failed.length;
+            if (ok && b.total > 1) $nuxt.$toast.success(fill(w.text.allDone, { n: ok }));
+            else if (ok) {
+              const result = (lib.scanResults && lib.scanResults.text) || "";
+              $nuxt.$toast.success(result ? fill(w.text.done, { name, result }) : fill(w.text.done, { name, result: "" }).replace(/[\\s:：]+$/, ""));
+            }
+          }
+        }
+        w.mark();
+      });
+    }
+    const batch = { ids: new Set(${JSON.stringify(ids)}), total: ${ids.length}, failed: [], started: Date.now() };
+    w.batches.push(batch);
+    w.minUntil = Date.now() + 1100;   // at least one full turn, even for a quick scan
+    w.mark();
+    setTimeout(w.mark, 1150);
+    setTimeout(w.mark, 15500);
     try {
       for (const id of ${JSON.stringify(ids)}) await s.dispatch("libraries/requestLibraryScan", { libraryId: id, force: false });
       $nuxt.$toast.success(${many} || str.ToastLibraryScanStarted || "Library scan started");
     } catch (err) {
+      w.batches = w.batches.filter((x) => x !== batch);
+      w.mark();
       $nuxt.$toast.error(str.ToastLibraryScanFailedToStart || "Failed to start scan");
     }
   })()`).catch(() => {});

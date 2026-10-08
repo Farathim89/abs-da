@@ -185,5 +185,8 @@
   "view.scanButton": "顯示掃描按鈕（管理員）",
   "scan.library": "掃描「{name}」",
   "scan.all": "掃描所有庫",
-  "scan.allStarted": "已開始掃描 {n} 個庫"
+  "scan.allStarted": "已開始掃描 {n} 個庫",
+  "scan.done": "「{name}」掃描完成：{result}",
+  "scan.allDone": "已完成 {n} 個庫的掃描",
+  "scan.failed": "「{name}」掃描失敗"
 }

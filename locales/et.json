@@ -185,5 +185,8 @@
   "view.scanButton": "Näita skannimisnuppu (administraatorid)",
   "scan.library": "Skanneeri „{name}“",
   "scan.all": "Skanneeri kõik raamatukogud",
-  "scan.allStarted": "Alustati {n} raamatukogu skannimist"
+  "scan.allStarted": "Alustati {n} raamatukogu skannimist",
+  "scan.done": "„{name}“ skannimine lõpetatud: {result}",
+  "scan.allDone": "{n} raamatukogu skannimine lõpetatud",
+  "scan.failed": "„{name}“ skannimine ebaõnnestus"
 }

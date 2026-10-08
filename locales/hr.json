@@ -185,5 +185,8 @@
   "view.scanButton": "Prikaži gumb za skeniranje (administratori)",
   "scan.library": "Skeniraj „{name}”",
   "scan.all": "Skeniraj sve knjižnice",
-  "scan.allStarted": "Pokrenuto skeniranje knjižnica: {n}"
+  "scan.allStarted": "Pokrenuto skeniranje knjižnica: {n}",
+  "scan.done": "Skeniranje „{name}” završeno: {result}",
+  "scan.allDone": "Skeniranje knjižnica završeno: {n}",
+  "scan.failed": "Skeniranje „{name}” nije uspjelo"
 }

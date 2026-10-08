@@ -185,5 +185,8 @@
   "view.scanButton": "Scan-Schaltfläche anzeigen (Admins)",
   "scan.library": "„{name}“ scannen",
   "scan.all": "Alle Bibliotheken scannen",
-  "scan.allStarted": "Scan für {n} Bibliotheken gestartet"
+  "scan.allStarted": "Scan für {n} Bibliotheken gestartet",
+  "scan.done": "Scan von „{name}“ abgeschlossen: {result}",
+  "scan.allDone": "Scan für {n} Bibliotheken abgeschlossen",
+  "scan.failed": "Scan von „{name}“ fehlgeschlagen"
 }

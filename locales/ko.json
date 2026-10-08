@@ -185,5 +185,8 @@
   "view.scanButton": "스캔 버튼 표시 (관리자)",
   "scan.library": "‘{name}’ 스캔",
   "scan.all": "모든 라이브러리 스캔",
-  "scan.allStarted": "라이브러리 {n}개 스캔을 시작했습니다"
+  "scan.allStarted": "라이브러리 {n}개 스캔을 시작했습니다",
+  "scan.done": "‘{name}’ 스캔 완료: {result}",
+  "scan.allDone": "라이브러리 {n}개 스캔을 완료했습니다",
+  "scan.failed": "‘{name}’ 스캔에 실패했습니다"
 }

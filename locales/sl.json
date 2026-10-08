@@ -185,5 +185,8 @@
   "view.scanButton": "Prikaži gumb za pregled (administratorji)",
   "scan.library": "Preglej »{name}«",
   "scan.all": "Preglej vse knjižnice",
-  "scan.allStarted": "Začel se je pregled knjižnic: {n}"
+  "scan.allStarted": "Začel se je pregled knjižnic: {n}",
+  "scan.done": "Pregled »{name}« končan: {result}",
+  "scan.allDone": "Pregled knjižnic končan: {n}",
+  "scan.failed": "Pregled »{name}« ni uspel"
 }

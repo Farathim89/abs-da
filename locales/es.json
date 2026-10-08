@@ -185,5 +185,8 @@
   "view.scanButton": "Mostrar botón de escaneo (administradores)",
   "scan.library": "Escanear «{name}»",
   "scan.all": "Escanear todas las bibliotecas",
-  "scan.allStarted": "Escaneo iniciado en {n} bibliotecas"
+  "scan.allStarted": "Escaneo iniciado en {n} bibliotecas",
+  "scan.done": "Escaneo de «{name}» terminado: {result}",
+  "scan.allDone": "Escaneo terminado en {n} bibliotecas",
+  "scan.failed": "Falló el escaneo de «{name}»"
 }

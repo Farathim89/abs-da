@@ -185,5 +185,8 @@
   "view.scanButton": "Tarama düğmesini göster (yöneticiler)",
   "scan.library": "“{name}” kütüphanesini tara",
   "scan.all": "Tüm kütüphaneleri tara",
-  "scan.allStarted": "{n} kütüphanede tarama başlatıldı"
+  "scan.allStarted": "{n} kütüphanede tarama başlatıldı",
+  "scan.done": "“{name}” taraması tamamlandı: {result}",
+  "scan.allDone": "{n} kütüphanede tarama tamamlandı",
+  "scan.failed": "“{name}” taraması başarısız oldu"
 }

@@ -185,5 +185,8 @@
   "view.scanButton": "Mostra il pulsante di scansione (amministratori)",
   "scan.library": "Scansiona “{name}”",
   "scan.all": "Scansiona tutte le librerie",
-  "scan.allStarted": "Scansione avviata per {n} librerie"
+  "scan.allStarted": "Scansione avviata per {n} librerie",
+  "scan.done": "Scansione di “{name}” completata: {result}",
+  "scan.allDone": "Scansione completata per {n} librerie",
+  "scan.failed": "Scansione di “{name}” non riuscita"
 }

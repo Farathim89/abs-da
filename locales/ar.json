@@ -185,5 +185,8 @@
   "view.scanButton": "إظهار زر التحقق (للمديرين)",
   "scan.library": "تحقق من «{name}»",
   "scan.all": "تحقق من كل المكتبات",
-  "scan.allStarted": "بدأ التحقق من المكتبات ({n})"
+  "scan.allStarted": "بدأ التحقق من المكتبات ({n})",
+  "scan.done": "اكتمل التحقق من «{name}»: {result}",
+  "scan.allDone": "اكتمل التحقق من المكتبات ({n})",
+  "scan.failed": "فشل التحقق من «{name}»"
 }

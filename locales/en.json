@@ -185,5 +185,8 @@
   "view.scanButton": "Show scan button (admins)",
   "scan.library": "Scan “{name}”",
   "scan.all": "Scan all libraries",
-  "scan.allStarted": "Scan started for {n} libraries"
+  "scan.allStarted": "Scan started for {n} libraries",
+  "scan.done": "Scan of “{name}” finished: {result}",
+  "scan.allDone": "Scan finished for {n} libraries",
+  "scan.failed": "Scan of “{name}” failed"
 }

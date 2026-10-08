@@ -185,5 +185,8 @@
   "view.scanButton": "显示扫描按钮（管理员）",
   "scan.library": "扫描“{name}”",
   "scan.all": "扫描所有库",
-  "scan.allStarted": "已开始扫描 {n} 个库"
+  "scan.allStarted": "已开始扫描 {n} 个库",
+  "scan.done": "“{name}”扫描完成：{result}",
+  "scan.allDone": "已完成 {n} 个库的扫描",
+  "scan.failed": "“{name}”扫描失败"
 }

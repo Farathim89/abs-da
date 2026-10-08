@@ -185,5 +185,8 @@
   "view.scanButton": "Rodyti nuskaitymo mygtuką (administratoriai)",
   "scan.library": "Nuskaityti „{name}“",
   "scan.all": "Nuskaityti visas bibliotekas",
-  "scan.allStarted": "Pradėtas bibliotekų nuskaitymas: {n}"
+  "scan.allStarted": "Pradėtas bibliotekų nuskaitymas: {n}",
+  "scan.done": "„{name}“ nuskaitymas baigtas: {result}",
+  "scan.allDone": "Bibliotekų nuskaitymas baigtas: {n}",
+  "scan.failed": "Nepavyko nuskaityti „{name}“"
 }

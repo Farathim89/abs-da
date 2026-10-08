@@ -185,5 +185,8 @@
   "view.scanButton": "Szkennelés gomb megjelenítése (adminisztrátorok)",
   "scan.library": "„{name}” szkennelése",
   "scan.all": "Összes könyvtár szkennelése",
-  "scan.allStarted": "{n} könyvtár szkennelése elindult"
+  "scan.allStarted": "{n} könyvtár szkennelése elindult",
+  "scan.done": "„{name}” szkennelése kész: {result}",
+  "scan.allDone": "{n} könyvtár szkennelése kész",
+  "scan.failed": "„{name}” szkennelése sikertelen"
 }

@@ -353,8 +353,8 @@ if (location.protocol !== "file:") {
       background: color-mix(in srgb, var(--tb-logo, #f0a848) 28%, transparent); outline: none; }
     #absda-scan-menu .absda-scan-item + .absda-scan-item { border-top: 1px solid rgba(255,255,255,.08); }
     #absda-scan-btn.absda-active { background: rgba(255,255,255,.1); color: var(--tb-logo, #f0a848); }
-    /* Scan button: one turn when clicked. */
-    #absda-scan-btn.absda-spin svg { animation: absda-spin 1.1s ease-in-out; color: var(--tb-logo, #f0a848); }
+    /* Scan button: spins in the theme colour while a library scan runs (main.js sets the attribute). */
+    html[data-absda-scanning] #absda-scan-btn svg { animation: absda-spin 1.1s linear infinite; color: var(--tb-logo, #f0a848); }
     @keyframes absda-spin { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
     /* Account button: same box style as the library picker. */
@@ -562,13 +562,6 @@ if (location.protocol !== "file:") {
   function applyPrefs(p) { if (p) { prefs = p; ensureScanButton(); } }
   ipcRenderer.invoke("desktop:ui-prefs").then(applyPrefs).catch(() => {});
   ipcRenderer.on("desktop:ui-prefs", (_e, p) => applyPrefs(p));
-  // A scan was chosen in the menu: one turn of the icon.
-  ipcRenderer.on("desktop:scan-started", () => {
-    const btn = document.getElementById(SCAN_ID);
-    if (!btn) return;
-    btn.classList.add("absda-spin");
-    setTimeout(() => btn.classList.remove("absda-spin"), 1200);
-  });
 
   // The scan menu, drawn in the page so it follows the theme.
   const SCAN_MENU_ID = "absda-scan-menu";

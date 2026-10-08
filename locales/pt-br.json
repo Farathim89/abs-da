@@ -185,5 +185,8 @@
   "view.scanButton": "Mostrar botão de verificação (administradores)",
   "scan.library": "Verificar “{name}”",
   "scan.all": "Verificar todas as bibliotecas",
-  "scan.allStarted": "Verificação iniciada em {n} bibliotecas"
+  "scan.allStarted": "Verificação iniciada em {n} bibliotecas",
+  "scan.done": "Verificação de “{name}” concluída: {result}",
+  "scan.allDone": "Verificação concluída em {n} bibliotecas",
+  "scan.failed": "Falha na verificação de “{name}”"
 }
