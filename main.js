@@ -358,13 +358,13 @@ function themeCss(id) {
     // The web app's red "error" colour (Delete / Remove buttons, Missing, the "!" on
     // covers of books with issues, Invalid Cover, the side menu's Issues) takes the
     // theme's accent. Filled red buttons and badges get a darker shade of it so they
-    // still read as "careful". (Notifications have their own colours; the Logs page
-    // keeps ERROR red so it stays apart from WARN and INFO.)
+    // still read as "careful". (Notifications have their own colours.) On the Logs
+    // page ERROR is the accent and WARN a light tint of it, so they stay apart.
     const a = t.title.logo;
     parts.push(`html:root { --color-error: ${a} !important; }
       .bg-error { background-color: color-mix(in srgb, ${a} 55%, black) !important; color: #fff !important; }
       .bg-red-100:has(> .border-error) { background-color: var(--color-bg) !important; }
-      .w-12.text-right.text-error { color: #ff5252 !important; }`);
+      .w-12.text-right.text-warning { color: color-mix(in srgb, ${a} 45%, white) !important; }`);
   }
   if (t.css) parts.push(t.css);
   const tb = t.title;
