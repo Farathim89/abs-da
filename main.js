@@ -984,10 +984,11 @@ function createWindow() {
     webPreferences,
   });
   if (state.maximized) win.maximize();
-  // Portable: pinning the running app to the taskbar pins ABS-DA-Portable.exe, not the
-  // temporary copy it runs from.
-  if (process.env.PORTABLE_EXECUTABLE_FILE) {
-    const exe = process.env.PORTABLE_EXECUTABLE_FILE;
+  // Pinning the running app to the taskbar pins the .exe you start (for the portable:
+  // ABS-DA-Portable.exe, not the temporary copy it runs from), with the app's ID, so the
+  // pin and the open window share one taskbar button.
+  if (app.isPackaged) {
+    const exe = appExe();
     win.setAppDetails({ appId: APP_ID, appIconPath: exe, appIconIndex: 0, relaunchCommand: `"${exe}"`, relaunchDisplayName: "ABS Desktop App" });
   }
   win.on("page-title-updated", (e) => e.preventDefault());   // window title follows the web app
@@ -1486,6 +1487,27 @@ function createDesktopShortcut() {
     type: ok ? "info" : "warning", title: tr("app.desktopShortcut"), message: tr("app.desktopShortcut"),
     detail: ok ? tr("app.shortcutDone") : tr("app.shortcutFailed"), buttons: [tr("about.ok")],
   });
+}
+// A taskbar / Start pin made from the .exe itself (Explorer → Pin to taskbar) has no app ID,
+// so Windows shows the pin and the open window as two separate buttons. Give our own pins
+// the app's ID (only shortcuts that point at this app's .exe are touched).
+function fixPinnedShortcuts() {
+  if (!app.isPackaged) return;
+  const exe = appExe().toLowerCase();
+  const base = path.join(app.getPath("appData"), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned");
+  for (const sub of ["TaskBar", "StartMenu"]) {
+    let names = [];
+    try { names = fs.readdirSync(path.join(base, sub)).filter((n) => n.toLowerCase().endsWith(".lnk")); } catch { continue; }
+    for (const n of names) {
+      const lnk = path.join(base, sub, n);
+      try {
+        const s = shell.readShortcutLink(lnk);
+        if (String(s.target).toLowerCase() === exe && s.appUserModelId !== APP_ID) {
+          shell.writeShortcutLink(lnk, "update", { appUserModelId: APP_ID });
+        }
+      } catch {}
+    }
+  }
 }
 function repointDesktopShortcut(oldExe, newExe) {
   if (oldExe === newExe) return;
@@ -2236,6 +2258,7 @@ app.whenReady().then(() => {
   createWindow();
   createTray();
   startUpdateChecks();
+  setTimeout(fixPinnedShortcuts, 5000);
 });
 
 app.on("window-all-closed", () => app.quit());
