@@ -22,6 +22,11 @@ Get the latest version from the **[Releases](https://github.com/Farathim89/abs-d
 |------|------------|
 | `ABS-DA-Setup-<version>.exe` | Installer: Start Menu + desktop shortcuts, uninstaller, no admin rights needed |
 | `ABS-DA-Portable-<version>.exe` | Single file, no install — settings are kept in an `abs-da-data` folder next to it |
+| `ABS-DA-Folder-<version>.zip` | Folder version, no install: unzip it into a folder of its own and run `ABS Desktop App.exe`. Runs fully from that folder (starts faster than the single file, nothing unpacked to Temp); settings in `abs-da-data` next to it |
+
+> **Single file or folder?** The single-file portable unpacks itself into your Temp folder each time
+> it starts (that's how a one-file app works; it tidies up old copies by itself). The folder version
+> skips that: everything stays in the folder you unzipped it to. Both update with one click.
 
 > **Using the portable?** Give it a folder of its own first, for example `C:\Tools\ABS-DA` or
 > `Documents\ABS-DA`, put the `.exe` in it and start it from there. The app keeps its settings and

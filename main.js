@@ -25,13 +25,53 @@ const { SHELF_ARTS, artUrl } = require("./shelf-art");
 const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 
 // ---------------------------------------------------------------------------
-// Settings folder: next to the .exe for the portable build, %APPDATA% when installed.
-// Versions before 2.0 were called "Audiobookshelf Player" — carry their settings
-// (server, saved login, theme, window size) over once, so upgrading is seamless.
+// Which copy of the app is this?
+//  - portable: the single ABS-DA-Portable.exe. It unpacks the app into %TEMP%\<random
+//    name> on every start and runs it from there (that is how electron-builder's portable
+//    works); the folder is removed when the app closes normally.
+//  - folder: the ABS-DA-Folder zip, unpacked into a folder of your choice; runs in place.
+//  - installed: ABS-DA-Setup (has its uninstaller next to the .exe).
+// Started *directly* from a portable's Temp folder (Windows search, an old pin, the
+// Properties window…) it would run without your settings, as an old version that can
+// vanish any time: say so and stop (see whenReady).
 // ---------------------------------------------------------------------------
-let dataFolderProblem = null;   // portable: a data folder we can't write to (see whenReady)
-if (process.env.PORTABLE_EXECUTABLE_DIR) {
-  const dir = process.env.PORTABLE_EXECUTABLE_DIR;
+const exeDir = path.dirname(process.execPath);
+const exeName = path.basename(process.execPath);
+// An unpacked copy of *this* app: its app.asar carries our package name. (Read as a plain
+// file through original-fs: opening it as an archive would keep it open, undeletable.)
+// A folder with only resources\ left is a half-removed one and counts too.
+const PKG_NAME = require("./package.json").name;
+const isUnpackFolder = (dir) => {
+  if (!/^[0-9A-Za-z]{20,40}$/.test(path.basename(dir))) return false;
+  const ofs = require("original-fs");
+  try {
+    if (!ofs.existsSync(path.join(dir, exeName)) && ofs.readdirSync(dir).join() !== "resources") return false;
+    const asar = ofs.readFileSync(path.join(dir, "resources", "app.asar")).toString("latin1");
+    return new RegExp(`"name"\\s*:\\s*"${PKG_NAME}"`).test(asar);
+  } catch { return false; }
+};
+const sameDir = (a, b) => {
+  try { return fs.realpathSync.native(a).toLowerCase() === fs.realpathSync.native(b).toLowerCase(); } catch { return false; }
+};
+const startedFromTemp = app.isPackaged && !process.env.PORTABLE_EXECUTABLE_FILE &&
+  sameDir(path.dirname(exeDir), os.tmpdir()) && isUnpackFolder(exeDir);
+const isInstalled = () => {
+  const inside = (base) => base && exeDir.toLowerCase().startsWith(String(base).toLowerCase() + path.sep);
+  return fs.existsSync(path.join(exeDir, `Uninstall ${app.getName()}.exe`)) ||
+    inside(process.env.ProgramFiles) || inside(process.env["ProgramFiles(x86)"]) ||
+    inside(path.join(process.env.LOCALAPPDATA || "", "Programs"));
+};
+const folderMode = app.isPackaged && !process.env.PORTABLE_EXECUTABLE_FILE && !startedFromTemp && !isInstalled();
+
+// ---------------------------------------------------------------------------
+// Settings folder: next to the .exe for the portable and folder versions, %APPDATA% when
+// installed. Versions before 2.0 were called "Audiobookshelf Player" — carry their
+// settings (server, saved login, theme, window size) over once, so upgrading is seamless.
+// ---------------------------------------------------------------------------
+let dataFolderProblem = null;   // portable/folder: a data folder we can't write to (see whenReady)
+const localDataBase = process.env.PORTABLE_EXECUTABLE_DIR || (folderMode ? exeDir : null);
+if (localDataBase) {
+  const dir = localDataBase;
   const oldDir = path.join(dir, "abs-player-data");
   const newDir = path.join(dir, "abs-da-data");
   try { if (!fs.existsSync(newDir) && fs.existsSync(oldDir)) fs.renameSync(oldDir, newDir); } catch {}
@@ -61,32 +101,6 @@ if (process.env.PORTABLE_EXECUTABLE_DIR) {
     } catch {}
   }
 }
-
-// The portable .exe unpacks the app into %TEMP%\<random name> on every start and runs it
-// from there (that is how electron-builder's portable works); the folder is removed when
-// the app closes normally. Started *directly* from such a folder (Windows search, an old
-// pin, the Properties window…) it would run without your settings, as an old version
-// that can vanish any time: say so and stop (see whenReady).
-const exeDir = path.dirname(process.execPath);
-const exeName = path.basename(process.execPath);
-// An unpacked copy of *this* app: its app.asar carries our package name. (Read as a plain
-// file through original-fs: opening it as an archive would keep it open, undeletable.)
-// A folder with only resources\ left is a half-removed one and counts too.
-const PKG_NAME = require("./package.json").name;
-const isUnpackFolder = (dir) => {
-  if (!/^[0-9A-Za-z]{20,40}$/.test(path.basename(dir))) return false;
-  const ofs = require("original-fs");
-  try {
-    if (!ofs.existsSync(path.join(dir, exeName)) && ofs.readdirSync(dir).join() !== "resources") return false;
-    const asar = ofs.readFileSync(path.join(dir, "resources", "app.asar")).toString("latin1");
-    return new RegExp(`"name"\\s*:\\s*"${PKG_NAME}"`).test(asar);
-  } catch { return false; }
-};
-const sameDir = (a, b) => {
-  try { return fs.realpathSync.native(a).toLowerCase() === fs.realpathSync.native(b).toLowerCase(); } catch { return false; }
-};
-const startedFromTemp = app.isPackaged && !process.env.PORTABLE_EXECUTABLE_FILE &&
-  sameDir(path.dirname(exeDir), os.tmpdir()) && isUnpackFolder(exeDir);
 
 // Portable: folders left in %TEMP% by copies that were closed by force, or by older
 // versions (about 265 MB each), are removed a little after start. A copy that is still
@@ -1277,12 +1291,12 @@ async function gpuSummary() {
 async function copyDiagnostics() {
   const home = os.homedir();
   const short = (p) => (p ? String(p).split(home).join("%USERPROFILE%") : "");
-  const kind = process.env.PORTABLE_EXECUTABLE_FILE ? "Portable" : app.isPackaged ? "Installed" : "Development";
+  const kind = { portable: "Portable", folder: "Folder", installed: "Installed" }[appKind()] || "Development";
   const lines = [
     `ABS-DA ${app.getVersion()} (${kind})`,
     `Electron ${process.versions.electron} / Chromium ${process.versions.chrome}`,
     `Windows ${process.getSystemVersion()} (${os.arch()}), display scale ${Math.round(screen.getPrimaryDisplay().scaleFactor * 100)}%`,
-    `App: ${short(process.env.PORTABLE_EXECUTABLE_FILE || app.getPath("exe"))}`,
+    `App: ${short(appExe())}`,
     `Data folder: ${short(app.getPath("userData"))}`,
     `Language: ${uiLang()} (choice: ${config.langChoice || "auto"}, Audiobookshelf: ${config.webLang || "?"}, Windows: ${app.getLocale()})`,
     `Theme: ${themeId()}, bookshelf: ${shelfArtId()}, text size: ${Math.round(textSize() * 100)}%`,
@@ -1332,7 +1346,9 @@ const RELEASES_API = "https://api.github.com/repos/Farathim89/abs-da/releases/la
 let latestRelease = null;   // { version, url, asset } when GitHub has a newer version
 let updateBusy = false;     // downloading / installing right now
 const autoUpdateCheck = () => config.updateCheck !== false;
-const appKind = () => (process.env.PORTABLE_EXECUTABLE_FILE ? "portable" : app.isPackaged ? "installed" : "dev");
+const appKind = () => (process.env.PORTABLE_EXECUTABLE_FILE ? "portable" : folderMode ? "folder" : app.isPackaged ? "installed" : "dev");
+// The .exe you start: the portable's own file (not its copy in Temp), else this one.
+const appExe = () => process.env.PORTABLE_EXECUTABLE_FILE || process.execPath;
 
 // "2.10.0" vs "2.9.1" → true when a is newer than b.
 function isNewer(a, b) {
@@ -1345,6 +1361,7 @@ function isNewer(a, b) {
 // The release file this copy of the app can update itself with (null = can't).
 function pickAsset(assets) {
   const want = appKind() === "portable" ? /^ABS-DA-Portable-[\d.]+\.exe$/i
+    : appKind() === "folder" ? /^ABS-DA-Folder-[\d.]+\.zip$/i
     : appKind() === "installed" ? /^ABS-DA-Setup-[\d.]+\.exe$/i : null;
   const a = want && (assets || []).find((x) => want.test(x.name));
   if (!a) return null;
@@ -1424,8 +1441,8 @@ async function downloadFile(url, dest, size) {
 // .exe, also when an update renames the file once.
 const desktopShortcutPath = () => path.join(app.getPath("desktop"), "ABS Desktop App.lnk");
 function createDesktopShortcut() {
-  const exe = process.env.PORTABLE_EXECUTABLE_FILE;
-  if (!exe) return;
+  if (appKind() !== "portable" && appKind() !== "folder") return;
+  const exe = appExe();
   const ok = shell.writeShortcutLink(desktopShortcutPath(), "replace", {
     target: exe, cwd: path.dirname(exe), icon: exe, iconIndex: 0,
     description: "ABS Desktop App", appUserModelId: APP_ID,
@@ -1508,6 +1525,26 @@ async function installUpdate() {
         "Start-Process -FilePath $final";
       await launchIndependent(
         "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand " + psEncoded(script));
+    } else if (appKind() === "folder") {
+      // Folder version: a hidden PowerShell waits for this app to close, unpacks the new
+      // zip and copies it over this folder (only the app's own files; abs-da-data and
+      // anything else you keep there stay), then starts the app again.
+      const unpacked = path.join(dir, "unpacked");
+      const script =
+        `$zip = ${psQuote(target)}; $tmp = ${psQuote(unpacked)}; $dest = ${psQuote(exeDir)}; $exe = ${psQuote(process.execPath)};` +
+        "for ($i = 0; $i -lt 120; $i++) { if (-not (Get-Process | Where-Object { $_.Path -eq $exe })) { break }; Start-Sleep -Milliseconds 500 };" +
+        "Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue;" +
+        "Expand-Archive -LiteralPath $zip -DestinationPath $tmp -Force;" +
+        // The zip may hold the files directly or inside one folder.
+        "$src = $tmp; $top = @(Get-ChildItem -LiteralPath $tmp);" +
+        "if ($top.Count -eq 1 -and $top[0].PSIsContainer) { $src = $top[0].FullName };" +
+        "if (Test-Path -LiteralPath (Join-Path $src " + psQuote(exeName) + ")) {" +
+        " robocopy $src $dest /E /R:30 /W:1 /NFL /NDL /NJH /NJS /NP | Out-Null };" +
+        "Start-Process -FilePath $exe;" +
+        "Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue;" +
+        "Remove-Item -LiteralPath $zip -Force -ErrorAction SilentlyContinue";
+      await launchIndependent(
+        "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand " + psEncoded(script));
     } else {
       // Silent install of the new Setup; it starts the app again when done.
       await launchIndependent(`"${target}" /S --updated --force-run`);
@@ -1587,7 +1624,7 @@ function startUpdateChecks() {
     if (Notification.isSupported()) {
       new Notification({ title: "ABS Desktop App", body: tr("update.done", { version: app.getVersion(), from }), icon: ICON }).show();
     }
-    if (appKind() === "installed") {
+    if (appKind() === "installed" || appKind() === "folder") {
       try { fs.rmSync(path.join(os.tmpdir(), "abs-da-update"), { recursive: true, force: true }); } catch {}
     }
   }
@@ -1660,7 +1697,7 @@ function menuTemplate() {
       submenu: [
         { label: tr("app.home"), ...shortcut("Alt+Home"), click: goHome },
         { label: tr("app.changeServer"), click: () => showConnectPage("change") },
-        ...(appKind() === "portable" ? [{ label: tr("app.desktopShortcut"), click: createDesktopShortcut }] : []),
+        ...(appKind() === "portable" || appKind() === "folder" ? [{ label: tr("app.desktopShortcut"), click: createDesktopShortcut }] : []),
         {
           label: tr("app.forgetLogin"),
           click: () => {

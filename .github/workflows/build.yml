@@ -1,4 +1,4 @@
-# Builds the Windows installer and portable exe from source on GitHub's servers,
+# Builds the Windows installer, portable exe and folder zip from source on GitHub's servers,
 # so every release can be traced back to the code in this repo.
 name: Build
 
@@ -23,7 +23,7 @@ jobs:
 
       - run: npm ci
 
-      - name: Build installer + portable
+      - name: Build installer + portable + folder zip
         run: npx electron-builder --win --publish never
 
       - uses: actions/upload-artifact@v4
@@ -31,4 +31,5 @@ jobs:
           name: ABS-DA-windows
           path: |
             dist/*.exe
+            dist/*.zip
           if-no-files-found: error
