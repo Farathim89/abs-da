@@ -1775,33 +1775,15 @@ function scanLibraries(ids) {
     }
   })()`).catch(() => {});
 }
-// The scan button's menu: this library, all libraries, or any single one.
-ipcMain.on("desktop:scan-menu", async (e, pos = {}) => {
+// The scan button's menu (drawn by preload.js): this library, or all libraries.
+ipcMain.on("desktop:scan", async (e, { all } = {}) => {
   if (!fromServerPage(e) || !view || e.sender !== wc()) return;
-  const info = await wc().executeJavaScript(`(() => {
+  const ids = await wc().executeJavaScript(`(() => {
     const s = window.$nuxt && $nuxt.$store;
-    if (!s || !s.getters["user/getIsAdminOrUp"]) return null;
-    return { current: s.state.libraries.currentLibraryId,
-      libs: (s.state.libraries.libraries || []).map((l) => ({ id: l.id, name: l.name })) };
-  })()`).catch(() => null);
-  if (!info || !info.libs.length) return;
-  const cur = info.libs.find((l) => l.id === info.current);
-  const others = info.libs.filter((l) => l !== cur);
-  const items = [];
-  if (cur) items.push({ label: tr("scan.library", { name: cur.name.trim() }), click: () => scanLibraries([cur.id]) });
-  if (info.libs.length > 1) items.push({ label: tr("scan.all"), click: () => scanLibraries(info.libs.map((l) => l.id)) });
-  if (others.length) {
-    items.push({ type: "separator" });
-    for (const l of others) items.push({ label: tr("scan.library", { name: l.name.trim() }), click: () => scanLibraries([l.id]) });
-  }
-  // Under the button (page coordinates → window coordinates).
-  const zoomF = wc().getZoomFactor();
-  const top = view.getBounds().y;
-  Menu.buildFromTemplate(items).popup({
-    window: win,
-    x: Math.round((Number(pos.x) || 0) * zoomF),
-    y: Math.round(top + (Number(pos.y) || 0) * zoomF),
-  });
+    if (!s || !s.getters["user/getIsAdminOrUp"]) return [];
+    return ${all ? "(s.state.libraries.libraries || []).map((l) => l.id)" : "[s.state.libraries.currentLibraryId].filter(Boolean)"};
+  })()`).catch(() => []);
+  scanLibraries(ids || []);
 });
 
 // ✕ / Esc in the settings overlay, or a click on the dimmed app behind it.

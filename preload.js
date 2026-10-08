@@ -342,6 +342,17 @@ if (location.protocol !== "file:") {
     #appbar a.w-8.h-8:hover, #absda-looks-btn:hover, #absda-looks-btn.absda-active, #absda-scan-btn:hover,
     #appbar .absda-search:not(.absda-open):hover { background: rgba(255,255,255,.1); color: rgb(243 244 246); }
     #absda-looks-btn.absda-active { color: var(--tb-logo, #f0a848); }
+    /* Scan menu: same look as the theme's panels; highlight in the theme colour. */
+    #absda-scan-menu { position: fixed; z-index: 2147482000; min-width: 220px; padding: 6px;
+      background: var(--color-bg, #373838); border: 1px solid rgba(255,255,255,.14); border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,.55); display: flex; flex-direction: column; gap: 2px; }
+    #absda-scan-menu .absda-scan-item { display: block; width: 100%; text-align: left; white-space: nowrap;
+      padding: 9px 14px; border: 0; border-radius: 6px; background: none; color: #f3f4f6;
+      font: 500 14px "Segoe UI", system-ui, sans-serif; cursor: pointer; }
+    #absda-scan-menu .absda-scan-item:hover, #absda-scan-menu .absda-scan-item:focus-visible {
+      background: color-mix(in srgb, var(--tb-logo, #f0a848) 28%, transparent); outline: none; }
+    #absda-scan-menu .absda-scan-item + .absda-scan-item { border-top: 1px solid rgba(255,255,255,.08); }
+    #absda-scan-btn.absda-active { background: rgba(255,255,255,.1); color: var(--tb-logo, #f0a848); }
     /* Scan button: one turn when clicked. */
     #absda-scan-btn.absda-spin svg { animation: absda-spin 1.1s ease-in-out; color: var(--tb-logo, #f0a848); }
     @keyframes absda-spin { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
@@ -559,6 +570,45 @@ if (location.protocol !== "file:") {
     setTimeout(() => btn.classList.remove("absda-spin"), 1200);
   });
 
+  // The scan menu, drawn in the page so it follows the theme.
+  const SCAN_MENU_ID = "absda-scan-menu";
+  function closeScanMenu() {
+    const m = document.getElementById(SCAN_MENU_ID);
+    if (m) m.remove();
+    const b = document.getElementById(SCAN_ID);
+    if (b) b.classList.remove("absda-active");
+  }
+  function toggleScanMenu(btn) {
+    if (document.getElementById(SCAN_MENU_ID)) { closeScanMenu(); return; }
+    // Current library name and how many libraries there are, from the library picker.
+    const picker = document.querySelector("#appbar div:has(> ul.librariesDropdownMenu)");
+    const current = picker ? (picker.querySelector("button span:not(.abs-icons)") || picker.querySelector("button")).innerText.trim() : "";
+    const count = picker ? picker.querySelectorAll("ul.librariesDropdownMenu li").length : 1;
+    const menu = el("div");
+    menu.id = SCAN_MENU_ID;
+    menu.setAttribute("role", "menu");
+    const item = (label, all) => {
+      const b = el("button", "absda-scan-item");
+      b.type = "button";
+      b.setAttribute("role", "menuitem");
+      b.textContent = label;
+      b.addEventListener("click", () => { closeScanMenu(); ipcRenderer.send("desktop:scan", { all }); });
+      return b;
+    };
+    menu.append(item(T("scan.library", "Scan “{name}”").replace("{name}", current || T("scan.button", "Scan library")), false));
+    if (count > 1) menu.append(item(T("scan.all", "Scan all libraries"), true));
+    document.body.append(menu);
+    const r = btn.getBoundingClientRect();
+    menu.style.top = `${Math.round(r.bottom + 8)}px`;
+    menu.style.left = `${Math.round(Math.max(8, Math.min(window.innerWidth - menu.offsetWidth - 8, r.left + r.width / 2 - menu.offsetWidth / 2)))}px`;
+    btn.classList.add("absda-active");
+    menu.querySelector("button").focus();
+  }
+  document.addEventListener("mousedown", (e) => {
+    if (document.getElementById(SCAN_MENU_ID) && !e.target.closest("#" + SCAN_MENU_ID + ", #" + SCAN_ID)) closeScanMenu();
+  }, true);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeScanMenu(); }, true);
+
   function ensureScanButton() {
     if (windowKind !== "main") return;
     const existing = document.getElementById(SCAN_ID);
@@ -573,12 +623,11 @@ if (location.protocol !== "file:") {
     btn.type = "button";
     btn.setAttribute("aria-label", T("scan.button", "Scan library"));
     btn.innerHTML = SCAN_SVG;
-    // Click → a menu: this library, all libraries, or any single one (built in main.js).
+    // Click → a small themed menu: this library, or all libraries.
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       hideTip();
-      const r = btn.getBoundingClientRect();
-      ipcRenderer.send("desktop:scan-menu", { x: r.left, y: r.bottom + 4 });
+      toggleScanMenu(btn);
     });
     btn.addEventListener("mouseenter", showTip);
     btn.addEventListener("mouseleave", hideTip);
