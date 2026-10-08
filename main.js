@@ -104,6 +104,33 @@ const ABS_CSS_FIXES = `
   #mediaPlayerContainer div.bg-white.text-black.rounded-full:has(.arrow-down) { background: transparent !important; }
   #mediaPlayerContainer .arrow-down { border-top-color: var(--tb-logo, #f0a848) !important; }
 `;
+// Web-app bug fixes that need code (run in every server page once the web app is up):
+//  - Library folder picker ("Choose a Folder"): it asks /api/filesystem?path=<folder>
+//    without encoding the folder, so a name with & # + (e.g. "Audio & Books") is cut
+//    off and the server answers "Invalid path" → "Failed to load data". Encode it.
+//    (If a future web app encodes it itself, it is decoded first, so never twice.)
+const ABS_JS_FIXES = `(() => {
+  const ax = window.$nuxt && $nuxt.$axios;
+  if (!ax || !ax.interceptors) return false;
+  if (window.__absdaFixes) return true;
+  window.__absdaFixes = true;
+  ax.interceptors.request.use((cfg) => {
+    const m = String(cfg.url || "").match(/^(.*\\/api\\/filesystem\\?path=)(.*)(&level=\\d+)$/);
+    if (m) {
+      let p = m[2];
+      if (!/[&#+ ]/.test(p)) { try { p = decodeURIComponent(p); } catch (e) {} }
+      cfg.url = m[1] + encodeURIComponent(p) + m[3];
+    }
+    return cfg;
+  });
+  return true;
+})()`;
+function applyWebAppFixes(contents, attempt = 0) {
+  if (!contents || contents.isDestroyed() || !isServerUrl(contents.getURL())) return;
+  contents.executeJavaScript(ABS_JS_FIXES)
+    .then((ok) => { if (!ok && attempt < 10) setTimeout(() => applyWebAppFixes(contents, attempt + 1), 1500); })
+    .catch(() => {});
+}
 
 // ---- Themes ----------------------------------------------------------------
 // The Audiobookshelf web app takes its colours from CSS variables (--color-primary
@@ -1900,7 +1927,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => { applyToastSettings(contents); installScanWatch(contents); });
+  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.
   contents.on("did-finish-load", async () => {
