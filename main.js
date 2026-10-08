@@ -69,8 +69,19 @@ if (process.env.PORTABLE_EXECUTABLE_DIR) {
 // that can vanish any time: say so and stop (see whenReady).
 const exeDir = path.dirname(process.execPath);
 const exeName = path.basename(process.execPath);
-const isUnpackFolder = (dir) => /^[0-9A-Za-z]{20,40}$/.test(path.basename(dir)) &&
-  fs.existsSync(path.join(dir, exeName)) && fs.existsSync(path.join(dir, "resources", "app.asar"));
+// An unpacked copy of *this* app: its app.asar carries our package name. (Read as a plain
+// file through original-fs: opening it as an archive would keep it open, undeletable.)
+// A folder with only resources\ left is a half-removed one and counts too.
+const PKG_NAME = require("./package.json").name;
+const isUnpackFolder = (dir) => {
+  if (!/^[0-9A-Za-z]{20,40}$/.test(path.basename(dir))) return false;
+  const ofs = require("original-fs");
+  try {
+    if (!ofs.existsSync(path.join(dir, exeName)) && ofs.readdirSync(dir).join() !== "resources") return false;
+    const asar = ofs.readFileSync(path.join(dir, "resources", "app.asar")).toString("latin1");
+    return new RegExp(`"name"\\s*:\\s*"${PKG_NAME}"`).test(asar);
+  } catch { return false; }
+};
 const sameDir = (a, b) => {
   try { return fs.realpathSync.native(a).toLowerCase() === fs.realpathSync.native(b).toLowerCase(); } catch { return false; }
 };
@@ -88,10 +99,12 @@ function cleanOldUnpackFolders() {
   for (const name of names) {
     const dir = path.join(tmp, name);
     if (name.toLowerCase() === path.basename(exeDir).toLowerCase() || !isUnpackFolder(dir)) continue;
-    try { fs.closeSync(fs.openSync(path.join(dir, exeName), "r+")); } catch { continue; }   // in use
-    const gone = `${dir}.absda-old`;
-    try { fs.renameSync(dir, gone); } catch { continue; }
-    fs.promises.rm(gone, { recursive: true, force: true }).catch(() => {});
+    const exe = path.join(dir, exeName);
+    try { if (fs.existsSync(exe)) fs.closeSync(fs.openSync(exe, "r+")); } catch { continue; }   // in use
+    // (Windows may keep the empty folder itself while another program, e.g. a browser
+    // the app opened, still uses it as its working folder; the files are what count.)
+    // original-fs: Electron's normal fs treats app.asar as a folder, which trips up rm.
+    require("original-fs").promises.rm(dir, { recursive: true, force: true, maxRetries: 2 }).catch(() => {});
   }
 }
 
