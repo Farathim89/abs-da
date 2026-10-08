@@ -103,6 +103,13 @@ const ABS_CSS_FIXES = `
     border: 1px solid var(--tb-logo, #f0a848); box-shadow: 0 2px 10px rgba(0, 0, 0, .6); }
   #mediaPlayerContainer div.bg-white.text-black.rounded-full:has(.arrow-down) { background: transparent !important; }
   #mediaPlayerContainer .arrow-down { border-top-color: var(--tb-logo, #f0a848) !important; }
+  /* Side menu "Issues" (books with missing files…): red tint → a tint of the theme's
+     accent, with the warning icon in that colour so it still stands out. */
+  #siderail-buttons-container a[href*="filter=issues"] {
+    background-color: color-mix(in srgb, var(--tb-logo, #f0a848) 16%, transparent) !important; }
+  #siderail-buttons-container a[href*="filter=issues"]:hover {
+    background-color: color-mix(in srgb, var(--tb-logo, #f0a848) 30%, transparent) !important; }
+  #siderail-buttons-container a[href*="filter=issues"] .material-symbols { color: var(--tb-logo, #f0a848); }
 `;
 // Web-app bug fixes that need code (run in every server page once the web app is up):
 //  - Library folder picker ("Choose a Folder"): it asks /api/filesystem?path=<folder>
@@ -478,13 +485,13 @@ async function applyPageCssNow(contents, isNewPage) {
       await readWoodTexture(contents);   // before our theme replaces it
     }
   }
+  // New theme in first, then the old one out: never a moment without one (with
+  // Windows' contrast colours on, that gap let them paint parts of the page and stick).
   const oldKey = themeKeys.get(contents);
-  if (oldKey) {
-    themeKeys.delete(contents);
-    await contents.removeInsertedCSS(oldKey).catch(() => {});
-  }
+  themeKeys.delete(contents);
   const key = await contents.insertCSS(themeCss(themeId())).catch(() => null);
   if (key) themeKeys.set(contents, key);
+  if (oldKey) await contents.removeInsertedCSS(oldKey).catch(() => {});
   // Let the page carry the colour setting into the e-book reader's frames (see preload.js).
   if (!contents.isDestroyed()) contents.send("desktop:sync-frames");
 }
