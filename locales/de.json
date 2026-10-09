@@ -190,5 +190,9 @@
   "scan.allDone": "Scan für {n} Bibliotheken abgeschlossen",
   "scan.failed": "Scan von „{name}“ fehlgeschlagen",
   "temp.title": "Dies ist eine temporäre Kopie",
-  "temp.msg": "ABS Desktop App wurde aus einem temporären Ordner gestartet, in den sich die portable Version entpackt:\n{folder}\n\nDiese Kopie verwendet nicht deine Einstellungen und kann jederzeit verschwinden. Starte stattdessen ABS-DA-Portable.exe aus seinem eigenen Ordner (oder über deine Verknüpfung)."
+  "temp.msg": "ABS Desktop App wurde aus einem temporären Ordner gestartet, in den sich die portable Version entpackt:\n{folder}\n\nDiese Kopie verwendet nicht deine Einstellungen und kann jederzeit verschwinden. Starte stattdessen ABS-DA-Portable.exe aus seinem eigenen Ordner (oder über deine Verknüpfung).",
+  "issues.confirm": "Alle {n} Bücher mit Problemen aus dieser Bibliothek entfernen? Dateien auf dem Datenträger werden nicht gelöscht.",
+  "issues.noProgress": "Keines davon hat Hörfortschritt oder Lesezeichen.",
+  "issues.withProgress": "{n} davon haben Hörfortschritt oder Lesezeichen, die gelöscht werden:",
+  "issues.more": "…und {n} weitere"
 }

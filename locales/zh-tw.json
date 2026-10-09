@@ -190,5 +190,9 @@
   "scan.allDone": "已完成 {n} 個庫的掃描",
   "scan.failed": "「{name}」掃描失敗",
   "temp.title": "這是暫存副本",
-  "temp.msg": "ABS Desktop App 是從可攜版自行解壓縮到的暫存資料夾啟動的：\n{folder}\n\n此副本不會使用你的設定，且可能隨時消失。請改從 ABS-DA-Portable.exe 所在的資料夾（或透過捷徑）啟動。"
+  "temp.msg": "ABS Desktop App 是從可攜版自行解壓縮到的暫存資料夾啟動的：\n{folder}\n\n此副本不會使用你的設定，且可能隨時消失。請改從 ABS-DA-Portable.exe 所在的資料夾（或透過捷徑）啟動。",
+  "issues.confirm": "從此媒體庫移除全部 {n} 本有問題的書？磁碟上的檔案不會被刪除。",
+  "issues.noProgress": "它們都沒有收聽進度或書籤。",
+  "issues.withProgress": "其中 {n} 本有收聽進度或書籤，將被刪除：",
+  "issues.more": "……另外 {n} 本"
 }

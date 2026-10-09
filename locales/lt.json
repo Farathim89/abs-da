@@ -190,5 +190,9 @@
   "scan.allDone": "Bibliotekų nuskaitymas baigtas: {n}",
   "scan.failed": "Nepavyko nuskaityti „{name}“",
   "temp.title": "Tai laikina kopija",
-  "temp.msg": "ABS Desktop App paleista iš laikino aplanko, į kurį išsiskleidžia nešiojamoji versija:\n{folder}\n\nŠi kopija nenaudoja jūsų nustatymų ir bet kada gali dingti. Vietoj to paleiskite ABS-DA-Portable.exe iš jo paties aplanko (arba nuoroda)."
+  "temp.msg": "ABS Desktop App paleista iš laikino aplanko, į kurį išsiskleidžia nešiojamoji versija:\n{folder}\n\nŠi kopija nenaudoja jūsų nustatymų ir bet kada gali dingti. Vietoj to paleiskite ABS-DA-Portable.exe iš jo paties aplanko (arba nuoroda).",
+  "issues.confirm": "Pašalinti iš šios bibliotekos visas {n} knygas su problemomis? Failai diske neištrinami.",
+  "issues.noProgress": "Nė viena neturi klausymo eigos ar žymių.",
+  "issues.withProgress": "{n} iš jų turi klausymo eigą arba žymių, kurios bus ištrintos:",
+  "issues.more": "…ir dar {n}"
 }

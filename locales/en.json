@@ -190,5 +190,9 @@
   "scan.allDone": "Scan finished for {n} libraries",
   "scan.failed": "Scan of “{name}” failed",
   "temp.title": "This is a temporary copy",
-  "temp.msg": "ABS Desktop App was started from a temporary folder that the portable version unpacks itself into:\n{folder}\n\nThis copy doesn't use your settings and can disappear at any time. Start ABS-DA-Portable.exe from its own folder instead (or with your shortcut or taskbar pin)."
+  "temp.msg": "ABS Desktop App was started from a temporary folder that the portable version unpacks itself into:\n{folder}\n\nThis copy doesn't use your settings and can disappear at any time. Start ABS-DA-Portable.exe from its own folder instead (or with your shortcut or taskbar pin).",
+  "issues.confirm": "Remove all {n} books with issues from this library? Files on disk are not deleted.",
+  "issues.noProgress": "None of them has listening progress or bookmarks.",
+  "issues.withProgress": "{n} of them have listening progress or bookmarks, which will be deleted:",
+  "issues.more": "…and {n} more"
 }

@@ -190,5 +190,9 @@
   "scan.allDone": "Scan voltooid voor {n} bibliotheken",
   "scan.failed": "Scan van ‘{name}’ mislukt",
   "temp.title": "Dit is een tijdelijke kopie",
-  "temp.msg": "ABS Desktop App is gestart vanuit een tijdelijke map waarin de portable versie zichzelf uitpakt:\n{folder}\n\nDeze kopie gebruikt je instellingen niet en kan elk moment verdwijnen. Start in plaats daarvan ABS-DA-Portable.exe vanuit zijn eigen map (of met je snelkoppeling)."
+  "temp.msg": "ABS Desktop App is gestart vanuit een tijdelijke map waarin de portable versie zichzelf uitpakt:\n{folder}\n\nDeze kopie gebruikt je instellingen niet en kan elk moment verdwijnen. Start in plaats daarvan ABS-DA-Portable.exe vanuit zijn eigen map (of met je snelkoppeling).",
+  "issues.confirm": "Alle {n} boeken met problemen uit deze bibliotheek verwijderen? Bestanden op de schijf worden niet verwijderd.",
+  "issues.noProgress": "Geen ervan heeft luistervoortgang of bladwijzers.",
+  "issues.withProgress": "{n} ervan hebben luistervoortgang of bladwijzers, die worden verwijderd:",
+  "issues.more": "…en nog {n}"
 }

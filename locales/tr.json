@@ -190,5 +190,9 @@
   "scan.allDone": "{n} kütüphanede tarama tamamlandı",
   "scan.failed": "“{name}” taraması başarısız oldu",
   "temp.title": "Bu geçici bir kopya",
-  "temp.msg": "ABS Desktop App, taşınabilir sürümün kendini açtığı geçici bir klasörden başlatıldı:\n{folder}\n\nBu kopya ayarlarınızı kullanmaz ve her an kaybolabilir. Bunun yerine ABS-DA-Portable.exe dosyasını kendi klasöründen (veya kısayolunuzla) başlatın."
+  "temp.msg": "ABS Desktop App, taşınabilir sürümün kendini açtığı geçici bir klasörden başlatıldı:\n{folder}\n\nBu kopya ayarlarınızı kullanmaz ve her an kaybolabilir. Bunun yerine ABS-DA-Portable.exe dosyasını kendi klasöründen (veya kısayolunuzla) başlatın.",
+  "issues.confirm": "Sorunlu {n} kitabın tümü bu kütüphaneden kaldırılsın mı? Diskteki dosyalar silinmez.",
+  "issues.noProgress": "Hiçbirinde dinleme ilerlemesi veya yer imi yok.",
+  "issues.withProgress": "{n} tanesinde dinleme ilerlemesi veya yer imi var, bunlar silinecek:",
+  "issues.more": "…ve {n} tane daha"
 }

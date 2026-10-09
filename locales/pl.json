@@ -190,5 +190,9 @@
   "scan.allDone": "Zakończono skanowanie bibliotek: {n}",
   "scan.failed": "Skanowanie „{name}” nie powiodło się",
   "temp.title": "To jest kopia tymczasowa",
-  "temp.msg": "ABS Desktop App uruchomiono z folderu tymczasowego, do którego rozpakowuje się wersja przenośna:\n{folder}\n\nTa kopia nie używa Twoich ustawień i może zniknąć w każdej chwili. Zamiast tego uruchom ABS-DA-Portable.exe z jego własnego folderu (lub skrótem)."
+  "temp.msg": "ABS Desktop App uruchomiono z folderu tymczasowego, do którego rozpakowuje się wersja przenośna:\n{folder}\n\nTa kopia nie używa Twoich ustawień i może zniknąć w każdej chwili. Zamiast tego uruchom ABS-DA-Portable.exe z jego własnego folderu (lub skrótem).",
+  "issues.confirm": "Usunąć z tej biblioteki wszystkie {n} książki z problemami? Pliki na dysku nie zostaną usunięte.",
+  "issues.noProgress": "Żadna z nich nie ma postępu słuchania ani zakładek.",
+  "issues.withProgress": "{n} z nich ma postęp słuchania lub zakładki, które zostaną usunięte:",
+  "issues.more": "…i jeszcze {n}"
 }

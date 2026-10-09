@@ -190,5 +190,9 @@
   "scan.allDone": "{n} raamatukogu skannimine lõpetatud",
   "scan.failed": "„{name}“ skannimine ebaõnnestus",
   "temp.title": "See on ajutine koopia",
-  "temp.msg": "ABS Desktop App käivitati ajutisest kaustast, kuhu kaasaskantav versioon end lahti pakib:\n{folder}\n\nSee koopia ei kasuta sinu seadeid ja võib igal hetkel kaduda. Käivita selle asemel ABS-DA-Portable.exe tema enda kaustast (või otsetee kaudu)."
+  "temp.msg": "ABS Desktop App käivitati ajutisest kaustast, kuhu kaasaskantav versioon end lahti pakib:\n{folder}\n\nSee koopia ei kasuta sinu seadeid ja võib igal hetkel kaduda. Käivita selle asemel ABS-DA-Portable.exe tema enda kaustast (või otsetee kaudu).",
+  "issues.confirm": "Kas eemaldada sellest raamatukogust kõik {n} probleemiga raamatut? Kettal olevaid faile ei kustutata.",
+  "issues.noProgress": "Ühelgi neist pole kuulamise edenemist ega järjehoidjaid.",
+  "issues.withProgress": "{n} neist on kuulamise edenemine või järjehoidjad, mis kustutatakse:",
+  "issues.more": "…ja veel {n}"
 }

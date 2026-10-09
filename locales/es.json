@@ -190,5 +190,9 @@
   "scan.allDone": "Escaneo terminado en {n} bibliotecas",
   "scan.failed": "Falló el escaneo de «{name}»",
   "temp.title": "Esta es una copia temporal",
-  "temp.msg": "ABS Desktop App se inició desde una carpeta temporal en la que se descomprime la versión portable:\n{folder}\n\nEsta copia no usa tu configuración y puede desaparecer en cualquier momento. Inicia ABS-DA-Portable.exe desde su propia carpeta (o con tu acceso directo)."
+  "temp.msg": "ABS Desktop App se inició desde una carpeta temporal en la que se descomprime la versión portable:\n{folder}\n\nEsta copia no usa tu configuración y puede desaparecer en cualquier momento. Inicia ABS-DA-Portable.exe desde su propia carpeta (o con tu acceso directo).",
+  "issues.confirm": "¿Quitar de esta biblioteca los {n} libros con problemas? Los archivos del disco no se borran.",
+  "issues.noProgress": "Ninguno tiene progreso de escucha ni marcadores.",
+  "issues.withProgress": "{n} de ellos tienen progreso de escucha o marcadores, que se borrarán:",
+  "issues.more": "…y {n} más"
 }

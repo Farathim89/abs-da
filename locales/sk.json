@@ -190,5 +190,9 @@
   "scan.allDone": "Skenovanie knižníc dokončené: {n}",
   "scan.failed": "Skenovanie „{name}“ zlyhalo",
   "temp.title": "Toto je dočasná kópia",
-  "temp.msg": "ABS Desktop App bola spustená z dočasného priečinka, do ktorého sa rozbaľuje prenosná verzia:\n{folder}\n\nTáto kópia nepoužíva vaše nastavenia a môže kedykoľvek zmiznúť. Namiesto toho spúšťajte ABS-DA-Portable.exe z jeho vlastného priečinka (alebo odkazom)."
+  "temp.msg": "ABS Desktop App bola spustená z dočasného priečinka, do ktorého sa rozbaľuje prenosná verzia:\n{folder}\n\nTáto kópia nepoužíva vaše nastavenia a môže kedykoľvek zmiznúť. Namiesto toho spúšťajte ABS-DA-Portable.exe z jeho vlastného priečinka (alebo odkazom).",
+  "issues.confirm": "Odstrániť z tejto knižnice všetkých {n} kníh s problémami? Súbory na disku sa nevymažú.",
+  "issues.noProgress": "Žiadna z nich nemá priebeh počúvania ani záložky.",
+  "issues.withProgress": "{n} z nich má priebeh počúvania alebo záložky, ktoré sa vymažú:",
+  "issues.more": "…a ďalších {n}"
 }

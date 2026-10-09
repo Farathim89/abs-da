@@ -190,5 +190,9 @@
   "scan.allDone": "S’ha acabat l’escaneig de {n} biblioteques",
   "scan.failed": "Ha fallat l’escaneig de «{name}»",
   "temp.title": "Aquesta és una còpia temporal",
-  "temp.msg": "ABS Desktop App s’ha iniciat des d’una carpeta temporal on es descomprimeix la versió portable:\n{folder}\n\nAquesta còpia no fa servir la vostra configuració i pot desaparèixer en qualsevol moment. Inicieu ABS-DA-Portable.exe des de la seva carpeta (o amb la drecera)."
+  "temp.msg": "ABS Desktop App s’ha iniciat des d’una carpeta temporal on es descomprimeix la versió portable:\n{folder}\n\nAquesta còpia no fa servir la vostra configuració i pot desaparèixer en qualsevol moment. Inicieu ABS-DA-Portable.exe des de la seva carpeta (o amb la drecera).",
+  "issues.confirm": "Voleu treure de la biblioteca tots els {n} llibres amb problemes? Els fitxers del disc no s’esborren.",
+  "issues.noProgress": "Cap d’ells no té progrés d’escolta ni marcadors.",
+  "issues.withProgress": "{n} d’ells tenen progrés d’escolta o marcadors, que s’esborraran:",
+  "issues.more": "…i {n} més"
 }

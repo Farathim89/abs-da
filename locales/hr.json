@@ -190,5 +190,9 @@
   "scan.allDone": "Skeniranje knjižnica završeno: {n}",
   "scan.failed": "Skeniranje „{name}” nije uspjelo",
   "temp.title": "Ovo je privremena kopija",
-  "temp.msg": "ABS Desktop App pokrenut je iz privremene mape u koju se raspakirava prijenosna verzija:\n{folder}\n\nOva kopija ne koristi vaše postavke i može nestati u bilo kojem trenutku. Umjesto toga pokrenite ABS-DA-Portable.exe iz njegove mape (ili prečacem)."
+  "temp.msg": "ABS Desktop App pokrenut je iz privremene mape u koju se raspakirava prijenosna verzija:\n{folder}\n\nOva kopija ne koristi vaše postavke i može nestati u bilo kojem trenutku. Umjesto toga pokrenite ABS-DA-Portable.exe iz njegove mape (ili prečacem).",
+  "issues.confirm": "Ukloniti iz ove knjižnice sve {n} knjige s problemima? Datoteke na disku se ne brišu.",
+  "issues.noProgress": "Nijedna nema napredak slušanja ni oznake.",
+  "issues.withProgress": "{n} njih ima napredak slušanja ili oznake, koji će biti obrisani:",
+  "issues.more": "…i još {n}"
 }

@@ -190,5 +190,9 @@
   "scan.allDone": "Skanning ferdig for {n} bibliotek",
   "scan.failed": "Skanning av «{name}» mislyktes",
   "temp.title": "Dette er en midlertidig kopi",
-  "temp.msg": "ABS Desktop App ble startet fra en midlertidig mappe som den bærbare versjonen pakker seg ut i:\n{folder}\n\nDenne kopien bruker ikke innstillingene dine og kan forsvinne når som helst. Start heller ABS-DA-Portable.exe fra sin egen mappe (eller med snarveien)."
+  "temp.msg": "ABS Desktop App ble startet fra en midlertidig mappe som den bærbare versjonen pakker seg ut i:\n{folder}\n\nDenne kopien bruker ikke innstillingene dine og kan forsvinne når som helst. Start heller ABS-DA-Portable.exe fra sin egen mappe (eller med snarveien).",
+  "issues.confirm": "Fjerne alle {n} bøker med problemer fra dette biblioteket? Filene på disken slettes ikke.",
+  "issues.noProgress": "Ingen av dem har lytteframdrift eller bokmerker.",
+  "issues.withProgress": "{n} av dem har lytteframdrift eller bokmerker, som blir slettet:",
+  "issues.more": "…og {n} til"
 }

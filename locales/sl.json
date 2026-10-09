@@ -190,5 +190,9 @@
   "scan.allDone": "Pregled knjižnic končan: {n}",
   "scan.failed": "Pregled »{name}« ni uspel",
   "temp.title": "To je začasna kopija",
-  "temp.msg": "ABS Desktop App je bil zagnan iz začasne mape, v katero se razpakira prenosna različica:\n{folder}\n\nTa kopija ne uporablja vaših nastavitev in lahko kadar koli izgine. Namesto tega zaženite ABS-DA-Portable.exe iz njegove mape (ali z bližnjico)."
+  "temp.msg": "ABS Desktop App je bil zagnan iz začasne mape, v katero se razpakira prenosna različica:\n{folder}\n\nTa kopija ne uporablja vaših nastavitev in lahko kadar koli izgine. Namesto tega zaženite ABS-DA-Portable.exe iz njegove mape (ali z bližnjico).",
+  "issues.confirm": "Odstranim iz te knjižnice vseh {n} knjig s težavami? Datoteke na disku se ne izbrišejo.",
+  "issues.noProgress": "Nobena nima napredka poslušanja ali zaznamkov.",
+  "issues.withProgress": "{n} od njih ima napredek poslušanja ali zaznamke, ki bodo izbrisani:",
+  "issues.more": "…in še {n}"
 }

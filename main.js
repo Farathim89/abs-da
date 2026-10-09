@@ -192,9 +192,64 @@ const ABS_JS_FIXES = `(() => {
   });
   return true;
 })()`;
+// Issues page → "Remove All N Books": the web app asks with a plain browser confirm() that
+// doesn't say what you'd lose. ABS-DA asks instead in the web app's own (themed) pop-up,
+// in your language, saying which of those books still have listening progress or
+// bookmarks (removing deletes them). On Yes it does exactly what the web app does.
+function issuesHookJs() {
+  const text = JSON.stringify({ confirm: tr("issues.confirm"), none: tr("issues.noProgress"), some: tr("issues.withProgress"), more: tr("issues.more") });
+  return `(() => {
+    if (!window.$nuxt || !$nuxt.$root || !$nuxt.$store) return false;
+    window.__absdaIssuesText = ${text};
+    const fill = (t, v) => Object.entries(v).reduce((a, [k, x]) => a.split("{" + k + "}").join(x), t);
+    window.__absdaRemoveAllIssues = async function () {
+      const vm = this, T = window.__absdaIssuesText, libId = vm.currentLibraryId;
+      let items = [];
+      try { items = (await vm.$axios.$get("/api/libraries/" + libId + "/items?filter=issues&limit=1000")).results || []; } catch (e) {}
+      const user = vm.$store.state.user.user || {};
+      const ids = new Set(items.map((i) => i.id));
+      const used = new Set();
+      for (const p of user.mediaProgress || []) {
+        if (ids.has(p.libraryItemId) && (p.isFinished || p.currentTime > 0 || p.ebookProgress > 0 || p.progress > 0)) used.add(p.libraryItemId);
+      }
+      for (const b of user.bookmarks || []) if (ids.has(b.libraryItemId)) used.add(b.libraryItemId);
+      const titles = items.filter((i) => used.has(i.id)).map((i) => (i.media && i.media.metadata && i.media.metadata.title) || "?");
+      let msg = fill(T.confirm, { n: items.length || vm.numShowing }) + "<br><br>";
+      msg += titles.length
+        ? fill(T.some, { n: titles.length }) + "<br>• " + titles.slice(0, 8).join("<br>• ") + (titles.length > 8 ? "<br>" + fill(T.more, { n: titles.length - 8 }) : "")
+        : T.none;
+      vm.$store.commit("globals/setConfirmPrompt", {
+        message: msg, allowHtml: true, type: "yesNo",
+        yesButtonText: vm.$strings.ButtonRemove || "Remove", yesButtonColor: "error",
+        callback: (ok) => {
+          if (!ok) return;
+          vm.processingIssues = true;
+          vm.$axios.$delete("/api/libraries/" + libId + "/issues")
+            .then(() => {
+              vm.$toast.success(vm.$strings.ToastRemoveItemsWithIssuesSuccess);
+              vm.$router.push("/library/" + libId + "/bookshelf");
+              vm.$store.dispatch("libraries/fetch", libId);
+            })
+            .catch((error) => { console.error("Failed to remove library items with issues", error); vm.$toast.error(vm.$strings.ToastRemoveItemsWithIssuesFailed); })
+            .finally(() => { vm.processingIssues = false; });
+        },
+      });
+    };
+    const hook = (vm) => {
+      if ((vm.$options._componentTag || vm.$options.name) !== "app-book-shelf-toolbar" || vm.__absdaHooked) return;
+      vm.__absdaHooked = true;
+      vm.removeAllIssues = window.__absdaRemoveAllIssues.bind(vm);
+      vm.$forceUpdate();
+    };
+    if (!window.__absdaIssuesMixin) { window.__absdaIssuesMixin = true; $nuxt.$root.constructor.mixin({ created() { hook(this); } }); }
+    const walk = (vm) => { hook(vm); vm.$children.forEach(walk); };
+    walk($nuxt.$root);
+    return true;
+  })()`;
+}
 function applyWebAppFixes(contents, attempt = 0) {
   if (!contents || contents.isDestroyed() || !isServerUrl(contents.getURL())) return;
-  contents.executeJavaScript(ABS_JS_FIXES)
+  contents.executeJavaScript(`[${ABS_JS_FIXES}, ${issuesHookJs()}].every(Boolean)`)
     .then((ok) => { if (!ok && attempt < 10) setTimeout(() => applyWebAppFixes(contents, attempt + 1), 1500); })
     .catch(() => {});
 }
@@ -687,6 +742,9 @@ const tr = (key, vars) => translator(uiLang())(key, vars);
 function onLangChanged() {
   const s = stringsFor(uiLang());
   for (const c of webContents.getAllWebContents()) if (!c.isDestroyed()) c.send("desktop:strings", s);
+  for (const c of webContents.getAllWebContents()) {
+    if (!c.isDestroyed() && isServerUrl(c.getURL())) c.executeJavaScript(issuesHookJs()).catch(() => {});   // its texts
+  }
   updateTrayTooltip();
   sendUpdateToTitleBar();
 }

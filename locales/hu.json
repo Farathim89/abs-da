@@ -190,5 +190,9 @@
   "scan.allDone": "{n} könyvtár szkennelése kész",
   "scan.failed": "„{name}” szkennelése sikertelen",
   "temp.title": "Ez egy ideiglenes másolat",
-  "temp.msg": "Az ABS Desktop App egy ideiglenes mappából indult, ahová a hordozható verzió kicsomagolja magát:\n{folder}\n\nEz a másolat nem a te beállításaidat használja, és bármikor eltűnhet. Inkább az ABS-DA-Portable.exe fájlt indítsd a saját mappájából (vagy a parancsikonnal)."
+  "temp.msg": "Az ABS Desktop App egy ideiglenes mappából indult, ahová a hordozható verzió kicsomagolja magát:\n{folder}\n\nEz a másolat nem a te beállításaidat használja, és bármikor eltűnhet. Inkább az ABS-DA-Portable.exe fájlt indítsd a saját mappájából (vagy a parancsikonnal).",
+  "issues.confirm": "Eltávolítod a könyvtárból mind a(z) {n} hibás könyvet? A lemezen lévő fájlok nem törlődnek.",
+  "issues.noProgress": "Egyiknek sincs hallgatási előrehaladása vagy könyvjelzője.",
+  "issues.withProgress": "{n} közülük hallgatási előrehaladással vagy könyvjelzőkkel rendelkezik, ezek törlődnek:",
+  "issues.more": "…és még {n}"
 }

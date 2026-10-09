@@ -190,5 +190,9 @@
   "scan.allDone": "Scansione completata per {n} librerie",
   "scan.failed": "Scansione di “{name}” non riuscita",
   "temp.title": "Questa è una copia temporanea",
-  "temp.msg": "ABS Desktop App è stato avviato da una cartella temporanea in cui si decomprime la versione portable:\n{folder}\n\nQuesta copia non usa le tue impostazioni e può sparire in qualsiasi momento. Avvia invece ABS-DA-Portable.exe dalla sua cartella (o con il collegamento)."
+  "temp.msg": "ABS Desktop App è stato avviato da una cartella temporanea in cui si decomprime la versione portable:\n{folder}\n\nQuesta copia non usa le tue impostazioni e può sparire in qualsiasi momento. Avvia invece ABS-DA-Portable.exe dalla sua cartella (o con il collegamento).",
+  "issues.confirm": "Rimuovere da questa libreria tutti i {n} libri con problemi? I file sul disco non vengono eliminati.",
+  "issues.noProgress": "Nessuno ha progressi di ascolto o segnalibri.",
+  "issues.withProgress": "{n} di questi hanno progressi di ascolto o segnalibri, che verranno eliminati:",
+  "issues.more": "…e altri {n}"
 }

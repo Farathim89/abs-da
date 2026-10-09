@@ -190,5 +190,9 @@
   "scan.allDone": "Prohledávání knihoven dokončeno: {n}",
   "scan.failed": "Prohledávání „{name}“ selhalo",
   "temp.title": "Toto je dočasná kopie",
-  "temp.msg": "ABS Desktop App byla spuštěna z dočasné složky, do které se rozbaluje přenosná verze:\n{folder}\n\nTato kopie nepoužívá vaše nastavení a může kdykoli zmizet. Spouštějte ABS-DA-Portable.exe z jeho vlastní složky (nebo zástupcem)."
+  "temp.msg": "ABS Desktop App byla spuštěna z dočasné složky, do které se rozbaluje přenosná verze:\n{folder}\n\nTato kopie nepoužívá vaše nastavení a může kdykoli zmizet. Spouštějte ABS-DA-Portable.exe z jeho vlastní složky (nebo zástupcem).",
+  "issues.confirm": "Odebrat z této knihovny všech {n} knih s problémy? Soubory na disku se nesmažou.",
+  "issues.noProgress": "Žádná z nich nemá průběh poslechu ani záložky.",
+  "issues.withProgress": "{n} z nich má průběh poslechu nebo záložky, které budou smazány:",
+  "issues.more": "…a dalších {n}"
 }

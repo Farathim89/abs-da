@@ -190,5 +190,9 @@
   "scan.allDone": "Analyse terminée pour {n} bibliothèques",
   "scan.failed": "Échec de l’analyse de « {name} »",
   "temp.title": "Ceci est une copie temporaire",
-  "temp.msg": "ABS Desktop App a été lancé depuis un dossier temporaire dans lequel la version portable se décompresse :\n{folder}\n\nCette copie n’utilise pas vos réglages et peut disparaître à tout moment. Lancez plutôt ABS-DA-Portable.exe depuis son propre dossier (ou avec votre raccourci)."
+  "temp.msg": "ABS Desktop App a été lancé depuis un dossier temporaire dans lequel la version portable se décompresse :\n{folder}\n\nCette copie n’utilise pas vos réglages et peut disparaître à tout moment. Lancez plutôt ABS-DA-Portable.exe depuis son propre dossier (ou avec votre raccourci).",
+  "issues.confirm": "Retirer de cette bibliothèque les {n} livres avec des problèmes ? Les fichiers sur le disque ne sont pas supprimés.",
+  "issues.noProgress": "Aucun n’a de progression d’écoute ni de signets.",
+  "issues.withProgress": "{n} d’entre eux ont une progression d’écoute ou des signets, qui seront supprimés :",
+  "issues.more": "…et {n} de plus"
 }
