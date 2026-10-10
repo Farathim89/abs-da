@@ -577,6 +577,11 @@ if (location.protocol !== "file:") {
   function applyPrefs(p) { if (p) { prefs = p; ensureScanButton(); } }
   ipcRenderer.invoke("desktop:ui-prefs").then(applyPrefs).catch(() => {});
   ipcRenderer.on("desktop:ui-prefs", (_e, p) => applyPrefs(p));
+  // Per-library tab / filter memory (main.js libraryMemoryJs) → the app keeps it in config.json.
+  window.addEventListener("message", (e) => {
+    if (e.source !== window || !e.data || typeof e.data.absdaLibraryMemory !== "object") return;
+    ipcRenderer.send("desktop:library-memory", e.data.absdaLibraryMemory);
+  });
 
   // Tooltip: "Scan library", or what is being scanned right now (main.js keeps that in
   // <html data-absda-scanning>). Follows along live, also while the tooltip is showing.

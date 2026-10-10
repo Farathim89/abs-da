@@ -192,6 +192,87 @@ const ABS_JS_FIXES = `(() => {
   });
   return true;
 })()`;
+// Per-library memory (in the web app's own storage, so it survives restarts):
+//  - each library keeps its own filter / sort / collapse settings (the web app has one
+//    shared set, so switching libraries carried them over or reset them);
+//  - each library remembers the tab you used last (Library, Series, Authors, …), and the
+//    library picker takes you back to it;
+//  - when the app starts, it reopens the library and tab you were last in.
+// restoreLast: only on the first page load of an app start (not on F5).
+function libraryMemoryJs(restoreLast) {
+  return `(() => {
+    const s = window.$nuxt && $nuxt.$store, r = window.$nuxt && $nuxt.$router;
+    if (!s || !r || !s.state.user || !s.state.user.user || !(s.state.libraries.libraries || []).length) return false;
+    // Kept by the app in config.json (saved at once, also if the app is closed by force);
+    // the page holds a copy and sends every change to the app (preload.js passes it on).
+    if (!window.__absdaMem) window.__absdaMem = ${JSON.stringify(config.libraryMemory || {})};
+    const load = () => JSON.parse(JSON.stringify(window.__absdaMem || {}));
+    const save = (m) => { window.__absdaMem = m; window.postMessage({ absdaLibraryMemory: m }, location.origin); };
+    const SETTINGS = ["orderBy", "orderDesc", "filterBy", "collapseSeries", "collapseBookSeries",
+      "seriesSortBy", "seriesSortDesc", "seriesFilterBy", "authorSortBy", "authorSortDesc"];
+    const pick = (st) => Object.fromEntries(SETTINGS.filter((k) => k in st).map((k) => [k, st[k]]));
+    // The library tabs worth remembering: /library/<id> plus one of these.
+    const TAB = /^\\/library\\/([^/?#]+)(\\/bookshelf(?:\\/(?:series|collections|playlists|authors))?|\\/narrators|\\/stats|\\/podcast\\/(?:latest|search|download-queue))?\\/?$/;
+    const libOf = (p) => { const m = TAB.exec(p); return m ? { id: m[1], tab: m[2] || "" } : null; };
+    const exists = (id) => (s.state.libraries.libraries || []).some((l) => l.id === id);
+    // (router.replace returns a promise only in newer versions of the web app)
+    const go = (p) => { try { const x = r.replace(p); if (x && x.catch) x.catch(() => {}); } catch (e) {} };
+    if (!window.__absdaLibMem) {
+      window.__absdaLibMem = true;
+      let quietUntil = 0;
+      // Filters / sorts: saved for the current library whenever they change; when the
+      // library changes, its own are put back (after the web app's own adjustments).
+      s.subscribe((m, state) => {
+        if (m.type === "libraries/setCurrentLibrary") {
+          const saved = ((load()[m.payload && m.payload.id]) || {}).settings;
+          quietUntil = Date.now() + 2000;
+          setTimeout(() => { if (saved) s.dispatch("user/updateUserSettings", saved); quietUntil = 0; }, 400);
+          return;
+        }
+        if (m.type !== "user/setSettings" || Date.now() < quietUntil) return;
+        const id = state.libraries.currentLibraryId;
+        if (!id) return;
+        const mem = load(); mem[id] = { ...(mem[id] || {}), settings: pick(state.user.settings) }; save(mem);
+      });
+      // Tabs: remembered per library; switching library goes to that library's last tab.
+      let prev = libOf(r.currentRoute.path);
+      r.afterEach((to) => {
+        const cur = libOf(to.path);
+        if (!cur) return;
+        if (prev && prev.id !== cur.id) {
+          const want = (load()[cur.id] || {}).tab;
+          if (typeof want === "string" && want !== cur.tab) { prev = cur; go("/library/" + cur.id + want); return; }
+        }
+        prev = cur;
+        const mem = load(); mem[cur.id] = { ...(mem[cur.id] || {}), tab: cur.tab }; mem.__last = "/library/" + cur.id + cur.tab; save(mem);
+      });
+      // The web app picked its library before this was loaded: put that library's own
+      // filters back now.
+      const startSaved = (load()[s.state.libraries.currentLibraryId] || {}).settings;
+      if (startSaved) { quietUntil = Date.now() + 1000; s.dispatch("user/updateUserSettings", startSaved); }
+    }
+    // App start: back to the last library and tab (if that library still exists).
+    if (${restoreLast ? "true" : "false"}) {
+      const last = load().__last, lib = last && libOf(last), here = r.currentRoute.path.replace(/\\/$/, "");
+      if (here === "") return false;   // the web app hasn't sent us to a library yet — try again shortly
+      // (On start-up the web app shows its own choice of library page; go to yours instead.)
+      if (lib && exists(lib.id) && here !== last && libOf(here)) go(last);
+    }
+    return true;
+  })()`;
+}
+let restoredLastLibrary = false;   // the app-start restore happens once per launch
+function installLibraryMemory(contents, attempt = 0) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  const restore = !restoredLastLibrary;
+  contents.executeJavaScript(libraryMemoryJs(restore))
+    .then((ok) => {
+      if (ok) restoredLastLibrary = true;
+      else if (attempt < 15) setTimeout(() => installLibraryMemory(contents, attempt + 1), 1000);
+    })
+    .catch(() => {});
+}
+
 // Issues page → "Remove All N Books": the web app asks with a plain browser confirm() that
 // doesn't say what you'd lose. ABS-DA asks instead in the web app's own (themed) pop-up,
 // in your language, saying which of those books still have listening progress or
@@ -2224,6 +2305,17 @@ function scanLibraries(ids) {
   })()`).catch(() => {});
 }
 // The scan button's menu (drawn by preload.js): this library, or all libraries.
+// Per-library tab / filter memory from the main view (see libraryMemoryJs), saved at once.
+let libraryMemoryTimer = null;
+ipcMain.on("desktop:library-memory", (e, mem) => {
+  if (!fromServerPage(e) || !view || e.sender !== wc() || !mem || typeof mem !== "object" || Array.isArray(mem)) return;
+  let json = "";
+  try { json = JSON.stringify(mem); } catch { return; }
+  if (json.length > 200000) return;
+  config = { ...config, libraryMemory: JSON.parse(json) };
+  clearTimeout(libraryMemoryTimer);
+  libraryMemoryTimer = setTimeout(() => writeJson(dataFile("config.json"), config), 150);
+});
 ipcMain.on("desktop:scan", async (e, { all } = {}) => {
   if (!fromServerPage(e) || !view || e.sender !== wc()) return;
   const ids = await wc().executeJavaScript(`(() => {
@@ -2280,7 +2372,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); });
+  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.
   contents.on("did-finish-load", async () => {
@@ -2294,7 +2386,12 @@ app.on("web-contents-created", (_e, contents) => {
 app.on("second-instance", showWindow);
 
 // A real quit (App → Exit, tray → Quit, Windows shutting down) closes instead of hiding.
-app.on("before-quit", () => { isQuitting = true; });
+app.on("before-quit", () => {
+  isQuitting = true;
+  // The web app's settings and our per-library memory live in its storage, which Chromium
+  // writes to disk a little later; make sure the latest is saved.
+  try { session.defaultSession.flushStorageData(); } catch {}
+});
 
 app.whenReady().then(() => {
   if (!gotLock) return;
