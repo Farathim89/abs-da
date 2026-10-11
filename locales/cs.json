@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Když hraje kniha",
   "mood.whileLibrary": "Když hraje kniha a v knihovně",
   "settings.desktop": "Desktopová aplikace",
-  "settings.desktopNote": "Nastavení ABS Desktop App v tomto PC. Stejné volby jsou i v nabídkách záhlaví (Aplikace a Zobrazení)."
+  "settings.desktopNote": "Nastavení ABS Desktop App v tomto PC. Stejné volby jsou i v nabídkách záhlaví (Aplikace a Zobrazení).",
+  "mood.libraryOnly": "Jen v knihovně (ticho, když hraje kniha)"
 }

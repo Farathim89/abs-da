@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Пока играет книга",
   "mood.whileLibrary": "Пока играет книга и в библиотеке",
   "settings.desktop": "Приложение для ПК",
-  "settings.desktopNote": "Настройки ABS Desktop App на этом ПК. Те же параметры есть в меню заголовка (Приложение и Вид)."
+  "settings.desktopNote": "Настройки ABS Desktop App на этом ПК. Те же параметры есть в меню заголовка (Приложение и Вид).",
+  "mood.libraryOnly": "Только в библиотеке (тихо, пока играет книга)"
 }

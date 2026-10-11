@@ -261,5 +261,6 @@
   "mood.whilePlaying": "播放书籍时",
   "mood.whileLibrary": "播放书籍时和在书库中",
   "settings.desktop": "桌面应用",
-  "settings.desktopNote": "此电脑上 ABS Desktop App 的设置。同样的选项也在标题栏菜单（应用和视图）中。"
+  "settings.desktopNote": "此电脑上 ABS Desktop App 的设置。同样的选项也在标题栏菜单（应用和视图）中。",
+  "mood.libraryOnly": "仅在书库中（播放书籍时静音）"
 }

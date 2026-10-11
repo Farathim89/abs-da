@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Enquanto um livro toca",
   "mood.whileLibrary": "Enquanto um livro toca e na biblioteca",
   "settings.desktop": "App para computador",
-  "settings.desktopNote": "Configurações do ABS Desktop App neste PC. As mesmas opções estão nos menus da barra de título (App e Exibir)."
+  "settings.desktopNote": "Configurações do ABS Desktop App neste PC. As mesmas opções estão nos menus da barra de título (App e Exibir).",
+  "mood.libraryOnly": "Só na biblioteca (em silêncio enquanto um livro toca)"
 }

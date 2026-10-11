@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Калі грае кніга",
   "mood.whileLibrary": "Калі грае кніга і ў бібліятэцы",
   "settings.desktop": "Праграма для ПК",
-  "settings.desktopNote": "Налады ABS Desktop App на гэтым ПК. Тыя ж параметры ёсць у меню загалоўка (Праграма і Выгляд)."
+  "settings.desktopNote": "Налады ABS Desktop App на гэтым ПК. Тыя ж параметры ёсць у меню загалоўка (Праграма і Выгляд).",
+  "mood.libraryOnly": "Толькі ў бібліятэцы (ціха, калі грае кніга)"
 }

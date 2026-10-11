@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Kui raamat mängib",
   "mood.whileLibrary": "Kui raamat mängib ja raamatukogus",
   "settings.desktop": "Töölauarakendus",
-  "settings.desktopNote": "ABS Desktop Appi seaded selles arvutis. Samad valikud on ka tiitliriba menüüdes (Rakendus ja Vaade)."
+  "settings.desktopNote": "ABS Desktop Appi seaded selles arvutis. Samad valikud on ka tiitliriba menüüdes (Rakendus ja Vaade).",
+  "mood.libraryOnly": "Ainult raamatukogus (vaikne, kui raamat mängib)"
 }

@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Terwijl een boek speelt",
   "mood.whileLibrary": "Terwijl een boek speelt en in de bibliotheek",
   "settings.desktop": "Desktop-app",
-  "settings.desktopNote": "Instellingen voor ABS Desktop App op deze pc. Dezelfde opties staan in de menu's van de titelbalk (App en Beeld)."
+  "settings.desktopNote": "Instellingen voor ABS Desktop App op deze pc. Dezelfde opties staan in de menu's van de titelbalk (App en Beeld).",
+  "mood.libraryOnly": "Alleen in de bibliotheek (stil terwijl een boek speelt)"
 }

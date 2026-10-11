@@ -261,5 +261,6 @@
   "mood.whilePlaying": "While a book is playing",
   "mood.whileLibrary": "While a book is playing and in the library",
   "settings.desktop": "Desktop App",
-  "settings.desktopNote": "Settings for ABS Desktop App on this PC. The same options are in the title bar menus (App and View)."
+  "settings.desktopNote": "Settings for ABS Desktop App on this PC. The same options are in the title bar menus (App and View).",
+  "mood.libraryOnly": "Only in the library (quiet while a book plays)"
 }

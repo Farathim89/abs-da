@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Medan en bok spelas",
   "mood.whileLibrary": "Medan en bok spelas och i biblioteket",
   "settings.desktop": "Skrivbordsapp",
-  "settings.desktopNote": "Inställningar för ABS Desktop App på den här datorn. Samma val finns i namnlistens menyer (App och Visa)."
+  "settings.desktopNote": "Inställningar för ABS Desktop App på den här datorn. Samma val finns i namnlistens menyer (App och Visa).",
+  "mood.libraryOnly": "Bara i biblioteket (tyst medan en bok spelas)"
 }

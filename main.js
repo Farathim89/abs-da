@@ -913,7 +913,13 @@ let previewUntil = 0, previewTimer = null;
 // "While a book is playing and in the library": also while the window is open on screen
 // (not minimized, not closed to the tray).
 const appOnScreen = () => !!(win && !win.isDestroyed() && win.isVisible() && !win.isMinimized());
+// When the sounds play: "book" (while a book plays), "both" (…and in the library),
+// "library" (only while you browse; quiet while a book plays). (Older versions: moodSoundAlways.)
+const MOOD_WHEN = ["book", "both", "library"];
+const moodWhen = () => (MOOD_WHEN.includes(config.moodSoundWhen) ? config.moodSoundWhen : config.moodSoundAlways ? "both" : "book");
 function previewMoodSound() {
+  previewUntil = 0;                       // a new theme: the last one's taste ends now
+  clearTimeout(previewTimer);
   if (!isMood() || !config.moodSound) return;
   previewUntil = Date.now() + 7000;
   clearTimeout(previewTimer);
@@ -922,10 +928,10 @@ function previewMoodSound() {
 const moodSoundVolume = () => (Number.isFinite(config.moodSoundVolume) ? config.moodSoundVolume : 35);
 function moodSoundState() {
   return {
-    available: isMood(), on: !!config.moodSound, volume: moodSoundVolume(), always: !!config.moodSoundAlways,
+    available: isMood(), on: !!config.moodSound, volume: moodSoundVolume(), when: moodWhen(),
     name: tr("theme." + themeId()),
     texts: { sounds: tr("mood.sounds"), volume: tr("mood.volume"), when: tr("mood.when"),
-      whilePlaying: tr("mood.whilePlaying"), whileLibrary: tr("mood.whileLibrary") },
+      whilePlaying: tr("mood.whilePlaying"), whileLibrary: tr("mood.whileLibrary"), libraryOnly: tr("mood.libraryOnly") },
   };
 }
 function sendMoodSound() {
@@ -933,7 +939,12 @@ function sendMoodSound() {
   if (win && !win.isDestroyed()) {
     win.webContents.send("desktop:ambience", {
       mood: themeId(), volume: st.volume / 100,
-      on: st.available && st.on && (bookPlaying || offlinePlaying || (st.always && appOnScreen()) || Date.now() < previewUntil),
+      on: st.available && st.on && (Date.now() < previewUntil || (() => {
+        const book = bookPlaying || offlinePlaying;
+        if (st.when === "library") return !book && appOnScreen();
+        if (st.when === "both") return book || appOnScreen();
+        return book;
+      })()),
     });
   }
   if (view && !view.webContents.isDestroyed()) view.webContents.send("desktop:mood-sound-state", st);
@@ -942,7 +953,7 @@ function setMoodSound(patch) {
   const next = { ...config };
   if (typeof patch.on === "boolean") next.moodSound = patch.on;
   if (Number.isFinite(patch.volume)) next.moodSoundVolume = Math.max(0, Math.min(100, Math.round(patch.volume)));
-  if (typeof patch.always === "boolean") next.moodSoundAlways = patch.always;
+  if (MOOD_WHEN.includes(patch.when)) { next.moodSoundWhen = patch.when; delete next.moodSoundAlways; }
   config = next;
   writeJson(dataFile("config.json"), config);
   if (patch.on === true || Number.isFinite(patch.volume)) previewMoodSound();
@@ -2098,8 +2109,9 @@ function themeMenuItems() {
         items.push({ label: tr("mood.volumeMenu"), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
           label: v + "%", type: "checkbox", checked: moodSoundVolume() === v, click: () => setMoodSound({ volume: v }) })) });
         items.push({ label: tr("mood.when"), submenu: [
-          { label: tr("mood.whilePlaying"), type: "checkbox", checked: !config.moodSoundAlways, click: () => setMoodSound({ always: false }) },
-          { label: tr("mood.whileLibrary"), type: "checkbox", checked: !!config.moodSoundAlways, click: () => setMoodSound({ always: true }) },
+          { label: tr("mood.whilePlaying"), type: "checkbox", checked: moodWhen() === "book", click: () => setMoodSound({ when: "book" }) },
+          { label: tr("mood.whileLibrary"), type: "checkbox", checked: moodWhen() === "both", click: () => setMoodSound({ when: "both" }) },
+          { label: tr("mood.libraryOnly"), type: "checkbox", checked: moodWhen() === "library", click: () => setMoodSound({ when: "library" }) },
         ] });
       }
       items.push({ type: "separator" });
@@ -2640,7 +2652,9 @@ function looksState() {
   const sizes = TEXT_SIZES.map(([name, f]) => ({ id: String(f), label: tr("size." + name), percent: Math.round(f * 100) }));
   return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves,
     motion: config.moodMotion !== false, motionLabel: tr("theme.motion"),
-    sound: { on: !!config.moodSound, volume: moodSoundVolume(), label: tr("mood.sounds"), volumeLabel: tr("mood.volume") } };
+    sound: { on: !!config.moodSound, volume: moodSoundVolume(), label: tr("mood.sounds"), volumeLabel: tr("mood.volume"),
+      when: moodWhen(), whenLabel: tr("mood.when"),
+      whens: [["book", tr("mood.whilePlaying")], ["both", tr("mood.whileLibrary")], ["library", tr("mood.libraryOnly")]] } };
 }
 ipcMain.handle("desktop:get-looks", (e) => (fromServerPage(e) ? looksState() : null));
 ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
@@ -2651,6 +2665,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
   if (kind === "motion") setMoodMotion(id === "on");
   if (kind === "sound") setMoodSound({ on: id === "on" });
   if (kind === "soundVolume" && Number.isFinite(Number(id))) setMoodSound({ volume: Number(id) });
+  if (kind === "soundWhen" && MOOD_WHEN.includes(id)) setMoodSound({ when: id });
   return looksState();
 });
 

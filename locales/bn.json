@@ -261,5 +261,6 @@
   "mood.whilePlaying": "বই চলার সময়",
   "mood.whileLibrary": "বই চলার সময় এবং লাইব্রেরিতে",
   "settings.desktop": "ডেস্কটপ অ্যাপ",
-  "settings.desktopNote": "এই পিসিতে ABS Desktop App-এর সেটিংস। একই বিকল্প টাইটেল বারের মেনুতেও আছে (অ্যাপ ও ভিউ)।"
+  "settings.desktopNote": "এই পিসিতে ABS Desktop App-এর সেটিংস। একই বিকল্প টাইটেল বারের মেনুতেও আছে (অ্যাপ ও ভিউ)।",
+  "mood.libraryOnly": "শুধু লাইব্রেরিতে (বই চলার সময় চুপ)"
 }

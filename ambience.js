@@ -303,20 +303,20 @@
         // forget recordings no other mood needs any more
         const keepNames = new Set((recs || []).map((r) => r[0]).concat(old ? (RECORDINGS[old.id] || []).map((r) => r[0]) : []));
         for (const n of [...buffers.keys()]) if (!keepNames.has(n)) buffers.delete(n);
-        out.gain.setTargetAtTime(1, ctx.currentTime, 0.8);
+        out.gain.setTargetAtTime(1, ctx.currentTime + 0.3, 0.3);   // (after the old one is gone)
         current = { id: want, out, kit };
         if (old) {
-          old.out.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.6);
-          setTimeout(() => { old.kit.stop(); old.out.disconnect(); }, 3500);
+          old.out.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.08);
+          setTimeout(() => { old.kit.stop(); old.out.disconnect(); }, 700);
         }
       }
     } else if (ctx && current) {
-      master.gain.setTargetAtTime(0, ctx.currentTime, 0.6);
+      master.gain.setTargetAtTime(0, ctx.currentTime, 0.1);
       clearTimeout(stopTimer);
       stopTimer = setTimeout(() => {
         if (current) { current.kit.stop(); current.out.disconnect(); current = null; }
         ctx.suspend().catch(() => {});   // nothing running while it's quiet
-      }, 3500);
+      }, 900);
     }
   }
   desktop.onAmbience(apply);

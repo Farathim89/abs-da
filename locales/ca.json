@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Mentre sona un llibre",
   "mood.whileLibrary": "Mentre sona un llibre i a la biblioteca",
   "settings.desktop": "Aplicació d'escriptori",
-  "settings.desktopNote": "Configuració d'ABS Desktop App en aquest PC. Les mateixes opcions són als menús de la barra de títol (Aplicació i Visualització)."
+  "settings.desktopNote": "Configuració d'ABS Desktop App en aquest PC. Les mateixes opcions són als menús de la barra de títol (Aplicació i Visualització).",
+  "mood.libraryOnly": "Només a la biblioteca (en silenci mentre sona un llibre)"
 }

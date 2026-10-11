@@ -513,6 +513,9 @@ if (location.protocol !== "file:") {
     #${PANEL_ID} .absda-motion { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; cursor: pointer; color: rgba(255,255,255,.85); }
     #${PANEL_ID} .absda-motion input { width: 16px; height: 16px; margin: 0; accent-color: var(--tb-logo, #f0a848); cursor: pointer; }
     #${PANEL_ID} .absda-motion input.absda-vol { width: auto; flex: 1; max-width: 180px; margin-left: 8px; }
+    #${PANEL_ID} .absda-when { cursor: default; }
+    #${PANEL_ID} .absda-when select { flex: 1; max-width: 300px; margin-left: 8px; padding: 4px 6px; border-radius: 6px; font: inherit; font-size: 12px;
+      color: #f3f4f6; background: var(--color-primary, #1f1f1f); border: 1px solid rgba(255,255,255,.2); }
     #${PANEL_ID} .absda-tile { display: flex; flex-direction: column; align-items: stretch; gap: 5px; width: 100%;
       padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
     #${PANEL_ID} .absda-pv { position: relative; height: 62px; border-radius: 6px; overflow: hidden;
@@ -693,7 +696,13 @@ if (location.protocol !== "file:") {
     vol.setAttribute("aria-label", looks.sound.volumeLabel);
     vol.addEventListener("change", () => setLook("soundVolume", vol.value));
     snd.append(sbox, Object.assign(el("span"), { textContent: looks.sound.label }), vol);
-    wrap.append(lab, snd);
+    // When they play: while a book plays / …and in the library / only in the library
+    const whenRow = el("label", "absda-motion absda-when");
+    const sel = el("select");
+    for (const [v, text] of looks.sound.whens) sel.append(Object.assign(el("option"), { value: v, textContent: text, selected: looks.sound.when === v }));
+    sel.addEventListener("change", () => setLook("soundWhen", sel.value));
+    whenRow.append(Object.assign(el("span"), { textContent: looks.sound.whenLabel }), sel);
+    wrap.append(lab, snd, whenRow);
     return wrap;
   }
 
@@ -901,7 +910,7 @@ if (location.protocol !== "file:") {
   // keeps the settings; ambience.js in the title bar makes the sound).
   const MOOD_BTN = "absda-mood-btn", MOOD_POP = "absda-mood-pop";
   const MOOD_ICON = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 7v10M21 12h0"/></svg>';
-  let mood = null;   // { available, on, volume, always, name, texts }
+  let mood = null;   // { available, on, volume, when, name, texts }
   ipcRenderer.on("desktop:mood-sound-state", (_e, m) => { mood = m; ensureMoodButton(); drawMoodPop(); });
   ipcRenderer.invoke("desktop:get-mood-sound").then((m) => { if (m) { mood = m; ensureMoodButton(); } }).catch(() => {});
   function ensureMoodButton() {
@@ -960,10 +969,10 @@ if (location.protocol !== "file:") {
     // When they play: while a book is playing / also while you're in the library
     const when = el("div", "absda-mp-when");
     when.append(Object.assign(el("div", "absda-mp-sub"), { textContent: mood.texts.when }));
-    for (const [always, text] of [[false, mood.texts.whilePlaying], [true, mood.texts.whileLibrary]]) {
+    for (const [when, text] of [["book", mood.texts.whilePlaying], ["both", mood.texts.whileLibrary], ["library", mood.texts.libraryOnly]]) {
       const row = el("label", "absda-mp-row");
-      const r = Object.assign(el("input"), { type: "radio", name: "absda-mood-when", checked: !!mood.always === always });
-      r.addEventListener("change", () => { if (r.checked) setMood({ always }); });
+      const r = Object.assign(el("input"), { type: "radio", name: "absda-mood-when", checked: mood.when === when });
+      r.addEventListener("change", () => { if (r.checked) setMood({ when }); });
       row.append(r, Object.assign(el("span"), { textContent: text }));
       when.append(row);
     }

@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Mentre un libro è in riproduzione",
   "mood.whileLibrary": "Mentre un libro è in riproduzione e nella libreria",
   "settings.desktop": "App desktop",
-  "settings.desktopNote": "Impostazioni di ABS Desktop App su questo PC. Le stesse opzioni sono nei menu della barra del titolo (App e Visualizza)."
+  "settings.desktopNote": "Impostazioni di ABS Desktop App su questo PC. Le stesse opzioni sono nei menu della barra del titolo (App e Visualizza).",
+  "mood.libraryOnly": "Solo nella libreria (in silenzio mentre un libro è in riproduzione)"
 }

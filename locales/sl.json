@@ -261,5 +261,6 @@
   "mood.whilePlaying": "Med predvajanjem knjige",
   "mood.whileLibrary": "Med predvajanjem knjige in v knjižnici",
   "settings.desktop": "Namizna aplikacija",
-  "settings.desktopNote": "Nastavitve ABS Desktop App v tem računalniku. Iste možnosti so tudi v menijih naslovne vrstice (Aplikacija in Pogled)."
+  "settings.desktopNote": "Nastavitve ABS Desktop App v tem računalniku. Iste možnosti so tudi v menijih naslovne vrstice (Aplikacija in Pogled).",
+  "mood.libraryOnly": "Samo v knjižnici (tiho med predvajanjem knjige)"
 }
