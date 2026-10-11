@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} davon haben Hörfortschritt oder Lesezeichen, die gelöscht werden:",
   "issues.more": "…und {n} weitere",
   "player.closedOther": "„{title}“ wurde hier geschlossen: Es läuft auf einem anderen Gerät ({device}).",
-  "home.allLibraries": "Alle Bibliotheken",
-  "view.homeStyle": "Startseiten-Stil",
-  "view.homeFlat": "Flach (wie Plex)",
-  "view.homeShelves": "Auf den Regalen"
+  "home.allLibraries": "Alle Bibliotheken"
 }

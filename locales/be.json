@@ -196,8 +196,5 @@
   "issues.withProgress": "У {n} з іх ёсць прагрэс праслухоўвання або закладкі, яны будуць выдалены:",
   "issues.more": "…і яшчэ {n}",
   "player.closedOther": "«{title}» закрыта тут: яна прайграецца на іншай прыладзе ({device}).",
-  "home.allLibraries": "Усе бібліятэкі",
-  "view.homeStyle": "Выгляд галоўнай",
-  "view.homeFlat": "Плоскі (як Plex)",
-  "view.homeShelves": "На паліцах"
+  "home.allLibraries": "Усе бібліятэкі"
 }

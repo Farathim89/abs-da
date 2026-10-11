@@ -309,18 +309,15 @@ function libraryMemoryJs(restoreLast) {
 }
 let restoredLastLibrary = false;   // the app-start restore happens once per launch
 // "🏠 All libraries" Home (home-page.js): installed in the app window once the web app is up.
-const homeStyle = () => (config.homeStyle === "shelf" ? "shelf" : "flat");
+// Its look follows the Bookshelf choice (theme panel / View → Bookshelf), like every
+// library: "None (flat)" → flat rows, any shelf art → the same shelves.
+const homeStyle = () => (shelfArtId() === "none" ? "flat" : "shelf");
 const homeJs = () => homePageJs({ allLibraries: tr("home.allLibraries"), style: homeStyle() });
 function installHome(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
   contents.executeJavaScript(homeJs())
     .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installHome(contents, attempt + 1), 1000); })
     .catch(() => {});
-}
-function setHomeStyle(style) {
-  config = { ...config, homeStyle: style };
-  writeJson(dataFile("config.json"), config);
-  if (view) installHome(wc());   // redraws it if it's open
 }
 function installLibraryMemory(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
@@ -837,6 +834,7 @@ function setShelfArt(id) {
   delete config.woodShelf;
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
+  if (view && isServerUrl(wc().getURL())) installHome(wc());   // the all-libraries Home follows it too
 }
 
 // ---- navigation helpers ----------------------------------------------------
@@ -2044,13 +2042,6 @@ function menuTemplate() {
         { label: tr("view.theme"), submenu: themeMenuItems() },
         { label: tr("view.bookshelf"), submenu: shelfMenuItems() },
         { label: tr("view.notifications"), submenu: notificationMenuItems() },
-        {
-          label: tr("view.homeStyle"),
-          submenu: [
-            { label: tr("view.homeFlat"), type: "checkbox", checked: homeStyle() === "flat", click: () => setHomeStyle("flat") },
-            { label: tr("view.homeShelves"), type: "checkbox", checked: homeStyle() === "shelf", click: () => setHomeStyle("shelf") },
-          ],
-        },
         { label: tr("view.scanButton"), type: "checkbox", checked: config.scanButton !== false,
           click: (item) => setScanButton(item.checked) },
         { label: tr("view.language"), submenu: languageMenuItems() },

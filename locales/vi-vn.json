@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} cuốn có tiến độ nghe hoặc dấu trang, sẽ bị xóa:",
   "issues.more": "…và {n} cuốn khác",
   "player.closedOther": "Đã đóng “{title}” ở đây: sách đang phát trên thiết bị khác ({device}).",
-  "home.allLibraries": "Tất cả thư viện",
-  "view.homeStyle": "Kiểu trang chủ",
-  "view.homeFlat": "Phẳng (như Plex)",
-  "view.homeShelves": "Trên giá sách"
+  "home.allLibraries": "Tất cả thư viện"
 }

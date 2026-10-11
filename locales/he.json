@@ -196,8 +196,5 @@
   "issues.withProgress": "ל-{n} מהם יש התקדמות האזנה או סימניות, שיימחקו:",
   "issues.more": "…ועוד {n}",
   "player.closedOther": "\"{title}\" נסגר כאן: הוא מתנגן במכשיר אחר ({device}).",
-  "home.allLibraries": "כל הספריות",
-  "view.homeStyle": "סגנון דף הבית",
-  "view.homeFlat": "שטוח (כמו Plex)",
-  "view.homeShelves": "על המדפים"
+  "home.allLibraries": "כל הספריות"
 }

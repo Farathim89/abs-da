@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} z nich ma postęp słuchania lub zakładki, które zostaną usunięte:",
   "issues.more": "…i jeszcze {n}",
   "player.closedOther": "Zamknięto tu „{title}”: jest odtwarzana na innym urządzeniu ({device}).",
-  "home.allLibraries": "Wszystkie biblioteki",
-  "view.homeStyle": "Styl strony głównej",
-  "view.homeFlat": "Płaski (jak Plex)",
-  "view.homeShelves": "Na półkach"
+  "home.allLibraries": "Wszystkie biblioteki"
 }

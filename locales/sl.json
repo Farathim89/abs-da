@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} od njih ima napredek poslušanja ali zaznamke, ki bodo izbrisani:",
   "issues.more": "…in še {n}",
   "player.closedOther": "»{title}« je tukaj zaprta: predvaja se na drugi napravi ({device}).",
-  "home.allLibraries": "Vse knjižnice",
-  "view.homeStyle": "Slog domače strani",
-  "view.homeFlat": "Ploščat (kot Plex)",
-  "view.homeShelves": "Na policah"
+  "home.allLibraries": "Vse knjižnice"
 }

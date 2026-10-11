@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} niistä on kuunteluedistyminen tai kirjanmerkkejä, jotka poistetaan:",
   "issues.more": "…ja {n} muuta",
   "player.closedOther": "”{title}” suljettiin täällä: sitä toistetaan toisella laitteella ({device}).",
-  "home.allLibraries": "Kaikki kirjastot",
-  "view.homeStyle": "Etusivun tyyli",
-  "view.homeFlat": "Litteä (kuten Plex)",
-  "view.homeShelves": "Hyllyillä"
+  "home.allLibraries": "Kaikki kirjastot"
 }

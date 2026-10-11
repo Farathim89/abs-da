@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} njih ima napredak slušanja ili oznake, koji će biti obrisani:",
   "issues.more": "…i još {n}",
   "player.closedOther": "„{title}” je zatvoren ovdje: reproducira se na drugom uređaju ({device}).",
-  "home.allLibraries": "Sve knjižnice",
-  "view.homeStyle": "Izgled početne",
-  "view.homeFlat": "Ravno (kao Plex)",
-  "view.homeShelves": "Na policama"
+  "home.allLibraries": "Sve knjižnice"
 }

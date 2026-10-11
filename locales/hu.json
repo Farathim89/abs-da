@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} közülük hallgatási előrehaladással vagy könyvjelzőkkel rendelkezik, ezek törlődnek:",
   "issues.more": "…és még {n}",
   "player.closedOther": "„{title}” itt bezárva: egy másik eszközön szól ({device}).",
-  "home.allLibraries": "Minden könyvtár",
-  "view.homeStyle": "Kezdőlap stílusa",
-  "view.homeFlat": "Lapos (mint a Plex)",
-  "view.homeShelves": "A polcokon"
+  "home.allLibraries": "Minden könyvtár"
 }

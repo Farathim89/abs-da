@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} of them have listening progress or bookmarks, which will be deleted:",
   "issues.more": "…and {n} more",
   "player.closedOther": "Closed “{title}” here: it's playing on another device ({device}).",
-  "home.allLibraries": "All libraries",
-  "view.homeStyle": "Home style",
-  "view.homeFlat": "Flat (like Plex)",
-  "view.homeShelves": "On the bookshelves"
+  "home.allLibraries": "All libraries"
 }

@@ -196,8 +196,5 @@
   "issues.withProgress": "そのうち {n} 冊には再生の進行状況またはブックマークがあり、削除されます:",
   "issues.more": "…ほか {n} 冊",
   "player.closedOther": "「{title}」をここで閉じました: 別のデバイスで再生中です ({device})。",
-  "home.allLibraries": "すべてのライブラリー",
-  "view.homeStyle": "ホームのスタイル",
-  "view.homeFlat": "フラット (Plex 風)",
-  "view.homeShelves": "本棚の上"
+  "home.allLibraries": "すべてのライブラリー"
 }

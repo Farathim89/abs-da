@@ -196,8 +196,5 @@
   "issues.withProgress": "{n} d’entre eux ont une progression d’écoute ou des signets, qui seront supprimés :",
   "issues.more": "…et {n} de plus",
   "player.closedOther": "« {title} » a été fermé ici : il est en lecture sur un autre appareil ({device}).",
-  "home.allLibraries": "Toutes les bibliothèques",
-  "view.homeStyle": "Style de l’accueil",
-  "view.homeFlat": "Plat (comme Plex)",
-  "view.homeShelves": "Sur les étagères"
+  "home.allLibraries": "Toutes les bibliothèques"
 }

@@ -196,8 +196,5 @@
   "issues.withProgress": "其中 {n} 本有收聽進度或書籤，將被刪除：",
   "issues.more": "……另外 {n} 本",
   "player.closedOther": "已在此處關閉「{title}」：它正在另一部裝置上播放（{device}）。",
-  "home.allLibraries": "所有媒體庫",
-  "view.homeStyle": "首頁樣式",
-  "view.homeFlat": "扁平（類似 Plex）",
-  "view.homeShelves": "書架上"
+  "home.allLibraries": "所有媒體庫"
 }
