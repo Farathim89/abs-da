@@ -63,10 +63,22 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   what's playing, Play/Pause, skip back/forward, previous/next chapter and a **sleep timer**
 - **Start with Windows** (in the tray)
 - Keyboard **media keys** and the **Windows media controls** show the book and cover
-- **7 themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
+- **All libraries on one Home page** (library picker → **All libraries**): continue listening, continue
+  series, recently added per library (one card per series) and listen again, flat or on bookshelves
+- **Offline listening**: a download button next to Play (and **Download series** on series pages) keeps
+  books on your PC. The **Offline library** (App → Offline) plays them without the server — chapters,
+  speed, sleep timer — and sends your listening back when the server is reachable again. Download queue
+  with cancel, optional removal of finished books' offline copies, and the offline library opens by
+  itself when the server can't be reached
+- **7 colour themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**. Buttons, switches, pop-up notifications and the
   Stats chart and listening calendar follow the theme too
+- **10 mood themes** — Dungeon, Fireside Tavern, Starship, Neon Nights, Deep Sea, Haunted Manor,
+  Wizard's Library, Rainy Day, Autumn Woods, Snowy Night — each with its own scenery, bookshelf, title
+  bar, menus, player bar and heading font, a gentle light layer (torches, embers, stars, fog, rain,
+  snow…) and optional **mood sounds** (made live, no sound files) that can play only while a book plays.
+  Animations run at a low frame rate and pause while you use other windows
 - **View → Notifications**: how long pop-up notifications stay (3 s / 5 s / 10 s / until closed),
   where they appear, pause while hovering, theme or original colours
 - **Settings, Upload and Account open as an overlay** over the app (close with ✕, Esc or a click outside),
@@ -161,6 +173,10 @@ run `build.cmd` as administrator once (it caches the signing toolkit); after tha
 - `preload.js` — desktop bridge for the connect screen, Remember me, mouse side buttons
 - `server.js` — checks a server address and finds its web app
 - `shelf-art.js` — the procedural bookshelf textures (SVG) and their plank colours
+- `mood-themes.js` — the mood themes: scenery, light layers, bars and fonts
+- `ambience.js` — mood sounds (Web Audio, runs in the title bar page)
+- `home-page.js` — the All libraries Home page
+- `offline.js`, `offline-button.js`, `offline.*` — downloads, the offline library and player, syncing listening back
 - `titlebar.*` — the custom title bar (the web app runs in a panel underneath it)
 - `connect.*` — the connect / change server / can't-reach screen
 - `build/installer.nsh` — removes the Start with Windows entry on uninstall
