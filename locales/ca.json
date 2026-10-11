@@ -195,5 +195,9 @@
   "issues.noProgress": "Cap d’ells no té progrés d’escolta ni marcadors.",
   "issues.withProgress": "{n} d’ells tenen progrés d’escolta o marcadors, que s’esborraran:",
   "issues.more": "…i {n} més",
-  "player.closedOther": "S’ha tancat «{title}» aquí: s’està reproduint en un altre dispositiu ({device})."
+  "player.closedOther": "S’ha tancat «{title}» aquí: s’està reproduint en un altre dispositiu ({device}).",
+  "home.allLibraries": "Totes les biblioteques",
+  "view.homeStyle": "Estil de l’inici",
+  "view.homeFlat": "Pla (com Plex)",
+  "view.homeShelves": "Als prestatges"
 }

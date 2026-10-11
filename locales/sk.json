@@ -195,5 +195,9 @@
   "issues.noProgress": "Žiadna z nich nemá priebeh počúvania ani záložky.",
   "issues.withProgress": "{n} z nich má priebeh počúvania alebo záložky, ktoré sa vymažú:",
   "issues.more": "…a ďalších {n}",
-  "player.closedOther": "„{title}“ tu bola zatvorená: prehráva sa na inom zariadení ({device})."
+  "player.closedOther": "„{title}“ tu bola zatvorená: prehráva sa na inom zariadení ({device}).",
+  "home.allLibraries": "Všetky knižnice",
+  "view.homeStyle": "Vzhľad domovskej stránky",
+  "view.homeFlat": "Plochý (ako Plex)",
+  "view.homeShelves": "Na policiach"
 }

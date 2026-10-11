@@ -195,5 +195,9 @@
   "issues.noProgress": "Ingen af dem har lytteforløb eller bogmærker.",
   "issues.withProgress": "{n} af dem har lytteforløb eller bogmærker, som bliver slettet:",
   "issues.more": "…og {n} mere",
-  "player.closedOther": "»{title}« er lukket her: den afspilles på en anden enhed ({device})."
+  "player.closedOther": "»{title}« er lukket her: den afspilles på en anden enhed ({device}).",
+  "home.allLibraries": "Alle biblioteker",
+  "view.homeStyle": "Forsidens stil",
+  "view.homeFlat": "Flad (som Plex)",
+  "view.homeShelves": "På hylderne"
 }

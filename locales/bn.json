@@ -195,5 +195,9 @@
   "issues.noProgress": "এগুলোর কোনোটিতেই শোনার অগ্রগতি বা বুকমার্ক নেই।",
   "issues.withProgress": "এগুলোর {n}টিতে শোনার অগ্রগতি বা বুকমার্ক আছে, যা মুছে যাবে:",
   "issues.more": "…আরও {n}টি",
-  "player.closedOther": "“{title}” এখানে বন্ধ করা হয়েছে: এটি অন্য ডিভাইসে চলছে ({device})।"
+  "player.closedOther": "“{title}” এখানে বন্ধ করা হয়েছে: এটি অন্য ডিভাইসে চলছে ({device})।",
+  "home.allLibraries": "সব লাইব্রেরি",
+  "view.homeStyle": "হোম পেজের ধরন",
+  "view.homeFlat": "সমতল (Plex-এর মতো)",
+  "view.homeShelves": "তাকের উপর"
 }

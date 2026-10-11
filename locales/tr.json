@@ -195,5 +195,9 @@
   "issues.noProgress": "Hiçbirinde dinleme ilerlemesi veya yer imi yok.",
   "issues.withProgress": "{n} tanesinde dinleme ilerlemesi veya yer imi var, bunlar silinecek:",
   "issues.more": "…ve {n} tane daha",
-  "player.closedOther": "“{title}” burada kapatıldı: başka bir cihazda çalıyor ({device})."
+  "player.closedOther": "“{title}” burada kapatıldı: başka bir cihazda çalıyor ({device}).",
+  "home.allLibraries": "Tüm kütüphaneler",
+  "view.homeStyle": "Ana sayfa stili",
+  "view.homeFlat": "Düz (Plex gibi)",
+  "view.homeShelves": "Rafların üzerinde"
 }

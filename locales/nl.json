@@ -195,5 +195,9 @@
   "issues.noProgress": "Geen ervan heeft luistervoortgang of bladwijzers.",
   "issues.withProgress": "{n} ervan hebben luistervoortgang of bladwijzers, die worden verwijderd:",
   "issues.more": "…en nog {n}",
-  "player.closedOther": "‘{title}’ is hier gesloten: het speelt op een ander apparaat ({device})."
+  "player.closedOther": "‘{title}’ is hier gesloten: het speelt op een ander apparaat ({device}).",
+  "home.allLibraries": "Alle bibliotheken",
+  "view.homeStyle": "Stijl van de startpagina",
+  "view.homeFlat": "Vlak (zoals Plex)",
+  "view.homeShelves": "Op de boekenplanken"
 }

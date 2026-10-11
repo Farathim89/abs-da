@@ -195,5 +195,9 @@
   "issues.noProgress": "Никоя от тях няма напредък в слушането или отметки.",
   "issues.withProgress": "{n} от тях имат напредък в слушането или отметки, които ще бъдат изтрити:",
   "issues.more": "…и още {n}",
-  "player.closedOther": "„{title}“ е затворена тук: пуска се на друго устройство ({device})."
+  "player.closedOther": "„{title}“ е затворена тук: пуска се на друго устройство ({device}).",
+  "home.allLibraries": "Всички библиотеки",
+  "view.homeStyle": "Изглед на началото",
+  "view.homeFlat": "Плосък (като Plex)",
+  "view.homeShelves": "На рафтовете"
 }

@@ -195,5 +195,9 @@
   "issues.noProgress": "Nessuno ha progressi di ascolto o segnalibri.",
   "issues.withProgress": "{n} di questi hanno progressi di ascolto o segnalibri, che verranno eliminati:",
   "issues.more": "…e altri {n}",
-  "player.closedOther": "“{title}” è stato chiuso qui: è in riproduzione su un altro dispositivo ({device})."
+  "player.closedOther": "“{title}” è stato chiuso qui: è in riproduzione su un altro dispositivo ({device}).",
+  "home.allLibraries": "Tutte le librerie",
+  "view.homeStyle": "Stile della home",
+  "view.homeFlat": "Piatto (come Plex)",
+  "view.homeShelves": "Sugli scaffali"
 }

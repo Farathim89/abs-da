@@ -23,6 +23,7 @@ const fs = require("fs");
 const { normalizeServer, probeServer } = require("./server");
 const { SHELF_ARTS, artUrl } = require("./shelf-art");
 const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
+const homePageJs = require("./home-page");
 
 // ---------------------------------------------------------------------------
 // Which copy of the app is this?
@@ -307,6 +308,20 @@ function libraryMemoryJs(restoreLast) {
   })()`;
 }
 let restoredLastLibrary = false;   // the app-start restore happens once per launch
+// "🏠 All libraries" Home (home-page.js): installed in the app window once the web app is up.
+const homeStyle = () => (config.homeStyle === "shelf" ? "shelf" : "flat");
+const homeJs = () => homePageJs({ allLibraries: tr("home.allLibraries"), style: homeStyle() });
+function installHome(contents, attempt = 0) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  contents.executeJavaScript(homeJs())
+    .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installHome(contents, attempt + 1), 1000); })
+    .catch(() => {});
+}
+function setHomeStyle(style) {
+  config = { ...config, homeStyle: style };
+  writeJson(dataFile("config.json"), config);
+  if (view) installHome(wc());   // redraws it if it's open
+}
 function installLibraryMemory(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
   const restore = !restoredLastLibrary;
@@ -871,6 +886,7 @@ function onLangChanged() {
   for (const c of webContents.getAllWebContents()) {
     if (!c.isDestroyed() && isServerUrl(c.getURL())) c.executeJavaScript(issuesHookJs()).catch(() => {});   // its texts
   }
+  if (view && isServerUrl(wc().getURL())) installHome(wc());   // "All libraries" text
   updateTrayTooltip();
   sendUpdateToTitleBar();
 }
@@ -1274,6 +1290,7 @@ function createWindow() {
     onServerPage(url);
     readWebLang(contents);   // e.g. you just changed the language on the Account page
     applyWebAppFixes(contents);   // e.g. after signing in, the player exists now
+    installHome(contents);
   });
 
   if (!app.isPackaged) contents.on("did-navigate", (_e, url) => console.log("[nav]", url));
@@ -2027,6 +2044,13 @@ function menuTemplate() {
         { label: tr("view.theme"), submenu: themeMenuItems() },
         { label: tr("view.bookshelf"), submenu: shelfMenuItems() },
         { label: tr("view.notifications"), submenu: notificationMenuItems() },
+        {
+          label: tr("view.homeStyle"),
+          submenu: [
+            { label: tr("view.homeFlat"), type: "checkbox", checked: homeStyle() === "flat", click: () => setHomeStyle("flat") },
+            { label: tr("view.homeShelves"), type: "checkbox", checked: homeStyle() === "shelf", click: () => setHomeStyle("shelf") },
+          ],
+        },
         { label: tr("view.scanButton"), type: "checkbox", checked: config.scanButton !== false,
           click: (item) => setScanButton(item.checked) },
         { label: tr("view.language"), submenu: languageMenuItems() },
@@ -2418,7 +2442,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); });
+  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.
   contents.on("did-finish-load", async () => {

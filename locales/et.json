@@ -195,5 +195,9 @@
   "issues.noProgress": "Ühelgi neist pole kuulamise edenemist ega järjehoidjaid.",
   "issues.withProgress": "{n} neist on kuulamise edenemine või järjehoidjad, mis kustutatakse:",
   "issues.more": "…ja veel {n}",
-  "player.closedOther": "„{title}“ suleti siin: seda esitatakse teisel seadmel ({device})."
+  "player.closedOther": "„{title}“ suleti siin: seda esitatakse teisel seadmel ({device}).",
+  "home.allLibraries": "Kõik raamatukogud",
+  "view.homeStyle": "Avalehe stiil",
+  "view.homeFlat": "Lame (nagu Plex)",
+  "view.homeShelves": "Riiulitel"
 }

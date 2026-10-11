@@ -195,5 +195,9 @@
   "issues.noProgress": "Ingen av dem har lyssningsförlopp eller bokmärken.",
   "issues.withProgress": "{n} av dem har lyssningsförlopp eller bokmärken, som raderas:",
   "issues.more": "…och {n} till",
-  "player.closedOther": "Stängde ”{title}” här: den spelas på en annan enhet ({device})."
+  "player.closedOther": "Stängde ”{title}” här: den spelas på en annan enhet ({device}).",
+  "home.allLibraries": "Alla bibliotek",
+  "view.homeStyle": "Startsidans stil",
+  "view.homeFlat": "Platt (som Plex)",
+  "view.homeShelves": "På bokhyllorna"
 }

@@ -195,5 +195,9 @@
   "issues.noProgress": "Nenhum deles tem progresso de audição ou marcadores.",
   "issues.withProgress": "{n} deles têm progresso de audição ou marcadores, que serão apagados:",
   "issues.more": "…e mais {n}",
-  "player.closedOther": "“{title}” foi fechado aqui: está tocando em outro dispositivo ({device})."
+  "player.closedOther": "“{title}” foi fechado aqui: está tocando em outro dispositivo ({device}).",
+  "home.allLibraries": "Todas as bibliotecas",
+  "view.homeStyle": "Estilo da página inicial",
+  "view.homeFlat": "Plano (como o Plex)",
+  "view.homeShelves": "Nas estantes"
 }

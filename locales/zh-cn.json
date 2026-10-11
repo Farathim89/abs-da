@@ -195,5 +195,9 @@
   "issues.noProgress": "它们都没有收听进度或书签。",
   "issues.withProgress": "其中 {n} 本有收听进度或书签，将被删除：",
   "issues.more": "……另外 {n} 本",
-  "player.closedOther": "已在此处关闭“{title}”：它正在另一台设备上播放（{device}）。"
+  "player.closedOther": "已在此处关闭“{title}”：它正在另一台设备上播放（{device}）。",
+  "home.allLibraries": "所有库",
+  "view.homeStyle": "首页样式",
+  "view.homeFlat": "扁平（类似 Plex）",
+  "view.homeShelves": "书架上"
 }

@@ -195,5 +195,9 @@
   "issues.noProgress": "Nė viena neturi klausymo eigos ar žymių.",
   "issues.withProgress": "{n} iš jų turi klausymo eigą arba žymių, kurios bus ištrintos:",
   "issues.more": "…ir dar {n}",
-  "player.closedOther": "„{title}“ čia uždaryta: ji leidžiama kitame įrenginyje ({device})."
+  "player.closedOther": "„{title}“ čia uždaryta: ji leidžiama kitame įrenginyje ({device}).",
+  "home.allLibraries": "Visos bibliotekos",
+  "view.homeStyle": "Pradžios stilius",
+  "view.homeFlat": "Plokščias (kaip Plex)",
+  "view.homeShelves": "Lentynose"
 }

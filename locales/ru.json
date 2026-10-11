@@ -195,5 +195,9 @@
   "issues.noProgress": "Ни у одной из них нет прогресса прослушивания или закладок.",
   "issues.withProgress": "У {n} из них есть прогресс прослушивания или закладки, они будут удалены:",
   "issues.more": "…и ещё {n}",
-  "player.closedOther": "«{title}» закрыта здесь: она воспроизводится на другом устройстве ({device})."
+  "player.closedOther": "«{title}» закрыта здесь: она воспроизводится на другом устройстве ({device}).",
+  "home.allLibraries": "Все библиотеки",
+  "view.homeStyle": "Вид главной",
+  "view.homeFlat": "Плоский (как Plex)",
+  "view.homeShelves": "На полках"
 }

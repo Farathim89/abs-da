@@ -195,5 +195,9 @@
   "issues.noProgress": "Ingen av dem har lytteframdrift eller bokmerker.",
   "issues.withProgress": "{n} av dem har lytteframdrift eller bokmerker, som blir slettet:",
   "issues.more": "…og {n} til",
-  "player.closedOther": "«{title}» er lukket her: den spilles på en annen enhet ({device})."
+  "player.closedOther": "«{title}» er lukket her: den spilles på en annen enhet ({device}).",
+  "home.allLibraries": "Alle biblioteker",
+  "view.homeStyle": "Stil på startsiden",
+  "view.homeFlat": "Flat (som Plex)",
+  "view.homeShelves": "På bokhyllene"
 }
