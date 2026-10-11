@@ -176,20 +176,44 @@ const ABS_CSS_FIXES = `
 //    without encoding the folder, so a name with & # + (e.g. "Audio & Books") is cut
 //    off and the server answers "Invalid path" → "Failed to load data". Encode it.
 //    (If a future web app encodes it itself, it is decoded first, so never twice.)
-const ABS_JS_FIXES = `(() => {
+//  - A paused book could start playing by itself. The player remembers "play when
+//    ready" from your last Play click and never resets it; when the paused player hits
+//    an error (e.g. another device moved the book's position and the hours-old audio link
+//    had expired), it reconnects with a new session — and starts playing. Reconnect,
+//    but stay paused when it was paused. (An error just after you press Play still
+//    reconnects and plays, as before.)
+const absJsFixes = (appWindow) => `(() => {
   const ax = window.$nuxt && $nuxt.$axios;
   if (!ax || !ax.interceptors) return false;
-  if (window.__absdaFixes) return true;
-  window.__absdaFixes = true;
-  ax.interceptors.request.use((cfg) => {
-    const m = String(cfg.url || "").match(/^(.*\\/api\\/filesystem\\?path=)(.*)(&level=\\d+)$/);
-    if (m) {
-      let p = m[2];
-      if (!/[&#+ ]/.test(p)) { try { p = decodeURIComponent(p); } catch (e) {} }
-      cfg.url = m[1] + encodeURIComponent(p) + m[3];
-    }
-    return cfg;
-  });
+  if (!window.__absdaFixes) {
+    window.__absdaFixes = true;
+    ax.interceptors.request.use((cfg) => {
+      const m = String(cfg.url || "").match(/^(.*\\/api\\/filesystem\\?path=)(.*)(&level=\\d+)$/);
+      if (m) {
+        let p = m[2];
+        if (!/[&#+ ]/.test(p)) { try { p = decodeURIComponent(p); } catch (e) {} }
+        cfg.url = m[1] + encodeURIComponent(p) + m[3];
+      }
+      return cfg;
+    });
+  }
+  // The player (only in the app window; the settings panel has none).
+  let handler = null;
+  const walk = (vm) => { if (handler) return; if (vm.playerHandler && typeof vm.playerHandler.prepare === "function") { handler = vm.playerHandler; return; } vm.$children.forEach(walk); };
+  if ($nuxt.$root) walk($nuxt.$root);
+  if (!handler) return !${appWindow ? "true" : "false"};   // the app window has a player: wait for it
+  const proto = Object.getPrototypeOf(handler);
+  if (!proto.__absdaNoAutoplay) {
+    proto.__absdaNoAutoplay = true;
+    const prepare = proto.prepare;
+    proto.prepare = function (forceTranscode) {
+      if (forceTranscode && this.playerState === "PAUSED") {
+        console.log("[ABS-DA] Player error while paused: reconnecting without starting playback");
+        this.playWhenReady = false;
+      }
+      return prepare.apply(this, arguments);
+    };
+  }
   return true;
 })()`;
 // Per-library memory (in the web app's own storage, so it survives restarts):
@@ -330,7 +354,7 @@ function issuesHookJs() {
 }
 function applyWebAppFixes(contents, attempt = 0) {
   if (!contents || contents.isDestroyed() || !isServerUrl(contents.getURL())) return;
-  contents.executeJavaScript(`[${ABS_JS_FIXES}, ${issuesHookJs()}].every(Boolean)`)
+  contents.executeJavaScript(`[${absJsFixes(!!view && contents === wc())}, ${issuesHookJs()}].every(Boolean)`)
     .then((ok) => { if (!ok && attempt < 10) setTimeout(() => applyWebAppFixes(contents, attempt + 1), 1500); })
     .catch(() => {});
 }
@@ -1228,6 +1252,7 @@ function createWindow() {
     if (!isMainFrame) return;
     onServerPage(url);
     readWebLang(contents);   // e.g. you just changed the language on the Account page
+    applyWebAppFixes(contents);   // e.g. after signing in, the player exists now
   });
 
   if (!app.isPackaged) contents.on("did-navigate", (_e, url) => console.log("[nav]", url));
