@@ -253,5 +253,9 @@
   "theme.snow": "Zasněžená noc",
   "offline.queueTitle": "Stahování",
   "offline.queued": "Čeká",
-  "offline.cancelDownload": "Zrušit toto stahování"
+  "offline.cancelDownload": "Zrušit toto stahování",
+  "mood.sounds": "Zvuky nálady",
+  "mood.volume": "Hlasitost",
+  "mood.volumeMenu": "Hlasitost zvuků nálady",
+  "mood.onlyPlaying": "Jen když hraje kniha"
 }

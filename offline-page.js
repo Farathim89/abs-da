@@ -197,6 +197,8 @@ audio.addEventListener("ended", () => {
   if (book && trackIdx < book.tracks.length - 1) loadTrack(trackIdx + 1, 0, true);
   else { report(true); updateUi(book ? book.duration : 0); }   // the end of the book = finished
 });
+audio.addEventListener("playing", () => desktop.offlinePlaying(true));
+audio.addEventListener("pause", () => desktop.offlinePlaying(false));
 audio.addEventListener("play", () => { if (sessionStart == null) sessionStart = bookTime(); lastTick = performance.now(); $("play").innerHTML = ICON_PAUSE; clearInterval(saveTimer); saveTimer = setInterval(report, 10000); });
 audio.addEventListener("pause", () => { $("play").innerHTML = ICON_PLAY; clearInterval(saveTimer); report(); });
 audio.addEventListener("timeupdate", () => {

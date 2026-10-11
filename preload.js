@@ -5,6 +5,16 @@
 
 const { contextBridge, ipcRenderer } = require("electron");
 
+// Mood themes' animations pause while the app isn't the window you're using (mood-themes.js).
+// The whole window counts (title bar, menus, settings panel), so main.js tells us.
+{
+  let windowActive = true;
+  const markIdle = () => document.documentElement.classList.toggle("absda-idle", document.hidden || !windowActive);
+  ipcRenderer.on("desktop:window-active", (_e, on) => { windowActive = !!on; markIdle(); });
+  document.addEventListener("visibilitychange", markIdle);
+  window.addEventListener("DOMContentLoaded", markIdle);
+}
+
 // Desktop bridge for the app's own local page (connect / error screen) only.
 // It is never exposed to the remote Audiobookshelf web app.
 if (location.protocol === "file:") {
@@ -35,6 +45,9 @@ if (location.protocol === "file:") {
     offlineCancel: (id) => ipcRenderer.send("desktop:offline-cancel", id),
     onOfflineQueue: (cb) => ipcRenderer.on("desktop:offline-queue", (_e, q) => cb(q)),
     onOfflineFailed: (cb) => ipcRenderer.on("desktop:offline-failed", (_e, text) => cb(String(text || ""))),
+    offlinePlaying: (on) => ipcRenderer.send("desktop:offline-playing", !!on),
+    // mood sounds (ambience.js in the title bar)
+    onAmbience: (cb) => ipcRenderer.on("desktop:ambience", (_e, a) => cb(a)),
     // themed menus and message boxes (ui.html)
     ui: {
       onMenu: (cb) => ipcRenderer.on("ui:menu", (_e, m) => cb(m)),
@@ -296,6 +309,19 @@ if (location.protocol !== "file:") {
   const BRUSH_SVG = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">' +
     '<path d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37l-1.34-1.34a.996.996 0 00-1.41 0L9 12.25 11.75 15l8.96-8.96a.996.996 0 000-1.41z"/></svg>';
   const LOOKS_CSS = `
+    /* Mood sounds: button in the player bar and its little panel. */
+    #absda-mood-btn { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; margin: 0 4px;
+      border-radius: 8px; border: 0; background: none; color: rgba(255,255,255,.55); cursor: pointer; }
+    #absda-mood-btn:hover { background: rgba(255,255,255,.08); color: #fff; }
+    #absda-mood-btn.absda-on { color: var(--tb-logo, #f0a848); }
+    #absda-mood-pop { position: fixed; z-index: 2147483100; width: 260px; padding: 12px 14px; border-radius: 10px;
+      background: var(--color-bg, #373838); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 12px 32px rgba(0,0,0,.55);
+      color: #f3f4f6; font: 14px "Segoe UI", system-ui, sans-serif; display: flex; flex-direction: column; gap: 10px; }
+    #absda-mood-pop .absda-mp-head { font-weight: 600; color: var(--tb-logo, #f0a848); }
+    #absda-mood-pop .absda-mp-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    #absda-mood-pop input[type=checkbox] { width: 16px; height: 16px; margin: 0; accent-color: var(--tb-logo, #f0a848); }
+    #absda-mood-pop input[type=range] { flex: 1; accent-color: var(--tb-logo, #f0a848); }
+
     #${BRUSH_ID} { background: none; border: 0; padding: 0; color: inherit; }
     #${TIP_ID} { position: fixed; z-index: 2147482001; pointer-events: none; padding: 4px 8px; border-radius: 4px;
       background: #000; color: #fff; font-size: 0.85rem; white-space: pre; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
@@ -311,6 +337,7 @@ if (location.protocol !== "file:") {
     #${PANEL_ID} .absda-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
     #${PANEL_ID} .absda-motion { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; cursor: pointer; color: rgba(255,255,255,.85); }
     #${PANEL_ID} .absda-motion input { width: 16px; height: 16px; margin: 0; accent-color: var(--tb-logo, #f0a848); cursor: pointer; }
+    #${PANEL_ID} .absda-motion input.absda-vol { width: auto; flex: 1; max-width: 180px; margin-left: 8px; }
     #${PANEL_ID} .absda-tile { display: flex; flex-direction: column; align-items: stretch; gap: 5px; width: 100%;
       padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
     #${PANEL_ID} .absda-pv { position: relative; height: 62px; border-radius: 6px; overflow: hidden;
@@ -468,13 +495,24 @@ if (location.protocol !== "file:") {
     return tile;
   }
 
-  // "Animate mood themes" (torches flicker, embers rise…), on/off.
+  // "Animate mood themes" (torches flicker, embers rise…), mood sounds and their volume.
   function motionSwitch() {
+    const wrap = el("div");
     const lab = el("label", "absda-motion");
     const box = Object.assign(el("input"), { type: "checkbox", checked: !!looks.motion });
     box.addEventListener("change", () => setLook("motion", box.checked ? "on" : "off"));
     lab.append(box, Object.assign(el("span"), { textContent: looks.motionLabel }));
-    return lab;
+    const snd = el("label", "absda-motion");
+    const sbox = Object.assign(el("input"), { type: "checkbox", checked: !!looks.sound.on });
+    sbox.addEventListener("change", () => setLook("sound", sbox.checked ? "on" : "off"));
+    const vol = Object.assign(el("input"), { type: "range", min: "0", max: "100", step: "5", value: String(looks.sound.volume) });
+    vol.className = "absda-vol";
+    vol.title = looks.sound.volumeLabel;
+    vol.setAttribute("aria-label", looks.sound.volumeLabel);
+    vol.addEventListener("change", () => setLook("soundVolume", vol.value));
+    snd.append(sbox, Object.assign(el("span"), { textContent: looks.sound.label }), vol);
+    wrap.append(lab, snd);
+    return wrap;
   }
 
   function renderPanel(panel) {
@@ -621,13 +659,6 @@ if (location.protocol !== "file:") {
     else if (m.action === "remove") ipcRenderer.send("desktop:offline-remove", m.itemId);
   });
   ipcRenderer.on("desktop:offline-status", (_e, s) => window.postMessage({ absdaOfflineStatus: s }, location.origin));
-  // Mood themes' animations pause while the app isn't the window you're using (mood-themes.js).
-  // The whole window counts (title bar, menus, settings panel), so main.js tells us.
-  let windowActive = true;
-  const markIdle = () => document.documentElement.classList.toggle("absda-idle", document.hidden || !windowActive);
-  ipcRenderer.on("desktop:window-active", (_e, on) => { windowActive = !!on; markIdle(); });
-  document.addEventListener("visibilitychange", markIdle);
-  window.addEventListener("DOMContentLoaded", markIdle);
   // Per-library tab / filter memory (main.js libraryMemoryJs) → the app keeps it in config.json.
   window.addEventListener("message", (e) => {
     if (e.source !== window || !e.data || typeof e.data.absdaLibraryMemory !== "object") return;
@@ -682,6 +713,77 @@ if (location.protocol !== "file:") {
     if (document.getElementById(SCAN_MENU_ID) && !e.target.closest("#" + SCAN_MENU_ID + ", #" + SCAN_ID)) closeScanMenu();
   }, true);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeScanMenu(); }, true);
+
+  // ---- Mood sounds button in the player bar (a mood theme is on) -------------------
+  // Click: a small panel with on/off, volume and "only while a book is playing" (main.js
+  // keeps the settings; ambience.js in the title bar makes the sound).
+  const MOOD_BTN = "absda-mood-btn", MOOD_POP = "absda-mood-pop";
+  const MOOD_ICON = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 7v10M21 12h0"/></svg>';
+  let mood = null;   // { available, on, volume, always, name, texts }
+  ipcRenderer.on("desktop:mood-sound-state", (_e, m) => { mood = m; ensureMoodButton(); drawMoodPop(); });
+  ipcRenderer.invoke("desktop:get-mood-sound").then((m) => { if (m) { mood = m; ensureMoodButton(); } }).catch(() => {});
+  function ensureMoodButton() {
+    const pc = document.getElementById("mediaPlayerContainer");
+    let btn = document.getElementById(MOOD_BTN);
+    if (!pc || !mood || !mood.available) { if (btn) btn.remove(); closeMoodPop(); return; }
+    const grow = pc.querySelector(":scope > div > .grow");
+    if (!grow) return;
+    if (!btn) {
+      ensureStyle();
+      btn = document.createElement("button");
+      btn.id = MOOD_BTN;
+      btn.type = "button";
+      btn.innerHTML = MOOD_ICON;
+      btn.addEventListener("click", (e) => { e.stopPropagation(); if (document.getElementById(MOOD_POP)) closeMoodPop(); else openMoodPop(); });
+      grow.after(btn);
+    }
+    btn.classList.toggle("absda-on", !!mood.on);
+    const tip = `${mood.texts.sounds}: ${mood.name}`;
+    btn.title = tip;
+    btn.setAttribute("aria-label", tip);
+  }
+  function setMood(patch) { ipcRenderer.send("desktop:set-mood-sound", patch); }
+  function openMoodPop() {
+    const pop = document.createElement("div");
+    pop.id = MOOD_POP;
+    document.body.append(pop);
+    drawMoodPop();
+    setTimeout(() => document.addEventListener("click", outsideMoodPop, true), 0);
+  }
+  function outsideMoodPop(e) {
+    const pop = document.getElementById(MOOD_POP);
+    if (pop && !pop.contains(e.target) && !(e.target.closest && e.target.closest("#" + MOOD_BTN))) closeMoodPop();
+  }
+  function closeMoodPop() {
+    const pop = document.getElementById(MOOD_POP);
+    if (pop) pop.remove();
+    document.removeEventListener("click", outsideMoodPop, true);
+  }
+  function drawMoodPop() {
+    const pop = document.getElementById(MOOD_POP);
+    const btn = document.getElementById(MOOD_BTN);
+    if (!pop || !mood) return;
+    if (!btn || !mood.available) { closeMoodPop(); return; }
+    pop.textContent = "";
+    const head = el("div", "absda-mp-head");
+    head.textContent = `${mood.texts.sounds} — ${mood.name}`;
+    const onRow = el("label", "absda-mp-row");
+    const on = Object.assign(el("input"), { type: "checkbox", checked: !!mood.on });
+    on.addEventListener("change", () => setMood({ on: on.checked }));
+    onRow.append(on, Object.assign(el("span"), { textContent: mood.texts.sounds }));
+    const volRow = el("label", "absda-mp-row");
+    const vol = Object.assign(el("input"), { type: "range", min: "0", max: "100", step: "5", value: String(mood.volume) });
+    vol.addEventListener("input", () => setMood({ volume: Number(vol.value) }));
+    volRow.append(Object.assign(el("span"), { textContent: mood.texts.volume }), vol);
+    const onlyRow = el("label", "absda-mp-row");
+    const only = Object.assign(el("input"), { type: "checkbox", checked: !mood.always });
+    only.addEventListener("change", () => setMood({ always: !only.checked }));
+    onlyRow.append(only, Object.assign(el("span"), { textContent: mood.texts.onlyPlaying }));
+    pop.append(head, onRow, volRow, onlyRow);
+    const r = btn.getBoundingClientRect();
+    pop.style.right = `${Math.max(8, Math.round(window.innerWidth - r.right - 8))}px`;
+    pop.style.bottom = `${Math.round(window.innerHeight - r.top + 8)}px`;
+  }
 
   function ensureScanButton() {
     if (windowKind !== "main") return;
@@ -772,6 +874,7 @@ if (location.protocol !== "file:") {
       ensureLooksButton();
       ensureSearch();
       ensureScanButton();
+      ensureMoodButton();
       ensureOverlayHead();
       if (location.pathname !== lastPath) { lastPath = location.pathname; closePanel(); }
     }, 150);

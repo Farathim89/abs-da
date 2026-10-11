@@ -184,8 +184,9 @@ const AUTUMN_WOOD = url(wood({ base: "#5a3418", dark: "#2a1608", light: "#8a5a2e
 const FROST_WOOD = url(wood({ base: "#3a3a40", dark: "#1c1c22", light: "#6a6e78", seed: 88, plankW: 120, size: 480 }));
 
 // ---- light layers (fx) ---------------------------------------------------------
-// Only the web app's own page (not the title bar, the menus/dialogs layer or our pages).
-const HOST = "body:has(#__nuxt)";
+// The web app's page and our offline / can't-reach pages (body.absda-mood-page) — not the
+// title bar or the menus/dialogs layer.
+const HOST = "body:is(:has(#__nuxt), .absda-mood-page)";
 const layerCss = (which, css) => `${HOST}::${which} { content: ""; position: fixed; pointer-events: none; ${css} }`;
 // Paused while the app isn't the window you're using (preload.js sets html.absda-idle), and off
 // for "reduce motion" in Windows.
@@ -491,12 +492,14 @@ const FONTS = {
 };
 // Headings and labels only (titles, shelf names, side menu) — never the reading text.
 const FONT_TARGETS = ["#appbar h1", "#toolbar p", ".shinyBlack", "#page-wrapper h1", "#page-wrapper h2",
-  "#page-wrapper h3", "#absda-home h2", ".bar .title"];
+  "#page-wrapper h3", "#absda-home h2", ".bar .title", "#mediaPlayerContainer a.truncate",
+  ".absda-mood-page h1", ".absda-mood-page h2", ".absda-mood-page .ptitle"];
 // The scenery texture is defined once (--absda-tex) and darkened per bar.
 function chromeCss(c) {
   const bg = (v) => (c.tex ? `linear-gradient(${v}, ${v}), var(--absda-tex)` : v);
   return `html:root { ${c.tex ? `--absda-tex: ${c.tex};` : ""} --tb-image: ${bg(c.bar)}; --tb-line: ${c.line}; }
     html body div:has(> #appbar) { background: var(--tb-image) !important; box-shadow: inset 0 -2px 0 ${c.line}, 0 2px 14px ${c.glow} !important; }
+    html body #mediaPlayerContainer { background: var(--tb-image) !important; box-shadow: inset 0 2px 0 ${c.line}, 0 -2px 14px ${c.glow} !important; }
     html body div:has(> #siderail-buttons-container) { background: ${bg(c.rail)} !important; box-shadow: inset -2px 0 0 ${c.line}, 2px 0 14px ${c.glow} !important; }`;
 }
 // The side menu is narrow: its labels get the font (and glow) but no small caps or extra spacing.
@@ -504,7 +507,9 @@ const fontCss = (ft) => `${FONT_TARGETS.map((x) => "html body " + x).join(", ")}
   html body #siderail-buttons-container p { font-family: ${ft.family} !important; ${(ft.extra || "").replace(/(font-variant|letter-spacing):[^;]*;/g, "")} }`;
 for (const [id, t] of Object.entries(MOOD_THEMES)) {
   const fx = t.fx;
-  t.fx = (motion) => fx(motion) + chromeCss(CHROME[id]) + fontCss(FONTS[id]);
+  // Our own pages (offline library, can't-reach page) get the scenery behind their cards.
+  const pageCss = `html body.absda-mood-page { background-image: ${t.page} !important; background-attachment: fixed !important; }`;
+  t.fx = (motion) => fx(motion) + chromeCss(CHROME[id]) + fontCss(FONTS[id]) + pageCss;
 }
 
 module.exports = { MOOD_THEMES };

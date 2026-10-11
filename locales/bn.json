@@ -253,5 +253,9 @@
   "theme.snow": "তুষারের রাত",
   "offline.queueTitle": "ডাউনলোড হচ্ছে",
   "offline.queued": "অপেক্ষায়",
-  "offline.cancelDownload": "এই ডাউনলোড বাতিল করুন"
+  "offline.cancelDownload": "এই ডাউনলোড বাতিল করুন",
+  "mood.sounds": "মুডের শব্দ",
+  "mood.volume": "ভলিউম",
+  "mood.volumeMenu": "মুডের শব্দের ভলিউম",
+  "mood.onlyPlaying": "শুধু বই চলার সময়"
 }

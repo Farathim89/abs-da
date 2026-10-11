@@ -253,5 +253,9 @@
   "theme.snow": "Karlı Gece",
   "offline.queueTitle": "İndiriliyor",
   "offline.queued": "Bekliyor",
-  "offline.cancelDownload": "Bu indirmeyi iptal et"
+  "offline.cancelDownload": "Bu indirmeyi iptal et",
+  "mood.sounds": "Atmosfer sesleri",
+  "mood.volume": "Ses düzeyi",
+  "mood.volumeMenu": "Atmosfer seslerinin düzeyi",
+  "mood.onlyPlaying": "Yalnızca bir kitap çalarken"
 }

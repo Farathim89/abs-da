@@ -253,5 +253,9 @@
   "theme.snow": "ليلة ثلجية",
   "offline.queueTitle": "جارٍ التنزيل",
   "offline.queued": "في الانتظار",
-  "offline.cancelDownload": "إلغاء هذا التنزيل"
+  "offline.cancelDownload": "إلغاء هذا التنزيل",
+  "mood.sounds": "أصوات الأجواء",
+  "mood.volume": "مستوى الصوت",
+  "mood.volumeMenu": "مستوى صوت الأجواء",
+  "mood.onlyPlaying": "فقط أثناء تشغيل كتاب"
 }

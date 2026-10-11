@@ -253,5 +253,9 @@
   "theme.snow": "Snowy Night",
   "offline.queueTitle": "Downloading",
   "offline.queued": "Waiting",
-  "offline.cancelDownload": "Cancel this download"
+  "offline.cancelDownload": "Cancel this download",
+  "mood.sounds": "Mood sounds",
+  "mood.volume": "Volume",
+  "mood.volumeMenu": "Mood sound volume",
+  "mood.onlyPlaying": "Only while a book is playing"
 }

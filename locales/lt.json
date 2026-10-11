@@ -253,5 +253,9 @@
   "theme.snow": "Snieguota naktis",
   "offline.queueTitle": "Atsisiunčiama",
   "offline.queued": "Laukia",
-  "offline.cancelDownload": "Atšaukti šį atsisiuntimą"
+  "offline.cancelDownload": "Atšaukti šį atsisiuntimą",
+  "mood.sounds": "Nuotaikos garsai",
+  "mood.volume": "Garsumas",
+  "mood.volumeMenu": "Nuotaikos garsų garsumas",
+  "mood.onlyPlaying": "Tik kai groja knyga"
 }

@@ -253,5 +253,9 @@
   "theme.snow": "雪夜",
   "offline.queueTitle": "正在下載",
   "offline.queued": "等待中",
-  "offline.cancelDownload": "取消此下載"
+  "offline.cancelDownload": "取消此下載",
+  "mood.sounds": "氛圍音效",
+  "mood.volume": "音量",
+  "mood.volumeMenu": "氛圍音效音量",
+  "mood.onlyPlaying": "僅在播放書籍時"
 }

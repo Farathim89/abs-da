@@ -253,5 +253,9 @@
   "theme.snow": "Sneeuwnacht",
   "offline.queueTitle": "Downloaden",
   "offline.queued": "Wacht",
-  "offline.cancelDownload": "Deze download annuleren"
+  "offline.cancelDownload": "Deze download annuleren",
+  "mood.sounds": "Sfeergeluiden",
+  "mood.volume": "Volume",
+  "mood.volumeMenu": "Volume van sfeergeluiden",
+  "mood.onlyPlaying": "Alleen terwijl een boek speelt"
 }

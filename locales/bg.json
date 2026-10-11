@@ -253,5 +253,9 @@
   "theme.snow": "Снежна нощ",
   "offline.queueTitle": "Изтегляне",
   "offline.queued": "Чака",
-  "offline.cancelDownload": "Отказ от това изтегляне"
+  "offline.cancelDownload": "Отказ от това изтегляне",
+  "mood.sounds": "Звуци на настроението",
+  "mood.volume": "Сила на звука",
+  "mood.volumeMenu": "Сила на звуците на настроението",
+  "mood.onlyPlaying": "Само докато звучи книга"
 }

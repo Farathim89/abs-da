@@ -253,5 +253,9 @@
   "theme.snow": "눈 내리는 밤",
   "offline.queueTitle": "다운로드 중",
   "offline.queued": "대기 중",
-  "offline.cancelDownload": "이 다운로드 취소"
+  "offline.cancelDownload": "이 다운로드 취소",
+  "mood.sounds": "무드 사운드",
+  "mood.volume": "볼륨",
+  "mood.volumeMenu": "무드 사운드 볼륨",
+  "mood.onlyPlaying": "책이 재생 중일 때만"
 }

@@ -253,5 +253,9 @@
   "theme.snow": "Snenat",
   "offline.queueTitle": "Downloader",
   "offline.queued": "Venter",
-  "offline.cancelDownload": "Annullér denne download"
+  "offline.cancelDownload": "Annullér denne download",
+  "mood.sounds": "Stemningslyde",
+  "mood.volume": "Lydstyrke",
+  "mood.volumeMenu": "Lydstyrke for stemningslyde",
+  "mood.onlyPlaying": "Kun mens en bog afspilles"
 }

@@ -253,5 +253,9 @@
   "theme.snow": "雪の夜",
   "offline.queueTitle": "ダウンロード中",
   "offline.queued": "待機中",
-  "offline.cancelDownload": "このダウンロードをキャンセル"
+  "offline.cancelDownload": "このダウンロードをキャンセル",
+  "mood.sounds": "ムードサウンド",
+  "mood.volume": "音量",
+  "mood.volumeMenu": "ムードサウンドの音量",
+  "mood.onlyPlaying": "本の再生中のみ"
 }

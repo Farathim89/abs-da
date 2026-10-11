@@ -34,6 +34,7 @@
       "server.js",
       "shelf-art.js",
       "mood-themes.js",
+      "ambience.js",
       "i18n.js",
       "locales/*.json",
       "connect.html",

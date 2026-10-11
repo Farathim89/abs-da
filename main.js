@@ -900,7 +900,53 @@ function setTheme(id) {
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
   if (view && isServerUrl(wc().getURL())) installHome(wc());   // a mood theme may bring another bookshelf (Home follows it)
+  sendMoodSound();   // another mood's sounds (or none for a colour theme)
 }
+// ---- mood sounds (ambience.js in the title bar page) ---------------------------------
+// Off until you switch them on (player bar button, View → Theme, or the Looks panel).
+// By default they play only while a book is playing (here or in the offline library).
+let bookPlaying = false, offlinePlaying = false;
+const moodSoundVolume = () => (Number.isFinite(config.moodSoundVolume) ? config.moodSoundVolume : 35);
+function moodSoundState() {
+  return {
+    available: isMood(), on: !!config.moodSound, volume: moodSoundVolume(), always: !!config.moodSoundAlways,
+    name: tr("theme." + themeId()),
+    texts: { sounds: tr("mood.sounds"), volume: tr("mood.volume"), onlyPlaying: tr("mood.onlyPlaying") },
+  };
+}
+function sendMoodSound() {
+  const st = moodSoundState();
+  if (win && !win.isDestroyed()) {
+    win.webContents.send("desktop:ambience", {
+      mood: themeId(), volume: st.volume / 100,
+      on: st.available && st.on && (st.always || bookPlaying || offlinePlaying),
+    });
+  }
+  if (view && !view.webContents.isDestroyed()) view.webContents.send("desktop:mood-sound-state", st);
+}
+function setMoodSound(patch) {
+  const next = { ...config };
+  if (typeof patch.on === "boolean") next.moodSound = patch.on;
+  if (Number.isFinite(patch.volume)) next.moodSoundVolume = Math.max(0, Math.min(100, Math.round(patch.volume)));
+  if (typeof patch.always === "boolean") next.moodSoundAlways = patch.always;
+  config = next;
+  writeJson(dataFile("config.json"), config);
+  sendMoodSound();
+}
+// Is a book playing? (Only asked while it matters.)
+setInterval(async () => {
+  if (!isMood() || !config.moodSound || config.moodSoundAlways) return;
+  const p = !!(await playerState()).playing;
+  if (p !== bookPlaying) { bookPlaying = p; sendMoodSound(); }
+}, 2000);
+ipcMain.handle("desktop:get-mood-sound", (e) => (fromServerPage(e) ? moodSoundState() : null));
+ipcMain.on("desktop:set-mood-sound", (e, patch) => { if (fromServerPage(e) && patch && typeof patch === "object") setMoodSound(patch); });
+ipcMain.on("desktop:offline-playing", (e, on) => {
+  if (!fromLocalPage(e)) return;
+  offlinePlaying = !!on;
+  sendMoodSound();
+});
+
 // Mood themes' animations run only while this window is the one you're using (preload.js).
 function sendWindowActive() {
   if (!win || win.isDestroyed() || !view || view.webContents.isDestroyed()) return;
@@ -1280,6 +1326,7 @@ function createWindow() {
   }
   win.on("page-title-updated", (e) => e.preventDefault());   // window title follows the web app
   for (const ev of ["focus", "blur", "minimize", "restore", "show", "hide"]) win.on(ev, sendWindowActive);
+  win.webContents.on("did-finish-load", sendMoodSound);   // ambience.js lives in the title bar page
   win.webContents.on("will-navigate", (e) => e.preventDefault());   // the title bar never navigates
   win.webContents.on("before-input-event", onShortcut);
   win.loadFile(path.join(__dirname, "titlebar.html"));
@@ -2024,7 +2071,13 @@ function themeMenuItems() {
   let group;
   for (const [id, t] of Object.entries(THEMES)) {
     if (items.length && t.group !== group) {
-      if (group === "mood") items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
+      if (group === "mood") {
+        items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
+        items.push({ label: tr("mood.sounds"), type: "checkbox", checked: !!config.moodSound, click: (item) => setMoodSound({ on: item.checked }) });
+        items.push({ label: tr("mood.volumeMenu"), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
+          label: v + "%", type: "checkbox", checked: moodSoundVolume() === v, click: () => setMoodSound({ volume: v }) })) });
+        items.push({ label: tr("mood.onlyPlaying"), type: "checkbox", checked: !config.moodSoundAlways, click: (item) => setMoodSound({ always: !item.checked }) });
+      }
       items.push({ type: "separator" });
     }
     group = t.group;
@@ -2537,7 +2590,8 @@ function looksState() {
   });
   const sizes = TEXT_SIZES.map(([name, f]) => ({ id: String(f), label: tr("size." + name), percent: Math.round(f * 100) }));
   return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves,
-    motion: config.moodMotion !== false, motionLabel: tr("theme.motion") };
+    motion: config.moodMotion !== false, motionLabel: tr("theme.motion"),
+    sound: { on: !!config.moodSound, volume: moodSoundVolume(), label: tr("mood.sounds"), volumeLabel: tr("mood.volume") } };
 }
 ipcMain.handle("desktop:get-looks", (e) => (fromServerPage(e) ? looksState() : null));
 ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
@@ -2546,6 +2600,8 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
   if (kind === "shelf" && SHELF_ARTS[id]) setShelfArt(id);
   if (kind === "text" && TEXT_SIZES.some(([, f]) => String(f) === id)) setTextSize(Number(id));
   if (kind === "motion") setMoodMotion(id === "on");
+  if (kind === "sound") setMoodSound({ on: id === "on" });
+  if (kind === "soundVolume" && Number.isFinite(Number(id))) setMoodSound({ volume: Number(id) });
   return looksState();
 });
 
@@ -2554,7 +2610,8 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
   contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents);
-    if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; sendWindowActive(); setTimeout(() => offline.sync(), 8000); }   // offline listening → server
+    if (view && contents === wc()) { sendWindowActive(); sendMoodSound(); if (!isServerUrl(contents.getURL())) offlinePlaying = false; }
+    if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; setTimeout(() => offline.sync(), 8000); }   // offline listening → server
   });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.

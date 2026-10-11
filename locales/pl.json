@@ -253,5 +253,9 @@
   "theme.snow": "Śnieżna noc",
   "offline.queueTitle": "Pobieranie",
   "offline.queued": "Czeka",
-  "offline.cancelDownload": "Anuluj to pobieranie"
+  "offline.cancelDownload": "Anuluj to pobieranie",
+  "mood.sounds": "Dźwięki nastroju",
+  "mood.volume": "Głośność",
+  "mood.volumeMenu": "Głośność dźwięków nastroju",
+  "mood.onlyPlaying": "Tylko gdy gra książka"
 }

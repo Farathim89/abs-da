@@ -253,5 +253,9 @@
   "theme.snow": "Snežna noč",
   "offline.queueTitle": "Prenašanje",
   "offline.queued": "Čaka",
-  "offline.cancelDownload": "Prekliči ta prenos"
+  "offline.cancelDownload": "Prekliči ta prenos",
+  "mood.sounds": "Zvoki razpoloženja",
+  "mood.volume": "Glasnost",
+  "mood.volumeMenu": "Glasnost zvokov razpoloženja",
+  "mood.onlyPlaying": "Samo med predvajanjem knjige"
 }

@@ -253,5 +253,9 @@
   "theme.snow": "לילה מושלג",
   "offline.queueTitle": "מוריד",
   "offline.queued": "ממתין",
-  "offline.cancelDownload": "ביטול ההורדה הזו"
+  "offline.cancelDownload": "ביטול ההורדה הזו",
+  "mood.sounds": "צלילי אווירה",
+  "mood.volume": "עוצמה",
+  "mood.volumeMenu": "עוצמת צלילי האווירה",
+  "mood.onlyPlaying": "רק כשספר מתנגן"
 }

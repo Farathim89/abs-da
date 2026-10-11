@@ -253,5 +253,9 @@
   "theme.snow": "Снежная ноч",
   "offline.queueTitle": "Спампоўваецца",
   "offline.queued": "Чакае",
-  "offline.cancelDownload": "Скасаваць гэту спампоўку"
+  "offline.cancelDownload": "Скасаваць гэту спампоўку",
+  "mood.sounds": "Гукі настрою",
+  "mood.volume": "Гучнасць",
+  "mood.volumeMenu": "Гучнасць гукаў настрою",
+  "mood.onlyPlaying": "Толькі калі грае кніга"
 }

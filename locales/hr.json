@@ -253,5 +253,9 @@
   "theme.snow": "Snježna noć",
   "offline.queueTitle": "Preuzimanje",
   "offline.queued": "Čeka",
-  "offline.cancelDownload": "Otkaži ovo preuzimanje"
+  "offline.cancelDownload": "Otkaži ovo preuzimanje",
+  "mood.sounds": "Zvukovi raspoloženja",
+  "mood.volume": "Glasnoća",
+  "mood.volumeMenu": "Glasnoća zvukova raspoloženja",
+  "mood.onlyPlaying": "Samo dok se knjiga reproducira"
 }

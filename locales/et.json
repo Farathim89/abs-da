@@ -253,5 +253,9 @@
   "theme.snow": "Lumine öö",
   "offline.queueTitle": "Allalaadimine",
   "offline.queued": "Ootel",
-  "offline.cancelDownload": "Tühista see allalaadimine"
+  "offline.cancelDownload": "Tühista see allalaadimine",
+  "mood.sounds": "Meeleoluhelid",
+  "mood.volume": "Helitugevus",
+  "mood.volumeMenu": "Meeleoluhelide tugevus",
+  "mood.onlyPlaying": "Ainult siis, kui raamat mängib"
 }

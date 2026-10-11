@@ -253,5 +253,9 @@
   "theme.snow": "Đêm tuyết",
   "offline.queueTitle": "Đang tải xuống",
   "offline.queued": "Đang chờ",
-  "offline.cancelDownload": "Hủy bản tải xuống này"
+  "offline.cancelDownload": "Hủy bản tải xuống này",
+  "mood.sounds": "Âm thanh không khí",
+  "mood.volume": "Âm lượng",
+  "mood.volumeMenu": "Âm lượng âm thanh không khí",
+  "mood.onlyPlaying": "Chỉ khi đang phát sách"
 }

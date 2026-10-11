@@ -253,5 +253,9 @@
   "theme.snow": "Schneenacht",
   "offline.queueTitle": "Wird geladen",
   "offline.queued": "Wartet",
-  "offline.cancelDownload": "Diesen Download abbrechen"
+  "offline.cancelDownload": "Diesen Download abbrechen",
+  "mood.sounds": "Stimmungsklänge",
+  "mood.volume": "Lautstärke",
+  "mood.volumeMenu": "Lautstärke der Stimmungsklänge",
+  "mood.onlyPlaying": "Nur während ein Buch läuft"
 }
