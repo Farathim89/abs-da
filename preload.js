@@ -48,6 +48,7 @@ if (location.protocol === "file:") {
     offlinePlaying: (on) => ipcRenderer.send("desktop:offline-playing", !!on),
     // mood sounds (ambience.js in the title bar)
     onAmbience: (cb) => ipcRenderer.on("desktop:ambience", (_e, a) => cb(a)),
+    ambienceFile: (name) => ipcRenderer.invoke("desktop:ambience-file", name),
     // themed menus and message boxes (ui.html)
     ui: {
       onMenu: (cb) => ipcRenderer.on("ui:menu", (_e, m) => cb(m)),

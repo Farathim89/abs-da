@@ -35,6 +35,8 @@
       "shelf-art.js",
       "mood-themes.js",
       "ambience.js",
+      "sounds/*.ogg",
+      "sounds/CREDITS.txt",
       "i18n.js",
       "locales/*.json",
       "connect.html",

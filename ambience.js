@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Mood sounds: quiet background ambience for the mood themes (rain on the glass, a
-// crackling hearth, dripping cave water, a starship's hum…), made live with Web Audio —
-// no sound files. Runs in the title bar page, which stays open for the whole session,
+// crackling hearth, dripping cave water, a starship's hum…). Real recordings (CC0, see
+// sounds/CREDITS.txt) looped with a cross-fade; the sounds made with Web Audio below are
+// only used if a recording can't be loaded. Runs in the title bar page, which stays open for the whole session,
 // so the sound carries on across pages. main.js decides when it plays (mood theme on,
 // sounds switched on, and — unless you chose otherwise — only while a book is playing).
 
@@ -38,10 +39,52 @@
   }
 
   // Building blocks for one mood; everything it starts is stopped by kit.stop().
+  // Decoded recordings, kept for the mood that's playing (and the one before, while it fades).
+  const buffers = new Map();
+  async function loadBuffer(name) {
+    if (buffers.has(name)) return buffers.get(name);
+    const bytes = await desktop.ambienceFile(name).catch(() => null);
+    if (!bytes) return null;
+    const ab = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+    const buf = await ctx.decodeAudioData(ab).catch(() => null);
+    if (buf) buffers.set(name, buf);
+    return buf;
+  }
   function makeKit(out) {
     const nodes = [], timers = [];
     const keep = (n) => { nodes.push(n); return n; };
     const k = {
+      stopped: false,
+      // A recording, looped with a cross-fade (no audible seam); starts somewhere in the middle.
+      async loopFile(name, gain) {
+        const buf = await loadBuffer(name);
+        if (!buf || k.stopped) return !!buf;
+        const layer = ctx.createGain();
+        layer.gain.value = gain;
+        layer.connect(out);
+        const XF = Math.min(3, buf.duration / 4);
+        let next = ctx.currentTime + 0.05, first = true;
+        const play = () => {
+          if (k.stopped) return;
+          const s = keep(ctx.createBufferSource());
+          s.buffer = buf;
+          const g = ctx.createGain();
+          s.connect(g).connect(layer);
+          const offset = first ? rnd(0, Math.max(0, buf.duration - XF * 3)) : 0;
+          const len = buf.duration - offset;
+          g.gain.setValueAtTime(0.0001, next);
+          g.gain.linearRampToValueAtTime(1, next + XF);
+          g.gain.setValueAtTime(1, next + len - XF);
+          g.gain.linearRampToValueAtTime(0.0001, next + len);
+          s.start(next, offset);
+          s.stop(next + len + 0.05);
+          next = next + len - XF;
+          first = false;
+          timers.push(setTimeout(play, Math.max(0, (next - ctx.currentTime - 1.5) * 1000)));
+        };
+        play();
+        return true;
+      },
       // Endless filtered noise (wind, rain, rumble).
       noise(kind, { type = "lowpass", freq = 1000, q = 0.7, gain = 0.2 } = {}) {
         const s = keep(ctx.createBufferSource());
@@ -121,12 +164,28 @@
         timers.push(setTimeout(tick, rnd(0, minS) * 1000));
       },
       stop() {
+        k.stopped = true;
         timers.forEach(clearTimeout);
         nodes.forEach((n) => { try { n.stop(); } catch {} });
       },
     };
     return k;
   }
+
+  // ---- the recordings (sounds/*.ogg) per mood: [file, level] -------------------------
+  // Wind is mixed low on purpose (it gets tiring); drips and the clock sit under the rest.
+  const RECORDINGS = {
+    tavern: [["tavern", 0.75]],
+    dungeon: [["dungeon", 1.0], ["dungeon-drips", 0.45]],
+    starship: [["starship", 0.6]],
+    neon: [["neon", 1.0]],
+    deepsea: [["deepsea", 1.0]],
+    haunted: [["haunted", 0.75]],
+    wizard: [["wizard-fire", 0.9], ["wizard-clock", 0.3]],
+    rain: [["rain", 0.4]],
+    autumn: [["autumn", 0.7]],
+    snow: [["snow", 0.5]],
+  };
 
   // ---- the moods -------------------------------------------------------------------
   const CRACKLE = (k, loud) => k.every(0.06, 0.45, (t) => {
@@ -233,7 +292,17 @@
         out.connect(master);
         const kit = makeKit(out);
         kit.out = out;
-        MOODS[want](kit);
+        const recs = RECORDINGS[want];
+        if (recs) {
+          Promise.all(recs.map(([name, level]) => kit.loopFile(name, level))).then((ok) => {
+            if (!kit.stopped && !ok.some(Boolean)) MOODS[want](kit);   // (no recording loaded: the made sound)
+          });
+        } else {
+          MOODS[want](kit);
+        }
+        // forget recordings no other mood needs any more
+        const keepNames = new Set((recs || []).map((r) => r[0]).concat(old ? (RECORDINGS[old.id] || []).map((r) => r[0]) : []));
+        for (const n of [...buffers.keys()]) if (!keepNames.has(n)) buffers.delete(n);
         out.gain.setTargetAtTime(1, ctx.currentTime, 0.8);
         current = { id: want, out, kit };
         if (old) {
@@ -251,4 +320,6 @@
     }
   }
   desktop.onAmbience(apply);
+  // (for checks: which mood plays and which recordings are loaded)
+  window.__absdaAmbienceInfo = () => ({ mood: current && current.id, loaded: [...buffers.keys()], state: ctx && ctx.state });
 })();

@@ -954,6 +954,11 @@ setInterval(async () => {
   const p = !!(await playerState()).playing;
   if (p !== bookPlaying) { bookPlaying = p; sendMoodSound(); }
 }, 2000);
+// The mood sound recordings (sounds/<name>.ogg) for ambience.js in the title bar.
+ipcMain.handle("desktop:ambience-file", async (e, name) => {
+  if (!fromLocalPage(e) || typeof name !== "string" || !/^[a-z-]{1,40}$/.test(name)) return null;
+  try { return await fs.promises.readFile(path.join(__dirname, "sounds", name + ".ogg")); } catch { return null; }
+});
 ipcMain.handle("desktop:get-mood-sound", (e) => (fromServerPage(e) ? moodSoundState() : null));
 ipcMain.on("desktop:set-mood-sound", (e, patch) => { if (fromServerPage(e) && patch && typeof patch === "object") setMoodSound(patch); });
 ipcMain.on("desktop:offline-playing", (e, on) => {

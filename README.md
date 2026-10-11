@@ -77,7 +77,8 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - **10 mood themes** — Dungeon, Fireside Tavern, Starship, Neon Nights, Deep Sea, Haunted Manor,
   Wizard's Library, Rainy Day, Autumn Woods, Snowy Night — each with its own scenery, bookshelf, title
   bar, menus, player bar and heading font, a gentle light layer (torches, embers, stars, fog, rain,
-  snow…) and optional **mood sounds** (made live, no sound files) that can play only while a book plays.
+  snow…) and optional **mood sounds**: real recordings (crackling fire, rain on glass, cave drips, a starship's hum…),
+  all public domain (CC0) from Freesound — see [sounds/CREDITS.txt](sounds/CREDITS.txt) — playing while a book plays or while you browse.
   Animations run at a low frame rate and pause while you use other windows
 - **View → Notifications**: how long pop-up notifications stay (3 s / 5 s / 10 s / until closed),
   where they appear, pause while hovering, theme or original colours
@@ -174,7 +175,7 @@ run `build.cmd` as administrator once (it caches the signing toolkit); after tha
 - `server.js` — checks a server address and finds its web app
 - `shelf-art.js` — the procedural bookshelf textures (SVG) and their plank colours
 - `mood-themes.js` — the mood themes: scenery, light layers, bars and fonts
-- `ambience.js` — mood sounds (Web Audio, runs in the title bar page)
+- `ambience.js` — mood sounds: loops the recordings in `sounds/` with a cross-fade (Web Audio, runs in the title bar page)
 - `home-page.js` — the All libraries Home page
 - `offline.js`, `offline-button.js`, `offline.*` — downloads, the offline library and player, syncing listening back
 - `titlebar.*` — the custom title bar (the web app runs in a panel underneath it)

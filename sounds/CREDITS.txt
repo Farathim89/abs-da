@@ -1,0 +1,20 @@
+Mood sounds — recordings used by ABS Desktop App (ambience.js)
+
+All recordings are from Freesound (https://freesound.org) and released by their
+authors under Creative Commons 0 (public domain dedication,
+https://creativecommons.org/publicdomain/zero/1.0/). No attribution is required;
+thank you to the recordists all the same. In the app they are trimmed (at most
+90 seconds), loudness-evened and converted to Opus.
+
+tavern.ogg         "Fire crackling in fireplace" by Davor            https://freesound.org/s/382616/
+dungeon.ogg        "ambience cave.ogg" by fonografico                https://freesound.org/s/636108/
+dungeon-drips.ogg  "Dripping water" by Electroviolence               https://freesound.org/s/234554/
+starship.ogg       "Spaceship Ambience" by nick121087                https://freesound.org/s/234316/
+neon.ogg           "Ambience City Quiet Night Air Tone" by leonelmail https://freesound.org/s/427841/
+deepsea.ogg        "Underwater Ambience" by Fission9                 https://freesound.org/s/504641/
+haunted.ogg        "ambient ghost" by s-light                        https://freesound.org/s/530683/
+wizard-fire.ogg    "Fire crackling in fireplace" by NomadApe         https://freesound.org/s/444920/
+wizard-clock.ogg   "Kitchen Wall Clock Ticking 2" by giddster        https://freesound.org/s/434841/
+rain.ogg           "rain against window 2" by bastipictures          https://freesound.org/s/243781/
+autumn.ogg         "Autumn leaves falling on forest floor, moderate wind (loopable)" by Mjeno  https://freesound.org/s/405140/
+snow.ogg           "Winter wind.wav" by Elanor1995                   https://freesound.org/s/688841/
