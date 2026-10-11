@@ -7,8 +7,7 @@ thank you to the recordists all the same. In the app they are trimmed (at most
 90 seconds), loudness-evened and converted to Opus.
 
 tavern.ogg         "Fire crackling in fireplace" by Davor            https://freesound.org/s/382616/
-dungeon.ogg        "ambience cave.ogg" by fonografico                https://freesound.org/s/636108/
-dungeon-drips.ogg  "Dripping water" by Electroviolence               https://freesound.org/s/234554/
+dungeon.ogg        "A_Dungeon_Ambience_Loop.wav" by Grubzyy        https://freesound.org/s/422720/
 starship.ogg       "Spaceship Ambience" by nick121087                https://freesound.org/s/234316/
 neon.ogg           "Ambience City Quiet Night Air Tone" by leonelmail https://freesound.org/s/427841/
 deepsea.ogg        "Underwater Ambience" by Fission9                 https://freesound.org/s/504641/
@@ -18,3 +17,4 @@ wizard-clock.ogg   "Kitchen Wall Clock Ticking 2" by giddster        https://fre
 rain.ogg           "rain against window 2" by bastipictures          https://freesound.org/s/243781/
 autumn.ogg         "Autumn leaves falling on forest floor, moderate wind (loopable)" by Mjeno  https://freesound.org/s/405140/
 snow.ogg           "Winter wind.wav" by Elanor1995                   https://freesound.org/s/688841/
+summer.ogg         "summer forest atmosphere with birds and insects" by Garuda1982  https://freesound.org/s/693184/

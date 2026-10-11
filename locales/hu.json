@@ -262,5 +262,6 @@
   "mood.whileLibrary": "Amíg könyv szól és a könyvtárban",
   "settings.desktop": "Asztali alkalmazás",
   "settings.desktopNote": "Az ABS Desktop App beállításai ezen a gépen. Ugyanezek az opciók a címsor menüiben is megvannak (Alkalmazás és Nézet).",
-  "mood.libraryOnly": "Csak a könyvtárban (csendes, amíg könyv szól)"
+  "mood.libraryOnly": "Csak a könyvtárban (csendes, amíg könyv szól)",
+  "theme.summer": "Nyári erdő"
 }

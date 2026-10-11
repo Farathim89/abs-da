@@ -262,5 +262,6 @@
   "mood.whileLibrary": "Pendant la lecture d'un livre et dans la bibliothèque",
   "settings.desktop": "Application de bureau",
   "settings.desktopNote": "Réglages d'ABS Desktop App sur ce PC. Les mêmes options sont dans les menus de la barre de titre (Application et Affichage).",
-  "mood.libraryOnly": "Seulement dans la bibliothèque (silence pendant la lecture d'un livre)"
+  "mood.libraryOnly": "Seulement dans la bibliothèque (silence pendant la lecture d'un livre)",
+  "theme.summer": "Forêt d'été"
 }

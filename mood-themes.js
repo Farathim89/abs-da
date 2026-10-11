@@ -190,6 +190,28 @@ function snowflakes() {
   return svg(S, S, `<g stroke='#ffffff' stroke-linecap='round' fill='none'>${flakes}</g>`);
 }
 
+// A summer canopy: layers of leaves in many greens, a little sunlight between them.
+function canopy() {
+  const rand = rng(808);
+  const S = 480;
+  const greens = ["#24481f", "#2f6b2a", "#3f8a34", "#4f9a3c", "#62ad47", "#7cc257", "#2a5426"];
+  let leaves = "";
+  for (let i = 0; i < 170; i++) {
+    const x = Math.round(10 + rand() * (S - 20)), y = Math.round(10 + rand() * (S - 20));
+    const rx = Math.round(6 + rand() * 10), ry = Math.round(rx * (0.45 + rand() * 0.2));
+    const c = greens[Math.floor(rand() * greens.length)];
+    leaves += `<ellipse cx='${x}' cy='${y}' rx='${rx}' ry='${ry}' fill='${c}' ` +
+      `opacity='${(0.65 + rand() * 0.3).toFixed(1)}' transform='rotate(${(rand() * 180).toFixed(0)} ${x} ${y})'/>`;
+  }
+  let light = "";
+  for (let i = 0; i < 14; i++) {
+    light += `<circle cx='${(20 + rand() * (S - 40)).toFixed(0)}' cy='${(20 + rand() * (S - 40)).toFixed(0)}' r='${(2 + rand() * 4).toFixed(1)}' fill='#fff2b0' opacity='${(0.25 + rand() * 0.35).toFixed(2)}'/>`;
+  }
+  return svg(S, S,
+    noiseFilter("n", { freq: "0.03", octaves: 3, seed: 81, color: "#0b1a09", gain: 1.4, cut: 0.5 }) +
+    `<rect width='100%' height='100%' fill='#1c3a1c'/>` + layer("n", 0.6) + leaves + light);
+}
+
 const STONE = url(stoneWall());
 const TAVERN = url(wood({ base: "#3b2414", dark: "#1a0e05", light: "#6e4826", seed: 21, plankW: 96, size: 480 }));
 const HULL = url(hullPanels());
@@ -209,6 +231,8 @@ const SNOWCAP = url(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16
   `</svg>`);
 const ARCANE_WOOD = url(wood({ base: "#2a1a2e", dark: "#120814", light: "#4a3150", seed: 71, plankW: 110, size: 440 }));
 const AUTUMN_WOOD = url(wood({ base: "#5a3418", dark: "#2a1608", light: "#8a5a2e", seed: 33, plankW: 120, size: 480 }));
+const CANOPY = url(canopy());
+const BIRCH = url(wood({ base: "#c9b48a", dark: "#8a7550", light: "#efe2c0", seed: 61, plankW: 110, size: 440 }));
 const FROST_WOOD = url(wood({ base: "#3a3a40", dark: "#1c1c22", light: "#6a6e78", seed: 88, plankW: 120, size: 480 }));
 
 // ---- light layers (fx) ---------------------------------------------------------
@@ -445,6 +469,31 @@ const MOOD_THEMES = {
         ${motion ? anim("absda-rain", 0.75) + " will-change: transform;" : ""}`) +
       `@keyframes absda-rain { from { transform: rotate(7deg) translateY(0); } to { transform: rotate(7deg) translateY(120px); } }` + still,
   },
+  summer: {
+    label: "Summer Woods",
+    group: "mood",
+    title: { bg: "#0c160d", fg: "#eef6e6", hover: "#23361f", logo: "#f5d76e" },
+    tint: "rgba(30, 60, 20, 0.4)",
+    shelf: plank("#e6d6ad", "#b29c72", "#6b5a3e"),
+    scroll: "#4f7a3f",
+    page: `radial-gradient(ellipse 60% 50% at 25% 0%, rgba(255, 230, 140, .18), transparent 70%), linear-gradient(rgba(8, 20, 8, .45), rgba(8, 20, 8, .65)), ${CANOPY}`,
+    scene: `linear-gradient(rgba(20, 30, 10, .30), rgba(20, 30, 10, .30)), ${BIRCH}`,
+    colors: {
+      primary: "#0f1a10", bg: "#18281a", accent: "#f5d76e", success: "#3d8b3d",
+      "black-50": "#cdd9c6", "black-100": "#7b8d74", "black-200": "#62735c", "black-300": "#4a5945",
+      "black-400": "#354232", "black-500": "#222c20", "black-600": "#151c14", "black-700": "#0d120c",
+    },
+    // Sunlight falling through the leaves, swaying; pollen drifting up in it.
+    fx: (motion) =>
+      layerCss("before", `left: -10%; right: -10%; top: 0; height: 80%; z-index: 2147482000; transform-origin: 30% 0;
+        background: repeating-linear-gradient(115deg, rgba(255, 230, 150, .07) 0 60px, transparent 60px 170px, rgba(255, 230, 150, .04) 170px 200px, transparent 200px 300px);
+        -webkit-mask-image: linear-gradient(to bottom, black, transparent); mask-image: linear-gradient(to bottom, black, transparent);
+        ${motion ? anim("absda-sway", 11, "alternate") + " will-change: transform;" : ""}`) +
+      `@keyframes absda-sway { from { transform: skewX(-3deg) translateX(-1.5%); } to { transform: skewX(3deg) translateX(1.5%); } }` +
+      movingDots("after", dots([[10, 75, 1.3, "rgba(255,236,150,.6)"], [27, 30, 1.0, "rgba(255,255,220,.5)"], [43, 88, 1.5, "rgba(255,236,150,.55)"],
+        [58, 46, 1.1, "rgba(255,255,220,.45)"], [74, 15, 1.2, "rgba(255,236,150,.5)"], [90, 62, 1.0, "rgba(255,255,220,.45)"], [65, 95, 0.9, "rgba(255,236,150,.4)"]]),
+        460, 34, "up", motion) + still,
+  },
   autumn: {
     label: "Autumn Woods",
     group: "mood",
@@ -506,6 +555,7 @@ const CHROME = {
   haunted: { tex: DAMASK, bar: "rgba(8, 6, 12, .62)", rail: "rgba(8, 6, 12, .72)", line: "#4a3d5a", glow: "rgba(159, 232, 112, .12)" },
   wizard: { tex: SPINES, bar: "rgba(10, 6, 20, .72)", rail: "rgba(10, 6, 20, .80)", line: "#b8954a", glow: "rgba(150, 110, 255, .2)" },
   rain: { tex: GLASS, bar: "rgba(8, 12, 16, .55)", rail: "rgba(8, 12, 16, .65)", line: "#3e5566", glow: "rgba(242, 196, 109, .10)" },
+  summer: { tex: CANOPY, bar: "rgba(8, 18, 8, .70)", rail: "rgba(8, 18, 8, .78)", line: "#8fbf5a", glow: "rgba(245, 215, 110, .16)" },
   autumn: { tex: AUTUMN_WOOD, bar: "rgba(18, 10, 4, .62)", rail: "rgba(18, 10, 4, .70)", line: "#a0663a", glow: "rgba(255, 140, 66, .16)" },
   snow: { bar: "linear-gradient(180deg, #0a1328, #070d1c)", rail: "linear-gradient(90deg, #070d1c, #0e1830)", line: "#9fb4cc", glow: "rgba(159, 216, 255, .18)" },
 };
@@ -519,6 +569,7 @@ const FONTS = {
   haunted: { family: SERIF, extra: "font-style: italic; text-shadow: 0 0 8px rgba(159, 232, 112, .3);" },
   wizard: { family: SERIF, extra: "font-variant: small-caps; letter-spacing: .05em; text-shadow: 0 0 8px rgba(232, 198, 106, .3);" },
   rain: { family: `Candara, "Segoe UI", sans-serif` },
+  summer: { family: `Constantia, Georgia, serif` },
   autumn: { family: `Constantia, Georgia, serif` },
   snow: { family: `Candara, "Segoe UI", sans-serif`, extra: "text-shadow: 0 0 6px rgba(200, 230, 255, .3);" },
 };

@@ -262,5 +262,6 @@
   "mood.whileLibrary": "本の再生中とライブラリ表示中",
   "settings.desktop": "デスクトップアプリ",
   "settings.desktopNote": "このPCのABS Desktop Appの設定です。同じ項目はタイトルバーのメニュー（アプリと表示）にもあります。",
-  "mood.libraryOnly": "ライブラリのみ（本の再生中は鳴らさない）"
+  "mood.libraryOnly": "ライブラリのみ（本の再生中は鳴らさない）",
+  "theme.summer": "夏の森"
 }

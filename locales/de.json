@@ -262,5 +262,6 @@
   "mood.whileLibrary": "Während ein Buch läuft und in der Bibliothek",
   "settings.desktop": "Desktop-App",
   "settings.desktopNote": "Einstellungen für ABS Desktop App auf diesem PC. Dieselben Optionen gibt es in den Menüs der Titelleiste (App und Ansicht).",
-  "mood.libraryOnly": "Nur in der Bibliothek (still, während ein Buch läuft)"
+  "mood.libraryOnly": "Nur in der Bibliothek (still, während ein Buch läuft)",
+  "theme.summer": "Sommerwald"
 }

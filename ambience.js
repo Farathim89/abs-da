@@ -176,13 +176,14 @@
   // Wind is mixed low on purpose (it gets tiring); drips and the clock sit under the rest.
   const RECORDINGS = {
     tavern: [["tavern", 0.75]],
-    dungeon: [["dungeon", 1.0], ["dungeon-drips", 0.45]],
+    dungeon: [["dungeon", 1.3]],   // (a deep, quieter loop)
     starship: [["starship", 0.6]],
     neon: [["neon", 1.0]],
     deepsea: [["deepsea", 1.0]],
     haunted: [["haunted", 0.75]],
     wizard: [["wizard-fire", 0.9], ["wizard-clock", 0.3]],
     rain: [["rain", 0.4]],
+    summer: [["summer", 0.8]],
     autumn: [["autumn", 0.7]],
     snow: [["snow", 0.5]],
   };
@@ -263,6 +264,15 @@
       k.noise("white", { type: "bandpass", freq: 2500, q: 0.5, gain: 0.16 });
       k.noise("brown", { type: "lowpass", freq: 300, gain: 0.25 });
       k.every(0.04, 0.16, (t) => k.burst({ type: "bandpass", freq: rnd(2000, 6000), q: 4, dur: 0.02, gain: rnd(0.05, 0.11), at: t }));
+    },
+    // A light breeze and birds now and then.
+    summer(k) {
+      const air = k.noise("white", { type: "lowpass", freq: 900, gain: 0.08 });
+      k.every(3, 6, (t) => air.gain.gain.setTargetAtTime(rnd(0.04, 0.12), t, 1.5));
+      k.every(0.8, 3, (t) => {
+        const n = 2 + Math.floor(Math.random() * 4), base = rnd(2200, 3800);
+        for (let i = 0, at = t; i < n; i++, at += rnd(0.08, 0.16)) k.chirp({ from: base * rnd(0.9, 1.1), to: base * rnd(1.15, 1.35), dur: rnd(0.05, 0.1), gain: 0.025, at });
+      });
     },
     // Wind gusting through dry leaves.
     autumn(k) {
