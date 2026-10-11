@@ -9,7 +9,8 @@ const api = window.absDesktop;
 let hasServer = false;   // a server is already saved → offer Cancel
 let S = {};              // texts in the app's language (see i18n.js)
 const T = (key, fallback) => S[key] || fallback;
-let current = null;      // what's on screen, so a language change can redraw it
+let current = null;
+let offlineCount = 0;   // downloaded books (offline listening)      // what's on screen, so a language change can redraw it
 
 function setStatus(text, isError) {
   $("status").textContent = text || "";
@@ -28,6 +29,7 @@ function applyStrings() {
   $("cancel").textContent = T("connect.cancel", "Cancel");
   $("retry").textContent = T("connect.retry", "Retry");
   $("change").textContent = T("connect.change", "Change server");
+  $("offline").textContent = T("offline.listen", "Listen offline ({n})").split("{n}").join(offlineCount);
   if (current) current();
 }
 
@@ -54,6 +56,8 @@ async function init() {
   const cfg = api ? await api.getConfig() : null;
   if (cfg && cfg.server) $("server").value = cfg.server;
   hasServer = !!(cfg && cfg.hasServer);
+  offlineCount = (cfg && cfg.offlineCount) || 0;
+  applyStrings();
 
   if (mode === "error") {
     current = () => { $("title").textContent = T("connect.titleError", "Can't reach your server"); };
@@ -66,6 +70,7 @@ async function init() {
     }
     $("form").classList.add("hidden");
     $("error-actions").classList.remove("hidden");
+    $("offline").classList.toggle("hidden", !offlineCount);
     $("retry").focus();
   } else if (mode === "change" || (cfg && cfg.hasServer)) {
     showForm("connect.titleChange", "Change server");
@@ -98,6 +103,8 @@ $("cancel").addEventListener("click", () => {
   setStatus(T("connect.goingBack", "Going back…"));
   api.retry();
 });
+
+$("offline").addEventListener("click", () => api.openOffline());
 
 $("change").addEventListener("click", () => {
   setStatus("");

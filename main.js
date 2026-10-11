@@ -24,6 +24,8 @@ const { normalizeServer, probeServer } = require("./server");
 const { SHELF_ARTS, artUrl } = require("./shelf-art");
 const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 const homePageJs = require("./home-page");
+const setupOffline = require("./offline");
+const offlineButtonJs = require("./offline-button");
 
 // ---------------------------------------------------------------------------
 // Which copy of the app is this?
@@ -319,6 +321,42 @@ function installHome(contents, attempt = 0) {
     .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installHome(contents, attempt + 1), 1000); })
     .catch(() => {});
 }
+// ---- offline listening (offline.js, offline-button.js, offline.html) ----------------
+const offline = setupOffline({
+  view: () => view,
+  config: () => config,
+  setConfig: (patch) => { config = { ...config, ...patch }; writeJson(dataFile("config.json"), config); },
+  tr: (k, v) => tr(k, v),
+  isServerUrl: (u) => isServerUrl(u),
+  fromServerPage: (e) => fromServerPage(e),
+  fromLocalPage: (e) => fromLocalPage(e),
+  apiBase: () => String(config.webUrl || "").replace(/\/+$/, ""),
+  // The web app's sign-in (only while it's open in the window).
+  getToken: async () => {
+    if (!view || !isServerUrl(wc().getURL())) return null;
+    try { return await wc().executeJavaScript('window.$nuxt && $nuxt.$store && $nuxt.$store.getters["user/getToken"] || null'); } catch { return null; }
+  },
+  toast: (type, text) => {
+    if (!view || !isServerUrl(wc().getURL())) return;
+    wc().executeJavaScript(`window.$nuxt && $nuxt.$toast && $nuxt.$toast[${JSON.stringify(type)}](${JSON.stringify(text)})`).catch(() => {});
+  },
+  log: (m) => console.log("[offline]", m),
+});
+const offlineButtonTexts = () => ({
+  download: tr("offline.download"), downloading: tr("offline.downloading"), downloaded: tr("offline.downloaded"),
+  removeConfirm: tr("offline.removeConfirm"), cancelConfirm: tr("offline.cancelConfirm"), remove: tr("offline.remove"),
+});
+function installOfflineButton(contents, attempt = 0) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  contents.executeJavaScript(offlineButtonJs(offlineButtonTexts()))
+    .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installOfflineButton(contents, attempt + 1), 1000); })
+    .catch(() => {});
+}
+function showOfflineLibrary() {
+  if (view) wc().loadFile(path.join(__dirname, "offline.html"));
+}
+// Listening done offline goes to the server once the web app is open again (and every 10 minutes).
+setInterval(() => offline.sync(), 10 * 60 * 1000);
 function installLibraryMemory(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
   const restore = !restoredLastLibrary;
@@ -1289,6 +1327,7 @@ function createWindow() {
     readWebLang(contents);   // e.g. you just changed the language on the Account page
     applyWebAppFixes(contents);   // e.g. after signing in, the player exists now
     installHome(contents);
+    installOfflineButton(contents);
   });
 
   if (!app.isPackaged) contents.on("did-navigate", (_e, url) => console.log("[nav]", url));
@@ -1965,6 +2004,7 @@ function menuTemplate() {
       label: tr("menu.app"),
       submenu: [
         { label: tr("app.home"), ...shortcut("Alt+Home"), click: goHome },
+        { label: tr("app.offlineLibrary"), click: showOfflineLibrary },
         { label: tr("app.changeServer"), click: () => showConnectPage("change") },
         ...(appKind() === "portable" || appKind() === "folder" ? [{ label: tr("app.desktopShortcut"), click: createDesktopShortcut }] : []),
         {
@@ -2089,7 +2129,7 @@ const fromLocalPage = (e) => {
 };
 
 ipcMain.handle("desktop:get-config", (e) =>
-  fromLocalPage(e) ? { server: config.server || "", hasServer: !!config.webUrl } : null
+  fromLocalPage(e) ? { server: config.server || "", hasServer: !!config.webUrl, offlineCount: offline.count() } : null
 );
 
 ipcMain.handle("desktop:connect", async (e, input) => {
@@ -2104,6 +2144,12 @@ ipcMain.handle("desktop:connect", async (e, input) => {
   return { ok: true };
 });
 
+ipcMain.on("desktop:open-offline", (e) => { if (fromLocalPage(e)) showOfflineLibrary(); });
+ipcMain.handle("desktop:offline-confirm", async (e, { message, yes } = {}) => {
+  if (!fromLocalPage(e)) return false;
+  const { response } = await showDialog({ type: "question", message: String(message || ""), buttons: [String(yes || "OK"), tr("connect.cancel")], defaultId: 1, cancelId: 1 });
+  return response === 0;
+});
 ipcMain.handle("desktop:retry", (e) => {
   if (fromLocalPage(e) && config.webUrl) setImmediate(loadServer);
 });
@@ -2433,7 +2479,9 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); });
+  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents);
+    if (view && contents === wc() && isServerUrl(contents.getURL())) setTimeout(() => offline.sync(), 8000);   // offline listening → server
+  });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.
   contents.on("did-finish-load", async () => {

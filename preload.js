@@ -24,6 +24,13 @@ if (location.protocol === "file:") {
     // update check (title bar pill)
     onUpdate: (cb) => ipcRenderer.on("titlebar:update", (_e, u) => cb(u)),
     openUpdate: () => ipcRenderer.send("desktop:open-update"),
+    // offline listening (offline.html, and the button on the can't-reach page)
+    openOffline: () => ipcRenderer.send("desktop:open-offline"),
+    offlineList: () => ipcRenderer.invoke("desktop:offline-list"),
+    offlineItem: (id) => ipcRenderer.invoke("desktop:offline-item", id),
+    offlineListening: (id, data) => ipcRenderer.send("desktop:offline-listening", id, data),
+    offlineRemove: (id) => ipcRenderer.send("desktop:offline-remove", id),
+    offlineConfirm: (message, yes) => ipcRenderer.invoke("desktop:offline-confirm", { message, yes }),
     // themed menus and message boxes (ui.html)
     ui: {
       onMenu: (cb) => ipcRenderer.on("ui:menu", (_e, m) => cb(m)),
@@ -577,6 +584,17 @@ if (location.protocol !== "file:") {
   function applyPrefs(p) { if (p) { prefs = p; ensureScanButton(); } }
   ipcRenderer.invoke("desktop:ui-prefs").then(applyPrefs).catch(() => {});
   ipcRenderer.on("desktop:ui-prefs", (_e, p) => applyPrefs(p));
+  // Offline download button on a book page (offline-button.js) ↔ the app (offline.js).
+  window.addEventListener("message", async (e) => {
+    const m = e.source === window && e.data && e.data.absdaOffline;
+    if (!m || typeof m.itemId !== "string") return;
+    if (m.action === "state") {
+      const result = await ipcRenderer.invoke("desktop:offline-state", m.itemId).catch(() => null);
+      window.postMessage({ absdaOfflineReply: { reqId: m.reqId, result } }, location.origin);
+    } else if (m.action === "download") ipcRenderer.send("desktop:offline-download", m.itemId);
+    else if (m.action === "remove") ipcRenderer.send("desktop:offline-remove", m.itemId);
+  });
+  ipcRenderer.on("desktop:offline-status", (_e, s) => window.postMessage({ absdaOfflineStatus: s }, location.origin));
   // Per-library tab / filter memory (main.js libraryMemoryJs) → the app keeps it in config.json.
   window.addEventListener("message", (e) => {
     if (e.source !== window || !e.data || typeof e.data.absdaLibraryMemory !== "object") return;

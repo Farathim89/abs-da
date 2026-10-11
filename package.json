@@ -45,6 +45,11 @@
       "ui.css",
       "ui.js",
       "home-page.js",
+      "offline-page.js",
+      "offline.css",
+      "offline.html",
+      "offline-button.js",
+      "offline.js",
       "build/icon.ico",
       "LICENSE"
     ],

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' file: data:; media-src file:;"
+    />
+    <title>Offline library</title>
+    <link rel="stylesheet" href="offline.css" />
+  </head>
+  <body>
+    <!-- Downloaded audiobooks, playable without the server (see offline.js). -->
+    <header class="top">
+      <h1><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3a9 9 0 00-9 9v6a3 3 0 003 3h1a1 1 0 001-1v-6a1 1 0 00-1-1H5v-1a7 7 0 0114 0v1h-2a1 1 0 00-1 1v6a1 1 0 001 1h1a3 3 0 003-3v-6a9 9 0 00-9-9z"/></svg><span id="title">Offline library</span></h1>
+      <button id="back" type="button" class="ghost">Back to the server</button>
+    </header>
+
+    <main id="list" class="list"></main>
+    <p id="empty" class="empty hidden"></p>
+
+    <section id="player" class="player hidden">
+      <button id="toList" type="button" class="ghost small">‹</button>
+      <img id="pCover" class="pcover" alt="" />
+      <div class="pinfo">
+        <div id="pTitle" class="ptitle"></div>
+        <div id="pAuthor" class="pauthor"></div>
+        <div id="pChapter" class="pchapter"></div>
+        <input id="seek" type="range" min="0" max="1000" value="0" />
+        <div class="times"><span id="tNow">0:00</span><span id="tLeft"></span></div>
+        <div class="controls">
+          <button id="prevCh" type="button" title=""><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+          <button id="back30" type="button">−30</button>
+          <button id="play" type="button" class="big"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+          <button id="fwd30" type="button">+30</button>
+          <button id="nextCh" type="button" title=""><svg viewBox="0 0 24 24" fill="currentColor"><path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+        </div>
+        <div class="opts">
+          <label><span id="lSpeed">Speed</span>
+            <select id="speed"></select>
+          </label>
+          <label><span id="lSleep">Sleep timer</span>
+            <select id="sleep"></select>
+          </label>
+        </div>
+        <p id="pending" class="note"></p>
+      </div>
+      <div class="chapters">
+        <h2 id="lChapters">Chapters</h2>
+        <ol id="chapters"></ol>
+      </div>
+    </section>
+    <audio id="audio" preload="auto"></audio>
+    <script src="offline-page.js"></script>
+  </body>
+</html>
