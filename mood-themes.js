@@ -169,6 +169,27 @@ function snowNight() {
     `<path d='M0 560 Q 200 500 420 550 T 960 545 V 640 H 0 Z' fill='#d8e4f2' opacity='.45'/>`);
 }
 
+// Falling snow: six-armed flakes (each arm with two little branches), different
+// sizes, turns and brightness, and a few tiny far-away ones.
+function snowflakes() {
+  const rand = rng(727);
+  const S = 440;
+  const flake = (cx, cy, r, rot, op) => {
+    let arms = "";
+    for (let k = 0; k < 6; k++) {
+      arms += `<g transform='rotate(${k * 60})'><line x1='0' y1='0' x2='0' y2='${-r}'/>` +
+        `<line x1='0' y1='${(-r * 0.55).toFixed(2)}' x2='${(r * 0.26).toFixed(2)}' y2='${(-r * 0.78).toFixed(2)}'/>` +
+        `<line x1='0' y1='${(-r * 0.55).toFixed(2)}' x2='${(-r * 0.26).toFixed(2)}' y2='${(-r * 0.78).toFixed(2)}'/></g>`;
+    }
+    return `<g transform='translate(${cx.toFixed(1)} ${cy.toFixed(1)}) rotate(${rot.toFixed(0)})' opacity='${op.toFixed(2)}' ` +
+      `stroke-width='${(r > 6 ? 1.3 : 1).toFixed(1)}'>${arms}<circle r='${(r * 0.14).toFixed(2)}' fill='#fff'/></g>`;
+  };
+  let flakes = "";
+  for (let i = 0; i < 16; i++) flakes += flake(12 + rand() * (S - 24), 12 + rand() * (S - 24), 3 + rand() * 6, rand() * 60, 0.45 + rand() * 0.45);
+  for (let i = 0; i < 18; i++) flakes += `<circle cx='${(rand() * S).toFixed(1)}' cy='${(rand() * S).toFixed(1)}' r='${(0.6 + rand() * 0.9).toFixed(2)}' fill='#fff' opacity='${(0.3 + rand() * 0.35).toFixed(2)}'/>`;
+  return svg(S, S, `<g stroke='#ffffff' stroke-linecap='round' fill='none'>${flakes}</g>`);
+}
+
 const STONE = url(stoneWall());
 const TAVERN = url(wood({ base: "#3b2414", dark: "#1a0e05", light: "#6e4826", seed: 21, plankW: 96, size: 480 }));
 const HULL = url(hullPanels());
@@ -179,6 +200,13 @@ const DAMASK = url(damask());
 const SPINES = url(bookSpines());
 const GLASS = url(wetGlass());
 const SNOWSKY = url(snowNight());
+const FLAKES = url(snowflakes());
+// A cap of snow for the top of each book (stretched to the card's width): lumpy top,
+// soft rounded underside with a few drips, a cool shadow under it.
+const SNOWCAP = url(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16' preserveAspectRatio='none'>` +
+  `<path d='M0 8 Q 1 4 5 5 Q 9 1 15 3 Q 22 0 28 3 Q 35 1 41 3 Q 48 0 55 3 Q 62 1 68 3 Q 75 0 82 3 Q 89 1 94 4 Q 99 3 100 7 L 100 11 Q 96 13 92 11 Q 87 15 82 11 Q 74 13 68 11 Q 64 16 60 11 Q 52 13 46 11 Q 40 14 34 11 Q 26 13 20 11 Q 14 15 9 11 Q 4 13 0 12 Z' fill='#b9cfe6'/>` +
+  `<path d='M0 7 Q 1 3 5 4 Q 9 0 15 2 Q 22 -1 28 2 Q 35 0 41 2 Q 48 -1 55 2 Q 62 0 68 2 Q 75 -1 82 2 Q 89 0 94 3 Q 99 2 100 6 L 100 10 Q 96 12 92 10 Q 87 14 82 10 Q 74 12 68 10 Q 64 15 60 10 Q 52 12 46 10 Q 40 13 34 10 Q 26 12 20 10 Q 14 14 9 10 Q 4 12 0 11 Z' fill='#f7fbff'/>` +
+  `</svg>`);
 const ARCANE_WOOD = url(wood({ base: "#2a1a2e", dark: "#120814", light: "#4a3150", seed: 71, plankW: 110, size: 440 }));
 const AUTUMN_WOOD = url(wood({ base: "#5a3418", dark: "#2a1608", light: "#8a5a2e", seed: 33, plankW: 120, size: 480 }));
 const FROST_WOOD = url(wood({ base: "#3a3a40", dark: "#1c1c22", light: "#6a6e78", seed: 88, plankW: 120, size: 480 }));
@@ -192,9 +220,10 @@ const layerCss = (which, css) => `${HOST}::${which} { content: ""; position: fix
 // for "reduce motion" in Windows.
 const still = `@media (prefers-reduced-motion: reduce) { ${HOST}::before, ${HOST}::after { animation: none !important; } }
   html.absda-idle ${HOST}::before, html.absda-idle ${HOST}::after { animation-play-state: paused !important; }`;
-// Animations step at ~8 frames a second: slow drifting light doesn't need 60, and every frame
-// redraws the whole window (60 fps ≈ a third of a CPU core, 8 fps ≈ a twentieth).
-const FPS = 8;
+// Animations step at 30 frames a second. Smooth for slow drifting light, and measured
+// at about the same cost as 8 (5–10 % of one core); the full 60 redraws the whole window
+// every frame (≈ 30 %).
+const FPS = 30;
 const anim = (name, seconds, extra = "") => `animation: ${name} ${seconds}s steps(${Math.round(seconds * FPS)}) infinite ${extra};`;
 // Dots (embers, bubbles, stars) in a square tile; `rise` moves them up one tile per loop.
 const dots = (list) => list.map(([x, y, r, c]) => `radial-gradient(circle at ${x}% ${y}%, ${c} 0 ${r}px, transparent ${r + 1.2}px)`).join(", ");
@@ -447,6 +476,11 @@ const MOOD_THEMES = {
     shelf: "linear-gradient(180deg, #f4f8ff 0%, #dfe8f4 22%, #6a5a4a 30%, #4a3c30 85%, #241c14 100%)",
     scroll: "#3c5a80",
     page: SNOWSKY,
+    css: `html body :is([id^="book-card-"], [id^="series-card-"], [id^="collection-card-"], [id^="playlist-card-"]) { overflow: visible !important; }
+      html body #absda-home .h-card { position: relative; }
+      html body :is([id^="book-card-"], [id^="series-card-"], [id^="collection-card-"], [id^="playlist-card-"], #absda-home .h-card)::before {
+        content: ""; position: absolute; left: -3px; right: -3px; top: -8px; height: 16px; z-index: 45; pointer-events: none;
+        background: ${SNOWCAP} top left / 100% 100% no-repeat; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .35)); }`,
     scene: `linear-gradient(rgba(10, 18, 34, .35), rgba(10, 18, 34, .35)), ${FROST_WOOD}`,
     colors: {
       primary: "#0a1020", bg: "#141c30", accent: "#9fd8ff", success: "#3c78b8",
@@ -457,9 +491,7 @@ const MOOD_THEMES = {
     fx: (motion) =>
       layerCss("before", `inset: 0; z-index: 2147482000;
         background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(160, 200, 255, .08), transparent 70%);`) +
-      movingDots("after", dots([[7, 12, 1.8, "rgba(255,255,255,.75)"], [19, 58, 1.2, "rgba(255,255,255,.6)"], [31, 34, 2.2, "rgba(255,255,255,.7)"],
-        [44, 81, 1.4, "rgba(255,255,255,.6)"], [56, 22, 1.0, "rgba(255,255,255,.5)"], [67, 66, 2.0, "rgba(255,255,255,.7)"], [79, 9, 1.3, "rgba(255,255,255,.55)"],
-        [91, 47, 1.7, "rgba(255,255,255,.65)"], [25, 95, 1.1, "rgba(255,255,255,.5)"], [84, 88, 1.5, "rgba(255,255,255,.6)"]]), 440, 18, "down", motion) + still,
+      movingDots("after", FLAKES, 440, 22, "down", motion) + still,
   },
 };
 
