@@ -257,5 +257,9 @@
   "mood.sounds": "Tunnelmaäänet",
   "mood.volume": "Äänenvoimakkuus",
   "mood.volumeMenu": "Tunnelmaäänten voimakkuus",
-  "mood.onlyPlaying": "Vain kun kirja soi"
+  "mood.when": "Tunnelmaäänet soivat",
+  "mood.whilePlaying": "Kun kirja soi",
+  "mood.whileLibrary": "Kun kirja soi ja kirjastossa",
+  "settings.desktop": "Työpöytäsovellus",
+  "settings.desktopNote": "ABS Desktop Appin asetukset tällä tietokoneella. Samat valinnat löytyvät myös otsikkopalkin valikoista (Sovellus ja Näytä)."
 }

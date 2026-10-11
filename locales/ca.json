@@ -257,5 +257,9 @@
   "mood.sounds": "Sons d'ambient",
   "mood.volume": "Volum",
   "mood.volumeMenu": "Volum dels sons d'ambient",
-  "mood.onlyPlaying": "Només mentre sona un llibre"
+  "mood.when": "Els sons d'ambient sonen",
+  "mood.whilePlaying": "Mentre sona un llibre",
+  "mood.whileLibrary": "Mentre sona un llibre i a la biblioteca",
+  "settings.desktop": "Aplicació d'escriptori",
+  "settings.desktopNote": "Configuració d'ABS Desktop App en aquest PC. Les mateixes opcions són als menús de la barra de títol (Aplicació i Visualització)."
 }

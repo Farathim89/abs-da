@@ -257,5 +257,9 @@
   "mood.sounds": "צלילי אווירה",
   "mood.volume": "עוצמה",
   "mood.volumeMenu": "עוצמת צלילי האווירה",
-  "mood.onlyPlaying": "רק כשספר מתנגן"
+  "mood.when": "צלילי האווירה מתנגנים",
+  "mood.whilePlaying": "כשספר מתנגן",
+  "mood.whileLibrary": "כשספר מתנגן ובספרייה",
+  "settings.desktop": "אפליקציית שולחן העבודה",
+  "settings.desktopNote": "הגדרות ABS Desktop App במחשב הזה. אותן אפשרויות נמצאות גם בתפריטי שורת הכותרת (אפליקציה ותצוגה)."
 }

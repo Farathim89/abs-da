@@ -257,5 +257,9 @@
   "mood.sounds": "Nuotaikos garsai",
   "mood.volume": "Garsumas",
   "mood.volumeMenu": "Nuotaikos garsų garsumas",
-  "mood.onlyPlaying": "Tik kai groja knyga"
+  "mood.when": "Nuotaikos garsai groja",
+  "mood.whilePlaying": "Kai groja knyga",
+  "mood.whileLibrary": "Kai groja knyga ir bibliotekoje",
+  "settings.desktop": "Darbalaukio programa",
+  "settings.desktopNote": "ABS Desktop App nustatymai šiame kompiuteryje. Tos pačios parinktys yra ir pavadinimo juostos meniu (Programa ir Rodinys)."
 }

@@ -257,5 +257,9 @@
   "mood.sounds": "Sons de clima",
   "mood.volume": "Volume",
   "mood.volumeMenu": "Volume dos sons de clima",
-  "mood.onlyPlaying": "Só enquanto um livro toca"
+  "mood.when": "Os sons de clima tocam",
+  "mood.whilePlaying": "Enquanto um livro toca",
+  "mood.whileLibrary": "Enquanto um livro toca e na biblioteca",
+  "settings.desktop": "App para computador",
+  "settings.desktopNote": "Configurações do ABS Desktop App neste PC. As mesmas opções estão nos menus da barra de título (App e Exibir)."
 }

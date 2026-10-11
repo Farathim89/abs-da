@@ -257,5 +257,9 @@
   "mood.sounds": "Stämningsljud",
   "mood.volume": "Volym",
   "mood.volumeMenu": "Volym för stämningsljud",
-  "mood.onlyPlaying": "Bara medan en bok spelas"
+  "mood.when": "Stämningsljud spelas",
+  "mood.whilePlaying": "Medan en bok spelas",
+  "mood.whileLibrary": "Medan en bok spelas och i biblioteket",
+  "settings.desktop": "Skrivbordsapp",
+  "settings.desktopNote": "Inställningar för ABS Desktop App på den här datorn. Samma val finns i namnlistens menyer (App och Visa)."
 }

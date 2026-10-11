@@ -257,5 +257,9 @@
   "mood.sounds": "Stemningslyde",
   "mood.volume": "Lydstyrke",
   "mood.volumeMenu": "Lydstyrke for stemningslyde",
-  "mood.onlyPlaying": "Kun mens en bog afspilles"
+  "mood.when": "Stemningslyde afspilles",
+  "mood.whilePlaying": "Mens en bog afspilles",
+  "mood.whileLibrary": "Mens en bog afspilles og i biblioteket",
+  "settings.desktop": "Skrivebordsapp",
+  "settings.desktopNote": "Indstillinger for ABS Desktop App på denne pc. De samme valg findes i titellinjens menuer (App og Vis)."
 }

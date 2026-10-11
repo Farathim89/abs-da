@@ -257,5 +257,9 @@
   "mood.sounds": "Zvukovi raspoloženja",
   "mood.volume": "Glasnoća",
   "mood.volumeMenu": "Glasnoća zvukova raspoloženja",
-  "mood.onlyPlaying": "Samo dok se knjiga reproducira"
+  "mood.when": "Zvukovi raspoloženja sviraju",
+  "mood.whilePlaying": "Dok se knjiga reproducira",
+  "mood.whileLibrary": "Dok se knjiga reproducira i u knjižnici",
+  "settings.desktop": "Aplikacija za računalo",
+  "settings.desktopNote": "Postavke ABS Desktop Appa na ovom računalu. Iste mogućnosti su i u izbornicima naslovne trake (Aplikacija i Prikaz)."
 }

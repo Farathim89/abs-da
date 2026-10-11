@@ -257,5 +257,9 @@
   "mood.sounds": "মুডের শব্দ",
   "mood.volume": "ভলিউম",
   "mood.volumeMenu": "মুডের শব্দের ভলিউম",
-  "mood.onlyPlaying": "শুধু বই চলার সময়"
+  "mood.when": "মুডের শব্দ বাজবে",
+  "mood.whilePlaying": "বই চলার সময়",
+  "mood.whileLibrary": "বই চলার সময় এবং লাইব্রেরিতে",
+  "settings.desktop": "ডেস্কটপ অ্যাপ",
+  "settings.desktopNote": "এই পিসিতে ABS Desktop App-এর সেটিংস। একই বিকল্প টাইটেল বারের মেনুতেও আছে (অ্যাপ ও ভিউ)।"
 }

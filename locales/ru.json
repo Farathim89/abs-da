@@ -257,5 +257,9 @@
   "mood.sounds": "Звуки настроения",
   "mood.volume": "Громкость",
   "mood.volumeMenu": "Громкость звуков настроения",
-  "mood.onlyPlaying": "Только пока играет книга"
+  "mood.when": "Звуки настроения играют",
+  "mood.whilePlaying": "Пока играет книга",
+  "mood.whileLibrary": "Пока играет книга и в библиотеке",
+  "settings.desktop": "Приложение для ПК",
+  "settings.desktopNote": "Настройки ABS Desktop App на этом ПК. Те же параметры есть в меню заголовка (Приложение и Вид)."
 }

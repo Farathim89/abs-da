@@ -257,5 +257,9 @@
   "mood.sounds": "Stemningslyder",
   "mood.volume": "Volum",
   "mood.volumeMenu": "Volum for stemningslyder",
-  "mood.onlyPlaying": "Bare mens en bok spilles"
+  "mood.when": "Stemningslyder spilles",
+  "mood.whilePlaying": "Mens en bok spilles",
+  "mood.whileLibrary": "Mens en bok spilles og i biblioteket",
+  "settings.desktop": "Skrivebordsapp",
+  "settings.desktopNote": "Innstillinger for ABS Desktop App på denne PC-en. De samme valgene finnes i tittellinjens menyer (App og Vis)."
 }

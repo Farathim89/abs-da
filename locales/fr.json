@@ -257,5 +257,9 @@
   "mood.sounds": "Sons d'ambiance",
   "mood.volume": "Volume",
   "mood.volumeMenu": "Volume des sons d'ambiance",
-  "mood.onlyPlaying": "Seulement pendant la lecture d'un livre"
+  "mood.when": "Les sons d'ambiance jouent",
+  "mood.whilePlaying": "Pendant la lecture d'un livre",
+  "mood.whileLibrary": "Pendant la lecture d'un livre et dans la bibliothèque",
+  "settings.desktop": "Application de bureau",
+  "settings.desktopNote": "Réglages d'ABS Desktop App sur ce PC. Les mêmes options sont dans les menus de la barre de titre (Application et Affichage)."
 }

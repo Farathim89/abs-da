@@ -257,5 +257,9 @@
   "mood.sounds": "Zvuky nálady",
   "mood.volume": "Hlasitost",
   "mood.volumeMenu": "Hlasitost zvuků nálady",
-  "mood.onlyPlaying": "Jen když hraje kniha"
+  "mood.when": "Zvuky nálady hrají",
+  "mood.whilePlaying": "Když hraje kniha",
+  "mood.whileLibrary": "Když hraje kniha a v knihovně",
+  "settings.desktop": "Desktopová aplikace",
+  "settings.desktopNote": "Nastavení ABS Desktop App v tomto PC. Stejné volby jsou i v nabídkách záhlaví (Aplikace a Zobrazení)."
 }

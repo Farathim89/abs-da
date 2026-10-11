@@ -257,5 +257,9 @@
   "mood.sounds": "Atmosfer sesleri",
   "mood.volume": "Ses düzeyi",
   "mood.volumeMenu": "Atmosfer seslerinin düzeyi",
-  "mood.onlyPlaying": "Yalnızca bir kitap çalarken"
+  "mood.when": "Atmosfer sesleri çalar",
+  "mood.whilePlaying": "Bir kitap çalarken",
+  "mood.whileLibrary": "Bir kitap çalarken ve kitaplıkta",
+  "settings.desktop": "Masaüstü Uygulaması",
+  "settings.desktopNote": "Bu bilgisayardaki ABS Desktop App ayarları. Aynı seçenekler başlık çubuğu menülerinde de var (Uygulama ve Görünüm)."
 }

@@ -257,5 +257,9 @@
   "mood.sounds": "Sonidos de ambiente",
   "mood.volume": "Volumen",
   "mood.volumeMenu": "Volumen de los sonidos de ambiente",
-  "mood.onlyPlaying": "Solo mientras suena un libro"
+  "mood.when": "Los sonidos de ambiente suenan",
+  "mood.whilePlaying": "Mientras suena un libro",
+  "mood.whileLibrary": "Mientras suena un libro y en la biblioteca",
+  "settings.desktop": "Aplicación de escritorio",
+  "settings.desktopNote": "Ajustes de ABS Desktop App en este PC. Las mismas opciones están en los menús de la barra de título (Aplicación y Ver)."
 }

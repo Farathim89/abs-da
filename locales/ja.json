@@ -257,5 +257,9 @@
   "mood.sounds": "ムードサウンド",
   "mood.volume": "音量",
   "mood.volumeMenu": "ムードサウンドの音量",
-  "mood.onlyPlaying": "本の再生中のみ"
+  "mood.when": "ムードサウンドを鳴らす",
+  "mood.whilePlaying": "本の再生中",
+  "mood.whileLibrary": "本の再生中とライブラリ表示中",
+  "settings.desktop": "デスクトップアプリ",
+  "settings.desktopNote": "このPCのABS Desktop Appの設定です。同じ項目はタイトルバーのメニュー（アプリと表示）にもあります。"
 }

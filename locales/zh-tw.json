@@ -257,5 +257,9 @@
   "mood.sounds": "氛圍音效",
   "mood.volume": "音量",
   "mood.volumeMenu": "氛圍音效音量",
-  "mood.onlyPlaying": "僅在播放書籍時"
+  "mood.when": "氛圍音效播放時機",
+  "mood.whilePlaying": "播放書籍時",
+  "mood.whileLibrary": "播放書籍時和在書庫中",
+  "settings.desktop": "桌面應用程式",
+  "settings.desktopNote": "此電腦上 ABS Desktop App 的設定。同樣的選項也在標題列選單（應用程式和檢視）中。"
 }

@@ -257,5 +257,9 @@
   "mood.sounds": "أصوات الأجواء",
   "mood.volume": "مستوى الصوت",
   "mood.volumeMenu": "مستوى صوت الأجواء",
-  "mood.onlyPlaying": "فقط أثناء تشغيل كتاب"
+  "mood.when": "تشغيل أصوات الأجواء",
+  "mood.whilePlaying": "أثناء تشغيل كتاب",
+  "mood.whileLibrary": "أثناء تشغيل كتاب وفي المكتبة",
+  "settings.desktop": "تطبيق سطح المكتب",
+  "settings.desktopNote": "إعدادات ABS Desktop App على هذا الحاسوب. الخيارات نفسها في قوائم شريط العنوان (التطبيق والعرض)."
 }

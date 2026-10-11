@@ -273,6 +273,178 @@ if (location.protocol !== "file:") {
     if (head.querySelector("span").textContent !== label) head.querySelector("span").textContent = label;
     head.querySelector("button").title = T("win.close", "Close");
   }
+  // ---- "Desktop App" page in the Settings window ----------------------------------
+  // A link at the top of the settings menu; its page shows the App and View menus as
+  // settings (switches, pick-lists, buttons), drawn from main.js desktopSettingsData().
+  const DS_LINK = "absda-ds-link", DS_PAGE = "absda-ds-page";
+  const DS_CSS = `
+    #${DS_PAGE} { position: fixed; z-index: 60; overflow-y: auto; padding: 24px 32px 40px; box-sizing: border-box;
+      background: var(--color-bg, #2b2b2b); color: #f3f4f6; font: 15px "Segoe UI", system-ui, sans-serif; scrollbar-width: thin; }
+    #${DS_PAGE} h1 { margin: 0 0 4px; font-size: 24px; font-weight: 600; }
+    #${DS_PAGE} .ds-note { margin: 0 0 20px; color: rgba(255,255,255,.6); font-size: 13px; }
+    #${DS_PAGE} .ds-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px 40px; align-items: start; }
+    #${DS_PAGE} h2 { margin: 6px 0 10px; font-size: 18px; font-weight: 600; color: var(--tb-logo, #f0a848); }
+    #${DS_PAGE} h3 { margin: 14px 0 8px; font-size: 15px; font-weight: 600; }
+    #${DS_PAGE} .ds-sub { padding-left: 12px; border-left: 2px solid rgba(255,255,255,.12); margin: 4px 0 10px; }
+    #${DS_PAGE} .ds-row { display: flex; align-items: center; gap: 12px; min-height: 36px; }
+    #${DS_PAGE} .ds-row > span:not(.ds-switch) { flex: 1; }
+    #${DS_PAGE} .ds-gap { height: 8px; }
+    #${DS_PAGE} .ds-info { color: rgba(255,255,255,.6); font-size: 13px; min-height: 28px; display: flex; align-items: center; }
+    #${DS_PAGE} select { min-width: 200px; max-width: 60%; padding: 6px 8px; border-radius: 6px; color: #f3f4f6;
+      background: var(--color-primary, #1f1f1f); border: 1px solid rgba(255,255,255,.2); font: inherit; font-size: 14px; }
+    #${DS_PAGE} button.ds-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,.2); cursor: pointer;
+      background: var(--color-primary, #1f1f1f); color: #f3f4f6; font: inherit; font-size: 14px; }
+    #${DS_PAGE} button.ds-btn:hover { border-color: var(--tb-logo, #f0a848); }
+    #${DS_PAGE} .ds-switch { position: relative; width: 44px; height: 24px; flex: none; cursor: pointer; }
+    #${DS_PAGE} .ds-switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+    #${DS_PAGE} .ds-switch i { position: absolute; inset: 0; border-radius: 12px; background: rgba(255,255,255,.18); transition: background .15s; pointer-events: none; }
+    #${DS_PAGE} .ds-switch i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; transition: transform .15s; }
+    #${DS_PAGE} .ds-switch input:checked + i { background: var(--tb-logo, #f0a848); }
+    #${DS_PAGE} .ds-switch input:checked + i::after { transform: translateX(20px); }
+    #${DS_PAGE} .ds-switch input:focus-visible + i { outline: 2px solid #fff; outline-offset: 2px; }
+    #${DS_PAGE} .ds-off { opacity: .5; pointer-events: none; }
+  `;
+  const settingsNav = () => document.querySelector("#page-wrapper .fixed.top-16");
+  let dsActive = null;   // the link the web app had marked as the open page
+  function ensureDesktopSettings() {
+    if (windowKind !== "settings") return;
+    const nav = settingsNav();
+    if (!nav || document.getElementById(DS_LINK)) return;
+    const sample = nav.querySelector("a[href]");
+    if (!sample) return;
+    if (!document.getElementById("absda-ds-css")) {
+      const st = document.createElement("style");
+      st.id = "absda-ds-css";
+      st.textContent = DS_CSS;
+      document.head.append(st);
+    }
+    const link = sample.cloneNode(true);
+    link.id = DS_LINK;
+    link.removeAttribute("aria-current");
+    link.setAttribute("href", "#");
+    const label = link.querySelector("p") || link;
+    label.textContent = T("settings.desktop", "Desktop App");
+    link.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); openDesktopSettings(); }, true);
+    sample.parentElement.insertBefore(link, sample);
+    // any other settings page → ours closes
+    nav.addEventListener("click", (e) => {
+      const a = e.target.closest && e.target.closest("a[href]");
+      if (a && a.id !== DS_LINK) closeDesktopSettings();
+    }, true);
+  }
+  function placeDesktopSettings() {
+    const page = document.getElementById(DS_PAGE), nav = settingsNav();
+    if (!page || !nav) return;
+    const r = nav.getBoundingClientRect();
+    page.style.left = Math.round(r.right) + "px";
+    page.style.top = Math.round(r.top) + "px";
+    page.style.right = "0px";
+    page.style.bottom = "0px";
+  }
+  window.addEventListener("resize", placeDesktopSettings);
+  async function openDesktopSettings() {
+    const data = await ipcRenderer.invoke("desktop:settings-data").catch(() => null);
+    if (!data) return;
+    let page = document.getElementById(DS_PAGE);
+    if (!page) { page = document.createElement("div"); page.id = DS_PAGE; document.body.append(page); }
+    placeDesktopSettings();
+    const link = document.getElementById(DS_LINK);
+    dsActive = settingsNav() && settingsNav().querySelector('a[aria-current="page"]:not(#' + DS_LINK + ")");
+    if (dsActive) dsActive.removeAttribute("aria-current");
+    if (link) link.setAttribute("aria-current", "page");
+    renderDesktopSettings(data);
+  }
+  function closeDesktopSettings() {
+    const page = document.getElementById(DS_PAGE);
+    if (!page) return;
+    page.remove();
+    const link = document.getElementById(DS_LINK);
+    if (link) link.removeAttribute("aria-current");
+    if (dsActive && dsActive.isConnected) dsActive.setAttribute("aria-current", "page");
+    dsActive = null;
+  }
+  window.addEventListener("popstate", closeDesktopSettings);
+  async function dsClick(id) {
+    const data = await ipcRenderer.invoke("desktop:settings-click", id).catch(() => null);
+    if (data && document.getElementById(DS_PAGE)) renderDesktopSettings(data);
+  }
+  function renderDesktopSettings(data) {
+    const page = document.getElementById(DS_PAGE);
+    if (!page) return;
+    const scroll = page.scrollTop;
+    page.textContent = "";
+    page.append(Object.assign(document.createElement("h1"), { textContent: data.title }),
+      Object.assign(document.createElement("p"), { className: "ds-note", textContent: data.note }));
+    const cols = document.createElement("div");
+    cols.className = "ds-cols";
+    for (const m of data.menus) {
+      const col = document.createElement("section");
+      col.append(Object.assign(document.createElement("h2"), { textContent: m.label }));
+      dsItems(m.items, col, m.label);
+      cols.append(col);
+    }
+    page.append(cols);
+    page.scrollTop = scroll;
+  }
+  // Menu items → settings: a tick = a switch, a pick-one list = a drop-down, a sub-menu =
+  // its own little section, an action = a button, a greyed-out line = information.
+  function dsItems(items, box, parentLabel) {
+    const radios = {};
+    for (const it of items) if (it.radio) (radios[it.radio] = radios[it.radio] || []).push(it);
+    const done = new Set();
+    for (const it of items) {
+      if (it.type === "separator") { box.append(Object.assign(document.createElement("div"), { className: "ds-gap" })); continue; }
+      if (it.radio) {
+        if (!done.has(it.radio)) { done.add(it.radio); box.append(dsSelect(parentLabel, radios[it.radio])); }
+        continue;
+      }
+      if (it.type === "submenu") {
+        const kids = (it.submenu || []).filter((k) => k.type !== "separator");
+        if (kids.length > 1 && kids.every((k) => k.type === "checkbox") && kids.filter((k) => k.checked).length === 1) {
+          box.append(dsSelect(it.label, kids));
+        } else {
+          const sub = document.createElement("div");
+          sub.className = "ds-sub";
+          sub.append(Object.assign(document.createElement("h3"), { textContent: it.label }));
+          dsItems(it.submenu || [], sub, it.label);
+          box.append(sub);
+        }
+      } else if (it.type === "checkbox") {
+        const row = document.createElement("label");
+        row.className = "ds-row" + (it.enabled ? "" : " ds-off");
+        const sw = document.createElement("span");
+        sw.className = "ds-switch";
+        const input = Object.assign(document.createElement("input"), { type: "checkbox", checked: !!it.checked, disabled: !it.enabled });
+        input.addEventListener("change", () => dsClick(it.id));
+        sw.append(input, document.createElement("i"));
+        row.append(sw, Object.assign(document.createElement("span"), { textContent: it.label }));
+        box.append(row);
+      } else if (!it.enabled) {
+        box.append(Object.assign(document.createElement("div"), { className: "ds-info", textContent: it.label }));
+      } else {
+        const row = document.createElement("div");
+        row.className = "ds-row";
+        const b = Object.assign(document.createElement("button"), { type: "button", className: "ds-btn", textContent: it.label });
+        b.addEventListener("click", () => dsClick(it.id));
+        row.append(b);
+        box.append(row);
+      }
+    }
+  }
+  function dsSelect(label, options) {
+    const row = document.createElement("label");
+    row.className = "ds-row";
+    const sel = document.createElement("select");
+    if (!options.some((o) => o.checked)) sel.append(Object.assign(document.createElement("option"), { value: "", textContent: "—", selected: true }));
+    for (const o of options) {
+      sel.append(Object.assign(document.createElement("option"), { value: String(o.id), textContent: o.label, selected: !!o.checked, disabled: !o.enabled }));
+    }
+    sel.addEventListener("change", () => { if (sel.value !== "") dsClick(Number(sel.value)); });
+    row.append(Object.assign(document.createElement("span"), { textContent: label }), sel);
+    return row;
+  }
+
   // Esc closes the overlay — unless one of the web app's own pop-ups is open (Esc closes that first).
   document.addEventListener("keydown", (e) => {
     if (windowKind !== "settings" || e.key !== "Escape") return;
@@ -319,7 +491,9 @@ if (location.protocol !== "file:") {
       color: #f3f4f6; font: 14px "Segoe UI", system-ui, sans-serif; display: flex; flex-direction: column; gap: 10px; }
     #absda-mood-pop .absda-mp-head { font-weight: 600; color: var(--tb-logo, #f0a848); }
     #absda-mood-pop .absda-mp-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    #absda-mood-pop input[type=checkbox] { width: 16px; height: 16px; margin: 0; accent-color: var(--tb-logo, #f0a848); }
+    #absda-mood-pop input[type=checkbox], #absda-mood-pop input[type=radio] { width: 16px; height: 16px; margin: 0; flex: none; accent-color: var(--tb-logo, #f0a848); }
+    #absda-mood-pop .absda-mp-when { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,.1); }
+    #absda-mood-pop .absda-mp-sub { font-size: 12px; color: rgba(255,255,255,.6); }
     #absda-mood-pop input[type=range] { flex: 1; accent-color: var(--tb-logo, #f0a848); }
 
     #${BRUSH_ID} { background: none; border: 0; padding: 0; color: inherit; }
@@ -350,6 +524,8 @@ if (location.protocol !== "file:") {
     #${PANEL_ID} .absda-bar { position: absolute; left: 0; right: 0; top: 0; height: 9px; display: flex; gap: 2px; padding: 3px 4px; }
     #${PANEL_ID} .absda-bar i { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,.45); }
     #${PANEL_ID} .absda-side { position: absolute; left: 0; top: 9px; bottom: 0; width: 15px; }
+    #${PANEL_ID} .absda-note { position: absolute; right: 4px; bottom: 4px; width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.6); color: #fff; }
     #${PANEL_ID} .absda-plank { position: absolute; height: 4px; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
     #${PANEL_ID} .absda-book { position: absolute; width: 9px; border-radius: 1px; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
 
@@ -473,6 +649,11 @@ if (location.protocol !== "file:") {
       miniShelf(pv, { left: 15, plank: "#fff", books: [["#ffff00", "#00ffff", "#fff"], ["#00ff00", "#ffff00"]] });
     } else {
       miniShelf(pv, { left: 15, plank: t.plank, books: [[t.accent, "#e8e1d6", t.panel], ["#c9c2b8", t.accent]] });
+    }
+    if (t.sound) {   // a little note: this theme has mood sounds
+      const note = el("div", "absda-note");
+      note.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>';
+      pv.append(note);
     }
     tile.append(pv, Object.assign(el("span"), { textContent: t.label }));
     tile.addEventListener("click", () => setLook("theme", t.id));
@@ -775,11 +956,17 @@ if (location.protocol !== "file:") {
     const vol = Object.assign(el("input"), { type: "range", min: "0", max: "100", step: "5", value: String(mood.volume) });
     vol.addEventListener("input", () => setMood({ volume: Number(vol.value) }));
     volRow.append(Object.assign(el("span"), { textContent: mood.texts.volume }), vol);
-    const onlyRow = el("label", "absda-mp-row");
-    const only = Object.assign(el("input"), { type: "checkbox", checked: !mood.always });
-    only.addEventListener("change", () => setMood({ always: !only.checked }));
-    onlyRow.append(only, Object.assign(el("span"), { textContent: mood.texts.onlyPlaying }));
-    pop.append(head, onRow, volRow, onlyRow);
+    // When they play: while a book is playing / also while you're in the library
+    const when = el("div", "absda-mp-when");
+    when.append(Object.assign(el("div", "absda-mp-sub"), { textContent: mood.texts.when }));
+    for (const [always, text] of [[false, mood.texts.whilePlaying], [true, mood.texts.whileLibrary]]) {
+      const row = el("label", "absda-mp-row");
+      const r = Object.assign(el("input"), { type: "radio", name: "absda-mood-when", checked: !!mood.always === always });
+      r.addEventListener("change", () => { if (r.checked) setMood({ always }); });
+      row.append(r, Object.assign(el("span"), { textContent: text }));
+      when.append(row);
+    }
+    pop.append(head, onRow, volRow, when);
     const r = btn.getBoundingClientRect();
     pop.style.right = `${Math.max(8, Math.round(window.innerWidth - r.right - 8))}px`;
     pop.style.bottom = `${Math.round(window.innerHeight - r.top + 8)}px`;
@@ -876,6 +1063,7 @@ if (location.protocol !== "file:") {
       ensureScanButton();
       ensureMoodButton();
       ensureOverlayHead();
+      ensureDesktopSettings();
       if (location.pathname !== lastPath) { lastPath = location.pathname; closePanel(); }
     }, 150);
     clearTimeout(frameTimer);

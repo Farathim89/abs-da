@@ -257,5 +257,9 @@
   "mood.sounds": "Гукі настрою",
   "mood.volume": "Гучнасць",
   "mood.volumeMenu": "Гучнасць гукаў настрою",
-  "mood.onlyPlaying": "Толькі калі грае кніга"
+  "mood.when": "Гукі настрою гучаць",
+  "mood.whilePlaying": "Калі грае кніга",
+  "mood.whileLibrary": "Калі грае кніга і ў бібліятэцы",
+  "settings.desktop": "Праграма для ПК",
+  "settings.desktopNote": "Налады ABS Desktop App на гэтым ПК. Тыя ж параметры ёсць у меню загалоўка (Праграма і Выгляд)."
 }

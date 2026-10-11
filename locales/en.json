@@ -257,5 +257,9 @@
   "mood.sounds": "Mood sounds",
   "mood.volume": "Volume",
   "mood.volumeMenu": "Mood sound volume",
-  "mood.onlyPlaying": "Only while a book is playing"
+  "mood.when": "Mood sounds play",
+  "mood.whilePlaying": "While a book is playing",
+  "mood.whileLibrary": "While a book is playing and in the library",
+  "settings.desktop": "Desktop App",
+  "settings.desktopNote": "Settings for ABS Desktop App on this PC. The same options are in the title bar menus (App and View)."
 }

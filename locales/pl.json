@@ -257,5 +257,9 @@
   "mood.sounds": "Dźwięki nastroju",
   "mood.volume": "Głośność",
   "mood.volumeMenu": "Głośność dźwięków nastroju",
-  "mood.onlyPlaying": "Tylko gdy gra książka"
+  "mood.when": "Dźwięki nastroju grają",
+  "mood.whilePlaying": "Gdy gra książka",
+  "mood.whileLibrary": "Gdy gra książka i w bibliotece",
+  "settings.desktop": "Aplikacja na komputer",
+  "settings.desktopNote": "Ustawienia ABS Desktop App na tym komputerze. Te same opcje są w menu paska tytułu (Aplikacja i Widok)."
 }

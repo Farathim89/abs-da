@@ -257,5 +257,9 @@
   "mood.sounds": "Meeleoluhelid",
   "mood.volume": "Helitugevus",
   "mood.volumeMenu": "Meeleoluhelide tugevus",
-  "mood.onlyPlaying": "Ainult siis, kui raamat mängib"
+  "mood.when": "Meeleoluhelid mängivad",
+  "mood.whilePlaying": "Kui raamat mängib",
+  "mood.whileLibrary": "Kui raamat mängib ja raamatukogus",
+  "settings.desktop": "Töölauarakendus",
+  "settings.desktopNote": "ABS Desktop Appi seaded selles arvutis. Samad valikud on ka tiitliriba menüüdes (Rakendus ja Vaade)."
 }

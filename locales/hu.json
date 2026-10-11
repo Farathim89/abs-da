@@ -257,5 +257,9 @@
   "mood.sounds": "Hangulathangok",
   "mood.volume": "Hangerő",
   "mood.volumeMenu": "Hangulathangok hangereje",
-  "mood.onlyPlaying": "Csak amíg könyv szól"
+  "mood.when": "A hangulathangok szólnak",
+  "mood.whilePlaying": "Amíg könyv szól",
+  "mood.whileLibrary": "Amíg könyv szól és a könyvtárban",
+  "settings.desktop": "Asztali alkalmazás",
+  "settings.desktopNote": "Az ABS Desktop App beállításai ezen a gépen. Ugyanezek az opciók a címsor menüiben is megvannak (Alkalmazás és Nézet)."
 }

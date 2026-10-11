@@ -900,18 +900,32 @@ function setTheme(id) {
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
   if (view && isServerUrl(wc().getURL())) installHome(wc());   // a mood theme may bring another bookshelf (Home follows it)
+  previewMoodSound();
   sendMoodSound();   // another mood's sounds (or none for a colour theme)
 }
 // ---- mood sounds (ambience.js in the title bar page) ---------------------------------
 // Off until you switch them on (player bar button, View → Theme, or the Looks panel).
 // By default they play only while a book is playing (here or in the offline library).
 let bookPlaying = false, offlinePlaying = false;
+// A short taste of the sound when you switch it on, change its volume or pick a mood theme,
+// so you hear it even with no book playing (it then follows "Only while a book is playing").
+let previewUntil = 0, previewTimer = null;
+// "While a book is playing and in the library": also while the window is open on screen
+// (not minimized, not closed to the tray).
+const appOnScreen = () => !!(win && !win.isDestroyed() && win.isVisible() && !win.isMinimized());
+function previewMoodSound() {
+  if (!isMood() || !config.moodSound) return;
+  previewUntil = Date.now() + 7000;
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(sendMoodSound, 7100);
+}
 const moodSoundVolume = () => (Number.isFinite(config.moodSoundVolume) ? config.moodSoundVolume : 35);
 function moodSoundState() {
   return {
     available: isMood(), on: !!config.moodSound, volume: moodSoundVolume(), always: !!config.moodSoundAlways,
     name: tr("theme." + themeId()),
-    texts: { sounds: tr("mood.sounds"), volume: tr("mood.volume"), onlyPlaying: tr("mood.onlyPlaying") },
+    texts: { sounds: tr("mood.sounds"), volume: tr("mood.volume"), when: tr("mood.when"),
+      whilePlaying: tr("mood.whilePlaying"), whileLibrary: tr("mood.whileLibrary") },
   };
 }
 function sendMoodSound() {
@@ -919,7 +933,7 @@ function sendMoodSound() {
   if (win && !win.isDestroyed()) {
     win.webContents.send("desktop:ambience", {
       mood: themeId(), volume: st.volume / 100,
-      on: st.available && st.on && (st.always || bookPlaying || offlinePlaying),
+      on: st.available && st.on && (bookPlaying || offlinePlaying || (st.always && appOnScreen()) || Date.now() < previewUntil),
     });
   }
   if (view && !view.webContents.isDestroyed()) view.webContents.send("desktop:mood-sound-state", st);
@@ -931,11 +945,12 @@ function setMoodSound(patch) {
   if (typeof patch.always === "boolean") next.moodSoundAlways = patch.always;
   config = next;
   writeJson(dataFile("config.json"), config);
+  if (patch.on === true || Number.isFinite(patch.volume)) previewMoodSound();
   sendMoodSound();
 }
 // Is a book playing? (Only asked while it matters.)
 setInterval(async () => {
-  if (!isMood() || !config.moodSound || config.moodSoundAlways) return;
+  if (!isMood() || !config.moodSound) return;
   const p = !!(await playerState()).playing;
   if (p !== bookPlaying) { bookPlaying = p; sendMoodSound(); }
 }, 2000);
@@ -951,6 +966,7 @@ ipcMain.on("desktop:offline-playing", (e, on) => {
 function sendWindowActive() {
   if (!win || win.isDestroyed() || !view || view.webContents.isDestroyed()) return;
   view.webContents.send("desktop:window-active", win.isFocused() && win.isVisible() && !win.isMinimized());
+  sendMoodSound();   // ("…and in the library" follows the window)
 }
 
 // Current bookshelf art (older versions had a wood on/off switch → "none"). Mood themes keep
@@ -2076,12 +2092,15 @@ function themeMenuItems() {
         items.push({ label: tr("mood.sounds"), type: "checkbox", checked: !!config.moodSound, click: (item) => setMoodSound({ on: item.checked }) });
         items.push({ label: tr("mood.volumeMenu"), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
           label: v + "%", type: "checkbox", checked: moodSoundVolume() === v, click: () => setMoodSound({ volume: v }) })) });
-        items.push({ label: tr("mood.onlyPlaying"), type: "checkbox", checked: !config.moodSoundAlways, click: (item) => setMoodSound({ always: !item.checked }) });
+        items.push({ label: tr("mood.when"), submenu: [
+          { label: tr("mood.whilePlaying"), type: "checkbox", checked: !config.moodSoundAlways, click: () => setMoodSound({ always: false }) },
+          { label: tr("mood.whileLibrary"), type: "checkbox", checked: !!config.moodSoundAlways, click: () => setMoodSound({ always: true }) },
+        ] });
       }
       items.push({ type: "separator" });
     }
     group = t.group;
-    items.push({ label: tr("theme." + id), type: "checkbox", checked: themeId() === id, click: () => setTheme(id) });
+    items.push({ label: tr("theme." + id) + (t.group === "mood" ? "  ♪" : ""), type: "checkbox", radio: "theme", checked: themeId() === id, click: () => setTheme(id) });
   }
   return items;
 }
@@ -2334,7 +2353,7 @@ function menuData(template, handlers) {
     const id = handlers.push(it) - 1;
     return {
       id, label: String(it.label || ""), enabled: it.enabled !== false, checked: !!it.checked, accel: accel(it.accelerator),
-      type: it.submenu ? "submenu" : it.type === "checkbox" ? "checkbox" : "normal",
+      type: it.submenu ? "submenu" : it.type === "checkbox" ? "checkbox" : "normal", radio: it.radio || undefined,
       submenu: it.submenu ? walk(it.submenu) : undefined,
     };
   });
@@ -2364,6 +2383,31 @@ ipcMain.on("ui:menu-click", (e, id) => {
   }
 });
 ipcMain.on("ui:close", (e) => { if (fromUi(e) && uiOpen && uiOpen.kind === "menu") closeUi(); });
+
+// ---- "Desktop App" in the Settings window ------------------------------------------
+// The App and View menus as a settings page (preload.js draws it in the Settings
+// overlay): the same items, so the page never falls behind the menus. Things that
+// are actions rather than settings (Home, Reload, zoom, full screen, Exit) are left out.
+let settingsHandlers = [];
+function desktopSettingsData() {
+  settingsHandlers = [];
+  const t = menuTemplate();
+  const keep = (items) => items.filter((it) => it && (it.type === "separator" || (!it.accelerator && it.label !== tr("app.exit"))))
+    .map((it) => (it.submenu ? { ...it, submenu: keep(it.submenu) } : it));
+  const tops = [t[0], t[2]].filter(Boolean).map((top) => ({ ...top, submenu: keep(top.submenu || []) }));   // App, View
+  return { title: tr("settings.desktop"), note: tr("settings.desktopNote"), menus: menuData(tops, settingsHandlers) };
+}
+const fromSettings = (e) => settingsView && !settingsView.webContents.isDestroyed() && e.sender === settingsView.webContents && fromServerPage(e);
+ipcMain.handle("desktop:settings-data", (e) => (fromSettings(e) ? desktopSettingsData() : null));
+ipcMain.handle("desktop:settings-click", async (e, id) => {
+  if (!fromSettings(e)) return null;
+  const item = settingsHandlers[Number(id)];
+  if (item && item.enabled !== false && typeof item.click === "function") {
+    try { await item.click({ checked: item.type === "checkbox" ? !item.checked : !!item.checked }); } catch {}
+  }
+  await new Promise((r) => setTimeout(r, 120));
+  return desktopSettingsData();
+});
 
 // Message boxes: showDialog({ type, title, message, detail, buttons, defaultId, cancelId })
 // → Promise<{ response }>, like dialog.showMessageBox(win, …).
@@ -2576,7 +2620,7 @@ function looksState() {
   const themes = Object.entries(THEMES).map(([id, th]) => {
     const c = th.colors || {};
     return {
-      id, label: tr("theme." + id), contrast: !!th.contrast, group: th.group || "colour", groupLabel: tr("themeGroup." + (th.group || "colour")),
+      id, label: tr("theme." + id), contrast: !!th.contrast, sound: th.group === "mood", group: th.group || "colour", groupLabel: tr("themeGroup." + (th.group || "colour")),
       title: th.title.bg, page: c.primary || BG, panel: c.bg || "#373838", image: th.page && th.group === "mood" ? th.page : null,
       accent: th.title.logo, plank: th.shelf || ABS_PLANK,
     };
