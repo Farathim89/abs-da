@@ -536,11 +536,11 @@ const MOOD_THEMES = {
       "black-50": "#c8d4e6", "black-100": "#76839c", "black-200": "#5d6a82", "black-300": "#445068",
       "black-400": "#303a4e", "black-500": "#1e2638", "black-600": "#121828", "black-700": "#0b101c",
     },
-    // Snow falling.
-    fx: (motion) =>
+    // Snow falling (View → Theme → Show snowflakes can turn the flakes off).
+    fx: (motion, o = {}) =>
       layerCss("before", `inset: 0; z-index: 2147482000;
         background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(160, 200, 255, .08), transparent 70%);`) +
-      movingDots("after", FLAKES, 440, 22, "down", motion) + still,
+      (o.snowFlakes === false ? "" : movingDots("after", FLAKES, 440, 22, "down", motion)) + still,
   },
 };
 
@@ -592,7 +592,7 @@ for (const [id, t] of Object.entries(MOOD_THEMES)) {
   const fx = t.fx;
   // Our own pages (offline library, can't-reach page) get the scenery behind their cards.
   const pageCss = `html body.absda-mood-page { background-image: ${t.page} !important; background-attachment: fixed !important; }`;
-  t.fx = (motion) => fx(motion) + chromeCss(CHROME[id]) + fontCss(FONTS[id]) + pageCss;
+  t.fx = (motion, o) => fx(motion, o) + chromeCss(CHROME[id]) + fontCss(FONTS[id]) + pageCss;
 }
 
 module.exports = { MOOD_THEMES };

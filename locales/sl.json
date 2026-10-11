@@ -263,5 +263,6 @@
   "settings.desktop": "Namizna aplikacija",
   "settings.desktopNote": "Nastavitve ABS Desktop App v tem računalniku. Iste možnosti so tudi v menijih naslovne vrstice (Aplikacija in Pogled).",
   "mood.libraryOnly": "Samo v knjižnici (tiho med predvajanjem knjige)",
-  "theme.summer": "Poletni gozd"
+  "theme.summer": "Poletni gozd",
+  "theme.snowFlakes": "Prikaži snežinke"
 }

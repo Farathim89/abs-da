@@ -263,5 +263,6 @@
   "settings.desktop": "桌面應用程式",
   "settings.desktopNote": "此電腦上 ABS Desktop App 的設定。同樣的選項也在標題列選單（應用程式和檢視）中。",
   "mood.libraryOnly": "僅在書庫中（播放書籍時靜音）",
-  "theme.summer": "夏日森林"
+  "theme.summer": "夏日森林",
+  "theme.snowFlakes": "顯示雪花"
 }

@@ -263,5 +263,6 @@
   "settings.desktop": "デスクトップアプリ",
   "settings.desktopNote": "このPCのABS Desktop Appの設定です。同じ項目はタイトルバーのメニュー（アプリと表示）にもあります。",
   "mood.libraryOnly": "ライブラリのみ（本の再生中は鳴らさない）",
-  "theme.summer": "夏の森"
+  "theme.summer": "夏の森",
+  "theme.snowFlakes": "雪の結晶を表示"
 }

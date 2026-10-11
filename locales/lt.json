@@ -263,5 +263,6 @@
   "settings.desktop": "Darbalaukio programa",
   "settings.desktopNote": "ABS Desktop App nustatymai šiame kompiuteryje. Tos pačios parinktys yra ir pavadinimo juostos meniu (Programa ir Rodinys).",
   "mood.libraryOnly": "Tik bibliotekoje (tylu, kai groja knyga)",
-  "theme.summer": "Vasaros miškas"
+  "theme.summer": "Vasaros miškas",
+  "theme.snowFlakes": "Rodyti snaiges"
 }

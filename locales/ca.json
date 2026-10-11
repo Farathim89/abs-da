@@ -263,5 +263,6 @@
   "settings.desktop": "Aplicació d'escriptori",
   "settings.desktopNote": "Configuració d'ABS Desktop App en aquest PC. Les mateixes opcions són als menús de la barra de títol (Aplicació i Visualització).",
   "mood.libraryOnly": "Només a la biblioteca (en silenci mentre sona un llibre)",
-  "theme.summer": "Bosc d'estiu"
+  "theme.summer": "Bosc d'estiu",
+  "theme.snowFlakes": "Mostra els flocs de neu"
 }

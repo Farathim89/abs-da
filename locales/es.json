@@ -263,5 +263,6 @@
   "settings.desktop": "Aplicación de escritorio",
   "settings.desktopNote": "Ajustes de ABS Desktop App en este PC. Las mismas opciones están en los menús de la barra de título (Aplicación y Ver).",
   "mood.libraryOnly": "Solo en la biblioteca (en silencio mientras suena un libro)",
-  "theme.summer": "Bosque de verano"
+  "theme.summer": "Bosque de verano",
+  "theme.snowFlakes": "Mostrar copos de nieve"
 }

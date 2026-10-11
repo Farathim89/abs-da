@@ -263,5 +263,6 @@
   "settings.desktop": "تطبيق سطح المكتب",
   "settings.desktopNote": "إعدادات ABS Desktop App على هذا الحاسوب. الخيارات نفسها في قوائم شريط العنوان (التطبيق والعرض).",
   "mood.libraryOnly": "في المكتبة فقط (صامتة أثناء تشغيل كتاب)",
-  "theme.summer": "غابة الصيف"
+  "theme.summer": "غابة الصيف",
+  "theme.snowFlakes": "إظهار رقاقات الثلج"
 }

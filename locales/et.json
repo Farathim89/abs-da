@@ -263,5 +263,6 @@
   "settings.desktop": "Töölauarakendus",
   "settings.desktopNote": "ABS Desktop Appi seaded selles arvutis. Samad valikud on ka tiitliriba menüüdes (Rakendus ja Vaade).",
   "mood.libraryOnly": "Ainult raamatukogus (vaikne, kui raamat mängib)",
-  "theme.summer": "Suvemets"
+  "theme.summer": "Suvemets",
+  "theme.snowFlakes": "Näita lumehelbeid"
 }

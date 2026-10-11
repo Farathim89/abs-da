@@ -733,7 +733,7 @@ function themeCss(id) {
       trix-toolbar .trix-input--dialog.validate:invalid { box-shadow: ${a} 0 0 1.5px 1px !important; }`);
   }
   if (t.css) parts.push(t.css);
-  if (t.fx) parts.push(t.fx(config.moodMotion !== false));   // View → Theme → Animate mood themes
+  if (t.fx) parts.push(t.fx(config.moodMotion !== false, { snowFlakes: config.snowFlakes !== false }));   // View → Theme → Animate mood themes / Show snowflakes
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
   // The connect / can't-reach screen (connect.css) follows the theme too.
@@ -2105,6 +2105,7 @@ function themeMenuItems() {
     if (items.length && t.group !== group) {
       if (group === "mood") {
         items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
+        if (themeId() === "snow") items.push({ label: tr("theme.snowFlakes"), type: "checkbox", checked: config.snowFlakes !== false, click: (item) => setSnowFlakes(item.checked) });
         items.push({ label: tr("mood.sounds"), type: "checkbox", checked: !!config.moodSound, click: (item) => setMoodSound({ on: item.checked }) });
         items.push({ label: tr("mood.volumeMenu"), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
           label: v + "%", type: "checkbox", checked: moodSoundVolume() === v, click: () => setMoodSound({ volume: v }) })) });
@@ -2120,6 +2121,12 @@ function themeMenuItems() {
     items.push({ label: tr("theme." + id) + (t.group === "mood" ? "  ♪" : ""), type: "checkbox", radio: "theme", checked: themeId() === id, click: () => setTheme(id) });
   }
   return items;
+}
+// Snowy Night: falling snowflakes on or off (the snow on the books stays).
+function setSnowFlakes(on) {
+  config = { ...config, snowFlakes: !!on };
+  writeJson(dataFile("config.json"), config);
+  reapplyTheme();
 }
 // Mood themes' torches, embers, bubbles… moving or standing still (remembered).
 function setMoodMotion(on) {
@@ -2652,6 +2659,7 @@ function looksState() {
   const sizes = TEXT_SIZES.map(([name, f]) => ({ id: String(f), label: tr("size." + name), percent: Math.round(f * 100) }));
   return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves,
     motion: config.moodMotion !== false, motionLabel: tr("theme.motion"),
+    snowFlakes: themeId() === "snow" ? { on: config.snowFlakes !== false, label: tr("theme.snowFlakes") } : null,
     sound: { on: !!config.moodSound, volume: moodSoundVolume(), label: tr("mood.sounds"), volumeLabel: tr("mood.volume"),
       when: moodWhen(), whenLabel: tr("mood.when"),
       whens: [["book", tr("mood.whilePlaying")], ["both", tr("mood.whileLibrary")], ["library", tr("mood.libraryOnly")]] } };
@@ -2663,6 +2671,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
   if (kind === "shelf" && SHELF_ARTS[id]) setShelfArt(id);
   if (kind === "text" && TEXT_SIZES.some(([, f]) => String(f) === id)) setTextSize(Number(id));
   if (kind === "motion") setMoodMotion(id === "on");
+  if (kind === "snowFlakes") setSnowFlakes(id === "on");
   if (kind === "sound") setMoodSound({ on: id === "on" });
   if (kind === "soundVolume" && Number.isFinite(Number(id))) setMoodSound({ volume: Number(id) });
   if (kind === "soundWhen" && MOOD_WHEN.includes(id)) setMoodSound({ when: id });

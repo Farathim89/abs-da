@@ -263,5 +263,6 @@
   "settings.desktop": "ডেস্কটপ অ্যাপ",
   "settings.desktopNote": "এই পিসিতে ABS Desktop App-এর সেটিংস। একই বিকল্প টাইটেল বারের মেনুতেও আছে (অ্যাপ ও ভিউ)।",
   "mood.libraryOnly": "শুধু লাইব্রেরিতে (বই চলার সময় চুপ)",
-  "theme.summer": "গ্রীষ্মের বন"
+  "theme.summer": "গ্রীষ্মের বন",
+  "theme.snowFlakes": "তুষারকণা দেখান"
 }

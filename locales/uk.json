@@ -263,5 +263,6 @@
   "settings.desktop": "Застосунок для ПК",
   "settings.desktopNote": "Налаштування ABS Desktop App на цьому ПК. Ті самі параметри є в меню заголовка (Застосунок і Вигляд).",
   "mood.libraryOnly": "Лише в бібліотеці (тихо, коли грає книга)",
-  "theme.summer": "Літній ліс"
+  "theme.summer": "Літній ліс",
+  "theme.snowFlakes": "Показувати сніжинки"
 }

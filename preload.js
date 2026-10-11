@@ -703,6 +703,13 @@ if (location.protocol !== "file:") {
     sel.addEventListener("change", () => setLook("soundWhen", sel.value));
     whenRow.append(Object.assign(el("span"), { textContent: looks.sound.whenLabel }), sel);
     wrap.append(lab, snd, whenRow);
+    if (looks.snowFlakes) {   // Snowy Night: show the falling snowflakes or not
+      const fl = el("label", "absda-motion");
+      const fbox = Object.assign(el("input"), { type: "checkbox", checked: !!looks.snowFlakes.on });
+      fbox.addEventListener("change", () => setLook("snowFlakes", fbox.checked ? "on" : "off"));
+      fl.append(fbox, Object.assign(el("span"), { textContent: looks.snowFlakes.label }));
+      wrap.insertBefore(fl, snd);
+    }
     return wrap;
   }
 

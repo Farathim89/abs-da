@@ -263,5 +263,6 @@
   "settings.desktop": "Masaüstü Uygulaması",
   "settings.desktopNote": "Bu bilgisayardaki ABS Desktop App ayarları. Aynı seçenekler başlık çubuğu menülerinde de var (Uygulama ve Görünüm).",
   "mood.libraryOnly": "Yalnızca kitaplıkta (kitap çalarken sessiz)",
-  "theme.summer": "Yaz Ormanı"
+  "theme.summer": "Yaz Ormanı",
+  "theme.snowFlakes": "Kar tanelerini göster"
 }

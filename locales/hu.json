@@ -263,5 +263,6 @@
   "settings.desktop": "Asztali alkalmazás",
   "settings.desktopNote": "Az ABS Desktop App beállításai ezen a gépen. Ugyanezek az opciók a címsor menüiben is megvannak (Alkalmazás és Nézet).",
   "mood.libraryOnly": "Csak a könyvtárban (csendes, amíg könyv szól)",
-  "theme.summer": "Nyári erdő"
+  "theme.summer": "Nyári erdő",
+  "theme.snowFlakes": "Hópelyhek megjelenítése"
 }

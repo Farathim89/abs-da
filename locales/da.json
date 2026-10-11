@@ -263,5 +263,6 @@
   "settings.desktop": "Skrivebordsapp",
   "settings.desktopNote": "Indstillinger for ABS Desktop App på denne pc. De samme valg findes i titellinjens menuer (App og Vis).",
   "mood.libraryOnly": "Kun i biblioteket (stille mens en bog afspilles)",
-  "theme.summer": "Sommerskov"
+  "theme.summer": "Sommerskov",
+  "theme.snowFlakes": "Vis snefnug"
 }

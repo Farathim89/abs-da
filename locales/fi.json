@@ -263,5 +263,6 @@
   "settings.desktop": "Työpöytäsovellus",
   "settings.desktopNote": "ABS Desktop Appin asetukset tällä tietokoneella. Samat valinnat löytyvät myös otsikkopalkin valikoista (Sovellus ja Näytä).",
   "mood.libraryOnly": "Vain kirjastossa (hiljaa, kun kirja soi)",
-  "theme.summer": "Kesämetsä"
+  "theme.summer": "Kesämetsä",
+  "theme.snowFlakes": "Näytä lumihiutaleet"
 }

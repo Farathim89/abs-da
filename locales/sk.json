@@ -263,5 +263,6 @@
   "settings.desktop": "Desktopová aplikácia",
   "settings.desktopNote": "Nastavenia ABS Desktop App v tomto PC. Rovnaké voľby sú aj v ponukách záhlavia (Aplikácia a Zobraziť).",
   "mood.libraryOnly": "Len v knižnici (ticho, keď hrá kniha)",
-  "theme.summer": "Letný les"
+  "theme.summer": "Letný les",
+  "theme.snowFlakes": "Zobraziť snehové vločky"
 }
