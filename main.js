@@ -925,7 +925,9 @@ function previewMoodSound() {
   clearTimeout(previewTimer);
   previewTimer = setTimeout(sendMoodSound, 7100);
 }
-const moodSoundVolume = () => (Number.isFinite(config.moodSoundVolume) ? config.moodSoundVolume : 35);
+// The slider goes 0–100 %, its top being half the sound's full level (loud enough under a book).
+const MOOD_MAX = 0.5;
+const moodSoundVolume = () => (Number.isFinite(config.moodSoundVolume) ? config.moodSoundVolume : 60);
 function moodSoundState() {
   return {
     available: isMood(), on: !!config.moodSound, volume: moodSoundVolume(), when: moodWhen(),
@@ -938,7 +940,7 @@ function sendMoodSound() {
   const st = moodSoundState();
   if (win && !win.isDestroyed()) {
     win.webContents.send("desktop:ambience", {
-      mood: themeId(), volume: st.volume / 100,
+      mood: themeId(), volume: (st.volume / 100) * MOOD_MAX,   // (the slider's 100 % = half of full)
       on: st.available && st.on && (Date.now() < previewUntil || (() => {
         const book = bookPlaying || offlinePlaying;
         if (st.when === "library") return !book && appOnScreen();
