@@ -147,6 +147,16 @@ module.exports = function setupOffline(ctx) {
     pump();
   }
 
+  // Queue books to download (already downloaded or queued ones are skipped).
+  function enqueue(ids) {
+    for (const id of ids.map(String)) {
+      if (jobs.has(id) || queue.includes(id) || meta(id)) continue;
+      queue.push(id);
+      emit(state(id));
+    }
+    pump();
+  }
+
   function remove(id) {
     const j = jobs.get(id);
     if (j) j.abort();
@@ -154,6 +164,18 @@ module.exports = function setupOffline(ctx) {
     if (qi >= 0) queue.splice(qi, 1);
     try { fs.rmSync(folder(id), { recursive: true, force: true }); } catch {}
     emit(state(id));
+  }
+  // App → Offline: how much is downloaded, and remove it all.
+  function summary() {
+    const books = list();
+    return { count: books.length, size: books.reduce((n, b) => n + (b.size || 0), 0), pending: books.some((b) => b.pending) };
+  }
+  function removeAll() {
+    queue.length = 0;
+    for (const j of jobs.values()) j.abort();
+    let names = [];
+    try { names = fs.readdirSync(root()); } catch {}
+    for (const n of names) remove(n);
   }
 
   // ---- the offline library page ------------------------------------------------
@@ -185,13 +207,16 @@ module.exports = function setupOffline(ctx) {
   }
 
   // Listening, sent by the offline player every few seconds while playing and on pause.
-  function saveListening(id, { currentTime, listened, newSession, startTime }) {
+  function saveListening(id, { currentTime, listened, newSession, startTime, finished }) {
     const m = meta(id);
     if (!m) return;
     const p = progress(id);
     const now = Date.now();
     p.currentTime = Math.max(0, Number(currentTime) || 0);
     p.updatedAt = now;
+    // Played to the end → finished (sent to the server on the next sync). Listening again from earlier undoes it.
+    if (finished) { p.finished = true; p.finishedSynced = false; }
+    else if (p.finished && p.currentTime < (m.duration || 0) - 60) { p.finished = false; p.finishedSynced = false; }
     p.sessions = p.sessions || [];
     let s = p.sessions[p.sessions.length - 1];
     const today = new Date(now).toISOString().slice(0, 10);
@@ -248,6 +273,16 @@ module.exports = function setupOffline(ctx) {
         }
         if (ok.size) ctx.toast("success", ctx.tr("offline.synced"));
       }
+      // Books played to the end offline → finished on the server too.
+      for (const id of ids) {
+        const p = progress(id);
+        if (!p.finished || p.finishedSynced || unsynced(p).length) continue;
+        try {
+          await api(`/api/me/progress/${id}`, token, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isFinished: true }) });
+          p.finishedSynced = true;
+          writeJson(progressFile(id), p);
+        } catch (err) { ctx.log("offline finish failed: " + err.message); }
+      }
       // Refresh where the server says you are, for every downloaded book.
       const me = await (await api("/api/me", token)).json();
       const byItem = new Map((me.mediaProgress || []).map((mp) => [mp.libraryItemId, mp]));
@@ -255,8 +290,22 @@ module.exports = function setupOffline(ctx) {
         const mp = byItem.get(id);
         if (!mp) continue;
         const p = progress(id);
-        p.serverProgress = { currentTime: mp.currentTime || 0, isFinished: !!mp.isFinished, lastUpdate: mp.lastUpdate || 0 };
+        p.serverProgress = { currentTime: mp.currentTime || 0, isFinished: !!mp.isFinished, lastUpdate: mp.lastUpdate || 0, finishedAt: mp.finishedAt || 0 };
         writeJson(progressFile(id), p);
+      }
+      // App → Offline → Delete finished books: once everything about a book has reached the
+      // server and it was finished after downloading (here or on another device), free the space.
+      // (A book you'd finished before and downloaded to hear again stays.)
+      if (ctx.config().offlineAutoDelete) {
+        for (const id of ids) {
+          const m = meta(id), p = progress(id);
+          if (!m || jobs.has(id) || unsynced(p).length || (p.finished && !p.finishedSynced)) continue;
+          const sp = p.serverProgress || {};
+          if ((p.finished && p.finishedSynced) || (sp.isFinished && (sp.finishedAt || 0) > (m.downloadedAt || 0))) {
+            remove(id);
+            ctx.toast("info", ctx.tr("offline.autoDeleted", { title: m.title }));
+          }
+        }
       }
     } catch (err) {
       ctx.log("offline sync failed: " + err.message);
@@ -275,6 +324,7 @@ module.exports = function setupOffline(ctx) {
     emit(state(String(id)));
     pump();
   });
+  ipcMain.on("desktop:offline-download-many", (e, ids) => { if (fromApp(e) && Array.isArray(ids)) enqueue(ids.filter((x) => typeof x === "string").slice(0, 500)); });
   ipcMain.on("desktop:offline-remove", (e, id) => { if ((fromApp(e) || ctx.fromLocalPage(e)) && id) remove(String(id)); });
   // From the offline library page.
   ipcMain.handle("desktop:offline-list", (e) => (ctx.fromLocalPage(e) ? list() : []));
@@ -283,6 +333,8 @@ module.exports = function setupOffline(ctx) {
 
   return {
     count: () => list().length,
+    summary,
+    removeAll,
     sync,
   };
 };

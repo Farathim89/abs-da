@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // The "Download for offline" button on a book's page in the web app (next to Play).
 // Shows the download's progress, then a tick; clicking the tick offers to remove the copy.
+// A series page gets a "Download series" button too (every audiobook in the series).
 // pageMain runs inside the Audiobookshelf page (main.js injects it); it talks to the app
 // through window messages that preload.js passes on (see offline.js).
 
@@ -10,7 +11,7 @@ function pageMain(opts) {
   if (!$n || !$n.$router || !$n.$store) return false;
   const B = window.__absdaOffline || (window.__absdaOffline = {});
   B.opts = opts;
-  if (B.installed) { B.ensure(true); return true; }
+  if (B.installed) { B.ensure(true); if (B.ensureSeries) B.ensureSeries(); return true; }
   B.installed = true;
 
   const BTN_ID = "absda-offline-btn";
@@ -34,7 +35,7 @@ function pageMain(opts) {
     const r = e.data.absdaOfflineReply;
     if (r && pending.has(r.reqId)) { pending.get(r.reqId)(r.result); pending.delete(r.reqId); }
     const s = e.data.absdaOfflineStatus;
-    if (s) { B.states[s.itemId] = s; draw(); }
+    if (s) { B.states[s.itemId] = s; draw(); drawSeries(); }
   });
   B.states = {};
 
@@ -121,10 +122,107 @@ function pageMain(opts) {
     }
   };
 
+  // ---- series page: download every audiobook in the series --------------------------
+  const SERIES_ID = "absda-offline-series";
+  B.series = B.series || { key: null, ids: [], name: "" };
+  const seriesRoute = () => /^\/library\/([^/]+)\/series\/([^/?#]+)/.exec($n.$route.path);
+  const enc = (v) => ($n.$encode ? $n.$encode(v) : encodeURIComponent(window.btoa(unescape(encodeURIComponent(v)))));
+  function seriesCounts() {
+    const st = B.series.ids.map((id) => B.states[id] || { state: "none" });
+    const done = st.filter((x) => x.state === "done");
+    const busyOnes = st.filter((x) => x.state === "downloading");
+    const pct = busyOnes.length ? Math.max(0, ...busyOnes.map((x) => x.percent || 0)) : 0;
+    return { total: st.length, done: done.length, downloading: busyOnes.length, pct, size: done.reduce((n, x) => n + (x.size || 0), 0) };
+  }
+  function drawSeries() {
+    const btn = document.getElementById(SERIES_ID);
+    if (!btn) return;
+    const c = seriesCounts();
+    const o = B.opts;
+    let html, title;
+    if (c.downloading) {
+      html = `<span style="font-weight:700">${fill(o.seriesProgress, { done: c.done, total: c.total })}</span><span style="opacity:.7">${c.pct}%</span>`;
+      title = fill(o.seriesProgress, { done: c.done, total: c.total });
+    } else if (c.done === c.total) {
+      html = ICON_OK + `<span>${fill(o.seriesDone, { total: c.total })}</span>`;
+      title = fill(o.seriesDone, { total: c.total });
+    } else {
+      const label = c.done ? fill(o.seriesRest, { count: c.total - c.done }) : o.seriesDownload;
+      html = ICON_DL + `<span>${label}</span>`;
+      title = label;
+    }
+    btn.innerHTML = html;
+    btn.title = title;
+    btn.setAttribute("aria-label", title);
+    btn.dataset.state = c.downloading ? "downloading" : c.done === c.total ? "done" : "none";
+    btn.style.color = c.done === c.total && !c.downloading ? "var(--tb-logo)" : "";
+  }
+  let seriesBusy = false;
+  B.ensureSeries = async () => {
+    if (seriesBusy) return;
+    const m = seriesRoute();
+    const old = document.getElementById(SERIES_ID);
+    const toolbar = document.getElementById("toolbar");
+    if (!m || !toolbar) { if (old) old.remove(); return; }
+    const key = m[1] + "/" + m[2];
+    if (old && old.dataset.key === key) return;
+    seriesBusy = true;
+    try {
+      if (old) old.remove();
+      if (B.series.key !== key) {
+        // The series' audiobooks (books with audio; e-books only are left out).
+        const r = await $n.$axios.$get(`/api/libraries/${m[1]}/items?filter=series.${enc(decodeURIComponent(m[2]))}&sort=media.metadata.title&limit=500&minified=1`).catch(() => null);
+        const items = ((r && r.results) || []).filter((li) => li.mediaType === "book" && li.media && (li.media.numTracks > 0 || li.media.numAudioFiles > 0));
+        B.series = { key, ids: items.map((li) => li.id), name: "" };
+        for (const id of B.series.ids) B.states[id] = (await ask(id)) || B.states[id] || { state: "none" };
+      }
+      if (!B.series.ids.length || !seriesRoute() || document.getElementById(SERIES_ID)) return;
+      const tb = document.getElementById("toolbar");
+      if (!tb) return;
+      B.series.name = ((tb.querySelector("p") || {}).textContent || "").trim();
+      const btn = document.createElement("button");
+      btn.id = SERIES_ID;
+      btn.type = "button";
+      btn.dataset.key = key;
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const c = seriesCounts();
+        if (c.done === c.total && !c.downloading) {
+          $n.$store.commit("globals/setConfirmPrompt", {
+            message: fill(B.opts.seriesRemoveConfirm, { count: c.total, series: B.series.name, size: sizeText(c.size) }),
+            type: "yesNo", yesButtonText: B.opts.remove, yesButtonColor: "error",
+            callback: (ok) => { if (ok) for (const id of B.series.ids) tell("remove", id); },
+          });
+          return;
+        }
+        if (c.downloading) return;   // already on its way
+        const todo = B.series.ids.filter((id) => (B.states[id] || {}).state !== "done");
+        window.postMessage({ absdaOffline: { action: "downloadMany", itemIds: todo } }, window.location.origin);
+      });
+      const grow = tb.querySelector(":scope > .grow");
+      if (grow) grow.after(btn); else tb.append(btn);
+      drawSeries();
+    } finally {
+      seriesBusy = false;
+    }
+  };
+  if (!document.getElementById("absda-offline-style")) {
+    const st = document.createElement("style");
+    st.id = "absda-offline-style";
+    st.textContent = `#${SERIES_ID} { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; margin: 0 6px;
+      border-radius: 6px; border: 1px solid rgba(255, 255, 255, .22); background: rgba(0, 0, 0, .3); color: inherit; font-size: 13px;
+      white-space: nowrap; cursor: pointer; }
+      #${SERIES_ID}:hover { border-color: var(--tb-logo); }
+      #${SERIES_ID} svg { width: 18px; height: 18px; }`;
+    document.head.append(st);
+  }
+
   let t = null;
-  new window.MutationObserver(() => { clearTimeout(t); t = setTimeout(() => B.ensure(false), 250); }).observe(document.body, { childList: true, subtree: true });
-  $n.$router.afterEach(() => setTimeout(() => B.ensure(false), 400));
-  B.ensure(false);
+  const ensureAll = () => { B.ensure(false); B.ensureSeries(); };
+  new window.MutationObserver(() => { clearTimeout(t); t = setTimeout(ensureAll, 250); }).observe(document.body, { childList: true, subtree: true });
+  $n.$router.afterEach(() => setTimeout(ensureAll, 400));
+  ensureAll();
   return true;
 }
 

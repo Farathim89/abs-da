@@ -261,4 +261,5 @@ const SHELF_ARTS = {
 // CSS value for a texture: url("data:image/svg+xml,…")
 const artUrl = (art) => `url("data:image/svg+xml,${encodeURIComponent(art.svg)}")`;
 
-module.exports = { SHELF_ARTS, artUrl };
+// The texture helpers are shared with the mood themes (mood-themes.js).
+module.exports = { SHELF_ARTS, artUrl, tex: { rng, svg, noiseFilter, layer, wood, plank, stars, ocean } };

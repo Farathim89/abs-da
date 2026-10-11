@@ -22,6 +22,7 @@ const os = require("os");
 const fs = require("fs");
 const { normalizeServer, probeServer } = require("./server");
 const { SHELF_ARTS, artUrl } = require("./shelf-art");
+const { MOOD_THEMES } = require("./mood-themes");
 const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 const homePageJs = require("./home-page");
 const setupOffline = require("./offline");
@@ -345,6 +346,8 @@ const offline = setupOffline({
 const offlineButtonTexts = () => ({
   download: tr("offline.download"), downloading: tr("offline.downloading"), downloaded: tr("offline.downloaded"),
   removeConfirm: tr("offline.removeConfirm"), cancelConfirm: tr("offline.cancelConfirm"), remove: tr("offline.remove"),
+  seriesDownload: tr("offline.seriesDownload"), seriesRest: tr("offline.seriesRest"), seriesProgress: tr("offline.seriesProgress"),
+  seriesDone: tr("offline.seriesDone"), seriesRemoveConfirm: tr("offline.seriesRemoveConfirm"),
 });
 function installOfflineButton(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
@@ -352,9 +355,41 @@ function installOfflineButton(contents, attempt = 0) {
     .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installOfflineButton(contents, attempt + 1), 1000); })
     .catch(() => {});
 }
-function showOfflineLibrary() {
-  if (view) wc().loadFile(path.join(__dirname, "offline.html"));
+function showOfflineLibrary(query) {
+  if (view) wc().loadFile(path.join(__dirname, "offline.html"), query ? { query } : undefined);
 }
+const sizeText = (b) => (b >= 1073741824 ? (b / 1073741824).toFixed(1) + " GB" : Math.round(b / 1048576) + " MB");
+// App → Offline: the offline library, its options, and how much space downloads take.
+function offlineMenuItems() {
+  const s = offline.summary();
+  const setKey = (k, v) => { config = { ...config, [k]: v }; writeJson(dataFile("config.json"), config); };
+  return [
+    { label: tr("app.offlineLibrary"), click: () => showOfflineLibrary() },
+    { type: "separator" },
+    { label: tr("offline.autoDelete"), type: "checkbox", checked: !!config.offlineAutoDelete,
+      click: (item) => { setKey("offlineAutoDelete", item.checked); if (item.checked) offline.sync(); } },
+    { label: tr("offline.autoOpen"), type: "checkbox", checked: config.offlineAutoOpen !== false,
+      click: (item) => setKey("offlineAutoOpen", item.checked) },
+    { type: "separator" },
+    { label: tr("offline.usage", { count: s.count, size: sizeText(s.size) }), enabled: false },
+    { label: tr("offline.removeAll"), enabled: s.count > 0, click: confirmRemoveAllOffline },
+  ];
+}
+async function confirmRemoveAllOffline() {
+  const s = offline.summary();
+  if (!s.count) return;
+  const { response } = await showDialog({
+    type: "warning", buttons: [tr("offline.remove"), tr("connect.cancel")], defaultId: 1, cancelId: 1,
+    message: tr("offline.removeAllConfirm", { count: s.count, size: sizeText(s.size) }),
+    detail: s.pending ? tr("offline.removeAllPending") : tr("offline.removeAllDetail"),
+  });
+  if (response !== 0) return;
+  offline.removeAll();
+  if (view && /offline.html/.test(wc().getURL())) showOfflineLibrary();   // show the now-empty list
+}
+// Opening the app with the server out of reach (no internet, server off) → your downloads,
+// once per start (App → Offline → Open the offline library when the server can't be reached).
+let serverReachedOnce = false, offlineStartShown = false;
 // Listening done offline goes to the server once the web app is open again (and every 10 minutes).
 setInterval(() => offline.sync(), 10 * 60 * 1000);
 function installLibraryMemory(contents, attempt = 0) {
@@ -509,9 +544,12 @@ const THEMES = {
       "black-400": "#34304c", "black-500": "#221f33", "black-600": "#161423", "black-700": "#100e19",
     },
   },
+  // Dungeon, Fireside Tavern, Starship, Neon Nights, Deep Sea, Haunted Manor (mood-themes.js).
+  ...MOOD_THEMES,
   // Easier to see: pure black, white text, yellow highlights, strong outlines.
   highcontrast: {
     label: "High contrast",
+    group: "access",
     title: { bg: "#000000", fg: "#ffffff", hover: "#3a3a3a", logo: "#ffd400" },
     tint: "rgba(0, 0, 0, 0.55)",
     shelf: "linear-gradient(180deg, #ffffff 0%, #c8c8c8 17%, #c8c8c8 88%, #8a8a8a 100%)",
@@ -540,7 +578,7 @@ const THEMES = {
       html:root body #appbar .absda-search input { border-color: #ffffff !important; background: #000000 !important; }
     `,
   },
-  contrast: { label: "Windows contrast colours", contrast: true, title: DEFAULT_TITLE },
+  contrast: { label: "Windows contrast colours", group: "access", contrast: true, title: DEFAULT_TITLE },
 };
 
 // The web app's own wood bookshelf image, e.g. url("…/wood_default.jpg").
@@ -609,6 +647,8 @@ function themeCss(id) {
     parts.push("html:root { --bookshelf-texture-img: none !important; }");
   } else if (art.svg) {
     parts.push(`html:root { --bookshelf-texture-img: ${artUrl(art)} !important; }`);
+  } else if (t.scene) {
+    parts.push(`html:root { --bookshelf-texture-img: ${t.scene} !important; }`);   // "Classic" = the mood theme's own
   } else if (t.tint && woodTexture) {
     parts.push(`html:root { --bookshelf-texture-img: linear-gradient(${t.tint}, ${t.tint}), ${woodTexture} !important; }`);
   }
@@ -693,6 +733,7 @@ function themeCss(id) {
       trix-toolbar .trix-input--dialog.validate:invalid { box-shadow: ${a} 0 0 1.5px 1px !important; }`);
   }
   if (t.css) parts.push(t.css);
+  if (t.fx) parts.push(t.fx(config.moodMotion !== false));   // View → Theme → Animate mood themes
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
   // The connect / can't-reach screen (connect.css) follows the theme too.
@@ -1300,6 +1341,11 @@ function createWindow() {
   // Server unreachable → friendly page with Retry / Change server.
   contents.on("did-fail-load", (_e, code, desc, url, isMainFrame) => {
     if (!isMainFrame || code === -3 || String(url).startsWith("file:")) return; // -3 = aborted (normal)
+    if (!serverReachedOnce && !offlineStartShown && config.offlineAutoOpen !== false && offline.count() > 0) {
+      offlineStartShown = true;
+      showOfflineLibrary({ from: "start" });
+      return;
+    }
     showConnectPage("error", `${desc} (${code})`);
   });
 
@@ -1406,6 +1452,7 @@ const SETTINGS_CSS = `
   #page-wrapper .fixed.top-16 { top: ${SETTINGS_BAR_H}px !important; }
   div:has(> #siderail-buttons-container) { display: none !important; }
   #app-content.has-siderail { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; left: 0 !important; }
+  html body:has(#__nuxt)::before, html body:has(#__nuxt)::after { display: none !important; }
   html::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 2147483001;
     border: 1px solid rgba(255, 255, 255, .22); }
   /* Settings menu: the open page gets the same marker as the app's side menu. */
@@ -1963,12 +2010,25 @@ const shortcut = (accelerator) => ({ accelerator, registerAccelerator: false });
 // group and would tick the first item of every group.)
 function themeMenuItems() {
   const items = [];
+  let group;
   for (const [id, t] of Object.entries(THEMES)) {
-    if (t.contrast) items.push({ type: "separator" });
+    if (items.length && t.group !== group) {
+      if (group === "mood") items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
+      items.push({ type: "separator" });
+    }
+    group = t.group;
     items.push({ label: tr("theme." + id), type: "checkbox", checked: themeId() === id, click: () => setTheme(id) });
   }
   return items;
 }
+// Mood themes' torches, embers, bubbles… moving or standing still (remembered).
+function setMoodMotion(on) {
+  config = { ...config, moodMotion: !!on };
+  writeJson(dataFile("config.json"), config);
+  reapplyTheme();
+}
+// "Classic" bookshelf = the theme's own scenery for a mood theme ("From the theme").
+const shelfLabel = (id) => (id === "classic" && currentTheme().scene ? tr("shelf.fromTheme") : tr("shelf." + id));
 
 // View → Bookshelf: one tick-item per shelf art, with a separator between groups
 // (wood · stone · materials · scenes · none).
@@ -1978,7 +2038,7 @@ function shelfMenuItems() {
   for (const [id, a] of Object.entries(SHELF_ARTS)) {
     if (lastGroup && a.group !== lastGroup) items.push({ type: "separator" });
     lastGroup = a.group;
-    items.push({ label: tr("shelf." + id), type: "checkbox", checked: shelfArtId() === id, click: () => setShelfArt(id) });
+    items.push({ label: shelfLabel(id), type: "checkbox", checked: shelfArtId() === id, click: () => setShelfArt(id) });
   }
   return items;
 }
@@ -2004,7 +2064,7 @@ function menuTemplate() {
       label: tr("menu.app"),
       submenu: [
         { label: tr("app.home"), ...shortcut("Alt+Home"), click: goHome },
-        { label: tr("app.offlineLibrary"), click: showOfflineLibrary },
+        { label: tr("app.offline"), submenu: offlineMenuItems() },
         { label: tr("app.changeServer"), click: () => showConnectPage("change") },
         ...(appKind() === "portable" || appKind() === "folder" ? [{ label: tr("app.desktopShortcut"), click: createDesktopShortcut }] : []),
         {
@@ -2452,19 +2512,21 @@ function looksState() {
   const themes = Object.entries(THEMES).map(([id, th]) => {
     const c = th.colors || {};
     return {
-      id, label: tr("theme." + id), contrast: !!th.contrast,
-      title: th.title.bg, page: c.primary || BG, panel: c.bg || "#373838",
+      id, label: tr("theme." + id), contrast: !!th.contrast, group: th.group || "colour", groupLabel: tr("themeGroup." + (th.group || "colour")),
+      title: th.title.bg, page: c.primary || BG, panel: c.bg || "#373838", image: th.page && th.group === "mood" ? th.page : null,
       accent: th.title.logo, plank: th.shelf || ABS_PLANK,
     };
   });
   const shelves = Object.entries(SHELF_ARTS).map(([id, a]) => {
     let image = null;
     if (a.svg) image = artUrl(a);
+    else if (id === "classic" && t.scene) image = t.scene;
     else if (id !== "none" && woodTexture) image = t.tint ? `linear-gradient(${t.tint}, ${t.tint}), ${woodTexture}` : woodTexture;
-    return { id, label: tr("shelf." + id), group: tr("group." + a.group), image, plank: a.plank || t.shelf || ABS_PLANK };
+    return { id, label: shelfLabel(id), group: tr("group." + a.group), image, plank: a.plank || t.shelf || ABS_PLANK };
   });
   const sizes = TEXT_SIZES.map(([name, f]) => ({ id: String(f), label: tr("size." + name), percent: Math.round(f * 100) }));
-  return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves };
+  return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves,
+    motion: config.moodMotion !== false, motionLabel: tr("theme.motion") };
 }
 ipcMain.handle("desktop:get-looks", (e) => (fromServerPage(e) ? looksState() : null));
 ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
@@ -2472,6 +2534,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
   if (kind === "theme" && THEMES[id]) setTheme(id);
   if (kind === "shelf" && SHELF_ARTS[id]) setShelfArt(id);
   if (kind === "text" && TEXT_SIZES.some(([, f]) => String(f) === id)) setTextSize(Number(id));
+  if (kind === "motion") setMoodMotion(id === "on");
   return looksState();
 });
 
@@ -2480,7 +2543,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
   contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents);
-    if (view && contents === wc() && isServerUrl(contents.getURL())) setTimeout(() => offline.sync(), 8000);   // offline listening → server
+    if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; setTimeout(() => offline.sync(), 8000); }   // offline listening → server
   });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.

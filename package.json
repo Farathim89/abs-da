@@ -33,6 +33,7 @@
       "preload.js",
       "server.js",
       "shelf-art.js",
+      "mood-themes.js",
       "i18n.js",
       "locales/*.json",
       "connect.html",

@@ -305,6 +305,8 @@ if (location.protocol !== "file:") {
     #${PANEL_ID} h4 { margin: 10px 0 6px; font-size: 11px; font-weight: 600; letter-spacing: .06em;
       text-transform: uppercase; color: rgba(255,255,255,.5); }
     #${PANEL_ID} .absda-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; }
+    #${PANEL_ID} .absda-motion { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; cursor: pointer; color: rgba(255,255,255,.85); }
+    #${PANEL_ID} .absda-motion input { width: 16px; height: 16px; margin: 0; accent-color: var(--tb-logo, #f0a848); cursor: pointer; }
     #${PANEL_ID} .absda-tile { display: flex; flex-direction: column; align-items: stretch; gap: 5px; width: 100%;
       padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
     #${PANEL_ID} .absda-pv { position: relative; height: 62px; border-radius: 6px; overflow: hidden;
@@ -429,6 +431,7 @@ if (location.protocol !== "file:") {
     const tile = el("button", "absda-tile" + (looks.theme === t.id ? " on" : ""));
     tile.type = "button";
     const pv = el("div", "absda-pv", `background:${t.page}`);
+    if (t.image) { pv.style.backgroundImage = t.image; pv.style.backgroundSize = "cover"; pv.style.backgroundPosition = "center"; }
     const bar = el("div", "absda-bar", `background:${t.title}`);
     bar.append(el("i"), el("i"), el("i"));
     pv.append(bar, el("div", "absda-side", `background:${t.panel}`));
@@ -461,6 +464,15 @@ if (location.protocol !== "file:") {
     return tile;
   }
 
+  // "Animate mood themes" (torches flicker, embers rise…), on/off.
+  function motionSwitch() {
+    const lab = el("label", "absda-motion");
+    const box = Object.assign(el("input"), { type: "checkbox", checked: !!looks.motion });
+    box.addEventListener("change", () => setLook("motion", box.checked ? "on" : "off"));
+    lab.append(box, Object.assign(el("span"), { textContent: looks.motionLabel }));
+    return lab;
+  }
+
   function renderPanel(panel) {
     const scroll = panel.scrollTop;
     panel.textContent = "";
@@ -477,9 +489,18 @@ if (location.protocol !== "file:") {
     });
     panel.append(sizes);
     panel.append(Object.assign(el("h3"), { textContent: T("looks.theme", "Theme") }));
-    const tg = el("div", "absda-grid");
-    looks.themes.forEach((t) => tg.append(themeTile(t)));
-    panel.append(tg);
+    // Grouped: colour themes · mood themes (+ their animation switch) · easier to see.
+    let tGroup = null, tg = null;
+    for (const t of looks.themes) {
+      if (t.group !== tGroup) {
+        if (tGroup === "mood") panel.append(motionSwitch());
+        tGroup = t.group;
+        panel.append(Object.assign(el("h4"), { textContent: t.groupLabel }));
+        tg = el("div", "absda-grid");
+        panel.append(tg);
+      }
+      tg.append(themeTile(t));
+    }
     panel.append(Object.assign(el("h3"), { textContent: T("looks.bookshelf", "Bookshelf") }));
     let group = null;
     let grid = null;
@@ -587,6 +608,7 @@ if (location.protocol !== "file:") {
   // Offline download button on a book page (offline-button.js) ↔ the app (offline.js).
   window.addEventListener("message", async (e) => {
     const m = e.source === window && e.data && e.data.absdaOffline;
+    if (m && m.action === "downloadMany" && Array.isArray(m.itemIds)) { ipcRenderer.send("desktop:offline-download-many", m.itemIds); return; }
     if (!m || typeof m.itemId !== "string") return;
     if (m.action === "state") {
       const result = await ipcRenderer.invoke("desktop:offline-state", m.itemId).catch(() => null);
@@ -595,6 +617,12 @@ if (location.protocol !== "file:") {
     else if (m.action === "remove") ipcRenderer.send("desktop:offline-remove", m.itemId);
   });
   ipcRenderer.on("desktop:offline-status", (_e, s) => window.postMessage({ absdaOfflineStatus: s }, location.origin));
+  // Mood themes' animations pause while the app isn't the window you're using (mood-themes.js).
+  const markIdle = () => document.documentElement.classList.toggle("absda-idle", document.hidden || !document.hasFocus());
+  window.addEventListener("blur", markIdle);
+  window.addEventListener("focus", markIdle);
+  document.addEventListener("visibilitychange", markIdle);
+  window.addEventListener("DOMContentLoaded", markIdle);
   // Per-library tab / filter memory (main.js libraryMemoryJs) → the app keeps it in config.json.
   window.addEventListener("message", (e) => {
     if (e.source !== window || !e.data || typeof e.data.absdaLibraryMemory !== "object") return;

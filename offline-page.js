@@ -37,6 +37,10 @@ function applyTexts() {
   }
   sleep.value = keep || "0";
   if (book) showPendingNote();
+  // Opened at start because the server couldn't be reached (main.js).
+  const fromStart = new URLSearchParams(location.search).get("from") === "start";
+  $("startNote").classList.toggle("hidden", !fromStart);
+  if (fromStart) $("startNote").textContent = T("offline.startNote", "Your server can't be reached right now, so here are your downloaded books. Press “Back to the server” to try again.");
 }
 desktop.getStrings().then((s) => { if (s) { S = s; applyTexts(); } });
 desktop.onStrings((s) => { if (s) { S = s; applyTexts(); } });
@@ -65,6 +69,12 @@ async function showList() {
     const cv = document.createElement("div");
     cv.className = "cv";
     if (b.cover) { const img = document.createElement("img"); img.src = b.cover; img.alt = ""; cv.append(img); }
+    else {   // no cover on the server: a title card, like the web app shows
+      const nc = document.createElement("div"); nc.className = "nocover";
+      const t = document.createElement("b"); t.textContent = b.title;
+      const a = document.createElement("span"); a.textContent = b.author || "";
+      nc.append(t, a); cv.append(nc);
+    }
     if (b.duration > 0 && b.position > 0) {
       const bar = document.createElement("div"); bar.className = "bar";
       bar.style.width = Math.min(100, Math.round((b.position / b.duration) * 100)) + "%"; cv.append(bar);
@@ -150,7 +160,7 @@ function pause() { audio.pause(); }
 
 audio.addEventListener("ended", () => {
   if (book && trackIdx < book.tracks.length - 1) loadTrack(trackIdx + 1, 0, true);
-  else { report(); updateUi(book ? book.duration : 0); }
+  else { report(true); updateUi(book ? book.duration : 0); }   // the end of the book = finished
 });
 audio.addEventListener("play", () => { if (sessionStart == null) sessionStart = bookTime(); lastTick = performance.now(); $("play").innerHTML = ICON_PAUSE; clearInterval(saveTimer); saveTimer = setInterval(report, 10000); });
 audio.addEventListener("pause", () => { $("play").innerHTML = ICON_PLAY; clearInterval(saveTimer); report(); });
@@ -165,10 +175,10 @@ audio.addEventListener("timeupdate", () => {
 });
 
 // Your listening → the app (every 10 seconds while playing, and on pause).
-function report() {
+function report(finished) {
   if (!book) return;
   if (!audio.paused && lastTick) { listened += (performance.now() - lastTick) / 1000; lastTick = performance.now(); }
-  desktop.offlineListening(book.id, { currentTime: bookTime(), listened: Math.round(listened), newSession: firstReport, startTime: sessionStart == null ? bookTime() : sessionStart });
+  desktop.offlineListening(book.id, { currentTime: bookTime(), listened: Math.round(listened), newSession: firstReport, startTime: sessionStart == null ? bookTime() : sessionStart, finished: finished === true });
   firstReport = false;
   listened = 0;
   showPendingNote();
