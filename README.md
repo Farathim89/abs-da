@@ -74,8 +74,8 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**. Buttons, switches, pop-up notifications and the
   Stats chart and listening calendar follow the theme too
-- **10 mood themes** — Dungeon, Fireside Tavern, Starship, Neon Nights, Deep Sea, Haunted Manor,
-  Wizard's Library, Rainy Day, Autumn Woods, Snowy Night — each with its own scenery, bookshelf, title
+- **11 mood themes** — Dungeon, Fireside Tavern, Starship, Neon Nights, Deep Sea, Haunted Manor,
+  Wizard's Library, Rainy Day, Summer Woods, Autumn Woods, Snowy Night — each with its own scenery, bookshelf, title
   bar, menus, player bar and heading font, a gentle light layer (torches, embers, stars, fog, rain,
   snow…) and optional **mood sounds**: real recordings (crackling fire, rain on glass, cave drips, a starship's hum…),
   all public domain (CC0) from Freesound — see [sounds/CREDITS.txt](sounds/CREDITS.txt) — playing while a book plays or while you browse.
