@@ -194,5 +194,6 @@
   "issues.confirm": "Sorunlu {n} kitabın tümü bu kütüphaneden kaldırılsın mı? Diskteki dosyalar silinmez.",
   "issues.noProgress": "Hiçbirinde dinleme ilerlemesi veya yer imi yok.",
   "issues.withProgress": "{n} tanesinde dinleme ilerlemesi veya yer imi var, bunlar silinecek:",
-  "issues.more": "…ve {n} tane daha"
+  "issues.more": "…ve {n} tane daha",
+  "player.closedOther": "“{title}” burada kapatıldı: başka bir cihazda çalıyor ({device})."
 }

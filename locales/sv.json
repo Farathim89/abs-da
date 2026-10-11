@@ -194,5 +194,6 @@
   "issues.confirm": "Ta bort alla {n} böcker med problem från det här biblioteket? Filerna på disken raderas inte.",
   "issues.noProgress": "Ingen av dem har lyssningsförlopp eller bokmärken.",
   "issues.withProgress": "{n} av dem har lyssningsförlopp eller bokmärken, som raderas:",
-  "issues.more": "…och {n} till"
+  "issues.more": "…och {n} till",
+  "player.closedOther": "Stängde ”{title}” här: den spelas på en annan enhet ({device})."
 }

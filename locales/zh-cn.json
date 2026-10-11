@@ -194,5 +194,6 @@
   "issues.confirm": "从此库中移除全部 {n} 本有问题的书？磁盘上的文件不会被删除。",
   "issues.noProgress": "它们都没有收听进度或书签。",
   "issues.withProgress": "其中 {n} 本有收听进度或书签，将被删除：",
-  "issues.more": "……另外 {n} 本"
+  "issues.more": "……另外 {n} 本",
+  "player.closedOther": "已在此处关闭“{title}”：它正在另一台设备上播放（{device}）。"
 }

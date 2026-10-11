@@ -194,5 +194,6 @@
   "issues.confirm": "Poistetaanko tästä kirjastosta kaikki {n} ongelmallista kirjaa? Levyllä olevia tiedostoja ei poisteta.",
   "issues.noProgress": "Yhdelläkään niistä ei ole kuunteluedistymistä tai kirjanmerkkejä.",
   "issues.withProgress": "{n} niistä on kuunteluedistyminen tai kirjanmerkkejä, jotka poistetaan:",
-  "issues.more": "…ja {n} muuta"
+  "issues.more": "…ja {n} muuta",
+  "player.closedOther": "”{title}” suljettiin täällä: sitä toistetaan toisella laitteella ({device})."
 }

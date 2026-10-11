@@ -198,10 +198,31 @@ const absJsFixes = (appWindow) => `(() => {
     });
   }
   // The player (only in the app window; the settings panel has none).
-  let handler = null;
-  const walk = (vm) => { if (handler) return; if (vm.playerHandler && typeof vm.playerHandler.prepare === "function") { handler = vm.playerHandler; return; } vm.$children.forEach(walk); };
+  let handler = null, container = null;
+  const walk = (vm) => { if (handler) return; if (vm.playerHandler && typeof vm.playerHandler.prepare === "function") { handler = vm.playerHandler; container = vm; return; } vm.$children.forEach(walk); };
   if ($nuxt.$root) walk($nuxt.$root);
   if (!handler) return !${appWindow ? "true" : "false"};   // the app window has a player: wait for it
+  // Playing the same book on another device (phone…) while it's open but paused here:
+  // close it here, so this window doesn't hold on to it. (Closing a paused player sends
+  // no position, so the other device's place is kept.) Playing here too: the web app
+  // shows its own "another session" warning instead.
+  const sock = $nuxt.$root.socket;
+  if (sock && !sock.__absdaOtherDevice) {
+    sock.__absdaOtherDevice = true;
+    const text = ${JSON.stringify(tr("player.closedOther"))};
+    sock.on("user_item_progress_updated", (payload) => {
+      const d = payload && payload.data, st = $nuxt.$store.state;
+      if (!d || !$nuxt.$store.getters["getIsMediaStreaming"](d.libraryItemId, d.episodeId)) return;
+      if (!payload.sessionId || st.playbackSessionId === payload.sessionId || st.streamIsPlaying) return;
+      const item = st.streamLibraryItem, title = (item && item.media && item.media.metadata && item.media.metadata.title) || "";
+      setTimeout(() => {
+        if ($nuxt.$store.state.streamIsPlaying || !container.playerHandler.libraryItem) return;
+        console.log("[ABS-DA] Book is playing on another device: closing it here", payload.deviceDescription);
+        container.closePlayer();
+        $nuxt.$toast.info(text.split("{title}").join(title).split("{device}").join(payload.deviceDescription || "?"), { timeout: 8000 });
+      }, 300);
+    });
+  }
   const proto = Object.getPrototypeOf(handler);
   if (!proto.__absdaNoAutoplay) {
     proto.__absdaNoAutoplay = true;

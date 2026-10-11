@@ -194,5 +194,6 @@
   "issues.confirm": "Voleu treure de la biblioteca tots els {n} llibres amb problemes? Els fitxers del disc no s’esborren.",
   "issues.noProgress": "Cap d’ells no té progrés d’escolta ni marcadors.",
   "issues.withProgress": "{n} d’ells tenen progrés d’escolta o marcadors, que s’esborraran:",
-  "issues.more": "…i {n} més"
+  "issues.more": "…i {n} més",
+  "player.closedOther": "S’ha tancat «{title}» aquí: s’està reproduint en un altre dispositiu ({device})."
 }

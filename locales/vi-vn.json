@@ -194,5 +194,6 @@
   "issues.confirm": "Gỡ tất cả {n} sách có vấn đề khỏi thư viện này? Tệp trên ổ đĩa không bị xóa.",
   "issues.noProgress": "Không cuốn nào có tiến độ nghe hay dấu trang.",
   "issues.withProgress": "{n} cuốn có tiến độ nghe hoặc dấu trang, sẽ bị xóa:",
-  "issues.more": "…và {n} cuốn khác"
+  "issues.more": "…và {n} cuốn khác",
+  "player.closedOther": "Đã đóng “{title}” ở đây: sách đang phát trên thiết bị khác ({device})."
 }

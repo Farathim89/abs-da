@@ -194,5 +194,6 @@
   "issues.confirm": "Odstranim iz te knjižnice vseh {n} knjig s težavami? Datoteke na disku se ne izbrišejo.",
   "issues.noProgress": "Nobena nima napredka poslušanja ali zaznamkov.",
   "issues.withProgress": "{n} od njih ima napredek poslušanja ali zaznamke, ki bodo izbrisani:",
-  "issues.more": "…in še {n}"
+  "issues.more": "…in še {n}",
+  "player.closedOther": "»{title}« je tukaj zaprta: predvaja se na drugi napravi ({device})."
 }

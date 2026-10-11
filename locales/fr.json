@@ -194,5 +194,6 @@
   "issues.confirm": "Retirer de cette bibliothèque les {n} livres avec des problèmes ? Les fichiers sur le disque ne sont pas supprimés.",
   "issues.noProgress": "Aucun n’a de progression d’écoute ni de signets.",
   "issues.withProgress": "{n} d’entre eux ont une progression d’écoute ou des signets, qui seront supprimés :",
-  "issues.more": "…et {n} de plus"
+  "issues.more": "…et {n} de plus",
+  "player.closedOther": "« {title} » a été fermé ici : il est en lecture sur un autre appareil ({device})."
 }

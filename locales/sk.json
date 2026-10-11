@@ -194,5 +194,6 @@
   "issues.confirm": "Odstrániť z tejto knižnice všetkých {n} kníh s problémami? Súbory na disku sa nevymažú.",
   "issues.noProgress": "Žiadna z nich nemá priebeh počúvania ani záložky.",
   "issues.withProgress": "{n} z nich má priebeh počúvania alebo záložky, ktoré sa vymažú:",
-  "issues.more": "…a ďalších {n}"
+  "issues.more": "…a ďalších {n}",
+  "player.closedOther": "„{title}“ tu bola zatvorená: prehráva sa na inom zariadení ({device})."
 }

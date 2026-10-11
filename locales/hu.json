@@ -194,5 +194,6 @@
   "issues.confirm": "Eltávolítod a könyvtárból mind a(z) {n} hibás könyvet? A lemezen lévő fájlok nem törlődnek.",
   "issues.noProgress": "Egyiknek sincs hallgatási előrehaladása vagy könyvjelzője.",
   "issues.withProgress": "{n} közülük hallgatási előrehaladással vagy könyvjelzőkkel rendelkezik, ezek törlődnek:",
-  "issues.more": "…és még {n}"
+  "issues.more": "…és még {n}",
+  "player.closedOther": "„{title}” itt bezárva: egy másik eszközön szól ({device})."
 }

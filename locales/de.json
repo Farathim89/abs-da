@@ -194,5 +194,6 @@
   "issues.confirm": "Alle {n} Bücher mit Problemen aus dieser Bibliothek entfernen? Dateien auf dem Datenträger werden nicht gelöscht.",
   "issues.noProgress": "Keines davon hat Hörfortschritt oder Lesezeichen.",
   "issues.withProgress": "{n} davon haben Hörfortschritt oder Lesezeichen, die gelöscht werden:",
-  "issues.more": "…und {n} weitere"
+  "issues.more": "…und {n} weitere",
+  "player.closedOther": "„{title}“ wurde hier geschlossen: Es läuft auf einem anderen Gerät ({device})."
 }

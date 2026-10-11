@@ -194,5 +194,6 @@
   "issues.confirm": "Fjern alle {n} bøger med problemer fra dette bibliotek? Filerne på disken slettes ikke.",
   "issues.noProgress": "Ingen af dem har lytteforløb eller bogmærker.",
   "issues.withProgress": "{n} af dem har lytteforløb eller bogmærker, som bliver slettet:",
-  "issues.more": "…og {n} mere"
+  "issues.more": "…og {n} mere",
+  "player.closedOther": "»{title}« er lukket her: den afspilles på en anden enhed ({device})."
 }

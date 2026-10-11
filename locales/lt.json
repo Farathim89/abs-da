@@ -194,5 +194,6 @@
   "issues.confirm": "Pašalinti iš šios bibliotekos visas {n} knygas su problemomis? Failai diske neištrinami.",
   "issues.noProgress": "Nė viena neturi klausymo eigos ar žymių.",
   "issues.withProgress": "{n} iš jų turi klausymo eigą arba žymių, kurios bus ištrintos:",
-  "issues.more": "…ir dar {n}"
+  "issues.more": "…ir dar {n}",
+  "player.closedOther": "„{title}“ čia uždaryta: ji leidžiama kitame įrenginyje ({device})."
 }

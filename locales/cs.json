@@ -194,5 +194,6 @@
   "issues.confirm": "Odebrat z této knihovny všech {n} knih s problémy? Soubory na disku se nesmažou.",
   "issues.noProgress": "Žádná z nich nemá průběh poslechu ani záložky.",
   "issues.withProgress": "{n} z nich má průběh poslechu nebo záložky, které budou smazány:",
-  "issues.more": "…a dalších {n}"
+  "issues.more": "…a dalších {n}",
+  "player.closedOther": "„{title}“ zde byla zavřena: přehrává se na jiném zařízení ({device})."
 }

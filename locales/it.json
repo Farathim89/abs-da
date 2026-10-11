@@ -194,5 +194,6 @@
   "issues.confirm": "Rimuovere da questa libreria tutti i {n} libri con problemi? I file sul disco non vengono eliminati.",
   "issues.noProgress": "Nessuno ha progressi di ascolto o segnalibri.",
   "issues.withProgress": "{n} di questi hanno progressi di ascolto o segnalibri, che verranno eliminati:",
-  "issues.more": "…e altri {n}"
+  "issues.more": "…e altri {n}",
+  "player.closedOther": "“{title}” è stato chiuso qui: è in riproduzione su un altro dispositivo ({device})."
 }

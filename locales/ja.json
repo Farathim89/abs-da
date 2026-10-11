@@ -194,5 +194,6 @@
   "issues.confirm": "問題のある {n} 冊をすべてこのライブラリーから削除しますか？ディスク上のファイルは削除されません。",
   "issues.noProgress": "どれにも再生の進行状況やブックマークはありません。",
   "issues.withProgress": "そのうち {n} 冊には再生の進行状況またはブックマークがあり、削除されます:",
-  "issues.more": "…ほか {n} 冊"
+  "issues.more": "…ほか {n} 冊",
+  "player.closedOther": "「{title}」をここで閉じました: 別のデバイスで再生中です ({device})。"
 }

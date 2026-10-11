@@ -194,5 +194,6 @@
   "issues.confirm": "從此媒體庫移除全部 {n} 本有問題的書？磁碟上的檔案不會被刪除。",
   "issues.noProgress": "它們都沒有收聽進度或書籤。",
   "issues.withProgress": "其中 {n} 本有收聽進度或書籤，將被刪除：",
-  "issues.more": "……另外 {n} 本"
+  "issues.more": "……另外 {n} 本",
+  "player.closedOther": "已在此處關閉「{title}」：它正在另一部裝置上播放（{device}）。"
 }
