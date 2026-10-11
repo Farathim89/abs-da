@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Z motívu",
   "themeGroup.colour": "Farby",
   "themeGroup.mood": "Nálada",
-  "themeGroup.access": "Lepšie viditeľné"
+  "themeGroup.access": "Lepšie viditeľné",
+  "theme.wizard": "Knižnica čarodeja",
+  "theme.rain": "Daždivý deň",
+  "theme.autumn": "Jesenný les",
+  "theme.snow": "Zasnežená noc",
+  "offline.queueTitle": "Sťahovanie",
+  "offline.queued": "Čaká",
+  "offline.cancelDownload": "Zrušiť toto sťahovanie"
 }

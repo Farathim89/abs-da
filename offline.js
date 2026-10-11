@@ -29,6 +29,7 @@ module.exports = function setupOffline(ctx) {
 
   const jobs = new Map();   // itemId → { percent, abort }
   const queue = [];
+  const titles = new Map(); // itemId → title, for the download queue in the offline library
 
   function deviceInfo() {
     let id = ctx.config().offlineDeviceId;
@@ -45,10 +46,25 @@ module.exports = function setupOffline(ctx) {
   }
   function emit(s) {
     const v = ctx.view();
-    if (v && !v.webContents.isDestroyed()) v.webContents.send("desktop:offline-status", s);
+    if (!v || v.webContents.isDestroyed()) return;
+    v.webContents.send("desktop:offline-status", s);
+    v.webContents.send("desktop:offline-queue", queueState());   // the offline library's "Downloading" list
+  }
+  // What is downloading now and what waits, in order.
+  function queueState() {
+    const now = [...jobs.entries()].map(([id, j]) => ({ id, title: titles.get(id) || "", percent: j.percent, state: "downloading" }));
+    return now.concat(queue.map((id) => ({ id, title: titles.get(id) || "", percent: 0, state: "queued" })));
   }
 
   // ---- downloading -------------------------------------------------------------
+  // The sign-in comes from the web app; the last one is kept (in memory only) so queued
+  // downloads go on while you look at the offline library or another page.
+  let lastToken = null;
+  async function downloadToken() {
+    const t = await ctx.getToken();
+    if (t) lastToken = t;
+    return t || lastToken;
+  }
   async function api(pathname, token, opts = {}) {
     const res = await net.fetch(ctx.apiBase() + pathname, { ...opts, headers: { Authorization: "Bearer " + token, ...(opts.headers || {}) } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -79,10 +95,11 @@ module.exports = function setupOffline(ctx) {
     const dir = folder(id);
     let title = "";
     try {
-      const token = await ctx.getToken();
+      const token = await downloadToken();
       if (!token) throw new Error(ctx.tr("offline.errSignIn"));
       const item = await (await api(`/api/items/${id}?expanded=1`, token)).json();
       title = item.media && item.media.metadata ? item.media.metadata.title : "";
+      if (title) titles.set(id, title);
       const tracks = ((item.media && item.media.tracks) || []).slice().sort((a, b) => a.index - b.index);
       if (item.mediaType !== "book" || !tracks.length) throw new Error(ctx.tr("offline.errNoAudio"));
       fs.mkdirSync(dir, { recursive: true });
@@ -137,7 +154,12 @@ module.exports = function setupOffline(ctx) {
       const cancelled = ctl.signal.aborted;
       if (!meta(id)) { try { fs.rmSync(dir, { recursive: true, force: true }); } catch {} }
       emit(state(id));
-      if (!cancelled) ctx.toast("error", ctx.tr("offline.failed", { title: title || "?", error: err.message }));
+      if (!cancelled) {
+        const text = ctx.tr("offline.failed", { title: title || titles.get(id) || "?", error: err.message });
+        ctx.toast("error", text);
+        const v = ctx.view();
+        if (v && !v.webContents.isDestroyed()) v.webContents.send("desktop:offline-failed", text);   // the offline library shows it too
+      }
     }
   }
   async function pump() {
@@ -148,8 +170,10 @@ module.exports = function setupOffline(ctx) {
   }
 
   // Queue books to download (already downloaded or queued ones are skipped).
-  function enqueue(ids) {
-    for (const id of ids.map(String)) {
+  function enqueue(items) {
+    for (const it of items) {
+      const id = String(typeof it === "object" ? it.id : it);
+      if (typeof it === "object" && it.title) titles.set(id, String(it.title).slice(0, 300));
       if (jobs.has(id) || queue.includes(id) || meta(id)) continue;
       queue.push(id);
       emit(state(id));
@@ -318,13 +342,13 @@ module.exports = function setupOffline(ctx) {
   // From the web app's book page (download button), via preload.js.
   const fromApp = (e) => ctx.fromServerPage(e) && ctx.view() && e.sender === ctx.view().webContents;
   ipcMain.handle("desktop:offline-state", (e, id) => (fromApp(e) && id ? state(String(id)) : null));
-  ipcMain.on("desktop:offline-download", (e, id) => {
-    if (!fromApp(e) || !id || jobs.has(id) || queue.includes(id)) return;
-    queue.push(String(id));
-    emit(state(String(id)));
-    pump();
+  ipcMain.on("desktop:offline-download", (e, id, title) => { if (fromApp(e) && typeof id === "string") enqueue([{ id, title }]); });
+  ipcMain.on("desktop:offline-download-many", (e, items) => {
+    if (!fromApp(e) || !Array.isArray(items)) return;
+    enqueue(items.filter((x) => typeof x === "string" || (x && typeof x.id === "string")).slice(0, 500));
   });
-  ipcMain.on("desktop:offline-download-many", (e, ids) => { if (fromApp(e) && Array.isArray(ids)) enqueue(ids.filter((x) => typeof x === "string").slice(0, 500)); });
+  ipcMain.handle("desktop:offline-queue", (e) => (ctx.fromLocalPage(e) ? queueState() : []));
+  ipcMain.on("desktop:offline-cancel", (e, id) => { if (ctx.fromLocalPage(e) && typeof id === "string") remove(id); });
   ipcMain.on("desktop:offline-remove", (e, id) => { if ((fromApp(e) || ctx.fromLocalPage(e)) && id) remove(String(id)); });
   // From the offline library page.
   ipcMain.handle("desktop:offline-list", (e) => (ctx.fromLocalPage(e) ? list() : []));

@@ -246,5 +246,12 @@
   "shelf.fromTheme": "テーマに合わせる",
   "themeGroup.colour": "カラー",
   "themeGroup.mood": "ムード",
-  "themeGroup.access": "見やすさ重視"
+  "themeGroup.access": "見やすさ重視",
+  "theme.wizard": "魔法使いの書庫",
+  "theme.rain": "雨の日",
+  "theme.autumn": "秋の森",
+  "theme.snow": "雪の夜",
+  "offline.queueTitle": "ダウンロード中",
+  "offline.queued": "待機中",
+  "offline.cancelDownload": "このダウンロードをキャンセル"
 }

@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Z motywu",
   "themeGroup.colour": "Kolory",
   "themeGroup.mood": "Nastrój",
-  "themeGroup.access": "Lepiej widoczne"
+  "themeGroup.access": "Lepiej widoczne",
+  "theme.wizard": "Biblioteka czarodzieja",
+  "theme.rain": "Deszczowy dzień",
+  "theme.autumn": "Jesienny las",
+  "theme.snow": "Śnieżna noc",
+  "offline.queueTitle": "Pobieranie",
+  "offline.queued": "Czeka",
+  "offline.cancelDownload": "Anuluj to pobieranie"
 }

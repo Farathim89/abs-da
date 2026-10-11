@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Teemasta",
   "themeGroup.colour": "Värit",
   "themeGroup.mood": "Tunnelma",
-  "themeGroup.access": "Helpompi nähdä"
+  "themeGroup.access": "Helpompi nähdä",
+  "theme.wizard": "Velhon kirjasto",
+  "theme.rain": "Sadepäivä",
+  "theme.autumn": "Syysmetsä",
+  "theme.snow": "Luminen yö",
+  "offline.queueTitle": "Ladataan",
+  "offline.queued": "Odottaa",
+  "offline.cancelDownload": "Peruuta tämä lataus"
 }

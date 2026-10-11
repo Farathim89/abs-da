@@ -246,5 +246,12 @@
   "shelf.fromTheme": "З тэмы",
   "themeGroup.colour": "Колеры",
   "themeGroup.mood": "Настрой",
-  "themeGroup.access": "Лягчэй бачыць"
+  "themeGroup.access": "Лягчэй бачыць",
+  "theme.wizard": "Бібліятэка чараўніка",
+  "theme.rain": "Дажджлівы дзень",
+  "theme.autumn": "Восеньскі лес",
+  "theme.snow": "Снежная ноч",
+  "offline.queueTitle": "Спампоўваецца",
+  "offline.queued": "Чакае",
+  "offline.cancelDownload": "Скасаваць гэту спампоўку"
 }

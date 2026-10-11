@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Teemast",
   "themeGroup.colour": "Värvid",
   "themeGroup.mood": "Meeleolu",
-  "themeGroup.access": "Lihtsam näha"
+  "themeGroup.access": "Lihtsam näha",
+  "theme.wizard": "Võluri raamatukogu",
+  "theme.rain": "Vihmane päev",
+  "theme.autumn": "Sügismets",
+  "theme.snow": "Lumine öö",
+  "offline.queueTitle": "Allalaadimine",
+  "offline.queued": "Ootel",
+  "offline.cancelDownload": "Tühista see allalaadimine"
 }

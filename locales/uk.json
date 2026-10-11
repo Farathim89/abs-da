@@ -246,5 +246,12 @@
   "shelf.fromTheme": "З теми",
   "themeGroup.colour": "Кольори",
   "themeGroup.mood": "Настрій",
-  "themeGroup.access": "Краще видно"
+  "themeGroup.access": "Краще видно",
+  "theme.wizard": "Бібліотека чарівника",
+  "theme.rain": "Дощовий день",
+  "theme.autumn": "Осінній ліс",
+  "theme.snow": "Сніжна ніч",
+  "offline.queueTitle": "Завантаження",
+  "offline.queued": "У черзі",
+  "offline.cancelDownload": "Скасувати це завантаження"
 }

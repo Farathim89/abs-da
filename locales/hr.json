@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Iz teme",
   "themeGroup.colour": "Boje",
   "themeGroup.mood": "Raspoloženje",
-  "themeGroup.access": "Lakše za vidjeti"
+  "themeGroup.access": "Lakše za vidjeti",
+  "theme.wizard": "Čarobnjakova knjižnica",
+  "theme.rain": "Kišni dan",
+  "theme.autumn": "Jesenska šuma",
+  "theme.snow": "Snježna noć",
+  "offline.queueTitle": "Preuzimanje",
+  "offline.queued": "Čeka",
+  "offline.cancelDownload": "Otkaži ovo preuzimanje"
 }

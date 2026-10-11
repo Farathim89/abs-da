@@ -246,5 +246,12 @@
   "shelf.fromTheme": "跟随主题",
   "themeGroup.colour": "配色",
   "themeGroup.mood": "氛围",
-  "themeGroup.access": "更易辨认"
+  "themeGroup.access": "更易辨认",
+  "theme.wizard": "巫师书房",
+  "theme.rain": "雨天",
+  "theme.autumn": "秋日森林",
+  "theme.snow": "雪夜",
+  "offline.queueTitle": "正在下载",
+  "offline.queued": "等待中",
+  "offline.cancelDownload": "取消此下载"
 }

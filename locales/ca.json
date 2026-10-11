@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Del tema",
   "themeGroup.colour": "Colors",
   "themeGroup.mood": "Ambient",
-  "themeGroup.access": "Més fàcil de veure"
+  "themeGroup.access": "Més fàcil de veure",
+  "theme.wizard": "Biblioteca del mag",
+  "theme.rain": "Dia de pluja",
+  "theme.autumn": "Bosc de tardor",
+  "theme.snow": "Nit de neu",
+  "offline.queueTitle": "Baixant",
+  "offline.queued": "En espera",
+  "offline.cancelDownload": "Cancel·la aquesta baixada"
 }

@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Fra temaet",
   "themeGroup.colour": "Farger",
   "themeGroup.mood": "Stemning",
-  "themeGroup.access": "Lettere å se"
+  "themeGroup.access": "Lettere å se",
+  "theme.wizard": "Trollmannens bibliotek",
+  "theme.rain": "Regnværsdag",
+  "theme.autumn": "Høstskog",
+  "theme.snow": "Snønatt",
+  "offline.queueTitle": "Laster ned",
+  "offline.queued": "Venter",
+  "offline.cancelDownload": "Avbryt denne nedlastingen"
 }

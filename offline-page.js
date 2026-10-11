@@ -26,6 +26,8 @@ function applyTexts() {
   document.title = T("offline.title", "Offline library");
   $("back").textContent = T("offline.back", "Back to the server");
   $("lChapters").textContent = T("offline.chapters", "Chapters");
+  $("lQueue").textContent = T("offline.queueTitle", "Downloading");
+  drawQueue();
   $("lSpeed").textContent = T("offline.speed", "Speed");
   $("lSleep").textContent = T("offline.sleep", "Sleep timer");
   $("empty").textContent = T("offline.empty", "No books are downloaded yet. Open a book and press the download button next to Play to keep it for listening without your server.");
@@ -52,6 +54,39 @@ for (const r of [0.75, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2]) {
 speed.value = localStorage.getItem("offlineSpeed") || "1";
 
 $("back").addEventListener("click", () => desktop.retry());
+
+// ---- downloads on their way (with ✕ to cancel) ---------------------------------
+let queueNow = [];
+let hadQueue = false;
+function drawQueue() {
+  const ul = $("queueList");
+  $("queue").classList.toggle("hidden", !queueNow.length || !$("player").classList.contains("hidden"));
+  ul.textContent = "";
+  for (const q of queueNow) {
+    const li = document.createElement("li");
+    const t = document.createElement("span"); t.className = "qt"; t.textContent = q.title || "…";
+    const bar = document.createElement("div"); bar.className = "qbar";
+    const fillEl = document.createElement("i"); fillEl.style.width = (q.state === "downloading" ? q.percent : 0) + "%"; bar.append(fillEl);
+    const p = document.createElement("span"); p.className = "qp";
+    p.textContent = q.state === "downloading" ? q.percent + "%" : T("offline.queued", "Waiting");
+    const x = document.createElement("button"); x.type = "button"; x.textContent = "✕";
+    x.title = T("offline.cancelDownload", "Cancel this download"); x.setAttribute("aria-label", x.title);
+    x.addEventListener("click", () => desktop.offlineCancel(q.id));
+    li.append(t, bar, p, x);
+    ul.append(li);
+  }
+}
+function setQueue(q) {
+  const before = queueNow.length;
+  queueNow = Array.isArray(q) ? q : [];
+  drawQueue();
+  // A download finished → show it in the list.
+  if (hadQueue && queueNow.length < before && $("player").classList.contains("hidden")) showList();
+  hadQueue = queueNow.length > 0;
+}
+desktop.offlineQueue().then(setQueue);
+desktop.onOfflineFailed((text) => { $("startNote").textContent = text; $("startNote").classList.remove("hidden"); });
+desktop.onOfflineQueue(setQueue);
 
 // ---- the list ------------------------------------------------------------------
 let books = [];

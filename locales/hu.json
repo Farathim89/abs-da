@@ -246,5 +246,12 @@
   "shelf.fromTheme": "A témából",
   "themeGroup.colour": "Színek",
   "themeGroup.mood": "Hangulat",
-  "themeGroup.access": "Jobban látható"
+  "themeGroup.access": "Jobban látható",
+  "theme.wizard": "A varázsló könyvtára",
+  "theme.rain": "Esős nap",
+  "theme.autumn": "Őszi erdő",
+  "theme.snow": "Havas éjszaka",
+  "offline.queueTitle": "Letöltés",
+  "offline.queued": "Várakozik",
+  "offline.cancelDownload": "A letöltés megszakítása"
 }

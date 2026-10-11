@@ -105,7 +105,10 @@ function pageMain(opts) {
         const book = currentBook();
         if (!book) return;
         const s = B.states[book.id] || { state: "none" };
-        if (s.state === "none") { tell("download", book.id); return; }
+        if (s.state === "none") {
+          window.postMessage({ absdaOffline: { action: "download", itemId: book.id, title: (book.media.metadata && book.media.metadata.title) || "" } }, window.location.origin);
+          return;
+        }
         const title = (book.media.metadata && book.media.metadata.title) || "";
         $n.$store.commit("globals/setConfirmPrompt", {
           message: fill(s.state === "done" ? B.opts.removeConfirm : B.opts.cancelConfirm, { title, size: sizeText(s.size || 0) }),
@@ -173,7 +176,7 @@ function pageMain(opts) {
         // The series' audiobooks (books with audio; e-books only are left out).
         const r = await $n.$axios.$get(`/api/libraries/${m[1]}/items?filter=series.${enc(decodeURIComponent(m[2]))}&sort=media.metadata.title&limit=500&minified=1`).catch(() => null);
         const items = ((r && r.results) || []).filter((li) => li.mediaType === "book" && li.media && (li.media.numTracks > 0 || li.media.numAudioFiles > 0));
-        B.series = { key, ids: items.map((li) => li.id), name: "" };
+        B.series = { key, ids: items.map((li) => li.id), titles: Object.fromEntries(items.map((li) => [li.id, (li.media.metadata && li.media.metadata.title) || ""])), name: "" };
         for (const id of B.series.ids) B.states[id] = (await ask(id)) || B.states[id] || { state: "none" };
       }
       if (!B.series.ids.length || !seriesRoute() || document.getElementById(SERIES_ID)) return;
@@ -198,7 +201,7 @@ function pageMain(opts) {
         }
         if (c.downloading) return;   // already on its way
         const todo = B.series.ids.filter((id) => (B.states[id] || {}).state !== "done");
-        window.postMessage({ absdaOffline: { action: "downloadMany", itemIds: todo } }, window.location.origin);
+        window.postMessage({ absdaOffline: { action: "downloadMany", items: todo.map((id) => ({ id, title: B.series.titles[id] || "" })) } }, window.location.origin);
       });
       const grow = tb.querySelector(":scope > .grow");
       if (grow) grow.after(btn); else tb.append(btn);

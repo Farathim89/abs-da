@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Из темы",
   "themeGroup.colour": "Цвета",
   "themeGroup.mood": "Настроение",
-  "themeGroup.access": "Лучше видно"
+  "themeGroup.access": "Лучше видно",
+  "theme.wizard": "Библиотека волшебника",
+  "theme.rain": "Дождливый день",
+  "theme.autumn": "Осенний лес",
+  "theme.snow": "Снежная ночь",
+  "offline.queueTitle": "Загрузка",
+  "offline.queued": "В очереди",
+  "offline.cancelDownload": "Отменить эту загрузку"
 }

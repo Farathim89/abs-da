@@ -246,5 +246,12 @@
   "shelf.fromTheme": "테마에 맞춤",
   "themeGroup.colour": "색상",
   "themeGroup.mood": "무드",
-  "themeGroup.access": "보기 쉽게"
+  "themeGroup.access": "보기 쉽게",
+  "theme.wizard": "마법사의 서재",
+  "theme.rain": "비 오는 날",
+  "theme.autumn": "가을 숲",
+  "theme.snow": "눈 내리는 밤",
+  "offline.queueTitle": "다운로드 중",
+  "offline.queued": "대기 중",
+  "offline.cancelDownload": "이 다운로드 취소"
 }

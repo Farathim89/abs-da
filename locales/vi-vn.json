@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Theo chủ đề",
   "themeGroup.colour": "Màu sắc",
   "themeGroup.mood": "Không khí",
-  "themeGroup.access": "Dễ nhìn hơn"
+  "themeGroup.access": "Dễ nhìn hơn",
+  "theme.wizard": "Thư viện phù thủy",
+  "theme.rain": "Ngày mưa",
+  "theme.autumn": "Rừng thu",
+  "theme.snow": "Đêm tuyết",
+  "offline.queueTitle": "Đang tải xuống",
+  "offline.queued": "Đang chờ",
+  "offline.cancelDownload": "Hủy bản tải xuống này"
 }

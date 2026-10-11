@@ -246,5 +246,12 @@
   "shelf.fromTheme": "থিম থেকে",
   "themeGroup.colour": "রং",
   "themeGroup.mood": "মুড",
-  "themeGroup.access": "দেখতে সহজ"
+  "themeGroup.access": "দেখতে সহজ",
+  "theme.wizard": "জাদুকরের গ্রন্থাগার",
+  "theme.rain": "বৃষ্টির দিন",
+  "theme.autumn": "শরতের বন",
+  "theme.snow": "তুষারের রাত",
+  "offline.queueTitle": "ডাউনলোড হচ্ছে",
+  "offline.queued": "অপেক্ষায়",
+  "offline.cancelDownload": "এই ডাউনলোড বাতিল করুন"
 }

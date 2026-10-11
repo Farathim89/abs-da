@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Vom Theme",
   "themeGroup.colour": "Farben",
   "themeGroup.mood": "Stimmung",
-  "themeGroup.access": "Besser lesbar"
+  "themeGroup.access": "Besser lesbar",
+  "theme.wizard": "Bibliothek des Zauberers",
+  "theme.rain": "Regentag",
+  "theme.autumn": "Herbstwald",
+  "theme.snow": "Schneenacht",
+  "offline.queueTitle": "Wird geladen",
+  "offline.queued": "Wartet",
+  "offline.cancelDownload": "Diesen Download abbrechen"
 }

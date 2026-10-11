@@ -246,5 +246,12 @@
   "shelf.fromTheme": "من السمة",
   "themeGroup.colour": "ألوان",
   "themeGroup.mood": "أجواء",
-  "themeGroup.access": "أسهل للرؤية"
+  "themeGroup.access": "أسهل للرؤية",
+  "theme.wizard": "مكتبة الساحر",
+  "theme.rain": "يوم ممطر",
+  "theme.autumn": "غابة الخريف",
+  "theme.snow": "ليلة ثلجية",
+  "offline.queueTitle": "جارٍ التنزيل",
+  "offline.queued": "في الانتظار",
+  "offline.cancelDownload": "إلغاء هذا التنزيل"
 }

@@ -31,6 +31,10 @@ if (location.protocol === "file:") {
     offlineListening: (id, data) => ipcRenderer.send("desktop:offline-listening", id, data),
     offlineRemove: (id) => ipcRenderer.send("desktop:offline-remove", id),
     offlineConfirm: (message, yes) => ipcRenderer.invoke("desktop:offline-confirm", { message, yes }),
+    offlineQueue: () => ipcRenderer.invoke("desktop:offline-queue"),
+    offlineCancel: (id) => ipcRenderer.send("desktop:offline-cancel", id),
+    onOfflineQueue: (cb) => ipcRenderer.on("desktop:offline-queue", (_e, q) => cb(q)),
+    onOfflineFailed: (cb) => ipcRenderer.on("desktop:offline-failed", (_e, text) => cb(String(text || ""))),
     // themed menus and message boxes (ui.html)
     ui: {
       onMenu: (cb) => ipcRenderer.on("ui:menu", (_e, m) => cb(m)),
@@ -608,19 +612,20 @@ if (location.protocol !== "file:") {
   // Offline download button on a book page (offline-button.js) ↔ the app (offline.js).
   window.addEventListener("message", async (e) => {
     const m = e.source === window && e.data && e.data.absdaOffline;
-    if (m && m.action === "downloadMany" && Array.isArray(m.itemIds)) { ipcRenderer.send("desktop:offline-download-many", m.itemIds); return; }
+    if (m && m.action === "downloadMany" && Array.isArray(m.items)) { ipcRenderer.send("desktop:offline-download-many", m.items); return; }
     if (!m || typeof m.itemId !== "string") return;
     if (m.action === "state") {
       const result = await ipcRenderer.invoke("desktop:offline-state", m.itemId).catch(() => null);
       window.postMessage({ absdaOfflineReply: { reqId: m.reqId, result } }, location.origin);
-    } else if (m.action === "download") ipcRenderer.send("desktop:offline-download", m.itemId);
+    } else if (m.action === "download") ipcRenderer.send("desktop:offline-download", m.itemId, typeof m.title === "string" ? m.title : "");
     else if (m.action === "remove") ipcRenderer.send("desktop:offline-remove", m.itemId);
   });
   ipcRenderer.on("desktop:offline-status", (_e, s) => window.postMessage({ absdaOfflineStatus: s }, location.origin));
   // Mood themes' animations pause while the app isn't the window you're using (mood-themes.js).
-  const markIdle = () => document.documentElement.classList.toggle("absda-idle", document.hidden || !document.hasFocus());
-  window.addEventListener("blur", markIdle);
-  window.addEventListener("focus", markIdle);
+  // The whole window counts (title bar, menus, settings panel), so main.js tells us.
+  let windowActive = true;
+  const markIdle = () => document.documentElement.classList.toggle("absda-idle", document.hidden || !windowActive);
+  ipcRenderer.on("desktop:window-active", (_e, on) => { windowActive = !!on; markIdle(); });
   document.addEventListener("visibilitychange", markIdle);
   window.addEventListener("DOMContentLoaded", markIdle);
   // Per-library tab / filter memory (main.js libraryMemoryJs) → the app keeps it in config.json.

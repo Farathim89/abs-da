@@ -15,6 +15,7 @@ html, body {
   height: 100%;
   overflow: hidden;
   background: var(--tb-bg);
+  background-image: var(--tb-image, none);   /* mood themes: stone, wood, hull plates… (mood-themes.js) */
   font-family: "Segoe UI", system-ui, sans-serif;
   user-select: none;
 }

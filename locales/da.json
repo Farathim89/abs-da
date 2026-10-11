@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Fra temaet",
   "themeGroup.colour": "Farver",
   "themeGroup.mood": "Stemning",
-  "themeGroup.access": "Lettere at se"
+  "themeGroup.access": "Lettere at se",
+  "theme.wizard": "Troldmandens bibliotek",
+  "theme.rain": "Regnvejrsdag",
+  "theme.autumn": "Efterårsskov",
+  "theme.snow": "Snenat",
+  "offline.queueTitle": "Downloader",
+  "offline.queued": "Venter",
+  "offline.cancelDownload": "Annullér denne download"
 }

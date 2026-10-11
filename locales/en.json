@@ -246,5 +246,12 @@
   "shelf.fromTheme": "From the theme",
   "themeGroup.colour": "Colours",
   "themeGroup.mood": "Mood",
-  "themeGroup.access": "Easier to see"
+  "themeGroup.access": "Easier to see",
+  "theme.wizard": "Wizard's Library",
+  "theme.rain": "Rainy Day",
+  "theme.autumn": "Autumn Woods",
+  "theme.snow": "Snowy Night",
+  "offline.queueTitle": "Downloading",
+  "offline.queued": "Waiting",
+  "offline.cancelDownload": "Cancel this download"
 }

@@ -899,18 +899,28 @@ function setTheme(id) {
   config = { ...config, themeMode: id };
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
+  if (view && isServerUrl(wc().getURL())) installHome(wc());   // a mood theme may bring another bookshelf (Home follows it)
+}
+// Mood themes' animations run only while this window is the one you're using (preload.js).
+function sendWindowActive() {
+  if (!win || win.isDestroyed() || !view || view.webContents.isDestroyed()) return;
+  view.webContents.send("desktop:window-active", win.isFocused() && win.isVisible() && !win.isMinimized());
 }
 
-// Current bookshelf art (older versions had a wood on/off switch → "none").
+// Current bookshelf art (older versions had a wood on/off switch → "none"). Mood themes keep
+// their own choice, "From the theme" (= classic) unless you pick another, so picking a mood
+// theme always brings its scenery and your bookshelf for the colour themes stays as it was.
+const isMood = () => currentTheme().group === "mood";
 function shelfArtId() {
+  if (isMood()) return SHELF_ARTS[config.moodShelfArt] ? config.moodShelfArt : "classic";
   if (SHELF_ARTS[config.shelfArt]) return config.shelfArt;
   return config.woodShelf === false ? "none" : "classic";
 }
 
 // View → Bookshelf: pick the shelf art (live, remembered).
 function setShelfArt(id) {
-  config = { ...config, shelfArt: id };
-  delete config.woodShelf;
+  config = { ...config, [isMood() ? "moodShelfArt" : "shelfArt"]: id };
+  if (!isMood()) delete config.woodShelf;
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
   if (view && isServerUrl(wc().getURL())) installHome(wc());   // the all-libraries Home follows it too
@@ -1269,6 +1279,7 @@ function createWindow() {
     win.setAppDetails({ appId: APP_ID, appIconPath: exe, appIconIndex: 0, relaunchCommand: `"${exe}"`, relaunchDisplayName: "ABS Desktop App" });
   }
   win.on("page-title-updated", (e) => e.preventDefault());   // window title follows the web app
+  for (const ev of ["focus", "blur", "minimize", "restore", "show", "hide"]) win.on(ev, sendWindowActive);
   win.webContents.on("will-navigate", (e) => e.preventDefault());   // the title bar never navigates
   win.webContents.on("before-input-event", onShortcut);
   win.loadFile(path.join(__dirname, "titlebar.html"));
@@ -2543,7 +2554,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
   contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents);
-    if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; setTimeout(() => offline.sync(), 8000); }   // offline listening → server
+    if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; sendWindowActive(); setTimeout(() => offline.sync(), 8000); }   // offline listening → server
   });
   contents.on("zoom-changed", (_ev, dir) => { if (isServerUrl(contents.getURL())) zoom(dir === "in" ? 1 : -1); });
   // If the wood image wasn't readable yet at dom-ready, try again once the page has loaded.

@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Iš temos",
   "themeGroup.colour": "Spalvos",
   "themeGroup.mood": "Nuotaika",
-  "themeGroup.access": "Lengviau matyti"
+  "themeGroup.access": "Lengviau matyti",
+  "theme.wizard": "Burtininko biblioteka",
+  "theme.rain": "Lietinga diena",
+  "theme.autumn": "Rudens miškas",
+  "theme.snow": "Snieguota naktis",
+  "offline.queueTitle": "Atsisiunčiama",
+  "offline.queued": "Laukia",
+  "offline.cancelDownload": "Atšaukti šį atsisiuntimą"
 }

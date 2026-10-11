@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Iz teme",
   "themeGroup.colour": "Barve",
   "themeGroup.mood": "Razpoloženje",
-  "themeGroup.access": "Lažje vidno"
+  "themeGroup.access": "Lažje vidno",
+  "theme.wizard": "Čarovnikova knjižnica",
+  "theme.rain": "Deževen dan",
+  "theme.autumn": "Jesenski gozd",
+  "theme.snow": "Snežna noč",
+  "offline.queueTitle": "Prenašanje",
+  "offline.queued": "Čaka",
+  "offline.cancelDownload": "Prekliči ta prenos"
 }

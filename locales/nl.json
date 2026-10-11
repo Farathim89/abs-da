@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Van het thema",
   "themeGroup.colour": "Kleuren",
   "themeGroup.mood": "Sfeer",
-  "themeGroup.access": "Beter zichtbaar"
+  "themeGroup.access": "Beter zichtbaar",
+  "theme.wizard": "Bibliotheek van de tovenaar",
+  "theme.rain": "Regenachtige dag",
+  "theme.autumn": "Herfstbos",
+  "theme.snow": "Sneeuwnacht",
+  "offline.queueTitle": "Downloaden",
+  "offline.queued": "Wacht",
+  "offline.cancelDownload": "Deze download annuleren"
 }

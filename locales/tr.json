@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Temadan",
   "themeGroup.colour": "Renkler",
   "themeGroup.mood": "Atmosfer",
-  "themeGroup.access": "Daha kolay görünür"
+  "themeGroup.access": "Daha kolay görünür",
+  "theme.wizard": "Büyücünün Kitaplığı",
+  "theme.rain": "Yağmurlu Gün",
+  "theme.autumn": "Sonbahar Ormanı",
+  "theme.snow": "Karlı Gece",
+  "offline.queueTitle": "İndiriliyor",
+  "offline.queued": "Bekliyor",
+  "offline.cancelDownload": "Bu indirmeyi iptal et"
 }

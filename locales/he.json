@@ -246,5 +246,12 @@
   "shelf.fromTheme": "מערכת הנושא",
   "themeGroup.colour": "צבעים",
   "themeGroup.mood": "אווירה",
-  "themeGroup.access": "קל יותר לראות"
+  "themeGroup.access": "קל יותר לראות",
+  "theme.wizard": "ספריית הקוסם",
+  "theme.rain": "יום גשום",
+  "theme.autumn": "יער סתווי",
+  "theme.snow": "לילה מושלג",
+  "offline.queueTitle": "מוריד",
+  "offline.queued": "ממתין",
+  "offline.cancelDownload": "ביטול ההורדה הזו"
 }

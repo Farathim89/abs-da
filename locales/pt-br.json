@@ -246,5 +246,12 @@
   "shelf.fromTheme": "Do tema",
   "themeGroup.colour": "Cores",
   "themeGroup.mood": "Clima",
-  "themeGroup.access": "Mais fácil de ver"
+  "themeGroup.access": "Mais fácil de ver",
+  "theme.wizard": "Biblioteca do mago",
+  "theme.rain": "Dia de chuva",
+  "theme.autumn": "Bosque de outono",
+  "theme.snow": "Noite de neve",
+  "offline.queueTitle": "Baixando",
+  "offline.queued": "Aguardando",
+  "offline.cancelDownload": "Cancelar este download"
 }
