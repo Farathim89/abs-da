@@ -181,7 +181,7 @@
     neon: [["neon", 1.0]],
     deepsea: [["deepsea", 1.0]],
     haunted: [["haunted", 0.75]],
-    wizard: [["wizard-fire", 0.9], ["wizard-clock", 0.3]],
+    wizard: [["wizard-fire", 0.9], ["wizard-clock", 0.3], ["wizard-bubbles", 0.2]],   // (a cauldron bubbling, mixed low)
     rain: [["rain", 0.4]],
     summer: [["summer", 0.8]],
     autumn: [["autumn", 0.7]],

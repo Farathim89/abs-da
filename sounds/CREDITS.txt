@@ -14,6 +14,7 @@ deepsea.ogg        "Underwater Ambience" by Fission9                 https://fre
 haunted.ogg        "ambient ghost" by s-light                        https://freesound.org/s/530683/
 wizard-fire.ogg    "Fire crackling in fireplace" by NomadApe         https://freesound.org/s/444920/
 wizard-clock.ogg   "Kitchen Wall Clock Ticking 2" by giddster        https://freesound.org/s/434841/
+wizard-bubbles.ogg "Bubbling" by mattfinarelli (looped to 64 s)  https://freesound.org/s/533147/
 rain.ogg           "rain against window 2" by bastipictures          https://freesound.org/s/243781/
 autumn.ogg         "Autumn leaves falling on forest floor, moderate wind (loopable)" by Mjeno  https://freesound.org/s/405140/
 snow.ogg           "Winter wind.wav" by Elanor1995                   https://freesound.org/s/688841/
