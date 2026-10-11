@@ -56,22 +56,24 @@
     const k = {
       stopped: false,
       // A recording, looped with a cross-fade (no audible seam); starts somewhere in the middle.
-      async loopFile(name, gain) {
+      // rate < 1 plays it slower (and a little deeper), like a slowed-down tape.
+      async loopFile(name, gain, rate = 1) {
         const buf = await loadBuffer(name);
         if (!buf || k.stopped) return !!buf;
         const layer = ctx.createGain();
         layer.gain.value = gain;
         layer.connect(out);
-        const XF = Math.min(3, buf.duration / 4);
+        const XF = Math.min(3, buf.duration / rate / 4);   // (in real seconds)
         let next = ctx.currentTime + 0.05, first = true;
         const play = () => {
           if (k.stopped) return;
           const s = keep(ctx.createBufferSource());
           s.buffer = buf;
+          s.playbackRate.value = rate;
           const g = ctx.createGain();
           s.connect(g).connect(layer);
-          const offset = first ? rnd(0, Math.max(0, buf.duration - XF * 3)) : 0;
-          const len = buf.duration - offset;
+          const offset = first ? rnd(0, Math.max(0, buf.duration - XF * rate * 3)) : 0;
+          const len = (buf.duration - offset) / rate;          // how long it plays, in real seconds
           g.gain.setValueAtTime(0.0001, next);
           g.gain.linearRampToValueAtTime(1, next + XF);
           g.gain.setValueAtTime(1, next + len - XF);
@@ -172,7 +174,7 @@
     return k;
   }
 
-  // ---- the recordings (sounds/*.ogg) per mood: [file, level] -------------------------
+  // ---- the recordings (sounds/*.ogg) per mood: [file, level, speed (1 = as recorded)] --
   // Wind is mixed low on purpose (it gets tiring); drips and the clock sit under the rest.
   const RECORDINGS = {
     tavern: [["tavern", 0.75]],
@@ -181,7 +183,7 @@
     neon: [["neon", 1.0]],
     deepsea: [["deepsea", 1.0]],
     haunted: [["haunted", 0.75]],
-    wizard: [["wizard-fire", 0.9], ["wizard-clock", 0.15], ["wizard-bubbles", 0.2]],   // (clock and cauldron mixed low)
+    wizard: [["wizard-fire", 0.9], ["wizard-clock", 0.15], ["wizard-bubbles", 0.2, 0.8]],   // (clock and cauldron low; the cauldron at 0.8 speed)
     rain: [["rain", 0.4]],
     summer: [["summer", 0.8]],
     autumn: [["autumn", 0.7]],
@@ -304,7 +306,7 @@
         kit.out = out;
         const recs = RECORDINGS[want];
         if (recs) {
-          Promise.all(recs.map(([name, level]) => kit.loopFile(name, level))).then((ok) => {
+          Promise.all(recs.map(([name, level, rate]) => kit.loopFile(name, level, rate))).then((ok) => {
             if (!kit.stopped && !ok.some(Boolean)) MOODS[want](kit);   // (no recording loaded: the made sound)
           });
         } else {
