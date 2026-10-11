@@ -188,20 +188,21 @@
 
   // ---- the recordings (sounds/*.ogg) per mood: [file, level, speed (1 = as recorded),
   //      now and then ({ on, off } seconds; none = all the time)] -----------------------
-  // Wind is mixed low on purpose (it gets tiring); drips and the clock sit under the rest.
+  // Levels set so every mood's whole mix is equally loud (-26.4 LUFS, measured with ffmpeg
+  // ebur128 on the mix — tools/measure-moods.js); within a mood the layers keep their balance.
   const RECORDINGS = {
-    tavern: [["tavern", 0.75]],
-    dungeon: [["dungeon", 1.3]],   // (a deep, quieter loop)
-    starship: [["starship", 0.6]],
-    neon: [["neon", 1.0]],
-    deepsea: [["deepsea", 1.0]],
-    haunted: [["haunted", 0.75]],
-    wizard: [["wizard-fire", 0.9], ["wizard-clock", 0.15], ["wizard-bubbles", 0.2, 0.8, { on: [8, 20], off: [15, 40] }]],
+    tavern: [["tavern", 0.76]],
+    dungeon: [["dungeon", 1.02]],
+    starship: [["starship", 0.71]],
+    neon: [["neon", 0.69]],
+    deepsea: [["deepsea", 0.76]],
+    haunted: [["haunted", 0.72]],
+    wizard: [["wizard-fire", 0.83], ["wizard-clock", 0.14], ["wizard-bubbles", 0.18, 0.8, { on: [8, 20], off: [15, 40] }]],
     // (clock and cauldron low; the cauldron slower, and only now and then)
-    rain: [["rain", 0.4]],
+    rain: [["rain", 0.75]],
     summer: [["summer", 0.8]],
-    autumn: [["autumn", 0.7]],
-    snow: [["snow", 0.5]],
+    autumn: [["autumn", 0.76]],
+    snow: [["snow", 0.63]],
   };
 
   // ---- the moods -------------------------------------------------------------------
