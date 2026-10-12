@@ -402,7 +402,9 @@ if (location.protocol !== "file:") {
       }
       if (it.type === "submenu") {
         const kids = (it.submenu || []).filter((k) => k.type !== "separator");
-        if (kids.length > 1 && kids.every((k) => k.type === "checkbox") && kids.filter((k) => k.checked).length === 1) {
+        // (a pick-one list only when every tick belongs to it: View → Theme's "Show mood themes"
+        // switch is not one of the themes, so it stays a switch even when it's off)
+        if (kids.length > 1 && kids.every((k) => k.type === "checkbox" && k.radio === kids[0].radio) && kids.filter((k) => k.checked).length === 1) {
           box.append(dsSelect(it.label, kids));
         } else {
           const sub = document.createElement("div");
