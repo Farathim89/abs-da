@@ -713,6 +713,15 @@ if (location.protocol !== "file:") {
     return wrap;
   }
 
+  // "Show mood themes": they're an extra you switch on (right after the colour themes).
+  function moodsSwitch() {
+    const lab = el("label", "absda-motion");
+    const box = Object.assign(el("input"), { type: "checkbox", checked: !!looks.moods.on });
+    box.addEventListener("change", () => setLook("moods", box.checked ? "on" : "off"));
+    lab.append(box, Object.assign(el("span"), { textContent: looks.moods.label }));
+    return lab;
+  }
+
   function renderPanel(panel) {
     const scroll = panel.scrollTop;
     panel.textContent = "";
@@ -734,6 +743,7 @@ if (location.protocol !== "file:") {
     for (const t of looks.themes) {
       if (t.group !== tGroup) {
         if (tGroup === "mood") panel.append(motionSwitch());
+        if (tGroup === "colour" && looks.moods) panel.append(moodsSwitch());
         tGroup = t.group;
         panel.append(Object.assign(el("h4"), { textContent: t.groupLabel }));
         tg = el("div", "absda-grid");
@@ -816,6 +826,26 @@ if (location.protocol !== "file:") {
     const t = document.getElementById(TIP_ID);
     if (t) t.remove();
   }
+  // Our buttons in the player bar (mood sounds): the tooltip goes ABOVE the button
+  // (Windows' own tooltip appears under the pointer, on top of the bar).
+  document.addEventListener("mouseover", (e) => {
+    const b = e.target.closest && e.target.closest("[data-absda-tip-up]");
+    if (!b || document.getElementById(TIP_ID) || document.getElementById("absda-mood-pop")) return;
+    ensureStyle();
+    const tip = el("div");
+    tip.id = TIP_ID;
+    tip.dataset.for = b.id;
+    tip.textContent = b.getAttribute("aria-label") || "";
+    document.body.append(tip);
+    const r = b.getBoundingClientRect();
+    tip.style.top = `${Math.round(r.top - tip.offsetHeight - 6)}px`;
+    tip.style.left = `${Math.round(Math.max(8, Math.min(window.innerWidth - tip.offsetWidth - 8, r.left + r.width / 2 - tip.offsetWidth / 2)))}px`;
+  });
+  document.addEventListener("mouseout", (e) => {
+    const b = e.target.closest && e.target.closest("[data-absda-tip-up]");
+    if (b && !b.contains(e.relatedTarget)) hideTip();
+  });
+  document.addEventListener("mousedown", (e) => { if (e.target.closest && e.target.closest("[data-absda-tip-up]")) hideTip(); }, true);
 
   function ensureLooksButton() {
     if (windowKind !== "main" || document.getElementById(BRUSH_ID)) return;
@@ -931,13 +961,14 @@ if (location.protocol !== "file:") {
       btn = document.createElement("button");
       btn.id = MOOD_BTN;
       btn.type = "button";
+      btn.dataset.absdaTipUp = "1";
       btn.innerHTML = MOOD_ICON;
       btn.addEventListener("click", (e) => { e.stopPropagation(); if (document.getElementById(MOOD_POP)) closeMoodPop(); else openMoodPop(); });
       grow.after(btn);
     }
     btn.classList.toggle("absda-on", !!mood.on);
     const tip = `${mood.texts.sounds}: ${mood.name}`;
-    btn.title = tip;
+    btn.removeAttribute("title");
     btn.setAttribute("aria-label", tip);
   }
   function setMood(patch) { ipcRenderer.send("desktop:set-mood-sound", patch); }

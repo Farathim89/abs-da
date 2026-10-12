@@ -27,6 +27,7 @@ const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 const homePageJs = require("./home-page");
 const setupOffline = require("./offline");
 const offlineButtonJs = require("./offline-button");
+const moodFxJs = require("./mood-fx");
 
 // ---------------------------------------------------------------------------
 // Which copy of the app is this?
@@ -353,6 +354,17 @@ function installOfflineButton(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
   contents.executeJavaScript(offlineButtonJs(offlineButtonTexts()))
     .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installOfflineButton(contents, attempt + 1), 1000); })
+    .catch(() => {});
+}
+// ---- mood effects drawn on a canvas over the library (mood-fx.js; every mood theme) ----
+const moodFxOpts = () => ({
+  effect: !isMood() ? null : themeId() === "snow" && config.snowFlakes === false ? null : themeId(),   // (Snowy Night without snowflakes: none)
+  motion: config.moodMotion !== false,
+});
+function installMoodFx(contents, attempt = 0) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  contents.executeJavaScript(moodFxJs(moodFxOpts()))
+    .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installMoodFx(contents, attempt + 1), 1000); })
     .catch(() => {});
 }
 function showOfflineLibrary(query) {
@@ -733,7 +745,7 @@ function themeCss(id) {
       trix-toolbar .trix-input--dialog.validate:invalid { box-shadow: ${a} 0 0 1.5px 1px !important; }`);
   }
   if (t.css) parts.push(t.css);
-  if (t.fx) parts.push(t.fx(config.moodMotion !== false, { snowFlakes: config.snowFlakes !== false }));   // View → Theme → Animate mood themes / Show snowflakes
+  if (t.fx) parts.push(t.fx(config.moodMotion !== false, { snowFlakes: false }));   // (Snowy Night's snow: the canvas in mood-fx.js)   // View → Theme → Animate mood themes / Show snowflakes
   const tb = t.title;
   parts.push(`html:root { --tb-bg: ${tb.bg}; --tb-fg: ${tb.fg}; --tb-hover: ${tb.hover}; --tb-logo: ${tb.logo}; }`);
   // The connect / can't-reach screen (connect.css) follows the theme too.
@@ -840,7 +852,12 @@ function onServerPage(url) {
 
 // ---- page styles: bug fixes + theme ----------------------------------------
 const themeKeys = new WeakMap();   // webContents → key of the inserted theme CSS
-const themeId = () => (THEMES[config.themeMode] ? config.themeMode : "abs");
+// Mood themes (with their sounds, animations and the sound button in the player bar) are an
+// extra you switch on: View → Theme → Show mood themes. While off, they're hidden everywhere
+// and a saved mood theme shows as the default one (it comes back when you switch them on).
+const moodsOn = () => config.moodThemes === true;
+const themeAllowed = (id) => !!THEMES[id] && (THEMES[id].group !== "mood" || moodsOn());
+const themeId = () => (themeAllowed(config.themeMode) ? config.themeMode : "abs");
 const currentTheme = () => THEMES[themeId()];
 
 // Add our styles to a page. isNewPage = the page just (re)loaded, so anything
@@ -899,9 +916,18 @@ function setTheme(id) {
   config = { ...config, themeMode: id };
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
-  if (view && isServerUrl(wc().getURL())) installHome(wc());   // a mood theme may bring another bookshelf (Home follows it)
+  if (view && isServerUrl(wc().getURL())) { installHome(wc()); installMoodFx(wc()); }   // a mood theme may bring another bookshelf and effect
   previewMoodSound();
   sendMoodSound();   // another mood's sounds (or none for a colour theme)
+}
+// Show mood themes on/off (remembered); everything mood follows at once.
+function setMoodThemes(on) {
+  config = { ...config, moodThemes: !!on };
+  writeJson(dataFile("config.json"), config);
+  reapplyTheme();
+  if (view && isServerUrl(wc().getURL())) { installHome(wc()); installMoodFx(wc()); }
+  previewUntil = 0;
+  sendMoodSound();
 }
 // ---- mood sounds (ambience.js in the title bar page) ---------------------------------
 // Off until you switch them on (player bar button, View → Theme, or the Looks panel).
@@ -1053,7 +1079,7 @@ function onLangChanged() {
   for (const c of webContents.getAllWebContents()) {
     if (!c.isDestroyed() && isServerUrl(c.getURL())) c.executeJavaScript(issuesHookJs()).catch(() => {});   // its texts
   }
-  if (view && isServerUrl(wc().getURL())) installHome(wc());   // "All libraries" text
+  if (view && isServerUrl(wc().getURL())) { installHome(wc()); }   // "All libraries" text
   updateTrayTooltip();
   sendUpdateToTitleBar();
 }
@@ -2101,10 +2127,14 @@ const shortcut = (accelerator) => ({ accelerator, registerAccelerator: false });
 // (Ticks, not radio buttons: Windows treats each separated group as its own radio
 // group and would tick the first item of every group.)
 function themeMenuItems() {
-  const items = [];
-  let group;
+  const items = [
+    { label: tr("theme.moodThemes"), type: "checkbox", checked: moodsOn(), click: (item) => setMoodThemes(item.checked) },
+    { type: "separator" },
+  ];
+  let group, listed = false;
   for (const [id, t] of Object.entries(THEMES)) {
-    if (items.length && t.group !== group) {
+    if (!themeAllowed(id)) continue;
+    if (listed && t.group !== group) {
       if (group === "mood") {
         items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
         if (themeId() === "snow") items.push({ label: tr("theme.snowFlakes"), type: "checkbox", checked: config.snowFlakes !== false, click: (item) => setSnowFlakes(item.checked) });
@@ -2120,6 +2150,7 @@ function themeMenuItems() {
       items.push({ type: "separator" });
     }
     group = t.group;
+    listed = true;
     items.push({ label: tr("theme." + id) + (t.group === "mood" ? "  ♪" : ""), type: "checkbox", radio: "theme", checked: themeId() === id, click: () => setTheme(id) });
   }
   return items;
@@ -2129,12 +2160,14 @@ function setSnowFlakes(on) {
   config = { ...config, snowFlakes: !!on };
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
+  if (view && isServerUrl(wc().getURL())) installMoodFx(wc());
 }
 // Mood themes' torches, embers, bubbles… moving or standing still (remembered).
 function setMoodMotion(on) {
   config = { ...config, moodMotion: !!on };
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
+  if (view && isServerUrl(wc().getURL())) installMoodFx(wc());
 }
 // "Classic" bookshelf = the theme's own scenery for a mood theme ("From the theme").
 const shelfLabel = (id) => (id === "classic" && currentTheme().scene ? tr("shelf.fromTheme") : tr("shelf." + id));
@@ -2643,7 +2676,7 @@ ipcMain.on("desktop:open-settings", (e, url) => {
 const ABS_PLANK = "linear-gradient(180deg, #95775a 0%, #674625 17%, #674625 88%, #473019 100%)";
 function looksState() {
   const t = currentTheme();
-  const themes = Object.entries(THEMES).map(([id, th]) => {
+  const themes = Object.entries(THEMES).filter(([id]) => themeAllowed(id)).map(([id, th]) => {
     const c = th.colors || {};
     return {
       id, label: tr("theme." + id), contrast: !!th.contrast, sound: th.group === "mood", group: th.group || "colour", groupLabel: tr("themeGroup." + (th.group || "colour")),
@@ -2660,6 +2693,7 @@ function looksState() {
   });
   const sizes = TEXT_SIZES.map(([name, f]) => ({ id: String(f), label: tr("size." + name), percent: Math.round(f * 100) }));
   return { theme: themeId(), shelf: shelfArtId(), textSize: String(textSize()), sizes, themes, shelves,
+    moods: { on: moodsOn(), label: tr("theme.moodThemes") },
     motion: config.moodMotion !== false, motionLabel: tr("theme.motion"),
     snowFlakes: themeId() === "snow" ? { on: config.snowFlakes !== false, label: tr("theme.snowFlakes") } : null,
     sound: { on: !!config.moodSound, volume: moodSoundVolume(), label: tr("mood.sounds"), volumeLabel: tr("mood.volume"),
@@ -2669,7 +2703,8 @@ function looksState() {
 ipcMain.handle("desktop:get-looks", (e) => (fromServerPage(e) ? looksState() : null));
 ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
   if (!fromServerPage(e)) return null;
-  if (kind === "theme" && THEMES[id]) setTheme(id);
+  if (kind === "theme" && themeAllowed(id)) setTheme(id);
+  if (kind === "moods") setMoodThemes(id === "on");
   if (kind === "shelf" && SHELF_ARTS[id]) setShelfArt(id);
   if (kind === "text" && TEXT_SIZES.some(([, f]) => String(f) === id)) setTextSize(Number(id));
   if (kind === "motion") setMoodMotion(id === "on");
@@ -2684,7 +2719,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents);
+  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents); installMoodFx(contents);
     if (view && contents === wc()) { sendWindowActive(); sendMoodSound(); if (!isServerUrl(contents.getURL())) offlinePlaying = false; }
     if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; setTimeout(() => offline.sync(), 8000); }   // offline listening → server
   });
@@ -2733,6 +2768,11 @@ app.whenReady().then(() => {
     return;
   }
   config = readJson(dataFile("config.json"), {});
+  // Mood themes became an extra you switch on (off for new users): kept on for anyone already using one.
+  if (config.moodThemes === undefined && ((THEMES[config.themeMode] && THEMES[config.themeMode].group === "mood") || config.moodSound || config.moodShelfArt)) {
+    config = { ...config, moodThemes: true };
+    writeJson(dataFile("config.json"), config);
+  }
   setTimeout(cleanOldUnpackFolders, 30000);
   refreshStartWithWindows();
   hardenSession();
