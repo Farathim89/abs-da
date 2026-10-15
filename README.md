@@ -70,7 +70,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   speed, sleep timer — and sends your listening back when the server is reachable again. Download queue
   with cancel, optional removal of finished books' offline copies, and the offline library opens by
   itself when the server can't be reached
-- **TV mode** (**View → TV mode** or `F10`): a full-screen layout for the couch, used with an **Xbox or
+- **TV mode** (**View → TV mode** or `F10`): a full-screen layout for the couch with a Plex-style side menu, used with an **Xbox or
   PlayStation controller**, a TV remote's arrow keys or the keyboard. Home rows, every library (books,
   series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
   Playing** screen (chapters, ±jump, speed, sleep timer). It plays through the web app's own player,

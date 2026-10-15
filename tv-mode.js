@@ -68,16 +68,29 @@ function pageMain(opts) {
     #absda-tv .tv-bg { position: absolute; inset: -80px; z-index: 0; background-size: cover; background-position: center;
       filter: blur(50px) saturate(1.25) brightness(.3); opacity: 0; transition: opacity .6s; pointer-events: none; }
     #absda-tv .tv-bg.on { opacity: 1; }
-    #absda-tv .tv-nav, #absda-tv .tv-main { position: relative; z-index: 1; }
-    #absda-tv .tv-nav { display: flex; align-items: center; gap: .6em; padding: 1em 2.4em .5em; flex: none; }
-    #absda-tv .tv-navl { display: flex; gap: .35em; flex: 1; min-width: 0; }
-    #absda-tv .tv-ni { display: flex; align-items: center; gap: .45em; padding: .45em .95em; border-radius: 999px; flex: none;
-      font-size: .95em; white-space: nowrap; opacity: .72; cursor: pointer; transition: background .12s, transform .12s; }
-    #absda-tv .tv-ni svg { width: 1.15em; height: 1.15em; }
-    #absda-tv .tv-ni.tv-cur { opacity: 1; background: rgba(255,255,255,.1); }
-    #absda-tv .tv-ni.tv-on { opacity: 1; background: var(--tb-logo, #f0a848); color: #141414; transform: scale(1.05); }
-    #absda-tv .tv-clock { font-size: 1.05em; opacity: .8; margin: 0 .4em 0 .8em; font-variant-numeric: tabular-nums; }
-    #absda-tv .tv-main { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: .7em 2.4em 5.5em; scrollbar-width: none; }
+    #absda-tv .tv-main { position: relative; z-index: 1; }
+    /* The side menu (like Plex): icons down the left; it opens with the names while you're in it. */
+    #absda-tv .tv-nav { position: absolute; z-index: 6; left: 0; top: 0; bottom: 0; width: 4.9em; display: flex; flex-direction: column;
+      gap: .3em; padding: 1.4em .75em; overflow: hidden; transition: width .18s ease, background .18s ease, box-shadow .18s ease;
+      background: linear-gradient(90deg, rgba(0,0,0,.45), rgba(0,0,0,0)); }
+    #absda-tv .tv-nav.open, #absda-tv:not(.tv-nocursor) .tv-nav:hover { width: 17.5em;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--color-primary, #141414) 97%, black) 75%, color-mix(in srgb, var(--color-primary, #141414) 88%, transparent));
+      box-shadow: 1.5em 0 3em rgba(0,0,0,.55); }
+    #absda-tv .tv-navl { display: flex; flex-direction: column; gap: .3em; flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; margin: 0 -.3em; padding: 0 .3em; }
+    #absda-tv .tv-navl::-webkit-scrollbar { display: none; }
+    #absda-tv .tv-navb { display: flex; flex-direction: column; gap: .3em; flex: none; }
+    #absda-tv .tv-navsep { height: 1px; margin: .4em .4em; background: rgba(255,255,255,.12); flex: none; }
+    #absda-tv .tv-ni { display: flex; align-items: center; gap: 1em; padding: .62em .82em; border-radius: .7em; flex: none; position: relative;
+      white-space: nowrap; opacity: .7; cursor: pointer; transition: background .12s, opacity .12s; }
+    #absda-tv .tv-ni svg, #absda-tv .tv-ni .abs-icons { width: 1.35em; height: 1.35em; font-size: 1.35em; line-height: 1; flex: none; display: grid; place-items: center; }
+    #absda-tv .tv-ni > span:last-child { opacity: 0; transition: opacity .12s; overflow: hidden; text-overflow: ellipsis; }
+    #absda-tv .tv-nav.open .tv-ni > span:last-child, #absda-tv:not(.tv-nocursor) .tv-nav:hover .tv-ni > span:last-child { opacity: 1; }
+    #absda-tv .tv-ni.tv-cur { opacity: 1; color: var(--tb-logo, #f0a848); }
+    #absda-tv .tv-ni.tv-cur::before { content: ""; position: absolute; left: -.75em; top: 22%; bottom: 22%; width: .22em; border-radius: 0 .2em .2em 0; background: var(--tb-logo, #f0a848); }
+    #absda-tv .tv-ni.tv-on { opacity: 1; background: var(--tb-logo, #f0a848); color: #141414; }
+    #absda-tv .tv-clock { position: absolute; z-index: 4; top: 1.1em; right: 2.4em; font-size: 1.05em; opacity: .8; font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 4px rgba(0,0,0,.7); pointer-events: none; }
+    #absda-tv .tv-main { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 1.2em 2.4em 5.5em 6.6em; scrollbar-width: none; }
     #absda-tv .tv-main::-webkit-scrollbar, #absda-tv .tv-track::-webkit-scrollbar, #absda-tv .tv-mlist::-webkit-scrollbar { display: none; }
     #absda-tv .tv-loading, #absda-tv .tv-empty { opacity: .6; font-size: 1.3em; padding: 1.5em 0; }
     #absda-tv .tv-h1 { font-size: 1.9em; font-weight: 700; margin: .1em 0 .5em; display: flex; align-items: center; gap: .5em; }
@@ -89,8 +102,6 @@ function pageMain(opts) {
       background: color-mix(in srgb, var(--tb-logo, #f0a848) 25%, transparent); color: color-mix(in srgb, var(--tb-logo, #f0a848) 55%, white); }
     #absda-tv .tv-track { display: flex; gap: 1.1em; overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
       padding: .8em .9em 1.1em; margin: -.8em -.9em -1.1em; }
-    #absda-tv .tv-navl.tv-track { gap: .35em; padding: .3em .4em; margin: -.3em -.4em;
-      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 1.2em, #000 calc(100% - 1.2em), transparent 100%); }
     #absda-tv .tv-card { flex: none; width: 7.6em; cursor: pointer; }
     #absda-tv .tv-card.sq { width: 9.6em; }
     #absda-tv .tv-card.big { width: 9.4em; }
@@ -205,7 +216,7 @@ function pageMain(opts) {
     #absda-tv .tv-key svg { width: 1.3em; height: 1.3em; }
     #absda-tv .tv-res { flex: 1; min-width: 0; }
     /* mini player, hints, pop-up lists */
-    #absda-tv .tv-mini { position: absolute; z-index: 3; left: 2.4em; bottom: 1em; display: flex; gap: .8em; align-items: center; max-width: 42vw;
+    #absda-tv .tv-mini { position: absolute; z-index: 3; left: 6.6em; bottom: 1em; display: flex; gap: .8em; align-items: center; max-width: 42vw;
       padding: .45em 1.1em .45em .45em; border-radius: .8em; background: rgba(0,0,0,.6); backdrop-filter: blur(10px); }
     #absda-tv .tv-mini img { height: 2.9em; width: auto; max-width: 2.9em; object-fit: cover; border-radius: .3em; }
     #absda-tv .tv-mini .tx { min-width: 0; }
@@ -380,6 +391,7 @@ function pageMain(opts) {
     e.classList.add("tv-on");
     try { e.focus({ preventScroll: true }); } catch (x) {}
     if (!noReveal) reveal(e);
+    if (nav) nav.classList.toggle("open", nav.contains(e));
     const s = cur();
     if (s && main && main.contains(e)) { s.focusKey = e.dataset.k; if (s.onFocus) s.onFocus(e); }
   }
@@ -391,7 +403,7 @@ function pageMain(opts) {
       if (r.left < t.left + pad) track.scrollBy({ left: r.left - t.left - pad, behavior: "smooth" });
       else if (r.right > t.right - pad) track.scrollBy({ left: r.right - t.right + pad, behavior: "smooth" });
     }
-    const box = e.closest(".tv-main, .tv-mlist");
+    const box = e.closest(".tv-main, .tv-mlist, .tv-navl");
     if (box) {
       const b = box.getBoundingClientRect(), target = e.closest(".tv-row") || e, r = target.getBoundingClientRect(), pad = b.height * 0.1;
       const firstRow = box.querySelector(".tv-row, .tv-f");
@@ -439,10 +451,25 @@ function pageMain(opts) {
       }
       return best;
     };
+    if (!modal && nav.contains(focused)) {
+      if (dx > 0) { const back = pageFocus(); if (back) setFocus(back); return; }
+      if (dx < 0) return;
+      const n = pick(true);
+      if (n) setFocus(n);
+      return;
+    }
+    const page = all.filter((e) => !nav.contains(e));
     let next = pick(true);
-    if (!next) { list = all; next = pick(true); }
-    if (!next && dx && root.classList.contains("tv-free")) { list = all.filter((e) => !nav.contains(e)); next = pick(false); }
+    if (!next) { list = page; next = pick(true); }
+    if (!next && dx && root.classList.contains("tv-free")) { list = page; next = pick(false); }
+    if (!next && dx < 0 && !modal) { focusNav(); return; }
     if (next) setFocus(next);
+  }
+  // Where the highlight goes back to on the page (from the menu).
+  function pageFocus() {
+    const s = cur();
+    const e = s && s.focusKey && main.querySelector(`[data-k="${CSS.escape(s.focusKey)}"]`);
+    return e || main.querySelector(".tv-f.tv-default") || main.querySelector(".tv-f");
   }
   function defaultFocus() {
     const scope = modal || main;
@@ -452,7 +479,7 @@ function pageMain(opts) {
 
   // ---- screens ---------------------------------------------------------------
   function push(s) { saveScreen(); stack.push(s); show(); }
-  function goRoot(s) { saveScreen(); s.enter = true; stack = [s]; show(); }
+  function goRoot(s) { saveScreen(); s.enter = true; stack = [s]; TV.beforeSettings = null; show(); }
   function back() {
     if (modal) { closeModal(); return; }
     if (stack.length > 1) { stack.pop(); show(); return; }
@@ -1171,26 +1198,29 @@ function pageMain(opts) {
   // ---- top menu, mini player, hints --------------------------------------------
   function drawNav() {
     nav.textContent = "";
-    const left = el("div", "tv-navl tv-track");
-    const item = (key, label, icon, act) => {
+    if (TV.clockEl) TV.clockEl.remove();
+    const list = el("div", "tv-navl");
+    const item = (box, key, label, icon, act) => {
       const b = focusable("div", "tv-ni", key, act);
       b.innerHTML = icon;
       b.append(el("span", null, label));
-      left.append(b);
+      box.append(b);
     };
-    item("nav:home", L("ButtonHome", "Home"), ICON.home, () => goRoot({ type: "home" }));
-    for (const l of libs()) item("nav:lib:" + l.id, l.name.trim(), l.mediaType === "podcast" ? ICON.podcast : ICON.lib, () => goRoot({ type: "lib", libId: l.id }));
-    item("nav:search", L("ButtonSearch", "Search"), ICON.search, () => goRoot({ type: "search" }));
-    item("nav:np", T("nowPlaying"), ICON.np, () => { if (cur().type !== "np") push({ type: "np", enter: true }); else setFocus(defaultFocus()); });
+    // A library's own icon from the web app's icon font (as in its side menu and library picker).
+    const libIcon = (l) => (l.icon && /^[a-z0-9-]+$/.test(l.icon) ? `<span class="abs-icons icon-${l.icon}"></span>` : l.mediaType === "podcast" ? ICON.podcast : ICON.lib);
+    item(list, "nav:search", L("ButtonSearch", "Search"), ICON.search, () => goRoot({ type: "search" }));
+    item(list, "nav:home", L("ButtonHome", "Home"), ICON.home, () => goRoot({ type: "home" }));
+    list.append(el("div", "tv-navsep"));
+    for (const l of libs()) item(list, "nav:lib:" + l.id, l.name.trim(), libIcon(l), () => goRoot({ type: "lib", libId: l.id }));
+    list.append(el("div", "tv-navsep"));
+    item(list, "nav:np", T("nowPlaying"), ICON.np, () => { if (cur().type !== "np") push({ type: "np", enter: true }); else setFocus(defaultFocus()); });
+    const bottom = el("div", "tv-navb");
+    item(bottom, "nav:set", L("HeaderSettings", "Settings"), ICON.gear, () => goRoot({ type: "settings" }));
+    item(bottom, "nav:exit", T("exit"), ICON.exit, askExit);
+    nav.append(list, el("div", "tv-navsep"), bottom);
     const clock = el("div", "tv-clock");
     TV.clockEl = clock;
-    const pad = focusable("div", "tv-ni", "nav:set", () => goRoot({ type: "settings" }));
-    pad.innerHTML = ICON.gear;
-    pad.title = L("HeaderSettings", "Settings");
-    const exit = focusable("div", "tv-ni", "nav:exit", askExit);
-    exit.innerHTML = ICON.exit;
-    exit.title = T("exit");
-    nav.append(left, clock, pad, exit);
+    root.append(clock);
     tickClock();
   }
   function markNav() {
@@ -1257,6 +1287,9 @@ function pageMain(opts) {
         j.append(Object.assign(el("span", "tv-g"), { textContent: ps ? "L2 R2" : "LT RT" }), document.createTextNode(T("jump")));
         hints.append(j);
       }
+      const st = el("span");
+      st.append(Object.assign(el("span", "tv-g"), { textContent: ps ? "Options" : "☰" }), document.createTextNode(L("HeaderSettings", "Settings")));
+      hints.append(st);
     }
   }
 
@@ -1292,6 +1325,11 @@ function pageMain(opts) {
       case "jumpback": pcall((p) => p.jumpBackward()); break;
       case "jumpfwd": pcall((p) => p.jumpForward()); break;
       case "menu": if (!modal) focusNav(); break;
+      case "settings":   // Start / Options: Settings (again: back to where you were)
+        if (modal) closeModal(true);
+        if (stack[0].type === "settings" && stack.length === 1 && TV.beforeSettings) { const b = TV.beforeSettings; TV.beforeSettings = null; saveScreen(); stack = b; show(); }
+        else { saveScreen(); TV.beforeSettings = stack; stack = [{ type: "settings", enter: true }]; show(); }
+        break;
     }
   }
   // Keyboard and TV remotes (arrow keys, OK = Enter, Back = Esc/Backspace). While TV mode
@@ -1321,9 +1359,9 @@ function pageMain(opts) {
 
   // Game controllers (Gamepad API, "standard" layout = Xbox and PlayStation alike):
   // D-pad / left stick move · A/✕ select · B/○ back · X/□ play/pause · Y/△ Now Playing
-  // LB RB / L1 R1 chapter · LT RT / L2 R2 jump · Start/Options = top menu · View/Share = back.
+  // LB RB / L1 R1 chapter · LT RT / L2 R2 jump · Start/Options = Settings · View/Share = the side menu.
   const held = {}, prevBtn = {};
-  const BUTTONS = { 0: "ok", 1: "back", 2: "playpause", 3: "np", 4: "prevch", 5: "nextch", 6: "jumpback", 7: "jumpfwd", 8: "back", 9: "menu" };
+  const BUTTONS = { 0: "ok", 1: "back", 2: "playpause", 3: "np", 4: "prevch", 5: "nextch", 6: "jumpback", 7: "jumpfwd", 8: "menu", 9: "settings" };
   function padLoop(now) {
     if (!TV.visible) return;
     TV.raf = requestAnimationFrame(padLoop);
