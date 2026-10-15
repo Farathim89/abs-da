@@ -25,6 +25,7 @@ const { SHELF_ARTS, artUrl } = require("./shelf-art");
 const { MOOD_THEMES } = require("./mood-themes");
 const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 const homePageJs = require("./home-page");
+const tvModeJs = require("./tv-mode");
 const setupOffline = require("./offline");
 const offlineButtonJs = require("./offline-button");
 const moodFxJs = require("./mood-fx");
@@ -323,6 +324,36 @@ function installHome(contents, attempt = 0) {
     .then((ok) => { if (!ok && attempt < 15) setTimeout(() => installHome(contents, attempt + 1), 1000); })
     .catch(() => {});
 }
+// ---- TV mode (tv-mode.js): full-screen couch layout for a game controller / TV remote ----
+// View → TV mode (F10) turns it on and off; "Start in TV mode" (config.tvStart) opens it when
+// the app starts. The window goes full screen while it's on (unless it already was).
+let tvActive = false, tvMadeFullScreen = false, tvStarted = false;
+const TV_TEXTS = ["exit", "exitAsk", "stay", "nowPlaying", "nothing", "resume", "startOver", "speed", "off", "sort",
+  "select", "playPause", "chapter", "jump", "minutes", "space", "clear", "searchHint", "empty"];
+const tvJs = () => tvModeJs({ open: tvActive, t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
+function installTv(contents, attempt = 0) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  contents.executeJavaScript(tvJs())
+    .then((ok) => { if (!ok && attempt < 30) setTimeout(() => installTv(contents, attempt + 1), 1000); })
+    .catch(() => {});
+}
+function setTvMode(on) {
+  tvActive = !!on;
+  // (Test copies stay off-screen: no full screen there.)
+  if (win && !win.isDestroyed() && !process.env.ABSDA_TEST_OFFSCREEN) {
+    if (tvActive && !win.isFullScreen()) { tvMadeFullScreen = true; if (win.isVisible()) win.setFullScreen(true); }
+    else if (!tvActive && tvMadeFullScreen) { tvMadeFullScreen = false; if (win.isFullScreen()) win.setFullScreen(false); }
+  }
+  if (view && isServerUrl(wc().getURL())) { installTv(wc()); if (tvActive) wc().focus(); }
+}
+// The web app finished loading: put TV mode in (and open it once at start if you chose that).
+function tvOnLoad(contents) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  if (config.tvStart && !tvStarted) { tvStarted = true; setTvMode(true); return; }
+  installTv(contents);
+}
+ipcMain.on("desktop:tv-exit", (e) => { if (fromServerPage(e) && tvActive) setTvMode(false); });
+
 // ---- offline listening (offline.js, offline-button.js, offline.html) ----------------
 const offline = setupOffline({
   view: () => view,
@@ -1193,6 +1224,7 @@ function onShortcut(event, input) {
   let action = null;
   if (key === "F5") action = () => wc().reload();
   else if (key === "F11") action = toggleFullScreen;
+  else if (key === "F10" && !ctrl && !input.alt && !input.shift) action = () => setTvMode(!tvActive);
   else if (input.alt && !ctrl && key === "ArrowLeft") action = () => navigate(-1);
   else if (input.alt && !ctrl && key === "ArrowRight") action = () => navigate(1);
   else if (input.alt && !ctrl && key === "Home") action = goHome;
@@ -1386,6 +1418,8 @@ function createWindow() {
   }
   win.on("page-title-updated", (e) => e.preventDefault());   // window title follows the web app
   for (const ev of ["focus", "blur", "minimize", "restore", "show", "hide"]) win.on(ev, sendWindowActive);
+  // TV mode switched on while the window was hidden (started with Windows): full screen when it shows.
+  win.on("show", () => { if (tvActive && tvMadeFullScreen && !win.isFullScreen() && !process.env.ABSDA_TEST_OFFSCREEN) win.setFullScreen(true); });
   win.webContents.on("did-finish-load", sendMoodSound);   // ambience.js lives in the title bar page
   win.webContents.on("will-navigate", (e) => e.preventDefault());   // the title bar never navigates
   win.webContents.on("before-input-event", onShortcut);
@@ -1492,6 +1526,7 @@ function createWindow() {
     applyWebAppFixes(contents);   // e.g. after signing in, the player exists now
     installHome(contents);
     installOfflineButton(contents);
+    installTv(contents);   // e.g. you just signed in
   });
 
   if (!app.isPackaged) contents.on("did-navigate", (_e, url) => console.log("[nav]", url));
@@ -2155,6 +2190,11 @@ function themeMenuItems() {
   }
   return items;
 }
+// View → Start in TV mode (remembered; takes effect at the next start).
+function setTvStart(on) {
+  config = { ...config, tvStart: !!on };
+  writeJson(dataFile("config.json"), config);
+}
 // Snowy Night: falling snowflakes on or off (the snow on the books stays).
 function setSnowFlakes(on) {
   config = { ...config, snowFlakes: !!on };
@@ -2289,6 +2329,8 @@ function menuTemplate() {
         { label: tr("view.language"), submenu: languageMenuItems() },
         { type: "separator" },
         { label: tr("view.fullScreen"), ...shortcut("F11"), click: toggleFullScreen },
+        { label: tr("tv.mode"), ...shortcut("F10"), type: "checkbox", checked: tvActive, click: () => setTvMode(!tvActive) },
+        { label: tr("tv.start"), type: "checkbox", checked: !!config.tvStart, click: (item) => setTvStart(item.checked) },
       ],
     },
     {
@@ -2719,7 +2761,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents); installMoodFx(contents);
+  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents); installMoodFx(contents); tvOnLoad(contents);
     if (view && contents === wc()) { sendWindowActive(); sendMoodSound(); if (!isServerUrl(contents.getURL())) offlinePlaying = false; }
     if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; setTimeout(() => offline.sync(), 8000); }   // offline listening → server
   });

@@ -479,7 +479,7 @@ function pageMain(opts) {
     canvas.height = Math.round(window.innerHeight * k);
     frame = EFFECTS[current](canvas.getContext("2d"), canvas.width, canvas.height);
   }
-  const resting = () => document.hidden || document.documentElement.classList.contains("absda-idle");
+  const resting = () => document.hidden || document.documentElement.classList.contains("absda-idle") || document.documentElement.hasAttribute("data-absda-tv");
   function loop() {
     timer = window.setTimeout(loop, 1000 / 30);
     if (resting()) { last = 0; return; }

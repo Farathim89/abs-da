@@ -70,6 +70,11 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   speed, sleep timer — and sends your listening back when the server is reachable again. Download queue
   with cancel, optional removal of finished books' offline copies, and the offline library opens by
   itself when the server can't be reached
+- **TV mode** (**View → TV mode** or `F10`): a full-screen layout for the couch, used with an **Xbox or
+  PlayStation controller**, a TV remote's arrow keys or the keyboard. Home rows, every library (books,
+  series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
+  Playing** screen (chapters, ±jump, speed, sleep timer). It plays through the web app's own player,
+  so progress syncs as usual. **View → Start in TV mode** opens it every time the app starts
 - **7 colour themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**. Buttons, switches, pop-up notifications and the
@@ -179,6 +184,7 @@ run `build.cmd` as administrator once (it caches the signing toolkit); after tha
 - `mood-fx.js` — the mood themes' moving light layer, drawn on a canvas over the library
 - `ambience.js` — mood sounds: loops the recordings in `sounds/` with a cross-fade (Web Audio, runs in the title bar page)
 - `home-page.js` — the All libraries Home page
+- `tv-mode.js` — TV mode: the full-screen couch layout, controller and remote input
 - `offline.js`, `offline-button.js`, `offline.*` — downloads, the offline library and player, syncing listening back
 - `titlebar.*` — the custom title bar (the web app runs in a panel underneath it)
 - `connect.*` — the connect / change server / can't-reach screen
