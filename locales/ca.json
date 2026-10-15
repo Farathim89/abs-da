@@ -31,6 +31,7 @@
   "view.langAuto": "La mateixa que Audiobookshelf",
   "view.fullScreen": "Pantalla completa",
   "tv.mode": "Mode TV",
+  "tv.open": "Obre el mode TV",
   "tv.start": "Inicia en mode TV",
   "tv.exit": "Surt del mode TV",
   "tv.exitAsk": "Vols sortir del mode TV?",

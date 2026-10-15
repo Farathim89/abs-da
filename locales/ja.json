@@ -31,6 +31,7 @@
   "view.langAuto": "Audiobookshelf と同じ",
   "view.fullScreen": "全画面表示",
   "tv.mode": "テレビモード",
+  "tv.open": "テレビモードを開く",
   "tv.start": "テレビモードで起動",
   "tv.exit": "テレビモードを終了",
   "tv.exitAsk": "テレビモードを終了しますか？",

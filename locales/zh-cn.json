@@ -31,6 +31,7 @@
   "view.langAuto": "与 Audiobookshelf 相同",
   "view.fullScreen": "全屏",
   "tv.mode": "电视模式",
+  "tv.open": "打开电视模式",
   "tv.start": "以电视模式启动",
   "tv.exit": "退出电视模式",
   "tv.exitAsk": "退出电视模式？",

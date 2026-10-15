@@ -31,6 +31,7 @@
   "view.langAuto": "Samma som Audiobookshelf",
   "view.fullScreen": "Helskärm",
   "tv.mode": "TV-läge",
+  "tv.open": "Öppna TV-läge",
   "tv.start": "Starta i TV-läge",
   "tv.exit": "Avsluta TV-läge",
   "tv.exitAsk": "Lämna TV-läget?",

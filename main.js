@@ -348,6 +348,7 @@ function installTv(contents, attempt = 0) {
 }
 function setTvMode(on) {
   tvActive = !!on;
+  if (tvActive && settingsView) closeSettings();   // (opened from Settings → Desktop App)
   // (Test copies stay off-screen: no full screen there.)
   if (win && !win.isDestroyed() && !process.env.ABSDA_TEST_OFFSCREEN) {
     if (tvActive && !win.isFullScreen()) { tvMadeFullScreen = true; if (win.isVisible()) win.setFullScreen(true); }
@@ -2339,9 +2340,12 @@ function menuTemplate() {
         { label: tr("view.language"), submenu: languageMenuItems() },
         { type: "separator" },
         { label: tr("view.fullScreen"), ...shortcut("F11"), click: toggleFullScreen },
-        { label: tr("tv.mode"), ...shortcut("F10"), type: "checkbox", checked: tvActive, click: () => setTvMode(!tvActive) },
-        { label: tr("tv.start"), type: "checkbox", checked: !!config.tvStart, click: (item) => setTvStart(item.checked) },
-        { label: tr("tv.controller"), submenu: [
+        // View → TV mode: everything for it in one place (also a section of Settings → Desktop App).
+        // ("(F10)" is in the label, not an accelerator, so the Settings page keeps the button.)
+        { label: tr("tv.mode"), submenu: [
+          { label: (tvActive ? tr("tv.exit") : tr("tv.open")) + "  (F10)", click: () => setTvMode(!tvActive) },
+          { label: tr("tv.start"), type: "checkbox", checked: !!config.tvStart, click: (item) => setTvStart(item.checked) },
+          { type: "separator" },
           { label: tr("tv.lockChapter"), type: "checkbox", checked: tvLocks().chapter, click: (item) => setTvLock("chapter", item.checked) },
           { label: tr("tv.lockJump"), type: "checkbox", checked: tvLocks().jump, click: (item) => setTvLock("jump", item.checked) },
         ] },
