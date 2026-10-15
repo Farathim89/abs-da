@@ -49,7 +49,7 @@ function pageMain(opts) {
     read: svg("M21 5c-1.1-.35-2.3-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"),
     check: svg("M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"),
     sort: svg("M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"),
-    lock: svg("M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"),
+    gear: svg("M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"),
     pad: svg("M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"),
     erase: svg("M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"),
   };
@@ -145,6 +145,13 @@ function pageMain(opts) {
     #absda-tv .tv-li.tv-on .tv-sw { background: rgba(0,0,0,.25); }
     #absda-tv .tv-li.tv-on .tv-sw.on { background: #141414; }
     #absda-tv .tv-note { opacity: .65; margin: .2em 0 1.2em; max-width: 50em; }
+    #absda-tv .tv-set { max-width: 52em; }
+    #absda-tv .tv-set h2 { font-size: 1.25em; margin: 1.2em 0 .3em; color: color-mix(in srgb, var(--tb-logo, #f0a848) 75%, white); }
+    #absda-tv .tv-set h2:first-child { margin-top: 0; }
+    #absda-tv .tv-set h3 { font-size: .95em; font-weight: 600; opacity: .7; margin: .9em 0 .2em 1em; }
+    #absda-tv .tv-setsub { margin-left: 1em; }
+    #absda-tv .tv-li .val { opacity: .75; white-space: nowrap; max-width: 45%; overflow: hidden; text-overflow: ellipsis; }
+    #absda-tv .tv-li.tv-dis { opacity: .45; }
     #absda-tv .tv-padname { margin: 0 0 1em; display: flex; align-items: center; gap: .5em; }
     #absda-tv .tv-padname svg { width: 1.4em; height: 1.4em; }
     /* a book */
@@ -1020,30 +1027,74 @@ function pageMain(opts) {
       return g ? String(g.id).replace(/\s*\(.*$/, "").trim() || g.id : "";
     } catch (e) { return ""; }
   };
-  function drawPad(s) {
-    main.append(el("div", "tv-h1", T("controller")));
+  // Settings: the same switches and choices as Settings → Desktop App (main.js tvSettingsData),
+  // TV mode's own section first. A switch flips with A/✕, a choice opens a list.
+  const askSettings = (cmd) => { html.dataset.absdaTvSet = cmd; window.dispatchEvent(new Event("absda-tv-settings")); };
+  TV.onSettings = (data) => {
+    const s = cur();
+    if (!s || s.type !== "settings" || !TV.visible) return;
+    s.data = data;
+    s.waiting = false;
+    if (s.enterLater) { s.enter = true; s.enterLater = false; }
+    redraw();
+  };
+  function drawSettings(s) {
+    main.append(el("div", "tv-h1", L("HeaderSettings", "Settings")));
     const name = el("div", "tv-padname");
     name.innerHTML = ICON.pad;
     s.nameEl = el("span");
     name.append(s.nameEl);
     main.append(name);
-    const list = el("div", "tv-list");
-    for (const [k, label] of [["chapter", T("lockChapter")], ["jump", T("lockJump")]]) {
-      const r = focusable("div", "tv-li", "lock:" + k, () => {
-        const on = !locked(k);
-        TV.opts.locks = { ...(TV.opts.locks || {}), [k]: on };
-        html.dataset.absdaTvLock = k + ":" + (on ? 1 : 0);   // preload.js → main.js (remembered)
-        window.dispatchEvent(new Event("absda-tv-lock"));
-        redraw();
-        drawHints();
-      });
-      r.innerHTML = ICON.lock;
-      r.append(el("span", "grow", label), el("span", "tv-sw" + (locked(k) ? " on" : "")));
-      list.append(r);
-    }
-    list.firstChild.classList.add("tv-default");
-    main.append(list, el("div", "tv-note", T("lockNote")));
     livePad(s);
+    if (!s.data) {
+      main.append(el("div", "tv-loading", "…"));
+      if (!s.waiting) { s.waiting = true; s.enterLater = s.enter; askSettings("get"); }   // (into the list once it's there)
+      return;
+    }
+    const box = el("div", "tv-set");
+    for (const sec of s.data.sections) {
+      box.append(el("h2", null, sec.label));
+      settingRows(sec.items, box, sec.label, sec.label);
+      if (sec.tv) box.append(el("div", "tv-note", T("lockNote")));
+    }
+    main.append(box);
+    const first = box.querySelector(".tv-f");
+    if (first) first.classList.add("tv-default");
+  }
+  function settingRows(items, box, path, parentLabel) {
+    const radios = {};
+    for (const it of items) if (it.radio) (radios[it.radio] = radios[it.radio] || []).push(it);
+    const done = new Set();
+    for (const it of items) {
+      if (it.type === "separator") continue;
+      if (it.radio) {
+        if (!done.has(it.radio)) { done.add(it.radio); box.append(choiceRow(path, parentLabel, radios[it.radio])); }
+        continue;
+      }
+      if (it.type === "submenu") {
+        const kids = (it.submenu || []).filter((k) => k.type !== "separator");
+        if (!it.multi && kids.length > 1 && kids.every((k) => k.type === "checkbox" && k.radio === kids[0].radio) && kids.filter((k) => k.checked).length === 1) {
+          box.append(choiceRow(path, it.label, kids));
+        } else {
+          const sub = el("div", "tv-setsub");
+          sub.append(el("h3", null, it.label));
+          settingRows(it.submenu || [], sub, path + "/" + it.label, it.label);
+          box.append(sub);
+        }
+      } else if (it.type === "checkbox") {
+        const r = focusable("div", "tv-li" + (it.enabled ? "" : " tv-dis"), "set:" + path + ":" + it.label, () => { if (it.enabled) askSettings("click:" + it.id); });
+        r.append(el("span", "grow", it.label), el("span", "tv-sw" + (it.checked ? " on" : "")));
+        box.append(r);
+      }
+    }
+  }
+  function choiceRow(path, label, options) {
+    const now = options.find((o) => o.checked);
+    const r = focusable("div", "tv-li", "set:" + path + ":" + label, () => {
+      openPicker(label, options.map((o) => ({ label: o.label, on: o.checked, act: () => { if (!o.checked) askSettings("click:" + o.id); } })));
+    });
+    r.append(el("span", "grow", label), el("span", "val", now ? now.label.trim() : ""), el("span", null, "›"));
+    return r;
   }
   function livePad(s) { if (s.nameEl) s.nameEl.textContent = padName() || T("noPad"); }
 
@@ -1057,7 +1108,7 @@ function pageMain(opts) {
     chapters: { draw: drawChapters },
     np: { draw: drawNp, live: liveNp },
     search: { draw: drawSearch, free: true },
-    pad: { draw: drawPad, live: livePad },
+    settings: { draw: drawSettings, live: livePad },
   };
 
   // ---- pop-up lists (speed, sleep timer, sort, leave TV mode) and long texts --------------
@@ -1127,9 +1178,9 @@ function pageMain(opts) {
     item("nav:np", T("nowPlaying"), ICON.np, () => { if (cur().type !== "np") push({ type: "np", enter: true }); else setFocus(defaultFocus()); });
     const clock = el("div", "tv-clock");
     TV.clockEl = clock;
-    const pad = focusable("div", "tv-ni", "nav:pad", () => goRoot({ type: "pad" }));
-    pad.innerHTML = ICON.pad;
-    pad.title = T("controller");
+    const pad = focusable("div", "tv-ni", "nav:set", () => goRoot({ type: "settings" }));
+    pad.innerHTML = ICON.gear;
+    pad.title = L("HeaderSettings", "Settings");
     const exit = focusable("div", "tv-ni", "nav:exit", askExit);
     exit.innerHTML = ICON.exit;
     exit.title = T("exit");
@@ -1138,7 +1189,7 @@ function pageMain(opts) {
   }
   function markNav() {
     const r = stack[0];
-    const key = r.type === "lib" ? "nav:lib:" + r.libId : r.type === "search" ? "nav:search" : r.type === "pad" ? "nav:pad" : cur().type === "np" ? "nav:np" : "nav:home";
+    const key = r.type === "lib" ? "nav:lib:" + r.libId : r.type === "search" ? "nav:search" : r.type === "settings" ? "nav:set" : cur().type === "np" ? "nav:np" : "nav:home";
     nav.querySelectorAll(".tv-ni").forEach((b) => b.classList.toggle("tv-cur", b.dataset.k === key));
   }
   function tickClock() {
@@ -1333,11 +1384,7 @@ function pageMain(opts) {
     TV.tick = setInterval(() => { updateMini(); tickClock(); }, 1000);
   };
   // New options from the app (a lock changed in the menu): hints and the Controller screen follow.
-  TV.refresh = () => {
-    drawHints();
-    const s = cur();
-    if (s && s.type === "pad") redraw();
-  };
+  TV.refresh = () => { drawHints(); };   // (the Settings screen gets its new list from main.js itself)
   TV.close = () => {
     if (!TV.visible) return;
     TV.visible = false;

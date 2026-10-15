@@ -404,7 +404,7 @@ if (location.protocol !== "file:") {
         const kids = (it.submenu || []).filter((k) => k.type !== "separator");
         // (a pick-one list only when every tick belongs to it: View → Theme's "Show mood themes"
         // switch is not one of the themes, so it stays a switch even when it's off)
-        if (kids.length > 1 && kids.every((k) => k.type === "checkbox" && k.radio === kids[0].radio) && kids.filter((k) => k.checked).length === 1) {
+        if (!it.multi && kids.length > 1 && kids.every((k) => k.type === "checkbox" && k.radio === kids[0].radio) && kids.filter((k) => k.checked).length === 1) {
           box.append(dsSelect(it.label, kids));
         } else {
           const sub = document.createElement("div");
@@ -831,11 +831,9 @@ if (location.protocol !== "file:") {
   // TV mode (tv-mode.js) asks to be left with a DOM event; main.js then turns it off
   // (window size, menu tick).
   window.addEventListener("absda-tv-exit", () => ipcRenderer.send("desktop:tv-exit"));
-  // A controller button lock switched in TV mode's Controller screen (<html data-absda-tv-lock="jump:1">).
-  window.addEventListener("absda-tv-lock", () => {
-    const [kind, on] = String(document.documentElement.dataset.absdaTvLock || "").split(":");
-    if (kind) ipcRenderer.send("desktop:tv-lock", kind, on === "1");
-  });
+  // TV mode's Settings screen asks for the settings or clicks one (<html data-absda-tv-set="get" | "click:12">);
+  // main.js answers by handing the page the new list.
+  window.addEventListener("absda-tv-settings", () => ipcRenderer.send("desktop:tv-settings", document.documentElement.dataset.absdaTvSet || "get"));
   // Our buttons in the player bar (mood sounds): the tooltip goes ABOVE the button
   // (Windows' own tooltip appears under the pointer, on top of the bar).
   document.addEventListener("mouseover", (e) => {

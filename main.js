@@ -363,7 +363,6 @@ function tvOnLoad(contents) {
   installTv(contents);
 }
 ipcMain.on("desktop:tv-exit", (e) => { if (fromServerPage(e) && tvActive) setTvMode(false); });
-ipcMain.on("desktop:tv-lock", (e, kind, on) => { if (fromServerPage(e)) setTvLock(String(kind), !!on); });
 
 // ---- offline listening (offline.js, offline-button.js, offline.html) ----------------
 const offline = setupOffline({
@@ -2257,7 +2256,7 @@ function menuTemplate() {
       label: tr("menu.app"),
       submenu: [
         { label: tr("app.home"), ...shortcut("Alt+Home"), click: goHome },
-        { label: tr("app.offline"), submenu: offlineMenuItems() },
+        { label: tr("app.offline"), multi: true, submenu: offlineMenuItems() },
         { label: tr("app.changeServer"), click: () => showConnectPage("change") },
         ...(appKind() === "portable" || appKind() === "folder" ? [{ label: tr("app.desktopShortcut"), click: createDesktopShortcut }] : []),
         {
@@ -2299,6 +2298,7 @@ function menuTemplate() {
         {
           label: tr("app.hwAccel"),
           type: "checkbox",
+          tv: false,   // (asks to restart in a dialog: not in TV mode's settings)
           checked: config.hardwareAcceleration !== false,
           click: (item) => setHardwareAcceleration(item.checked),
         },
@@ -2342,7 +2342,7 @@ function menuTemplate() {
         { label: tr("view.fullScreen"), ...shortcut("F11"), click: toggleFullScreen },
         // View → TV mode: everything for it in one place (also a section of Settings → Desktop App).
         // ("(F10)" is in the label, not an accelerator, so the Settings page keeps the button.)
-        { label: tr("tv.mode"), submenu: [
+        { label: tr("tv.mode"), multi: true, submenu: [
           { label: (tvActive ? tr("tv.exit") : tr("tv.open")) + "  (F10)", click: () => setTvMode(!tvActive) },
           { label: tr("tv.start"), type: "checkbox", checked: !!config.tvStart, click: (item) => setTvStart(item.checked) },
           { type: "separator" },
@@ -2472,6 +2472,7 @@ function menuData(template, handlers) {
     const id = handlers.push(it) - 1;
     return {
       id, label: String(it.label || ""), enabled: it.enabled !== false, checked: !!it.checked, accel: accel(it.accelerator),
+      multi: it.multi || undefined, noTv: it.tv === false || undefined,
       type: it.submenu ? "submenu" : it.type === "checkbox" ? "checkbox" : "normal", radio: it.radio || undefined,
       submenu: it.submenu ? walk(it.submenu) : undefined,
     };
@@ -2508,14 +2509,46 @@ ipcMain.on("ui:close", (e) => { if (fromUi(e) && uiOpen && uiOpen.kind === "menu
 // overlay): the same items, so the page never falls behind the menus. Things that
 // are actions rather than settings (Home, Reload, zoom, full screen, Exit) are left out.
 let settingsHandlers = [];
-function desktopSettingsData() {
-  settingsHandlers = [];
+function settingsMenus(handlers) {
   const t = menuTemplate();
   const keep = (items) => items.filter((it) => it && (it.type === "separator" || (!it.accelerator && it.label !== tr("app.exit"))))
     .map((it) => (it.submenu ? { ...it, submenu: keep(it.submenu) } : it));
   const tops = [t[0], t[2]].filter(Boolean).map((top) => ({ ...top, submenu: keep(top.submenu || []) }));   // App, View
-  return { title: tr("settings.desktop"), note: tr("settings.desktopNote"), menus: menuData(tops, settingsHandlers) };
+  return menuData(tops, handlers);
 }
+function desktopSettingsData() {
+  settingsHandlers = [];
+  return { title: tr("settings.desktop"), note: tr("settings.desktopNote"), menus: settingsMenus(settingsHandlers) };
+}
+// TV mode's Settings screen (tv-mode.js): the same settings, but only switches and choices
+// (buttons open windows and dialogs that need a mouse), with the TV mode section first.
+let tvSettingsHandlers = [];
+function tvSettingsData() {
+  tvSettingsHandlers = [];
+  const tvOnly = (items) => items
+    .filter((it) => !it.noTv && (it.type === "checkbox" || it.type === "submenu" || it.type === "separator"))
+    .map((it) => (it.type === "submenu" ? { ...it, submenu: tvOnly(it.submenu) } : it))
+    .filter((it) => it.type !== "submenu" || it.submenu.some((k) => k.type !== "separator"));
+  const sections = settingsMenus(tvSettingsHandlers).map((m) => ({ label: m.label, items: tvOnly(m.items) }));
+  for (const sec of sections) {
+    const i = sec.items.findIndex((it) => it.type === "submenu" && it.label === tr("tv.mode"));
+    if (i >= 0) { const [tvSec] = sec.items.splice(i, 1); sections.unshift({ label: tvSec.label, items: tvSec.submenu, tv: true }); break; }
+  }
+  return { sections: sections.filter((sec) => sec.items.some((it) => it.type !== "separator")) };
+}
+ipcMain.on("desktop:tv-settings", async (e, cmd) => {
+  if (!fromServerPage(e) || !view || e.sender !== wc()) return;
+  const m = /^click:(\d+)$/.exec(String(cmd || ""));
+  if (m) {
+    const item = tvSettingsHandlers[Number(m[1])];
+    if (item && item.enabled !== false && typeof item.click === "function") {
+      try { await item.click({ checked: item.type === "checkbox" ? !item.checked : !!item.checked }); } catch {}
+    }
+    await new Promise((r) => setTimeout(r, 150));
+  }
+  if (e.sender.isDestroyed()) return;
+  e.sender.executeJavaScript(`window.__absdaTv && window.__absdaTv.onSettings && window.__absdaTv.onSettings(${JSON.stringify(tvSettingsData())}); 0`).catch(() => {});
+});
 const fromSettings = (e) => settingsView && !settingsView.webContents.isDestroyed() && e.sender === settingsView.webContents && fromServerPage(e);
 ipcMain.handle("desktop:settings-data", (e) => (fromSettings(e) ? desktopSettingsData() : null));
 ipcMain.handle("desktop:settings-click", async (e, id) => {
