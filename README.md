@@ -74,7 +74,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   PlayStation controller**, a TV remote's arrow keys or the keyboard. Home rows, every library (books,
   series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
   Playing** screen (chapters, ±jump, speed, sleep timer). It plays through the web app's own player,
-  so progress syncs as usual. **View → Start in TV mode** opens it every time the app starts. The
+  so progress syncs as usual. **View → TV mode → Start in TV mode** opens it every time the app starts. The
   **⚙ Settings** screen inside TV mode has the app settings for the controller, including locks for the
   chapter and jump buttons against stray presses (also in **View → TV mode**)
 - **7 colour themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
