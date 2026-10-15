@@ -75,7 +75,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
   Playing** screen (chapters, ±jump, speed, sleep timer). It plays through the web app's own player,
   so progress syncs as usual. **View → Start in TV mode** opens it every time the app starts. The
-  **Controller** screen (or **View → Controller**) can lock the chapter and jump buttons against stray presses
+  **Controller** screen (or **View → TV mode**) can lock the chapter and jump buttons against stray presses
 - **7 colour themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**. Buttons, switches, pop-up notifications and the
