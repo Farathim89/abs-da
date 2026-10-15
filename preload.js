@@ -831,6 +831,11 @@ if (location.protocol !== "file:") {
   // TV mode (tv-mode.js) asks to be left with a DOM event; main.js then turns it off
   // (window size, menu tick).
   window.addEventListener("absda-tv-exit", () => ipcRenderer.send("desktop:tv-exit"));
+  // A controller button lock switched in TV mode's Controller screen (<html data-absda-tv-lock="jump:1">).
+  window.addEventListener("absda-tv-lock", () => {
+    const [kind, on] = String(document.documentElement.dataset.absdaTvLock || "").split(":");
+    if (kind) ipcRenderer.send("desktop:tv-lock", kind, on === "1");
+  });
   // Our buttons in the player bar (mood sounds): the tooltip goes ABOVE the button
   // (Windows' own tooltip appears under the pointer, on top of the bar).
   document.addEventListener("mouseover", (e) => {

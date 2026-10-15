@@ -19,6 +19,7 @@ function pageMain(opts) {
   if (TV.installed) {
     if (opts.open && !TV.visible) TV.open();
     else if (!opts.open && TV.visible) TV.close();
+    else if (TV.visible && TV.refresh) TV.refresh();   // e.g. a button lock changed in the menu
     return true;
   }
   TV.installed = true;
@@ -48,6 +49,8 @@ function pageMain(opts) {
     read: svg("M21 5c-1.1-.35-2.3-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"),
     check: svg("M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"),
     sort: svg("M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"),
+    lock: svg("M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"),
+    pad: svg("M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"),
     erase: svg("M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"),
   };
 
@@ -135,6 +138,15 @@ function pageMain(opts) {
     #absda-tv .tv-li .tv-lbar i { display: block; height: 100%; background: currentColor; }
     #absda-tv .tv-li svg { width: 1.1em; height: 1.1em; flex: none; }
     #absda-tv .tv-list { max-width: 60em; }
+    #absda-tv .tv-sw { position: relative; flex: none; width: 2.6em; height: 1.4em; border-radius: .7em; background: rgba(255,255,255,.2); transition: background .15s; }
+    #absda-tv .tv-sw::after { content: ""; position: absolute; top: .15em; left: .15em; width: 1.1em; height: 1.1em; border-radius: 50%; background: #fff; transition: transform .15s; }
+    #absda-tv .tv-sw.on { background: var(--tb-logo, #f0a848); }
+    #absda-tv .tv-sw.on::after { transform: translateX(1.2em); }
+    #absda-tv .tv-li.tv-on .tv-sw { background: rgba(0,0,0,.25); }
+    #absda-tv .tv-li.tv-on .tv-sw.on { background: #141414; }
+    #absda-tv .tv-note { opacity: .65; margin: .2em 0 1.2em; max-width: 50em; }
+    #absda-tv .tv-padname { margin: 0 0 1em; display: flex; align-items: center; gap: .5em; }
+    #absda-tv .tv-padname svg { width: 1.4em; height: 1.4em; }
     /* a book */
     #absda-tv .tv-item { display: flex; gap: 2.4em; align-items: flex-start; padding-top: .4em; }
     #absda-tv .tv-big { flex: none; height: 52vh; aspect-ratio: 1 / 1.6; border-radius: .5em; overflow: hidden; background: #2a2a2a; box-shadow: 0 1em 3em rgba(0,0,0,.6); }
@@ -1001,6 +1013,40 @@ function pageMain(opts) {
     if (keep) { const e = res.querySelector(`[data-k="${CSS.escape(keep)}"]`); setFocus(e || defaultFocus(), true); }
   }
 
+  const locked = (k) => !!(TV.opts.locks && TV.opts.locks[k]);
+  const padName = () => {
+    try {
+      const g = [...(navigator.getGamepads ? navigator.getGamepads() : [])].find((x) => x && x.connected);
+      return g ? String(g.id).replace(/\s*\(.*$/, "").trim() || g.id : "";
+    } catch (e) { return ""; }
+  };
+  function drawPad(s) {
+    main.append(el("div", "tv-h1", T("controller")));
+    const name = el("div", "tv-padname");
+    name.innerHTML = ICON.pad;
+    s.nameEl = el("span");
+    name.append(s.nameEl);
+    main.append(name);
+    const list = el("div", "tv-list");
+    for (const [k, label] of [["chapter", T("lockChapter")], ["jump", T("lockJump")]]) {
+      const r = focusable("div", "tv-li", "lock:" + k, () => {
+        const on = !locked(k);
+        TV.opts.locks = { ...(TV.opts.locks || {}), [k]: on };
+        html.dataset.absdaTvLock = k + ":" + (on ? 1 : 0);   // preload.js → main.js (remembered)
+        window.dispatchEvent(new Event("absda-tv-lock"));
+        redraw();
+        drawHints();
+      });
+      r.innerHTML = ICON.lock;
+      r.append(el("span", "grow", label), el("span", "tv-sw" + (locked(k) ? " on" : "")));
+      list.append(r);
+    }
+    list.firstChild.classList.add("tv-default");
+    main.append(list, el("div", "tv-note", T("lockNote")));
+    livePad(s);
+  }
+  function livePad(s) { if (s.nameEl) s.nameEl.textContent = padName() || T("noPad"); }
+
   const SCREENS = {
     home: { load: loadHome, draw: drawHome, refresh: 15000 },
     lib: { load: loadLib, draw: drawLib },
@@ -1011,6 +1057,7 @@ function pageMain(opts) {
     chapters: { draw: drawChapters },
     np: { draw: drawNp, live: liveNp },
     search: { draw: drawSearch, free: true },
+    pad: { draw: drawPad, live: livePad },
   };
 
   // ---- pop-up lists (speed, sleep timer, sort, leave TV mode) and long texts --------------
@@ -1080,15 +1127,18 @@ function pageMain(opts) {
     item("nav:np", T("nowPlaying"), ICON.np, () => { if (cur().type !== "np") push({ type: "np", enter: true }); else setFocus(defaultFocus()); });
     const clock = el("div", "tv-clock");
     TV.clockEl = clock;
+    const pad = focusable("div", "tv-ni", "nav:pad", () => goRoot({ type: "pad" }));
+    pad.innerHTML = ICON.pad;
+    pad.title = T("controller");
     const exit = focusable("div", "tv-ni", "nav:exit", askExit);
     exit.innerHTML = ICON.exit;
     exit.title = T("exit");
-    nav.append(left, clock, exit);
+    nav.append(left, clock, pad, exit);
     tickClock();
   }
   function markNav() {
     const r = stack[0];
-    const key = r.type === "lib" ? "nav:lib:" + r.libId : r.type === "search" ? "nav:search" : cur().type === "np" ? "nav:np" : "nav:home";
+    const key = r.type === "lib" ? "nav:lib:" + r.libId : r.type === "search" ? "nav:search" : r.type === "pad" ? "nav:pad" : cur().type === "np" ? "nav:np" : "nav:home";
     nav.querySelectorAll(".tv-ni").forEach((b) => b.classList.toggle("tv-cur", b.dataset.k === key));
   }
   function tickClock() {
@@ -1139,18 +1189,26 @@ function pageMain(opts) {
     add("b", L("ButtonBack", "Back"));
     add("x", T("playPause"));
     add("y", T("nowPlaying"));
-    if (TV.padType) {
-      const s = el("span");
-      s.append(Object.assign(el("span", "tv-g"), { textContent: ps ? "L1 R1" : "LB RB" }), document.createTextNode(T("chapter")));
-      const j = el("span");
-      j.append(Object.assign(el("span", "tv-g"), { textContent: ps ? "L2 R2" : "LT RT" }), document.createTextNode(T("jump")));
-      hints.append(s, j);
+    if (TV.padType) {   // (locked buttons aren't shown)
+      if (!locked("chapter")) {
+        const s = el("span");
+        s.append(Object.assign(el("span", "tv-g"), { textContent: ps ? "L1 R1" : "LB RB" }), document.createTextNode(T("chapter")));
+        hints.append(s);
+      }
+      if (!locked("jump")) {
+        const j = el("span");
+        j.append(Object.assign(el("span", "tv-g"), { textContent: ps ? "L2 R2" : "LT RT" }), document.createTextNode(T("jump")));
+        hints.append(j);
+      }
     }
   }
 
   // ---- input: controller, keyboard / TV remote, mouse -------------------------------
   function input(act) {
     hideCursor();
+    // Locked buttons (Controller screen / View → Controller) do nothing, so a stray press can't skip your place.
+    if ((act === "prevch" || act === "nextch") && locked("chapter")) return;
+    if ((act === "jumpback" || act === "jumpfwd") && locked("jump")) return;
     if (TV.reading) {   // in the e-book reader: turn pages, B closes it
       const page = (k) => $n.$eventBus.$emit("reader-hotkey", k);
       if (act === "left" || act === "up" || act === "prevch") page("ArrowLeft");
@@ -1215,7 +1273,9 @@ function pageMain(opts) {
     let pads = [];
     try { pads = [...(navigator.getGamepads ? navigator.getGamepads() : [])].filter((g) => g && g.connected); } catch (e) {}
     const g = pads.find((x) => x.mapping === "standard") || pads[0];
-    const type = !g ? null : /054c|playstation|dualsense|dualshock|wireless controller/i.test(g.id) ? "ps" : "xbox";
+    // (PlayStation pads: Sony's vendor id 054c, or plain "Wireless Controller" = DualShock 4; Xbox first, its
+    // pads are called "Xbox Wireless Controller")
+    const type = !g ? null : /xbox|xinput|045e/i.test(g.id) ? "xbox" : /054c|playstation|dualsense|dualshock|^wireless controller/i.test(g.id) ? "ps" : "xbox";
     if (type !== TV.padType) { TV.padType = type; drawHints(); }
     if (!g) return;
     const btn = (i) => !!(g.buttons[i] && (g.buttons[i].pressed || g.buttons[i].value > 0.5));
@@ -1271,6 +1331,12 @@ function pageMain(opts) {
     show();
     TV.raf = requestAnimationFrame(padLoop);
     TV.tick = setInterval(() => { updateMini(); tickClock(); }, 1000);
+  };
+  // New options from the app (a lock changed in the menu): hints and the Controller screen follow.
+  TV.refresh = () => {
+    drawHints();
+    const s = cur();
+    if (s && s.type === "pad") redraw();
   };
   TV.close = () => {
     if (!TV.visible) return;

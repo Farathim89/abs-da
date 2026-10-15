@@ -329,8 +329,17 @@ function installHome(contents, attempt = 0) {
 // the app starts. The window goes full screen while it's on (unless it already was).
 let tvActive = false, tvMadeFullScreen = false, tvStarted = false;
 const TV_TEXTS = ["exit", "exitAsk", "stay", "nowPlaying", "nothing", "resume", "startOver", "speed", "off", "sort",
-  "select", "playPause", "chapter", "jump", "minutes", "space", "clear", "searchHint", "empty"];
-const tvJs = () => tvModeJs({ open: tvActive, t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
+  "select", "playPause", "chapter", "jump", "minutes", "space", "clear", "searchHint", "empty",
+  "controller", "lockChapter", "lockJump", "lockNote", "noPad"];
+const TV_LOCKS = ["chapter", "jump"];   // controller buttons you can lock: LB/RB (chapter), LT/RT (jump)
+const tvLocks = () => Object.fromEntries(TV_LOCKS.map((k) => [k, !!(config.tvLock && config.tvLock[k])]));
+const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
+function setTvLock(kind, on) {
+  if (!TV_LOCKS.includes(kind)) return;
+  config = { ...config, tvLock: { ...tvLocks(), [kind]: !!on } };
+  writeJson(dataFile("config.json"), config);
+  if (view && isServerUrl(wc().getURL())) installTv(wc());
+}
 function installTv(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
   contents.executeJavaScript(tvJs())
@@ -353,6 +362,7 @@ function tvOnLoad(contents) {
   installTv(contents);
 }
 ipcMain.on("desktop:tv-exit", (e) => { if (fromServerPage(e) && tvActive) setTvMode(false); });
+ipcMain.on("desktop:tv-lock", (e, kind, on) => { if (fromServerPage(e)) setTvLock(String(kind), !!on); });
 
 // ---- offline listening (offline.js, offline-button.js, offline.html) ----------------
 const offline = setupOffline({
@@ -2331,6 +2341,10 @@ function menuTemplate() {
         { label: tr("view.fullScreen"), ...shortcut("F11"), click: toggleFullScreen },
         { label: tr("tv.mode"), ...shortcut("F10"), type: "checkbox", checked: tvActive, click: () => setTvMode(!tvActive) },
         { label: tr("tv.start"), type: "checkbox", checked: !!config.tvStart, click: (item) => setTvStart(item.checked) },
+        { label: tr("tv.controller"), submenu: [
+          { label: tr("tv.lockChapter"), type: "checkbox", checked: tvLocks().chapter, click: (item) => setTvLock("chapter", item.checked) },
+          { label: tr("tv.lockJump"), type: "checkbox", checked: tvLocks().jump, click: (item) => setTvLock("jump", item.checked) },
+        ] },
       ],
     },
     {
