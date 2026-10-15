@@ -480,9 +480,26 @@ function pageMain(opts) {
   // ---- screens ---------------------------------------------------------------
   function push(s) { saveScreen(); stack.push(s); show(); }
   function goRoot(s) { saveScreen(); s.enter = true; stack = [s]; TV.beforeSettings = null; show(); }
+  // Settings remembers where you were, however you open it (side menu, Start / Options, the
+  // Leave TV mode? question); Back or Start there takes you straight back.
+  function openSettings() {
+    if (stack[0].type !== "settings") TV.beforeSettings = stack;
+    saveScreen();
+    stack = [{ type: "settings", enter: true }];
+    show();
+  }
+  function leaveSettings() {
+    saveScreen();
+    const before = TV.beforeSettings || [{ type: "home" }];
+    TV.beforeSettings = null;
+    before[before.length - 1].enter = true;   // (the highlight goes back onto the page)
+    stack = before;
+    show();
+  }
   function back() {
     if (modal) { closeModal(); return; }
     if (stack.length > 1) { stack.pop(); show(); return; }
+    if (stack[0].type === "settings" && focused && !nav.contains(focused)) { leaveSettings(); return; }
     if (focused && !nav.contains(focused)) { focusNav(); return; }
     askExit();
   }
@@ -1186,7 +1203,7 @@ function pageMain(opts) {
   function askExit() {
     openPicker(T("exitAsk"), [
       { label: T("exit"), icon: ICON.exit, act: exitTv },
-      { label: L("HeaderSettings", "Settings"), icon: ICON.gear, act: () => goRoot({ type: "settings" }) },
+      { label: L("HeaderSettings", "Settings"), icon: ICON.gear, act: openSettings },
       { label: T("stay"), icon: ICON.back, def: true, act: () => {} },
     ]);
   }
@@ -1215,7 +1232,7 @@ function pageMain(opts) {
     list.append(el("div", "tv-navsep"));
     item(list, "nav:np", T("nowPlaying"), ICON.np, () => { if (cur().type !== "np") push({ type: "np", enter: true }); else setFocus(defaultFocus()); });
     const bottom = el("div", "tv-navb");
-    item(bottom, "nav:set", L("HeaderSettings", "Settings"), ICON.gear, () => goRoot({ type: "settings" }));
+    item(bottom, "nav:set", L("HeaderSettings", "Settings"), ICON.gear, openSettings);
     item(bottom, "nav:exit", T("exit"), ICON.exit, askExit);
     nav.append(list, el("div", "tv-navsep"), bottom);
     const clock = el("div", "tv-clock");
@@ -1327,8 +1344,7 @@ function pageMain(opts) {
       case "menu": if (!modal) focusNav(); break;
       case "settings":   // Start / Options: Settings (again: back to where you were)
         if (modal) closeModal(true);
-        if (stack[0].type === "settings" && stack.length === 1 && TV.beforeSettings) { const b = TV.beforeSettings; TV.beforeSettings = null; saveScreen(); stack = b; show(); }
-        else { saveScreen(); TV.beforeSettings = stack; stack = [{ type: "settings", enter: true }]; show(); }
+        if (stack[0].type === "settings") leaveSettings(); else openSettings();
         break;
     }
   }
