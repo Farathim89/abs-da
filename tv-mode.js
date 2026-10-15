@@ -1119,7 +1119,9 @@ function pageMain(opts) {
     const box = el("div", "tv-mbox");
     const list = el("div", "tv-mlist");
     options.forEach((o, i) => {
-      const b = focusable("div", "tv-li" + (o.on ? " cur tv-default" : ""), "opt:" + i, () => { closeModal(); o.act(); });
+      // (on = the current choice, ticked; def = only where the highlight starts)
+      const b = focusable("div", "tv-li" + (o.on ? " cur tv-default" : o.def ? " tv-default" : ""), "opt:" + i, () => { closeModal(); o.act(); });
+      if (o.icon) b.insertAdjacentHTML("beforeend", o.icon);
       if (o.on) b.insertAdjacentHTML("beforeend", ICON.check);
       b.append(el("span", "grow", o.label));
       list.append(b);
@@ -1155,7 +1157,11 @@ function pageMain(opts) {
     if (!silent) setFocus(ret && ret.isConnected ? ret : defaultFocus(), true);
   }
   function askExit() {
-    openPicker(T("exitAsk"), [{ label: T("exit"), act: exitTv }, { label: T("stay"), on: true, act: () => {} }]);
+    openPicker(T("exitAsk"), [
+      { label: T("exit"), icon: ICON.exit, act: exitTv },
+      { label: L("HeaderSettings", "Settings"), icon: ICON.gear, act: () => goRoot({ type: "settings" }) },
+      { label: T("stay"), icon: ICON.back, def: true, act: () => {} },
+    ]);
   }
   function exitTv() {
     TV.close();
