@@ -136,8 +136,11 @@ try {
 } catch {}
 
 // Only one copy of the app at a time — launching it again focuses the open one.
+// "ABS Desktop App.exe --quit" quits the open one for real, like the tray's Quit (a TV front end closing it:
+// its ✕ only hides the app to the tray); with none open it just ends.
+const quitOnly = process.argv.includes("--quit");
 const gotLock = app.requestSingleInstanceLock();
-if (!gotLock) app.quit();
+if (!gotLock || quitOnly) app.quit();
 
 // A fixed Windows app ID: groups the app's notifications/taskbar correctly, and is the
 // name of its "Start with Windows" registry entry (the uninstaller removes that entry).
@@ -2826,7 +2829,10 @@ app.on("web-contents-created", (_e, contents) => {
 });
 
 // Launching the app again (e.g. from the Start Menu while it's in the tray) shows the window.
-app.on("second-instance", showWindow);
+app.on("second-instance", (_ev, argv) => {
+  if ((argv || []).includes("--quit")) { app.quit(); return; }   // see quitOnly
+  showWindow();
+});
 
 // A real quit (App → Exit, tray → Quit, Windows shutting down) closes instead of hiding.
 app.on("before-quit", () => {
@@ -2837,7 +2843,7 @@ app.on("before-quit", () => {
 });
 
 app.whenReady().then(() => {
-  if (!gotLock) return;
+  if (!gotLock || quitOnly) return;
   if (dataFolderProblem) {
     dialog.showMessageBoxSync({
       type: "error",
