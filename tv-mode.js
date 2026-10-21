@@ -384,8 +384,10 @@ function pageMain(opts) {
     const scope = modal || root;
     return [...scope.querySelectorAll(".tv-f")].filter((e) => e.offsetParent !== null);
   }
+  let lastMoveAt = 0;   // when you last moved the highlight (Home's quiet reload waits for a pause)
   function setFocus(e, noReveal) {
     if (!e) return;
+    lastMoveAt = Date.now();
     if (focused && focused !== e) focused.classList.remove("tv-on");
     focused = e;
     e.classList.add("tv-on");
@@ -571,16 +573,60 @@ function pageMain(opts) {
     } catch (e) {}
     openItem(it);
   }
+  // Continue Listening's line under a cover: time left (audio), % read (ebook), else the author.
+  function contSub(it) {
+    const p = progOf(it.id, it.recentEpisode && it.recentEpisode.id);
+    if (p && !p.isFinished && isAudio(it) && p.duration > 0) return leftText(Math.max(0, p.duration - (p.currentTime || 0)));
+    if (p && !p.isFinished && p.ebookProgress > 0) return Math.round(p.ebookProgress * 100) + "%";
+    return authorOf(it);
+  }
+  // Home keeps up while you're on it: whenever progress changes (here or on another device,
+  // the web app stores it), Continue Listening's bars and time left update in place. A book
+  // that isn't first in the row yet, or one just finished, reloads Home quietly instead —
+  // at most every 30 s, and not while you're moving around.
+  let homeLiveTimer = null, homeReloadAt = 0;
+  store.subscribe((m) => {
+    if (m.type !== "user/updateMediaProgress" || !TV.visible) return;
+    clearTimeout(homeLiveTimer);
+    homeLiveTimer = setTimeout(() => homeLive(m.payload && m.payload.data), 300);
+  });
+  function homeLive(d) {
+    const s = cur();
+    if (!s || s.type !== "home" || !s.data || s.data.error || !main) return;
+    for (const c of main.querySelectorAll('[data-k^="cont:"]')) {
+      const [, id, ep] = c.dataset.k.split(":");
+      const it = s.data.inProg.find((x) => x.id === id && (!ep || (x.recentEpisode && x.recentEpisode.id === ep)));
+      if (!it) continue;
+      const p = progOf(id, ep), frac = fracOf(p), cv = c.querySelector(".tv-cover");
+      let bar = cv && cv.querySelector(".tv-bar");
+      if (cv && frac > 0 && !(p && p.isFinished)) {
+        if (!bar) { bar = el("div", "tv-bar"); cv.append(bar); }
+        bar.style.width = Math.round(frac * 100) + "%";
+      }
+      const sub = c.querySelector(".tv-cm");
+      if (sub) sub.textContent = contSub(it);
+    }
+    if (!d) return;
+    const first = s.data.inProg[0];
+    const isFirst = first && first.id === d.libraryItemId && (!d.episodeId || (first.recentEpisode && first.recentEpisode.id === d.episodeId));
+    if (isFirst && !d.isFinished) return;
+    const wait = Math.max(30000 - (Date.now() - homeReloadAt), 2500 - (Date.now() - lastMoveAt), 0);
+    homeLiveTimer = setTimeout(() => {
+      const now = cur();
+      if (!TV.visible || modal || !now || now.type !== "home") return;
+      if (Date.now() - lastMoveAt < 2500) { homeLive(d); return; }   // still moving: try again shortly
+      homeReloadAt = Date.now();
+      now.at = 0;
+      show();
+    }, wait);
+  }
   function drawHome(s) {
     const d = s.data;
     if (d.error) { main.append(errorBox(d)); return; }
     let n = 0;
     if (d.inProg.length) {
       main.append(row(L("LabelContinueListening", "Continue Listening"), null, "cont", d.inProg.map((it) => {
-        const p = progOf(it.id, it.recentEpisode && it.recentEpisode.id);
-        let sub = authorOf(it);
-        if (p && !p.isFinished && isAudio(it) && p.duration > 0) sub = leftText(Math.max(0, p.duration - (p.currentTime || 0)));
-        else if (p && !p.isFinished && p.ebookProgress > 0) sub = Math.round(p.ebookProgress * 100) + "%";
+        const sub = contSub(it);
         // Continue = straight back into it (the book's page is one press away in Now Playing).
         const act = isAudio(it) ? () => play(it.id, it.recentEpisode && it.recentEpisode.id) : isEbook(it) ? () => read(it) : () => openItem(it);
         const c = card(it, { key: "cont:" + it.id + (it.recentEpisode ? ":" + it.recentEpisode.id : ""), big: true, sub, act });

@@ -189,20 +189,23 @@ function pageMain(opts) {
       }
     }
     box.append(cover);
-    const meta = big
-      ? (() => {
-          if (!p || p.isFinished) return authorOf(it);
-          if (isAudio(it) && p.duration > 0) {
-            const left = Math.max(0, p.duration - (p.currentTime || 0));
-            return String(S().LabelTimeLeft || "{0} left").replace("{0}", $n.$elapsedPretty ? $n.$elapsedPretty(left) : Math.round(left / 60) + " min");
-          }
-          return Math.round((p.ebookProgress || 0) * 100) + "%";
-        })()
-      : authorOf(it);
+    const meta = big ? contMeta(it, p) : authorOf(it);
     const libName = big && c.item.libraryId && libsById().get(c.item.libraryId) ? " · " + libsById().get(c.item.libraryId).name.trim() : "";
     box.append(el("div", "h-t", c.series && c.items.length > 1 ? c.series : titleOf(it)), el("div", "h-m", meta + libName));
+    // Continue Listening cards: Home updates them as you listen (see H.live)
+    if (big) { box.dataset.cont = it.id + (it.recentEpisode ? ":" + it.recentEpisode.id : ""); box.dataset.lib = libName; }
     box.addEventListener("click", () => (c.series && c.items.length > 1 ? openSeries(c) : go(`/item/${it.id}`)));
     return box;
+  }
+
+  // Continue Listening's line: time left (audio), % read (ebook), else the author.
+  function contMeta(it, p) {
+    if (!p || p.isFinished) return authorOf(it);
+    if (isAudio(it) && p.duration > 0) {
+      const left = Math.max(0, p.duration - (p.currentTime || 0));
+      return String(S().LabelTimeLeft || "{0} left").replace("{0}", $n.$elapsedPretty ? $n.$elapsedPretty(left) : Math.round(left / 60) + " min");
+    }
+    return Math.round((p.ebookProgress || 0) * 100) + "%";
   }
 
   function rowEl(r, shelf) {
@@ -282,6 +285,43 @@ function pageMain(opts) {
     clearInterval(placeTimer);
     if (panel) { panel.remove(); panel = null; }
   };
+
+  // Home keeps up while it's open: whenever progress changes (here or on another device, the
+  // web app stores it), Continue Listening's bars and time left update in place. A book that
+  // isn't first in the row yet, or one just finished, reloads Home quietly (at most every 30 s).
+  let liveTimer = null, reloadAt = 0;
+  H.live = (d) => {
+    if (!H.visible || !panel || !H.data) return;
+    for (const box of panel.querySelectorAll("[data-cont]")) {
+      const [id, ep] = box.dataset.cont.split(":");
+      const it = H.data.inProg.find((x) => x.id === id);
+      if (!it) continue;
+      const p = progressOf(it, ep);
+      const frac = p ? (p.isFinished ? 1 : p.ebookProgress > 0 && !(p.duration > 0) ? p.ebookProgress : p.progress || 0) : 0;
+      const cover = box.querySelector(".h-cover");
+      let bar = cover && cover.querySelector(".h-bar");
+      if (cover && frac > 0) { if (!bar) { bar = el("div", "h-bar"); cover.append(bar); } bar.style.width = Math.round(frac * 100) + "%"; }
+      const m = box.querySelector(".h-m");
+      if (m) m.textContent = contMeta(it, p) + (box.dataset.lib || "");
+    }
+    if (!d) return;
+    const first = H.data.inProg[0];
+    const isFirst = first && first.id === d.libraryItemId && (!d.episodeId || (first.recentEpisode && first.recentEpisode.id === d.episodeId));
+    if (isFirst && !d.isFinished) return;
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(async () => {
+      if (!H.visible) return;
+      reloadAt = Date.now();
+      try { H.data = await load(); } catch (e) { return; }
+      if (H.visible) H.render();
+    }, Math.max(0, 30000 - (Date.now() - reloadAt)));
+  };
+  let liveDebounce = null;
+  $n.$store.subscribe((m) => {
+    if (m.type !== "user/updateMediaProgress" || !H.visible) return;
+    clearTimeout(liveDebounce);
+    liveDebounce = setTimeout(() => H.live(m.payload && m.payload.data), 300);
+  });
 
   // Any navigation (a book, a library, the side menu…) closes Home.
   $n.$router.afterEach(() => H.hide());
