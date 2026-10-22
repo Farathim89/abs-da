@@ -1438,6 +1438,14 @@ function pageMain(opts) {
     const btn = (i) => !!(g.buttons[i] && (g.buttons[i].pressed || g.buttons[i].value > 0.5));
     const x = g.axes[0] || 0, y = g.axes[1] || 0;
     const dirs = { up: btn(12) || y < -0.55, down: btn(13) || y > 0.55, left: btn(14) || x < -0.55, right: btn(15) || x > 0.55 };
+    // Another app in front (MediaDeck's menu, a game) or the window hidden: the pad isn't ours
+    // (main.js → preload.js mark <html class="absda-idle">). What's held when the app comes back
+    // only counts once it's let go and pressed again.
+    if (html.classList.contains("absda-idle")) {
+      for (const d of Object.keys(dirs)) { if (dirs[d]) held[d] = { next: Infinity, n: 0 }; else delete held[d]; }
+      for (const i of Object.keys(BUTTONS)) prevBtn[i] = btn(Number(i));
+      return;
+    }
     for (const d of Object.keys(dirs)) {
       if (dirs[d]) {
         const h = held[d];
