@@ -238,6 +238,13 @@ function pageMain(opts) {
     #absda-tv .tv-mbox h2 { margin: 0 0 .6em; font-size: 1.3em; }
     #absda-tv .tv-mlist { overflow-y: auto; scrollbar-width: none; }
     #absda-tv .tv-text { overflow-y: auto; line-height: 1.5; white-space: pre-wrap; max-width: 52em; margin-bottom: 1em; scrollbar-width: thin; }
+    #absda-tv .tv-vol { position: absolute; z-index: 20; left: 50%; top: 2.2em; transform: translateX(-50%); display: flex; align-items: center; gap: .8em;
+      padding: .6em 1.3em; border-radius: 2em; background: rgba(15,15,15,.85); pointer-events: none; font-weight: 600; }
+    #absda-tv .tv-vol[hidden] { display: none; }
+    #absda-tv .tv-vol svg { width: 1.3em; height: 1.3em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #absda-tv .tv-vbar { width: 11em; height: .35em; border-radius: .2em; background: rgba(255,255,255,.25); overflow: hidden; }
+    #absda-tv .tv-vbar i { display: block; height: 100%; background: #fff; }
+    #absda-tv .tv-vol b { min-width: 3.2em; text-align: right; }
   `;
   document.head.append(style);
 
@@ -280,6 +287,38 @@ function pageMain(opts) {
   const player = () => { const c = document.getElementById("mediaPlayerContainer"); const p = c && c.__vue__; return p && p.streamLibraryItem ? p : null; };
   const pcall = (fn) => { const p = player(); if (p) { try { fn(p); } catch (e) {} } setTimeout(updateLive, 150); };
   const togglePlay = () => pcall((p) => (p.isPlaying ? p.mediaSessionPause() : p.mediaSessionPlay()));
+  // Volume (the right stick, up / down), while a book is loaded. Set through the web app's own
+  // volume control, so the player, its slider and the level it saves (localStorage "volume")
+  // all follow; without the control, on the player directly.
+  const findVolume = (vm, depth = 0) => {
+    if (!vm || depth > 8) return null;
+    if (vm.$data && "trackHeight" in vm.$data && "volume" in vm) return vm;
+    for (const c of vm.$children || []) { const f = findVolume(c, depth + 1); if (f) return f; }
+    return null;
+  };
+  let volPill = null, volTimer = null;
+  function changeVolume(delta) {
+    const p = player();
+    if (!p) return;
+    const vc = findVolume(p);
+    let now = vc ? Number(vc.volume) : NaN;
+    if (!isFinite(now)) { try { now = parseFloat(localStorage.getItem("volume")); } catch (e) {} }
+    const v = Math.max(0, Math.min(1, Math.round(((isFinite(now) ? now : 1) + delta) * 100) / 100));
+    if (vc) vc.volume = v;
+    else { try { p.setVolume(v); localStorage.setItem("volume", v); } catch (e) {} }
+    if (!root) return;
+    if (!volPill || !root.contains(volPill)) {
+      volPill = el("div", "tv-vol");
+      volPill.innerHTML = '<svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg><span class="tv-vbar"><i></i></span><b></b>';
+      root.append(volPill);
+    }
+    volPill.querySelector("i").style.width = `${Math.round(v * 100)}%`;
+    volPill.querySelector("b").textContent = `${Math.round(v * 100)} %`;
+    volPill.hidden = false;
+    clearTimeout(volTimer);
+    volTimer = setTimeout(() => { if (volPill) volPill.hidden = true; }, 1500);
+  }
+  TV.volume = changeVolume;
   function play(itemId, episodeId, startTime) {
     const payload = { libraryItemId: itemId, episodeId: episodeId || null };
     if (startTime != null) payload.startTime = startTime;
@@ -1444,6 +1483,8 @@ function pageMain(opts) {
     if (html.classList.contains("absda-idle")) {
       for (const d of Object.keys(dirs)) { if (dirs[d]) held[d] = { next: Infinity, n: 0 }; else delete held[d]; }
       for (const i of Object.keys(BUTTONS)) prevBtn[i] = btn(Number(i));
+      const ry0 = (g.mapping === "standard" ? g.axes[3] : g.axes[5]) || 0;
+      for (const [k, on] of [["volup", ry0 < -0.6], ["voldown", ry0 > 0.6]]) { if (on) held[k] = { next: Infinity, n: 0 }; else delete held[k]; }
       return;
     }
     for (const d of Object.keys(dirs)) {
@@ -1457,6 +1498,14 @@ function pageMain(opts) {
       const on = btn(Number(i));
       if (on && !prevBtn[i]) input(BUTTONS[i]);
       prevBtn[i] = on;
+    }
+    // the right stick up / down: volume (held: it keeps moving)
+    const ry = (g.mapping === "standard" ? g.axes[3] : g.axes[5]) || 0;
+    for (const [k, on, step] of [["volup", ry < -0.6, 0.02], ["voldown", ry > 0.6, -0.02]]) {
+      if (!on) { delete held[k]; continue; }
+      const h = held[k];
+      if (!h) { held[k] = { next: now + 300, n: 0 }; hideCursor(); changeVolume(step); }
+      else if (now >= h.next) { h.next = now + 80; changeVolume(step); }
     }
   }
   // The mouse pointer hides while you use the controller or remote, and shows when you move the mouse.
