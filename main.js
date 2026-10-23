@@ -333,10 +333,18 @@ function installHome(contents, attempt = 0) {
 let tvActive = false, tvMadeFullScreen = false, tvStarted = false;
 const TV_TEXTS = ["exit", "exitAsk", "stay", "nowPlaying", "nothing", "resume", "startOver", "speed", "off", "sort",
   "select", "playPause", "chapter", "jump", "minutes", "space", "clear", "searchHint", "empty",
-  "controller", "lockChapter", "lockJump", "lockNote", "noPad"];
+  "controller", "lockChapter", "lockJump", "lockNote", "noPad", "book"];
 const TV_LOCKS = ["chapter", "jump"];   // controller buttons you can lock: LB/RB (chapter), LT/RT (jump)
 const tvLocks = () => Object.fromEntries(TV_LOCKS.map((k) => [k, !!(config.tvLock && config.tvLock[k])]));
-const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
+// Screen saver while listening in TV mode: seconds after the last press (0 = off), config.tvSaver.
+const TV_SAVERS = [0, 30, 60, 120, 300];
+const tvSaver = () => (TV_SAVERS.includes(config.tvSaver) ? config.tvSaver : 30);
+function setTvSaver(secs) {
+  config = { ...config, tvSaver: secs };
+  writeJson(dataFile("config.json"), config);
+  if (view && isServerUrl(wc().getURL())) installTv(wc());
+}
+const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
 function setTvLock(kind, on) {
   if (!TV_LOCKS.includes(kind)) return;
   config = { ...config, tvLock: { ...tvLocks(), [kind]: !!on } };
@@ -2348,6 +2356,9 @@ function menuTemplate() {
         { label: tr("tv.mode"), multi: true, submenu: [
           { label: (tvActive ? tr("tv.exit") : tr("tv.open")) + "  (F10)", click: () => setTvMode(!tvActive) },
           { label: tr("tv.start"), type: "checkbox", checked: !!config.tvStart, click: (item) => setTvStart(item.checked) },
+          { label: tr("tv.saver"), submenu: TV_SAVERS.map((sec) => ({
+            label: sec === 0 ? tr("tv.off") : sec < 60 ? tr("tv.seconds", { n: sec }) : tr("tv.minutes", { n: sec / 60 }),
+            type: "checkbox", checked: tvSaver() === sec, click: () => setTvSaver(sec) })) },
           { type: "separator" },
           { label: tr("tv.lockChapter"), type: "checkbox", checked: tvLocks().chapter, click: (item) => setTvLock("chapter", item.checked) },
           { label: tr("tv.lockJump"), type: "checkbox", checked: tvLocks().jump, click: (item) => setTvLock("jump", item.checked) },

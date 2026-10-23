@@ -195,7 +195,11 @@ function pageMain(opts) {
     #absda-tv .tv-prog { height: .45em; border-radius: .25em; background: rgba(255,255,255,.16); margin: .8em 0 .45em; overflow: hidden; }
     #absda-tv .tv-prog i { display: block; height: 100%; background: var(--tb-logo, #f0a848); }
     #absda-tv .tv-times { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; opacity: .8; font-size: .9em; }
-    #absda-tv .tv-left { opacity: .65; font-size: .85em; margin-top: .3em; }
+    #absda-tv .tv-pgroup.book { margin-top: 1.1em; }
+    #absda-tv .tv-pgroup[hidden] { display: none; }
+    #absda-tv .tv-plabel { display: flex; justify-content: space-between; gap: 1em; font-size: .85em; opacity: .75; }
+    #absda-tv .tv-prog.thin { height: .3em; margin: .35em 0 .4em; }
+    #absda-tv .tv-pgroup.book .tv-prog i { background: color-mix(in srgb, var(--tb-logo, #f0a848) 55%, white); }
     #absda-tv .tv-ctrls { display: flex; gap: 1.1em; align-items: center; margin: 1.4em 0 1.1em; }
     #absda-tv .tv-round { position: relative; width: 3.3em; height: 3.3em; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
       background: rgba(255,255,255,.1); transition: transform .12s, background .12s; }
@@ -245,6 +249,21 @@ function pageMain(opts) {
     #absda-tv .tv-vbar { width: 11em; height: .35em; border-radius: .2em; background: rgba(255,255,255,.25); overflow: hidden; }
     #absda-tv .tv-vbar i { display: block; height: 100%; background: #fff; }
     #absda-tv .tv-vol b { min-width: 3.2em; text-align: right; }
+    /* Screen saver: black, with a dimmed card that moves now and then (no burn-in on the TV). */
+    #absda-tv .tv-saver { position: absolute; inset: 0; z-index: 30; background: #000; opacity: 0; transition: opacity 1.5s ease; cursor: none; }
+    #absda-tv .tv-saver.on { opacity: 1; }
+    #absda-tv .tv-scard { position: absolute; display: flex; gap: 1.4em; align-items: center; width: 34em; max-width: 80vw; opacity: .5; transition: opacity 1.2s ease; }
+    #absda-tv .tv-scard.fade { opacity: 0; }
+    #absda-tv .tv-scard img { height: 11em; width: auto; max-width: 11em; border-radius: .4em; object-fit: cover; flex: none; }
+    #absda-tv .tv-scard .tx { min-width: 0; flex: 1; }
+    #absda-tv .tv-scard .t { font-size: 1.3em; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #absda-tv .tv-scard .m { opacity: .75; margin-top: .3em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #absda-tv .tv-scard .p { height: .25em; border-radius: .15em; background: rgba(255,255,255,.2); margin: .8em 0 .4em; overflow: hidden; }
+    #absda-tv .tv-scard .p i { display: block; height: 100%; background: #fff; }
+    #absda-tv .tv-scard .l { opacity: .65; font-size: .85em; }
+    #absda-tv .tv-scard .p.b { height: .18em; margin-top: .5em; }
+    #absda-tv .tv-scard .p.b i { background: rgba(255,255,255,.7); }
+    #absda-tv .tv-scard .c { font-size: 2.4em; font-weight: 300; margin-top: .25em; font-variant-numeric: tabular-nums; }
   `;
   document.head.append(style);
 
@@ -1013,11 +1032,18 @@ function pageMain(opts) {
     const ui = {};
     info.append(el("h1", null, p.title || md(it).title || "?"));
     info.append(el("div", "au", p.isPodcast ? md(it).title || "" : authorOf(it)));
+    // The chapter (its title, bar, time in it and left of it), then the whole book (bar, time / length, time left).
     ui.ch = el("div", "ch");
+    ui.chBox = el("div", "tv-pgroup");
     const bar = el("div", "tv-prog"); ui.bar = el("i"); bar.append(ui.bar);
     const times = el("div", "tv-times"); ui.t0 = el("span"); ui.t1 = el("span"); times.append(ui.t0, ui.t1);
-    ui.left = el("div", "tv-left");
-    info.append(ui.ch, bar, times, ui.left);
+    ui.chBox.append(bar, times);
+    ui.bookBox = el("div", "tv-pgroup book");
+    const head = el("div", "tv-plabel"); ui.bookPct = el("span"); head.append(el("span", null, T("book")), ui.bookPct);
+    const bbar = el("div", "tv-prog thin"); ui.bbar = el("i"); bbar.append(ui.bbar);
+    const btimes = el("div", "tv-times"); ui.b0 = el("span"); ui.b1 = el("span"); btimes.append(ui.b0, ui.b1);
+    ui.bookBox.append(head, bbar, btimes);
+    info.append(ui.ch, ui.chBox, ui.bookBox);
     const [jb, jf] = jumpSecs();
     const round = (key, icon, act, cls, label) => {
       const r = focusable("div", "tv-round " + (cls || ""), key, act);
@@ -1062,12 +1088,18 @@ function pageMain(opts) {
     const ch = p.currentChapter;
     const idx = ch ? chs.indexOf(ch) : -1;
     ui.ch.textContent = ch ? `${T("chapter")} ${idx + 1}/${chs.length}  ·  ${ch.title || ""}` : "";
-    const a = ch ? ch.start : 0, b = ch ? ch.end : total;
-    const len = Math.max(1, b - a);
-    ui.bar.style.width = Math.min(100, Math.max(0, ((t - a) / len) * 100)) + "%";
-    ui.t0.textContent = stamp(Math.max(0, t - a));
-    ui.t1.textContent = "-" + stamp(Math.max(0, (b - t) / rate));
-    ui.left.textContent = total ? leftText(Math.max(0, (total - t) / rate)) + "  ·  " + Math.round((t / total) * 100) + "%" : "";
+    ui.chBox.hidden = !ch;   // (no chapters: only the book)
+    if (ch) {
+      const len = Math.max(1, ch.end - ch.start);
+      ui.bar.style.width = Math.min(100, Math.max(0, ((t - ch.start) / len) * 100)) + "%";
+      ui.t0.textContent = stamp(Math.max(0, t - ch.start));
+      ui.t1.textContent = "-" + stamp(Math.max(0, (ch.end - t) / rate));
+    }
+    const frac = total ? Math.min(1, Math.max(0, t / total)) : 0;
+    ui.bbar.style.width = frac * 100 + "%";
+    ui.bookPct.textContent = Math.round(frac * 100) + "%";
+    ui.b0.textContent = stamp(t) + " / " + stamp(total);
+    ui.b1.textContent = total ? leftText(Math.max(0, (total - t) / rate)) : "";
     ui.play.firstChild.outerHTML = p.isPlaying ? ICON.pause : ICON.play;
     ui.speed.lastChild.textContent = (Math.round(rate * 100) / 100) + "×";
     ui.sleep.lastChild.textContent = !p.sleepTimerSet ? L("LabelSleepTimer", "Sleep timer")
@@ -1398,6 +1430,7 @@ function pageMain(opts) {
   // ---- input: controller, keyboard / TV remote, mouse -------------------------------
   function input(act) {
     hideCursor();
+    if (wake()) return;   // (the press that ends the screen saver does nothing else)
     // Locked buttons (Controller screen / View → Controller) do nothing, so a stray press can't skip your place.
     if ((act === "prevch" || act === "nextch") && locked("chapter")) return;
     if ((act === "jumpback" || act === "jumpfwd") && locked("jump")) return;
@@ -1438,6 +1471,7 @@ function pageMain(opts) {
   window.addEventListener("keydown", (e) => {
     if (!TV.visible || TV.reading) return;
     if (e.ctrlKey || e.altKey || e.metaKey || /^F\d+$/.test(e.key) || /^(Media|AudioVolume)/.test(e.key)) return;
+    if (wake()) { e.preventDefault(); e.stopImmediatePropagation(); return; }   // (only wakes the screen saver)
     const s = cur();
     const typing = s && s.type === "search" && !modal;
     const k = e.key;
@@ -1504,8 +1538,8 @@ function pageMain(opts) {
     for (const [k, on, step] of [["volup", ry < -0.6, 0.02], ["voldown", ry > 0.6, -0.02]]) {
       if (!on) { delete held[k]; continue; }
       const h = held[k];
-      if (!h) { held[k] = { next: now + 300, n: 0 }; hideCursor(); changeVolume(step); }
-      else if (now >= h.next) { h.next = now + 80; changeVolume(step); }
+      if (!h) { held[k] = { next: now + 300, n: 0 }; hideCursor(); if (!wake()) changeVolume(step); }
+      else if (now >= h.next) { h.next = now + 80; wake(); changeVolume(step); }
     }
   }
   // The mouse pointer hides while you use the controller or remote, and shows when you move the mouse.
@@ -1513,9 +1547,87 @@ function pageMain(opts) {
   function hideCursor() { if (root) root.classList.add("tv-nocursor"); }
   function showCursor() {
     if (!root) return;
+    wake();
     root.classList.remove("tv-nocursor");
     clearTimeout(cursorTimer);
     cursorTimer = setTimeout(hideCursor, 3000);
+  }
+
+  // ---- screen saver ----------------------------------------------------------------
+  // While a book plays in TV mode, TV.opts.saver seconds (default 30; 0 = off) after your last
+  // press, mouse move or key, the screen goes black with a dimmed "now playing" card that moves
+  // to a new spot every 20 s, so nothing stays lit in one place (OLED TVs). Any press wakes it.
+  let lastInput = Date.now(), saver = null, saverMove = 0;
+  function wake() {
+    lastInput = Date.now();
+    if (!saver) return false;
+    hideSaver();
+    return true;
+  }
+  function checkSaver() {
+    if (saver) { updateSaver(); return; }
+    const secs = TV.opts.saver == null ? 30 : Number(TV.opts.saver);
+    const p = player();
+    if (!secs || !TV.visible || TV.reading || !root || !p || !p.isPlaying) return;
+    if (Date.now() - lastInput >= secs * 1000) showSaver();
+  }
+  function showSaver() {
+    saver = el("div", "tv-saver");
+    const card = el("div", "tv-scard");
+    saver._card = card;
+    saver.addEventListener("mousemove", () => wake());
+    saver.addEventListener("click", (e) => { e.stopPropagation(); wake(); });
+    saver.append(card);
+    root.append(saver);
+    requestAnimationFrame(() => { if (saver) saver.classList.add("on"); });
+    saverMove = 0;
+    updateSaver();
+  }
+  function placeCard(card) {
+    const W = root.clientWidth, H = root.clientHeight, w = card.offsetWidth || W * 0.4, h = card.offsetHeight || H * 0.3;
+    card.style.left = Math.round(W * 0.04 + Math.random() * Math.max(0, W * 0.92 - w)) + "px";
+    card.style.top = Math.round(H * 0.06 + Math.random() * Math.max(0, H * 0.88 - h)) + "px";
+  }
+  function updateSaver() {
+    if (!saver) return;
+    const card = saver._card, p = player();
+    const it = p && p.streamLibraryItem;
+    const key = it ? npKey(p) : "";
+    if (card._key !== key) {   // (a new book: new cover and title)
+      card._key = key;
+      card.textContent = "";
+      if (it && hasCover(it)) { const img = el("img"); img.alt = ""; img.src = coverOf(it, 400); card.append(img); }
+      const tx = el("div", "tx");
+      card._t = el("div", "t", it ? p.title || md(it).title || "" : "");
+      card._m = el("div", "m");
+      const pr = el("div", "p"); card._bar = el("i"); pr.append(card._bar);   // the chapter
+      const pb = el("div", "p b"); card._bbar = el("i"); pb.append(card._bbar);   // the book
+      card._l = el("div", "l");
+      card._c = el("div", "c");
+      tx.append(card._t, card._m, pr, pb, card._l, card._c);
+      card.append(tx);
+    }
+    const t = (p && p.currentTime) || 0, total = (p && p.totalDuration) || 0, rate = (p && p.currentPlaybackRate) || 1;
+    const ch = p && p.currentChapter;
+    card._m.textContent = p ? ((ch && ch.title) || authorOf(it)) : "";
+    card._bar.parentNode.hidden = !ch;
+    if (ch) card._bar.style.width = Math.round(Math.min(1, Math.max(0, (t - ch.start) / Math.max(1, ch.end - ch.start))) * 100) + "%";
+    card._bbar.style.width = total ? Math.round((t / total) * 100) + "%" : "0";
+    card._l.textContent = total ? T("book") + " " + Math.round((t / total) * 100) + "%  ·  " + leftText(Math.max(0, (total - t) / rate)) : "";
+    card._c.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    // every 20 s: fade out, move, fade in
+    if (saverMove === 0) { placeCard(card); saverMove = Date.now(); }
+    else if (Date.now() - saverMove > 20000) {
+      saverMove = Date.now();
+      card.classList.add("fade");
+      setTimeout(() => { if (saver && saver._card === card) { placeCard(card); card.classList.remove("fade"); } }, 1300);
+    }
+  }
+  function hideSaver() {
+    if (!saver) return;
+    saver.remove();
+    saver = null;
+    lastInput = Date.now();
   }
 
   // ---- open / close --------------------------------------------------------------
@@ -1544,7 +1656,8 @@ function pageMain(opts) {
     updateMini();
     show();
     TV.raf = requestAnimationFrame(padLoop);
-    TV.tick = setInterval(() => { updateMini(); tickClock(); }, 1000);
+    lastInput = Date.now();
+    TV.tick = setInterval(() => { updateMini(); tickClock(); checkSaver(); }, 1000);
   };
   // New options from the app (a lock changed in the menu): hints and the Controller screen follow.
   TV.refresh = () => { drawHints(); };   // (the Settings screen gets its new list from main.js itself)
@@ -1552,6 +1665,7 @@ function pageMain(opts) {
     if (!TV.visible) return;
     TV.visible = false;
     if (TV.reading) { TV.reading = false; }
+    hideSaver();
     html.removeAttribute("data-absda-tv");
     cancelAnimationFrame(TV.raf);
     clearInterval(TV.tick);
