@@ -34,6 +34,7 @@
   "tv.open": "Ava teleri režiim",
   "tv.start": "Käivita teleri režiimis",
   "tv.saver": "Ekraanisäästja kuulamise ajal",
+  "tv.idleSaver": "Ekraanisäästja, kui midagi ei mängi",
   "tv.seconds": "{n} s",
   "tv.exit": "Välju teleri režiimist",
   "tv.exitAsk": "Väljuda teleri režiimist?",

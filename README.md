@@ -73,7 +73,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - **TV mode** (**View → TV mode** or `F10`): a full-screen layout for the couch with a Plex-style side menu, used with an **Xbox or
   PlayStation controller**, a TV remote's arrow keys or the keyboard. Home rows, every library (books,
   series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
-  Playing** screen (chapter and book progress, chapters, ±jump, speed, sleep timer). While a book plays, a dim, moving **screen saver** comes on after 30 s without a press (adjustable). It plays through the web app's own player,
+  Playing** screen (chapter and book progress, chapters, ±jump, speed, sleep timer). While a book plays, a dim, moving **screen saver** comes on after 30 s without a press, and after 5 min when nothing plays (both adjustable). It plays through the web app's own player,
   so progress syncs as usual. **View → TV mode → Start in TV mode** opens it every time the app starts. The
   **⚙ Settings** screen inside TV mode has the app settings for the controller, including locks for the
   chapter and jump buttons against stray presses (also in **View → TV mode**)

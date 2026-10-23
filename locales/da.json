@@ -34,6 +34,7 @@
   "tv.open": "Åbn TV-tilstand",
   "tv.start": "Start i TV-tilstand",
   "tv.saver": "Pauseskærm mens du lytter",
+  "tv.idleSaver": "Pauseskærm når intet afspilles",
   "tv.seconds": "{n} s",
   "tv.exit": "Afslut TV-tilstand",
   "tv.exitAsk": "Forlad TV-tilstand?",

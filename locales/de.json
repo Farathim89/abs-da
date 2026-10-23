@@ -34,6 +34,7 @@
   "tv.open": "TV-Modus öffnen",
   "tv.start": "Im TV-Modus starten",
   "tv.saver": "Bildschirmschoner beim Hören",
+  "tv.idleSaver": "Bildschirmschoner, wenn nichts läuft",
   "tv.seconds": "{n} s",
   "tv.exit": "TV-Modus beenden",
   "tv.exitAsk": "TV-Modus verlassen?",

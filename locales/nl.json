@@ -34,6 +34,7 @@
   "tv.open": "Tv-modus openen",
   "tv.start": "Starten in tv-modus",
   "tv.saver": "Schermbeveiliging tijdens luisteren",
+  "tv.idleSaver": "Schermbeveiliging als er niets speelt",
   "tv.seconds": "{n} s",
   "tv.exit": "Tv-modus verlaten",
   "tv.exitAsk": "Tv-modus verlaten?",

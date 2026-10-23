@@ -34,6 +34,7 @@
   "tv.open": "TV mód megnyitása",
   "tv.start": "Indítás TV módban",
   "tv.saver": "Képernyővédő hallgatás közben",
+  "tv.idleSaver": "Képernyővédő, ha semmi sem szól",
   "tv.seconds": "{n} mp",
   "tv.exit": "Kilépés a TV módból",
   "tv.exitAsk": "Kilépsz a TV módból?",

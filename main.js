@@ -339,12 +339,16 @@ const tvLocks = () => Object.fromEntries(TV_LOCKS.map((k) => [k, !!(config.tvLoc
 // Screen saver while listening in TV mode: seconds after the last press (0 = off), config.tvSaver.
 const TV_SAVERS = [0, 30, 60, 120, 300];
 const tvSaver = () => (TV_SAVERS.includes(config.tvSaver) ? config.tvSaver : 30);
-function setTvSaver(secs) {
-  config = { ...config, tvSaver: secs };
+// …and while nothing plays (paused, or nothing loaded): config.tvIdleSaver, default 5 min.
+const TV_IDLE_SAVERS = [0, 120, 300, 600, 1800];
+const tvIdleSaver = () => (TV_IDLE_SAVERS.includes(config.tvIdleSaver) ? config.tvIdleSaver : 300);
+const saverLabel = (sec) => (sec === 0 ? tr("tv.off") : sec < 60 ? tr("tv.seconds", { n: sec }) : tr("tv.minutes", { n: sec / 60 }));
+function setTvSaver(secs, idle) {
+  config = { ...config, [idle ? "tvIdleSaver" : "tvSaver"]: secs };
   writeJson(dataFile("config.json"), config);
   if (view && isServerUrl(wc().getURL())) installTv(wc());
 }
-const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
+const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
 function setTvLock(kind, on) {
   if (!TV_LOCKS.includes(kind)) return;
   config = { ...config, tvLock: { ...tvLocks(), [kind]: !!on } };
@@ -2357,8 +2361,9 @@ function menuTemplate() {
           { label: (tvActive ? tr("tv.exit") : tr("tv.open")) + "  (F10)", click: () => setTvMode(!tvActive) },
           { label: tr("tv.start"), type: "checkbox", checked: !!config.tvStart, click: (item) => setTvStart(item.checked) },
           { label: tr("tv.saver"), submenu: TV_SAVERS.map((sec) => ({
-            label: sec === 0 ? tr("tv.off") : sec < 60 ? tr("tv.seconds", { n: sec }) : tr("tv.minutes", { n: sec / 60 }),
-            type: "checkbox", checked: tvSaver() === sec, click: () => setTvSaver(sec) })) },
+            label: saverLabel(sec), type: "checkbox", checked: tvSaver() === sec, click: () => setTvSaver(sec) })) },
+          { label: tr("tv.idleSaver"), submenu: TV_IDLE_SAVERS.map((sec) => ({
+            label: saverLabel(sec), type: "checkbox", checked: tvIdleSaver() === sec, click: () => setTvSaver(sec, true) })) },
           { type: "separator" },
           { label: tr("tv.lockChapter"), type: "checkbox", checked: tvLocks().chapter, click: (item) => setTvLock("chapter", item.checked) },
           { label: tr("tv.lockJump"), type: "checkbox", checked: tvLocks().jump, click: (item) => setTvLock("jump", item.checked) },

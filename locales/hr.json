@@ -34,6 +34,7 @@
   "tv.open": "Otvori TV način",
   "tv.start": "Pokreni u TV načinu",
   "tv.saver": "Čuvar zaslona tijekom slušanja",
+  "tv.idleSaver": "Čuvar zaslona kad ništa ne svira",
   "tv.seconds": "{n} s",
   "tv.exit": "Izađi iz TV načina",
   "tv.exitAsk": "Napustiti TV način?",

@@ -34,6 +34,7 @@
   "tv.open": "Otevřít režim TV",
   "tv.start": "Spouštět v režimu TV",
   "tv.saver": "Spořič obrazovky při poslechu",
+  "tv.idleSaver": "Spořič obrazovky, když nic nehraje",
   "tv.seconds": "{n} s",
   "tv.exit": "Ukončit režim TV",
   "tv.exitAsk": "Opustit režim TV?",

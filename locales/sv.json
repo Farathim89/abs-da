@@ -34,6 +34,7 @@
   "tv.open": "Öppna TV-läge",
   "tv.start": "Starta i TV-läge",
   "tv.saver": "Skärmsläckare när du lyssnar",
+  "tv.idleSaver": "Skärmsläckare när inget spelas",
   "tv.seconds": "{n} s",
   "tv.exit": "Avsluta TV-läge",
   "tv.exitAsk": "Lämna TV-läget?",

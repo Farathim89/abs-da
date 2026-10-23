@@ -34,6 +34,7 @@
   "tv.open": "TV modunu aç",
   "tv.start": "TV modunda başlat",
   "tv.saver": "Dinlerken ekran koruyucu",
+  "tv.idleSaver": "Hiçbir şey çalmıyorken ekran koruyucu",
   "tv.seconds": "{n} sn",
   "tv.exit": "TV modundan çık",
   "tv.exitAsk": "TV modundan çıkılsın mı?",

@@ -34,6 +34,7 @@
   "tv.open": "Obre el mode TV",
   "tv.start": "Inicia en mode TV",
   "tv.saver": "Estalvi de pantalla mentre escoltes",
+  "tv.idleSaver": "Estalvi de pantalla quan no sona res",
   "tv.seconds": "{n} s",
   "tv.exit": "Surt del mode TV",
   "tv.exitAsk": "Vols sortir del mode TV?",

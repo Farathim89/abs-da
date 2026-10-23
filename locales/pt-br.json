@@ -34,6 +34,7 @@
   "tv.open": "Abrir o modo TV",
   "tv.start": "Iniciar no modo TV",
   "tv.saver": "Protetor de tela enquanto ouve",
+  "tv.idleSaver": "Protetor de tela quando nada toca",
   "tv.seconds": "{n} s",
   "tv.exit": "Sair do modo TV",
   "tv.exitAsk": "Sair do modo TV?",

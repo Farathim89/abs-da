@@ -34,6 +34,7 @@
   "tv.open": "Otwórz tryb TV",
   "tv.start": "Uruchamiaj w trybie TV",
   "tv.saver": "Wygaszacz ekranu podczas słuchania",
+  "tv.idleSaver": "Wygaszacz ekranu, gdy nic nie gra",
   "tv.seconds": "{n} s",
   "tv.exit": "Wyjdź z trybu TV",
   "tv.exitAsk": "Opuścić tryb TV?",

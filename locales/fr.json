@@ -34,6 +34,7 @@
   "tv.open": "Ouvrir le mode TV",
   "tv.start": "Démarrer en mode TV",
   "tv.saver": "Économiseur d'écran pendant l'écoute",
+  "tv.idleSaver": "Économiseur d'écran sans lecture",
   "tv.seconds": "{n} s",
   "tv.exit": "Quitter le mode TV",
   "tv.exitAsk": "Quitter le mode TV ?",

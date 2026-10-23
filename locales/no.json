@@ -34,6 +34,7 @@
   "tv.open": "Åpne TV-modus",
   "tv.start": "Start i TV-modus",
   "tv.saver": "Skjermsparer mens du lytter",
+  "tv.idleSaver": "Skjermsparer når ingenting spilles",
   "tv.seconds": "{n} s",
   "tv.exit": "Avslutt TV-modus",
   "tv.exitAsk": "Forlate TV-modus?",

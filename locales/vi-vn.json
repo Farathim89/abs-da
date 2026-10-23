@@ -34,6 +34,7 @@
   "tv.open": "Mở chế độ TV",
   "tv.start": "Khởi động ở chế độ TV",
   "tv.saver": "Trình bảo vệ màn hình khi nghe",
+  "tv.idleSaver": "Trình bảo vệ màn hình khi không phát",
   "tv.seconds": "{n} giây",
   "tv.exit": "Thoát chế độ TV",
   "tv.exitAsk": "Rời chế độ TV?",

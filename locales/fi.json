@@ -34,6 +34,7 @@
   "tv.open": "Avaa TV-tila",
   "tv.start": "Käynnistä TV-tilassa",
   "tv.saver": "Näytönsäästäjä kuunnellessa",
+  "tv.idleSaver": "Näytönsäästäjä, kun mitään ei toisteta",
   "tv.seconds": "{n} s",
   "tv.exit": "Poistu TV-tilasta",
   "tv.exitAsk": "Poistutaanko TV-tilasta?",

@@ -34,6 +34,7 @@
   "tv.open": "打开电视模式",
   "tv.start": "以电视模式启动",
   "tv.saver": "收听时的屏幕保护",
+  "tv.idleSaver": "未播放时的屏幕保护",
   "tv.seconds": "{n} 秒",
   "tv.exit": "退出电视模式",
   "tv.exitAsk": "退出电视模式？",

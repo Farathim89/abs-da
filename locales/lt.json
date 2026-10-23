@@ -34,6 +34,7 @@
   "tv.open": "Atidaryti TV režimą",
   "tv.start": "Paleisti TV režimu",
   "tv.saver": "Ekrano užsklanda klausantis",
+  "tv.idleSaver": "Ekrano užsklanda, kai niekas negroja",
   "tv.seconds": "{n} s",
   "tv.exit": "Išeiti iš TV režimo",
   "tv.exitAsk": "Išeiti iš TV režimo?",

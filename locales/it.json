@@ -34,6 +34,7 @@
   "tv.open": "Apri la modalità TV",
   "tv.start": "Avvia in modalità TV",
   "tv.saver": "Salvaschermo durante l'ascolto",
+  "tv.idleSaver": "Salvaschermo quando non c'è riproduzione",
   "tv.seconds": "{n} s",
   "tv.exit": "Esci dalla modalità TV",
   "tv.exitAsk": "Uscire dalla modalità TV?",

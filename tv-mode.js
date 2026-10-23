@@ -264,6 +264,9 @@ function pageMain(opts) {
     #absda-tv .tv-scard .p.b { height: .18em; margin-top: .5em; }
     #absda-tv .tv-scard .p.b i { background: rgba(255,255,255,.7); }
     #absda-tv .tv-scard .c { font-size: 2.4em; font-weight: 300; margin-top: .25em; font-variant-numeric: tabular-nums; }
+    #absda-tv .tv-scard.clock { width: auto; }
+    #absda-tv .tv-scard.clock .c { font-size: 4.5em; margin: 0; }
+    #absda-tv .tv-scard .p[hidden] { display: none; }
   `;
   document.head.append(style);
 
@@ -1564,11 +1567,13 @@ function pageMain(opts) {
     hideSaver();
     return true;
   }
+  // Two delays: while a book plays (TV.opts.saver, default 30 s) and while nothing plays — paused
+  // or nothing loaded (TV.opts.idleSaver, default 5 min). 0 = off.
   function checkSaver() {
     if (saver) { updateSaver(); return; }
-    const secs = TV.opts.saver == null ? 30 : Number(TV.opts.saver);
-    const p = player();
-    if (!secs || !TV.visible || TV.reading || !root || !p || !p.isPlaying) return;
+    const p = player(), playing = !!(p && p.isPlaying);
+    const secs = playing ? (TV.opts.saver == null ? 30 : Number(TV.opts.saver)) : (TV.opts.idleSaver == null ? 300 : Number(TV.opts.idleSaver));
+    if (!secs || !TV.visible || TV.reading || !root) return;
     if (Date.now() - lastInput >= secs * 1000) showSaver();
   }
   function showSaver() {
@@ -1592,10 +1597,11 @@ function pageMain(opts) {
     if (!saver) return;
     const card = saver._card, p = player();
     const it = p && p.streamLibraryItem;
-    const key = it ? npKey(p) : "";
-    if (card._key !== key) {   // (a new book: new cover and title)
+    const key = it ? npKey(p) : "-";
+    if (card._key !== key) {   // (a new book: new cover and title; nothing loaded: only the clock and date)
       card._key = key;
       card.textContent = "";
+      card.classList.toggle("clock", !it);
       if (it && hasCover(it)) { const img = el("img"); img.alt = ""; img.src = coverOf(it, 400); card.append(img); }
       const tx = el("div", "tx");
       card._t = el("div", "t", it ? p.title || md(it).title || "" : "");
@@ -1604,13 +1610,17 @@ function pageMain(opts) {
       const pb = el("div", "p b"); card._bbar = el("i"); pb.append(card._bbar);   // the book
       card._l = el("div", "l");
       card._c = el("div", "c");
-      tx.append(card._t, card._m, pr, pb, card._l, card._c);
+      card._d = el("div", "m");
+      tx.append(card._t, card._m, pr, pb, card._l, card._c, card._d);
       card.append(tx);
     }
+    card._d.textContent = it ? "" : new Date().toLocaleDateString([], { weekday: "long", day: "numeric", month: "long" });
+    if (it) card._t.textContent = (p.isPlaying ? "" : "❚❚  ") + (p.title || md(it).title || "");   // (paused: a pause mark)
     const t = (p && p.currentTime) || 0, total = (p && p.totalDuration) || 0, rate = (p && p.currentPlaybackRate) || 1;
     const ch = p && p.currentChapter;
-    card._m.textContent = p ? ((ch && ch.title) || authorOf(it)) : "";
+    card._m.textContent = it ? ((ch && ch.title) || authorOf(it)) : "";
     card._bar.parentNode.hidden = !ch;
+    card._bbar.parentNode.hidden = !it;
     if (ch) card._bar.style.width = Math.round(Math.min(1, Math.max(0, (t - ch.start) / Math.max(1, ch.end - ch.start))) * 100) + "%";
     card._bbar.style.width = total ? Math.round((t / total) * 100) + "%" : "0";
     card._l.textContent = total ? T("book") + " " + Math.round((t / total) * 100) + "%  ·  " + leftText(Math.max(0, (total - t) / rate)) : "";

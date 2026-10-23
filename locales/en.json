@@ -34,6 +34,7 @@
   "tv.open": "Open TV mode",
   "tv.start": "Start in TV mode",
   "tv.saver": "Screen saver while listening",
+  "tv.idleSaver": "Screen saver when nothing plays",
   "tv.seconds": "{n} s",
   "tv.exit": "Exit TV mode",
   "tv.exitAsk": "Leave TV mode?",
