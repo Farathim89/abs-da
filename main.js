@@ -348,7 +348,7 @@ function setTvSaver(secs, idle) {
   writeJson(dataFile("config.json"), config);
   if (view && isServerUrl(wc().getURL())) installTv(wc());
 }
-const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
+const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), update: tvUpdateData(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
 function setTvLock(kind, on) {
   if (!TV_LOCKS.includes(kind)) return;
   config = { ...config, tvLock: { ...tvLocks(), [kind]: !!on } };
@@ -374,10 +374,22 @@ function setTvMode(on) {
 // The web app finished loading: put TV mode in (and open it once at start if you chose that).
 function tvOnLoad(contents) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
-  if (config.tvStart && !tvStarted) { tvStarted = true; setTvMode(true); return; }
+  // (tvResume: an update was installed from TV mode, so the new version comes back in it)
+  if ((config.tvStart || config.tvResume) && !tvStarted) {
+    tvStarted = true;
+    if (config.tvResume) { config = { ...config, tvResume: false }; writeJson(dataFile("config.json"), config); }
+    setTvMode(true);
+    return;
+  }
   installTv(contents);
 }
 ipcMain.on("desktop:tv-exit", (e) => { if (fromServerPage(e) && tvActive) setTvMode(false); });
+// Install now, chosen in TV mode (the restarted app opens in TV mode again).
+ipcMain.on("desktop:tv-update", (e) => {
+  if (!fromServerPage(e) || !latestRelease || !latestRelease.asset || updateBusy) return;
+  if (tvActive) { config = { ...config, tvResume: true }; writeJson(dataFile("config.json"), config); }
+  installUpdate();
+});
 
 // ---- offline listening (offline.js, offline-button.js, offline.html) ----------------
 const offline = setupOffline({
@@ -1873,8 +1885,24 @@ function pickAsset(assets) {
   };
 }
 
+// TV mode's copy of it (its full screen hides the title bar): tv-mode.js shows a side-menu
+// item and a notice, and asks for Install now through desktop:tv-update.
+let tvUpdateProgress = null;
+function tvUpdateData() {
+  if (!latestRelease) return null;
+  return {
+    version: latestRelease.version, canInstall: !!latestRelease.asset, busy: updateBusy,
+    label: tvUpdateProgress || tr("update.pill", { version: latestRelease.version }),
+    title: tr("update.newTitle"), msg: tr("update.newMsg", { version: latestRelease.version, current: app.getVersion() }),
+    install: tr("update.installNow"), later: tr("update.later"),
+  };
+}
 // Title bar pill: "Update 2.3.0", or the download progress while installing.
 function sendUpdateToTitleBar(progressText) {
+  tvUpdateProgress = progressText || null;
+  if (view && !view.webContents.isDestroyed() && isServerUrl(wc().getURL())) {
+    wc().executeJavaScript(`window.__absdaTv && window.__absdaTv.onUpdate && window.__absdaTv.onUpdate(${JSON.stringify(tvUpdateData())}); 0`).catch(() => {});
+  }
   if (!win || win.isDestroyed()) return;
   win.webContents.send("titlebar:update", latestRelease
     ? { label: progressText || tr("update.pill", { version: latestRelease.version }),

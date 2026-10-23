@@ -831,6 +831,8 @@ if (location.protocol !== "file:") {
   // TV mode (tv-mode.js) asks to be left with a DOM event; main.js then turns it off
   // (window size, menu tick).
   window.addEventListener("absda-tv-exit", () => ipcRenderer.send("desktop:tv-exit"));
+  // TV mode: Install now (an update's side-menu item).
+  window.addEventListener("absda-tv-update", () => ipcRenderer.send("desktop:tv-update"));
   // TV mode's Settings screen asks for the settings or clicks one (<html data-absda-tv-set="get" | "click:12">);
   // main.js answers by handing the page the new list.
   window.addEventListener("absda-tv-settings", () => ipcRenderer.send("desktop:tv-settings", document.documentElement.dataset.absdaTvSet || "get"));

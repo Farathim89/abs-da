@@ -49,6 +49,7 @@ function pageMain(opts) {
     read: svg("M21 5c-1.1-.35-2.3-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"),
     check: svg("M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"),
     sort: svg("M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"),
+    upd: svg("M12 4l-8 8h5v8h6v-8h5z"),
     gear: svg("M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"),
     pad: svg("M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"),
     erase: svg("M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"),
@@ -79,6 +80,15 @@ function pageMain(opts) {
     #absda-tv .tv-navl { display: flex; flex-direction: column; gap: .3em; flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; margin: 0 -.3em; padding: 0 .3em; }
     #absda-tv .tv-navl::-webkit-scrollbar { display: none; }
     #absda-tv .tv-navb { display: flex; flex-direction: column; gap: .3em; flex: none; }
+    #absda-tv .tv-ni.tv-upd { opacity: 1; color: var(--tb-logo, #f0a848); }
+    #absda-tv .tv-ni.tv-upd.tv-on { color: #141414; }
+    #absda-tv .tv-ni.tv-upd::after { content: ""; position: absolute; left: 2.1em; top: .45em; width: .55em; height: .55em; border-radius: 50%;
+      background: var(--tb-logo, #f0a848); box-shadow: 0 0 0 .15em var(--color-primary, #141414); }
+    #absda-tv .tv-toast { position: absolute; z-index: 21; left: 50%; top: 1.2em; transform: translateX(-50%); display: flex; align-items: center; gap: .6em;
+      padding: .55em 1.3em; border-radius: 2em; background: rgba(15,15,15,.9); box-shadow: 0 .4em 1.2em rgba(0,0,0,.5); pointer-events: none; font-weight: 600; }
+    #absda-tv .tv-toast svg { width: 1.2em; height: 1.2em; color: var(--tb-logo, #f0a848); }
+    #absda-tv .tv-toast[hidden] { display: none; }
+    #absda-tv .tv-mnote { opacity: .8; max-width: 40em; margin: -.2em 0 1em; line-height: 1.4; }
     #absda-tv .tv-navsep { height: 1px; margin: .4em .4em; background: rgba(255,255,255,.12); flex: none; }
     #absda-tv .tv-ni { display: flex; align-items: center; gap: 1em; padding: .62em .82em; border-radius: .7em; flex: none; position: relative;
       white-space: nowrap; opacity: .7; cursor: pointer; transition: background .12s, opacity .12s; }
@@ -1276,7 +1286,7 @@ function pageMain(opts) {
   };
 
   // ---- pop-up lists (speed, sleep timer, sort, leave TV mode) and long texts --------------
-  function openPicker(title, options) {
+  function openPicker(title, options, note) {
     closeModal(true);
     const ret = focused;
     modal = el("div", "tv-modal");
@@ -1290,7 +1300,9 @@ function pageMain(opts) {
       b.append(el("span", "grow", o.label));
       list.append(b);
     });
-    box.append(el("h2", null, title), list);
+    box.append(el("h2", null, title));
+    if (note) box.append(el("p", "tv-mnote", note));
+    box.append(list);
     modal.append(box);
     modal._ret = ret;
     modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
@@ -1352,9 +1364,11 @@ function pageMain(opts) {
     list.append(el("div", "tv-navsep"));
     item(list, "nav:np", T("nowPlaying"), ICON.np, () => { if (cur().type !== "np") push({ type: "np", enter: true }); else setFocus(defaultFocus()); });
     const bottom = el("div", "tv-navb");
+    TV.navBottom = bottom;
     item(bottom, "nav:set", L("HeaderSettings", "Settings"), ICON.gear, openSettings);
     item(bottom, "nav:exit", T("exit"), ICON.exit, askExit);
     nav.append(list, el("div", "tv-navsep"), bottom);
+    drawUpdate();
     const clock = el("div", "tv-clock");
     TV.clockEl = clock;
     root.append(clock);
@@ -1670,7 +1684,41 @@ function pageMain(opts) {
     TV.tick = setInterval(() => { updateMini(); tickClock(); checkSaver(); }, 1000);
   };
   // New options from the app (a lock changed in the menu): hints and the Controller screen follow.
-  TV.refresh = () => { drawHints(); };   // (the Settings screen gets its new list from main.js itself)
+  TV.refresh = () => { drawHints(); drawUpdate(); };
+  // ---- an update: side-menu item with a dot, a notice once, Install now / Later -------------
+  TV.onUpdate = (u) => { TV.opts.update = u; drawUpdate(); };
+  let updToast = null, updToastTimer = null, updShown = null;
+  function drawUpdate() {
+    const u = TV.opts.update;
+    if (!nav || !TV.navBottom) return;
+    let it = nav.querySelector('[data-k="nav:upd"]');
+    if (!u) { if (it) it.remove(); if (updToast) updToast.hidden = true; return; }
+    if (!it) {
+      it = focusable("div", "tv-ni tv-upd", "nav:upd", askUpdate);
+      it.innerHTML = ICON.upd;
+      it.append(el("span"));
+      TV.navBottom.prepend(it);
+    }
+    it.lastChild.textContent = u.label;
+    // The notice at the top: once per version when it's found, and while it downloads / installs.
+    if (u.busy || updShown !== u.version) {
+      updShown = u.version;
+      if (!updToast || !root.contains(updToast)) { updToast = el("div", "tv-toast"); root.append(updToast); }
+      updToast.innerHTML = ICON.upd;
+      updToast.append(el("span", null, u.busy ? u.label : u.title + "  ·  " + u.version));
+      updToast.hidden = false;
+      clearTimeout(updToastTimer);
+      if (!u.busy) updToastTimer = setTimeout(() => { if (updToast) updToast.hidden = true; }, 8000);
+    }
+  }
+  function askUpdate() {
+    const u = TV.opts.update;
+    if (!u || u.busy) return;
+    const opts = [];
+    if (u.canInstall) opts.push({ label: u.install, icon: ICON.upd, def: true, act: () => window.dispatchEvent(new Event("absda-tv-update")) });
+    opts.push({ label: u.later, icon: ICON.back, def: !u.canInstall, act: () => {} });
+    openPicker(u.title, opts, u.msg);
+  }   // (the Settings screen gets its new list from main.js itself)
   TV.close = () => {
     if (!TV.visible) return;
     TV.visible = false;
