@@ -63,6 +63,7 @@ function pageMain(opts) {
       font-size: clamp(15px, 2.05vh, 40px); line-height: 1.3; color: #f4f4f4; user-select: none;
       background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--tb-logo, #f0a848) 10%, var(--color-bg, #232323)) 0%, var(--color-primary, #141414) 65%); }
     #absda-tv.tv-away { display: none; }
+    html[data-absda-tv] #absda-mood-fx { display: none !important; }
     #absda-tv.tv-nocursor, #absda-tv.tv-nocursor * { cursor: none !important; }
     #absda-tv svg { display: block; }
     #absda-tv .tv-f:focus, #absda-tv .tv-f:focus-visible { outline: none; }
@@ -551,7 +552,13 @@ function pageMain(opts) {
   function focusNav() { setFocus(nav.querySelector(".tv-ni.tv-cur") || nav.querySelector(".tv-ni")); }
 
   // ---- screens ---------------------------------------------------------------
-  function push(s) { saveScreen(); stack.push(s); show(); }
+  function push(s) {
+    saveScreen();
+    s.enter = true;
+    const np = s.type === "np" ? stack.findIndex((x) => x.type === "np") : -1;
+    if (np >= 0) { stack = stack.slice(0, np + 1); stack[np].enter = true; } else stack.push(s);
+    show();
+  }
   function goRoot(s) { saveScreen(); s.enter = true; stack = [s]; TV.beforeSettings = null; show(); }
   // Settings remembers where you were, however you open it (side menu, Start / Options, the
   // Leave TV mode? question); Back or Start there takes you straight back.
@@ -607,6 +614,7 @@ function pageMain(opts) {
   }
   function afterDraw(s, def) {
     main.scrollTop = s.scroll || 0;
+    if (modal && focused && modal.contains(focused)) { if (def.live) startLive(def.live); return; }
     if (focused && focused.isConnected && nav.contains(focused) && !s.enter) { if (def.live) startLive(def.live); return; }
     s.enter = false;
     let e = s.focusKey && main.querySelector(`[data-k="${CSS.escape(s.focusKey)}"]`);
@@ -828,17 +836,17 @@ function pageMain(opts) {
     s.onFocus = (e) => { if (e.dataset.idx != null && Number(e.dataset.idx) > d.list.length - 24) loadMore(s); };
   }
   async function loadMore(s) {
-    const d = s.data;
+    const d = s.data, grid = s.grid;
     if (!d || s.loadingMore || d.list.length >= d.total || s.tab === "authors") return;
     s.loadingMore = true;
     try {
       const r = await fetchPage(s, d.page + 1);
+      if (s.data !== d) return;   // (another tab or sort since: not for this grid)
       d.page += 1;
       const start = d.list.length;
       d.list.push(...r.list);
-      if (cur() === s && s.grid && s.grid.isConnected) r.list.forEach((x, j) => s.grid.append(libCard(s, x, start + j)));
-    } catch (e) {}
-    s.loadingMore = false;
+      if (cur() === s && s.grid === grid && grid && grid.isConnected) r.list.forEach((x, j) => grid.append(libCard(s, x, start + j)));
+    } catch (e) {} finally { if (s.data === d || !s.data) s.loadingMore = false; }
   }
   function pickSort(s) {
     const so = libSort(s.libId);
@@ -966,7 +974,7 @@ function pageMain(opts) {
       const fin = !!(p && p.isFinished);
       btns.append(button(fin ? L("MessageMarkAsNotFinished", "Mark as Not Finished") : L("MessageMarkAsFinished", "Mark as Finished"), ICON.check, "fin", async () => {
         try { await ax.$patch(`/api/me/progress/${it.id}`, { isFinished: !fin }); } catch (e) {}
-        setTimeout(() => { if (cur() === s) redraw(); }, 400);
+        setTimeout(() => { if (TV.visible && main && cur() === s) redraw(); }, 400);
       }));
     }
     if (btns.children.length) info.append(btns);
@@ -1113,7 +1121,7 @@ function pageMain(opts) {
     ui.bookPct.textContent = Math.round(frac * 100) + "%";
     ui.b0.textContent = stamp(t) + " / " + stamp(total);
     ui.b1.textContent = total ? leftText(Math.max(0, (total - t) / rate)) : "";
-    ui.play.firstChild.outerHTML = p.isPlaying ? ICON.pause : ICON.play;
+    if (ui.playing !== !!p.isPlaying) { ui.playing = !!p.isPlaying; ui.play.firstChild.outerHTML = p.isPlaying ? ICON.pause : ICON.play; }
     ui.speed.lastChild.textContent = (Math.round(rate * 100) / 100) + "×";
     ui.sleep.lastChild.textContent = !p.sleepTimerSet ? L("LabelSleepTimer", "Sleep timer")
       : p.sleepTimerType === "chapter" ? L("LabelEndOfChapter", "End of Chapter") : T("minutes").replace("{n}", Math.max(1, Math.ceil((p.sleepTimerRemaining || 0) / 60)));
@@ -1159,8 +1167,8 @@ function pageMain(opts) {
   }
   async function runSearch(s) {
     const q = s.q.trim();
-    if (!q) { s.results = null; drawResults(s); return; }
     const token = (s.token = (s.token || 0) + 1);
+    if (!q) { s.results = null; drawResults(s); return; }
     const all = await Promise.all(libs().map((l) => ax.$get(`/api/libraries/${l.id}/search?q=${encodeURIComponent(q)}&limit=12`).then((r) => ({ l, r })).catch(() => null)));
     if (token !== s.token || cur() !== s) return;
     const r = { books: [], series: [], authors: [] };
@@ -1403,7 +1411,7 @@ function pageMain(opts) {
     const t = p.currentTime || 0, total = p.totalDuration || 0;
     mini._m.textContent = (p.currentChapter && p.currentChapter.title) || authorOf(it);
     mini._bar.style.width = total ? Math.round((t / total) * 100) + "%" : "0";
-    mini._icon.innerHTML = p.isPlaying ? ICON.pause : ICON.play;
+    if (mini._playing !== !!p.isPlaying) { mini._playing = !!p.isPlaying; mini._icon.innerHTML = p.isPlaying ? ICON.pause : ICON.play; }
   }
   function updateLive() {
     updateMini();
@@ -1448,7 +1456,7 @@ function pageMain(opts) {
   function input(act) {
     hideCursor();
     if (wake()) return;   // (the press that ends the screen saver does nothing else)
-    // Locked buttons (Controller screen / View → Controller) do nothing, so a stray press can't skip your place.
+    // Locked buttons (TV mode's Settings / View → TV mode) do nothing, so a stray press can't skip your place.
     if ((act === "prevch" || act === "nextch") && locked("chapter")) return;
     if ((act === "jumpback" || act === "jumpfwd") && locked("jump")) return;
     if (TV.reading) {   // in the e-book reader: turn pages, B closes it
@@ -1492,6 +1500,7 @@ function pageMain(opts) {
     const s = cur();
     const typing = s && s.type === "search" && !modal;
     const k = e.key;
+    if (e.repeat && !/^Arrow/.test(k) && !(typing && (k === "Backspace" || k.length === 1))) { e.preventDefault(); e.stopImmediatePropagation(); return; }
     let act = null, typed = false;
     if (k === "ArrowUp") act = "up";
     else if (k === "ArrowDown") act = "down";
@@ -1683,11 +1692,11 @@ function pageMain(opts) {
     lastInput = Date.now();
     TV.tick = setInterval(() => { updateMini(); tickClock(); checkSaver(); }, 1000);
   };
-  // New options from the app (a lock changed in the menu): hints and the Controller screen follow.
+  // New options from the app (a lock changed in the menu): hints and the Settings screen follow.
   TV.refresh = () => { drawHints(); drawUpdate(); };
   // ---- an update: side-menu item with a dot, a notice once, Install now / Later -------------
   TV.onUpdate = (u) => { TV.opts.update = u; drawUpdate(); };
-  let updToast = null, updToastTimer = null, updShown = null;
+  let updToast = null, updToastTimer = null, updShown = null, updWasBusy = false;
   function drawUpdate() {
     const u = TV.opts.update;
     if (!nav || !TV.navBottom) return;
@@ -1701,7 +1710,9 @@ function pageMain(opts) {
     }
     it.lastChild.textContent = u.label;
     // The notice at the top: once per version when it's found, and while it downloads / installs.
-    if (u.busy || updShown !== u.version) {
+    const wasBusy = updWasBusy;
+    updWasBusy = !!u.busy;
+    if (u.busy || wasBusy || updShown !== u.version) {
       updShown = u.version;
       if (!updToast || !root.contains(updToast)) { updToast = el("div", "tv-toast"); root.append(updToast); }
       updToast.innerHTML = ICON.upd;

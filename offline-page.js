@@ -164,6 +164,9 @@ async function openBook(id) {
   firstReport = true;
   sessionStart = null;
   listened = 0;
+  sleepChapter = null;
+  clearTimeout(sleepTimer);
+  $("sleep").value = "0";
   showPendingNote();
   seekTo(book.position || 0);
   setupMediaSession();
@@ -185,6 +188,7 @@ function loadTrack(i, at, autoplay) {
 function seekTo(t) {
   if (!book) return;
   t = Math.max(0, Math.min(t, book.duration || t));
+  if (sleepChapter) sleepChapter = chapterAt(t);   // (End of chapter: the chapter you moved to)
   let i = book.tracks.findIndex((x) => t >= x.startOffset && t < x.startOffset + x.duration);
   if (i < 0) i = book.tracks.length - 1;
   loadTrack(i, t - book.tracks[i].startOffset, !audio.paused);

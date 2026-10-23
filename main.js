@@ -386,8 +386,9 @@ function tvOnLoad(contents) {
 ipcMain.on("desktop:tv-exit", (e) => { if (fromServerPage(e) && tvActive) setTvMode(false); });
 // Install now, chosen in TV mode (the restarted app opens in TV mode again).
 ipcMain.on("desktop:tv-update", (e) => {
-  if (!fromServerPage(e) || !latestRelease || !latestRelease.asset || updateBusy) return;
-  if (tvActive) { config = { ...config, tvResume: true }; writeJson(dataFile("config.json"), config); }
+  if (!fromServerPage(e) || !tvActive || !latestRelease || !latestRelease.asset || updateBusy) return;
+  config = { ...config, tvResume: true };
+  writeJson(dataFile("config.json"), config);
   installUpdate();
 });
 
@@ -436,7 +437,7 @@ function installMoodFx(contents, attempt = 0) {
     .catch(() => {});
 }
 function showOfflineLibrary(query) {
-  if (view) wc().loadFile(path.join(__dirname, "offline.html"), query ? { query } : undefined);
+  if (view) wc().loadFile(path.join(__dirname, "offline.html"), query ? { query } : undefined).catch(() => {});
 }
 const sizeText = (b) => (b >= 1073741824 ? (b / 1073741824).toFixed(1) + " GB" : Math.round(b / 1048576) + " MB");
 // App → Offline: the offline library, its options, and how much space downloads take.
@@ -493,6 +494,7 @@ function issuesHookJs() {
     if (!window.$nuxt || !$nuxt.$root || !$nuxt.$store) return false;
     window.__absdaIssuesText = ${text};
     const fill = (t, v) => Object.entries(v).reduce((a, [k, x]) => a.split("{" + k + "}").join(x), t);
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
     window.__absdaRemoveAllIssues = async function () {
       const vm = this, T = window.__absdaIssuesText, libId = vm.currentLibraryId;
       let items = [];
@@ -504,7 +506,7 @@ function issuesHookJs() {
         if (ids.has(p.libraryItemId) && (p.isFinished || p.currentTime > 0 || p.ebookProgress > 0 || p.progress > 0)) used.add(p.libraryItemId);
       }
       for (const b of user.bookmarks || []) if (ids.has(b.libraryItemId)) used.add(b.libraryItemId);
-      const titles = items.filter((i) => used.has(i.id)).map((i) => (i.media && i.media.metadata && i.media.metadata.title) || "?");
+      const titles = items.filter((i) => used.has(i.id)).map((i) => esc((i.media && i.media.metadata && i.media.metadata.title) || "?"));
       let msg = fill(T.confirm, { n: items.length || vm.numShowing }) + "<br><br>";
       msg += titles.length
         ? fill(T.some, { n: titles.length }) + "<br>• " + titles.slice(0, 8).join("<br>• ") + (titles.length > 8 ? "<br>" + fill(T.more, { n: titles.length - 8 }) : "")
@@ -842,12 +844,23 @@ let autoLoginUsed = false;         // auto sign-in is only attempted once per la
 const dataFile = (name) => path.join(app.getPath("userData"), name);
 
 function readJson(file, fallback) {
-  try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch { return fallback; }
+  try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch (err) {
+    // (a file cut short by a crash or power cut: the copy from the save before)
+    if (err && err.code !== "ENOENT") { try { return JSON.parse(fs.readFileSync(file + ".bak", "utf8")); } catch {} }
+    return fallback;
+  }
 }
+// Saved safely: a temp file, flushed to disk, then swapped in (a crash mid-save can't leave a
+// half-written file); the previous copy stays as <file>.bak.
 function writeJson(file, data) {
   try {
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+    const text = JSON.stringify(data, null, 2);
+    const tmp = file + ".tmp";
+    const fd = fs.openSync(tmp, "w");
+    try { fs.writeSync(fd, text); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
+    try { fs.copyFileSync(file, file + ".bak"); } catch {}
+    try { fs.renameSync(tmp, file); } catch { fs.writeFileSync(file, text); try { fs.unlinkSync(tmp); } catch {} }
   } catch (err) {
     console.error("Could not save", file, err.message);
   }
@@ -902,6 +915,7 @@ function saveLogin(creds) {
 function forgetLogin() {
   pendingLogin = null;
   try { fs.unlinkSync(loginFile()); } catch {}
+  try { fs.unlinkSync(loginFile() + ".bak"); } catch {}
 }
 
 // Called on every page change. Once we're past the login page the sign-in
@@ -1112,11 +1126,11 @@ function openExternal(url) {
   if (/^(https?|mailto):/i.test(String(url))) shell.openExternal(url);
 }
 function showConnectPage(mode, message) {
-  wc().loadFile(path.join(__dirname, "connect.html"), { query: { mode, msg: message || "" } });
+  wc().loadFile(path.join(__dirname, "connect.html"), { query: { mode, msg: message || "" } }).catch(() => {});
 }
 function loadServer() {
   clearHistoryOnLoad = true;
-  wc().loadURL(config.webUrl);
+  wc().loadURL(config.webUrl).catch(() => {});
 }
 function goHome() {
   if (config.webUrl) loadServer(); else showConnectPage("setup");
@@ -1473,6 +1487,14 @@ function createWindow() {
     win.show();
     wc().focus();
   });
+  // Windows is shutting down or signing out: quit for real (not to the tray), saving first.
+  for (const ev of ["query-session-end", "session-end"]) {
+    win.on(ev, () => {
+      isQuitting = true;
+      try { saveWindowState(); } catch {}
+      try { session.defaultSession.flushStorageData(); } catch {}
+    });
+  }
   // Closing hides to the tray (audio keeps playing) unless you're quitting or turned it off.
   win.on("close", (e) => {
     saveWindowState();
@@ -1590,6 +1612,7 @@ function guardLinks(contents) {
       openExternal(url);
     }
   });
+  contents.on("did-create-window", (child) => guardLinks(child.webContents));
   contents.setWindowOpenHandler(({ url }) => {
     if (isServerUrl(url)) {
       return { action: "allow", overrideBrowserWindowOptions: { icon: ICON, backgroundColor: BG, autoHideMenuBar: true } };
@@ -1693,7 +1716,7 @@ function openSettings(url) {
   };
   sc.on("did-navigate-in-page", (_e, u, isMainFrame) => { if (isMainFrame) leave(u); });
   sc.on("did-navigate", (_e, u) => leave(u));
-  sc.loadURL(url);
+  sc.loadURL(url).catch(() => {});
   sc.focus();
   wc().send("desktop:overlay", true);   // dim the app behind (preload.js)
 }
@@ -1766,6 +1789,8 @@ async function clearCacheAndRestart() {
 // Restart the app. Portable: restart the .exe you started (not the unpacked copy in Temp).
 function restartApp() {
   const exe = process.env.PORTABLE_EXECUTABLE_FILE;
+  try { saveWindowState(); } catch {}
+  try { session.defaultSession.flushStorageData(); } catch {}
   app.relaunch(exe ? { execPath: exe, args: [] } : undefined);
   isQuitting = true;
   app.exit(0);
@@ -1855,6 +1880,7 @@ async function copyDiagnostics() {
 // without a click. Automatic checks can be turned off (App → Check for updates
 // automatically); Help → Check for Updates… always works.
 const RELEASES_API = "https://api.github.com/repos/Farathim89/abs-da/releases/latest";
+let updateToast = null;   // (kept, so a click on the Windows toast still works later)
 let latestRelease = null;   // { version, url, asset } when GitHub has a newer version
 let updateBusy = false;     // downloading / installing right now
 const autoUpdateCheck = () => config.updateCheck !== false;
@@ -1876,7 +1902,7 @@ function pickAsset(assets) {
     : appKind() === "folder" ? /^ABS-DA-Folder-[\d.]+\.zip$/i
     : appKind() === "installed" ? /^ABS-DA-Setup-[\d.]+\.exe$/i : null;
   const a = want && (assets || []).find((x) => want.test(x.name));
-  if (!a) return null;
+  if (!a || !/^sha256:[0-9a-f]{64}$/i.test(String(a.digest || ""))) return null;   // (no checksum: the download page instead)
   return {
     name: a.name,
     url: a.browser_download_url,
@@ -1937,31 +1963,48 @@ async function showUpdateDialog() {
 }
 
 // Download to `dest` with progress in the title bar; returns the file's SHA-256.
+// A write error (disk full, a locked file) rejects instead of crashing the app, and a download
+// that gets no data for 60 s gives up, so the Update button never stays stuck.
 async function downloadFile(url, dest, size) {
-  const res = await net.fetch(url);
-  if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
-  const total = Number(res.headers.get("content-length")) || size || 0;
-  const hash = require("crypto").createHash("sha256");
-  const out = fs.createWriteStream(dest);
-  const reader = res.body.getReader();
-  let got = 0;
-  let lastPct = -1;
+  const ctl = new AbortController();
+  let idle = null;
+  const kick = () => { clearTimeout(idle); idle = setTimeout(() => ctl.abort(), 60000); };
+  kick();
   try {
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const chunk = Buffer.from(value);
-      hash.update(chunk);
-      if (!out.write(chunk)) await new Promise((r) => out.once("drain", r));
-      got += chunk.length;
-      const pct = total ? Math.floor((got / total) * 100) : 0;
-      if (pct !== lastPct) { lastPct = pct; sendUpdateToTitleBar(tr("update.downloading", { percent: pct })); }
+    const res = await net.fetch(url, { signal: ctl.signal });
+    if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+    const total = Number(res.headers.get("content-length")) || size || 0;
+    const hash = require("crypto").createHash("sha256");
+    const out = fs.createWriteStream(dest);
+    let writeErr = null;
+    const failed = new Promise((_, reject) => out.on("error", (err) => { writeErr = err; reject(err); }));
+    failed.catch(() => {});
+    const reader = res.body.getReader();
+    let got = 0;
+    let lastPct = -1;
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        kick();
+        if (writeErr) throw writeErr;
+        if (done) break;
+        const chunk = Buffer.from(value);
+        hash.update(chunk);
+        if (!out.write(chunk)) await Promise.race([new Promise((r) => out.once("drain", r)), failed]);
+        got += chunk.length;
+        const pct = total ? Math.floor((got / total) * 100) : 0;
+        if (pct !== lastPct) { lastPct = pct; sendUpdateToTitleBar(tr("update.downloading", { percent: pct })); }
+      }
+    } finally {
+      if (writeErr) out.destroy();
+      else await Promise.race([new Promise((r) => out.end(r)), failed.catch(() => {})]);
     }
+    if (writeErr) throw writeErr;
+    if (size && got !== size) throw new Error(`size ${got} ≠ ${size}`);
+    return hash.digest("hex");
   } finally {
-    await new Promise((r) => out.end(r));
+    clearTimeout(idle);
   }
-  if (size && got !== size) throw new Error(`size ${got} ≠ ${size}`);
-  return hash.digest("hex");
 }
 
 // ---- desktop shortcut (portable) ----------------------------------------------
@@ -2079,11 +2122,10 @@ async function installUpdate() {
       // old .exe), moves the new one into place and starts it.
       const script =
         `$old = ${psQuote(old)}; $new = ${psQuote(target)}; $final = ${psQuote(final)};` +
-        "for ($i = 0; $i -lt 120; $i++) { try {" +
-        " if (($old -ine $final) -and (Test-Path -LiteralPath $old)) { Remove-Item -LiteralPath $old -Force -ErrorAction Stop };" +
-        " Move-Item -LiteralPath $new -Destination $final -Force -ErrorAction Stop; break" +
-        " } catch { Start-Sleep -Milliseconds 500 } };" +
-        "Start-Process -FilePath $final";
+        "$ok = $false;" +
+        "for ($i = 0; $i -lt 120; $i++) { try { Move-Item -LiteralPath $new -Destination $final -Force -ErrorAction Stop; $ok = $true; break } catch { Start-Sleep -Milliseconds 500 } };" +
+        "if ($ok -and ($old -ine $final)) { for ($i = 0; $i -lt 40; $i++) { try { if (Test-Path -LiteralPath $old) { Remove-Item -LiteralPath $old -Force -ErrorAction Stop }; break } catch { Start-Sleep -Milliseconds 500 } } };" +
+        "if ($ok) { Start-Process -FilePath $final } else { Start-Process -FilePath $old }";
       await launchIndependent(
         "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand " + psEncoded(script));
     } else if (appKind() === "folder") {
@@ -2093,7 +2135,9 @@ async function installUpdate() {
       const unpacked = path.join(dir, "unpacked");
       const script =
         `$zip = ${psQuote(target)}; $tmp = ${psQuote(unpacked)}; $dest = ${psQuote(exeDir)}; $exe = ${psQuote(process.execPath)};` +
-        "for ($i = 0; $i -lt 120; $i++) { if (-not (Get-Process | Where-Object { $_.Path -eq $exe })) { break }; Start-Sleep -Milliseconds 500 };" +
+        "$gone = $false;" +
+        "for ($i = 0; $i -lt 120; $i++) { if (-not (Get-Process | Where-Object { $_.Path -eq $exe })) { $gone = $true; break }; Start-Sleep -Milliseconds 500 };" +
+        "if (-not $gone) { exit };" +   // (the app never closed: leave its files alone)
         "Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue;" +
         "Expand-Archive -LiteralPath $zip -DestinationPath $tmp -Force;" +
         // The zip may hold the files directly or inside one folder.
@@ -2115,6 +2159,7 @@ async function installUpdate() {
   } catch (err) {
     updateBusy = false;
     try { fs.unlinkSync(part); } catch {}
+    if (config.tvResume) { config = { ...config, tvResume: false }; writeJson(dataFile("config.json"), config); }
     sendUpdateToTitleBar();
     const verify = err && err.verify;
     const { response } = await showDialog({
@@ -2147,11 +2192,11 @@ async function checkForUpdates(manual) {
         // Tell once per new version.
         config = { ...config, updateNotified: version };
         writeJson(dataFile("config.json"), config);
-        const n = new Notification({
+        const n = (updateToast = new Notification({
           title: tr("update.newTitle"),
           body: tr("update.newMsg", { version, current: app.getVersion() }),
           icon: ICON,
-        });
+        }));
         n.on("click", showUpdateDialog);
         n.show();
       }
@@ -2445,7 +2490,7 @@ ipcMain.handle("desktop:connect", async (e, input) => {
   if (!fromLocalPage(e)) return { ok: false, error: tr("connect.err.notAllowed") };
   const base = normalizeServer(input);
   if (!base) return { ok: false, error: tr("connect.err.badAddress") };
-  const res = await probeServer(base);
+  const res = await probeServer(base, (u, o) => net.fetch(u, o));
   if (!res.ok) return { ok: false, error: tr("connect.err." + res.code) };
   config = { ...config, server: base, webUrl: res.webUrl };   // keep other settings (theme)
   writeJson(dataFile("config.json"), config);
@@ -2581,12 +2626,17 @@ function tvSettingsData() {
     const i = sec.items.findIndex((it) => it.type === "submenu" && it.label === tr("tv.mode"));
     if (i >= 0) { const [tvSec] = sec.items.splice(i, 1); sections.unshift({ label: tvSec.label, items: tvSec.submenu, tv: true }); break; }
   }
-  return { sections: sections.filter((sec) => sec.items.some((it) => it.type !== "separator")) };
+  const shown = sections.filter((sec) => sec.items.some((it) => it.type !== "separator"));
+  tvShownIds = new Set();
+  const collect = (items) => { for (const it of items) { if (it.type === "submenu") collect(it.submenu || []); else if (it.id != null) tvShownIds.add(it.id); } };
+  for (const sec of shown) collect(sec.items);
+  return { sections: shown };
 }
+let tvShownIds = new Set();
 ipcMain.on("desktop:tv-settings", async (e, cmd) => {
-  if (!fromServerPage(e) || !view || e.sender !== wc()) return;
+  if (!fromServerPage(e) || !view || e.sender !== wc() || !tvActive) return;
   const m = /^click:(\d+)$/.exec(String(cmd || ""));
-  if (m) {
+  if (m && tvShownIds.has(Number(m[1]))) {
     const item = tvSettingsHandlers[Number(m[1])];
     if (item && item.enabled !== false && typeof item.click === "function") {
       try { await item.click({ checked: item.type === "checkbox" ? !item.checked : !!item.checked }); } catch {}
@@ -2644,7 +2694,7 @@ ipcMain.on("ui:dialog-result", (e, i) => {
 
 // Mouse back/forward buttons reported by the page (see preload.js).
 // (In the settings overlay the side buttons move through the settings pages.)
-ipcMain.on("desktop:nav", (e, direction) =>
+ipcMain.on("desktop:nav", (e, direction) => (fromServerPage(e) || fromLocalPage(e)) &&
   navigate(direction === -1 ? -1 : 1, settingsView && e.sender === settingsView.webContents ? e.sender : null));
 
 // ---- "Remember me" on your server's login page (see preload.js) -----------

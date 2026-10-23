@@ -52,6 +52,8 @@
   }
   function makeKit(out) {
     const nodes = [], timers = [];
+    // (a timer drops out of the list once it has run, so the list stays short while a sound plays)
+    const later = (fn, ms) => { const id = setTimeout(() => { const i = timers.indexOf(id); if (i >= 0) timers.splice(i, 1); fn(); }, ms); timers.push(id); };
     const keep = (n) => { nodes.push(n); return n; };
     const k = {
       stopped: false,
@@ -71,7 +73,7 @@
             const start = t + (quietFirst ? rnd(2, now.off[0]) : 0);
             layer.gain.setTargetAtTime(gain, start, 0.8);               // fades in
             layer.gain.setTargetAtTime(0.0001, start + on, 1.2);        // fades out
-            timers.push(setTimeout(() => cycle(false), (start - t + on + off) * 1000));
+            later(() => cycle(false), (start - t + on + off) * 1000);
           };
           cycle(true);
         }
@@ -94,7 +96,7 @@
           s.stop(next + len + 0.05);
           next = next + len - XF;
           first = false;
-          timers.push(setTimeout(play, Math.max(0, (next - ctx.currentTime - 1.5) * 1000)));
+          later(play, Math.max(0, (next - ctx.currentTime - 1.5) * 1000));
         };
         play();
         return true;
@@ -174,8 +176,8 @@
       },
       // Do something every few seconds (random spacing), until the mood stops.
       every(minS, maxS, fn) {
-        const tick = () => { fn(ctx.currentTime + 0.03); timers.push(setTimeout(tick, rnd(minS, maxS) * 1000)); };
-        timers.push(setTimeout(tick, rnd(0, minS) * 1000));
+        const tick = () => { fn(ctx.currentTime + 0.03); later(tick, rnd(minS, maxS) * 1000); };
+        later(tick, rnd(0, minS) * 1000);
       },
       stop() {
         k.stopped = true;

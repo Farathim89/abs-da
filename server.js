@@ -20,11 +20,15 @@ function normalizeServer(input) {
   }
 }
 
-async function fetchTimeout(url, ms = 8000) {
+// Fetch with a time limit that also covers reading the answer. Returns { ok, url, body } —
+// url is where it ended up after redirects (e.g. http:// → https://).
+async function fetchTimeout(url, fetchImpl = fetch, ms = 8000) {
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), ms);
   try {
-    return await fetch(url, { signal: ctl.signal, redirect: "follow" });
+    const res = await fetchImpl(url, { signal: ctl.signal, redirect: "follow" });
+    const body = await res.text().catch(() => "");
+    return { ok: res.ok, url: res.url || url, body };
   } finally {
     clearTimeout(timer);
   }
@@ -32,15 +36,17 @@ async function fetchTimeout(url, ms = 8000) {
 
 // Check the address really is an Audiobookshelf server and find where its
 // web app lives. Returns { ok: true, webUrl } or { ok: false, code, error } (code: "unreachable" | "notAbs").
-async function probeServer(base) {
+// fetchImpl: the app passes Electron's net.fetch (Chromium's network: Windows certificates, proxy).
+async function probeServer(base, fetchImpl) {
   let reachable = false;
   let isAbs = false;
   for (const p of ["/status", "/audiobookshelf/status"]) {
     try {
-      const res = await fetchTimeout(base + p);
+      const res = await fetchTimeout(base + p, fetchImpl);
       reachable = true;
       if (res.ok) {
-        const json = await res.json().catch(() => null);
+        let json = null;
+        try { json = JSON.parse(res.body); } catch {}
         if (json && json.app === "audiobookshelf") { isAbs = true; break; }
       }
     } catch {}
@@ -56,8 +62,9 @@ async function probeServer(base) {
   // Newer servers serve the web app under /audiobookshelf/, older ones at the root.
   for (const p of ["/audiobookshelf/", "/"]) {
     try {
-      const res = await fetchTimeout(base + p);
-      if (res.ok && /<title>\s*Audiobookshelf/i.test(await res.text())) return { ok: true, webUrl: base + p };
+      const res = await fetchTimeout(base + p, fetchImpl);
+      // (where the server sent us — after an http → https redirect that's the https address)
+      if (res.ok && /<title>\s*Audiobookshelf/i.test(res.body)) return { ok: true, webUrl: res.url || base + p };
     } catch {}
   }
   return { ok: true, webUrl: base + "/audiobookshelf/" };

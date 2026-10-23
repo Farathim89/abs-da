@@ -74,9 +74,14 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   PlayStation controller**, a TV remote's arrow keys or the keyboard. Home rows, every library (books,
   series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
   Playing** screen (chapter and book progress, chapters, ±jump, speed, sleep timer). While a book plays, a dim, moving **screen saver** comes on after 30 s without a press, and after 5 min when nothing plays (both adjustable). It plays through the web app's own player,
-  so progress syncs as usual. **View → TV mode → Start in TV mode** opens it every time the app starts. The
-  **⚙ Settings** screen inside TV mode has the app settings for the controller, including locks for the
-  chapter and jump buttons against stray presses (also in **View → TV mode**)
+  so progress syncs as usual. Podcasts show their episodes; the right stick changes the volume.
+  **View → TV mode → Start in TV mode** opens it every time the app starts. **⚙ Settings** inside TV
+  mode (also the **Start / Options** button) has TV mode's own settings — Start in TV mode, both screen
+  savers, locks for the chapter and jump buttons against stray presses — and every switch and choice of
+  the App and View menus. A new version shows there too: a notice at the top and an **⬆ Update** item in
+  the side menu (**Install now** with the controller)
+- **Settings → Desktop App**: every ABS-DA option (App and View menus) as switches and lists, at the top
+  of the web app's Settings
 - **7 colour themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
   bar (with small previews) or from **View → Theme**. Buttons, switches, pop-up notifications and the
@@ -167,7 +172,7 @@ npm install
 npm start
 ```
 
-Build the installer and portable exe into `dist\`:
+Build the installer, the portable exe and the folder-version zip into `dist\`:
 
 ```bash
 npm run dist
@@ -179,7 +184,8 @@ run `build.cmd` as administrator once (it caches the signing toolkit); after tha
 ### Source files
 
 - `main.js` — window, title bar menus, themes, tray, shortcuts, navigation, settings
-- `preload.js` — desktop bridge for the connect screen, Remember me, mouse side buttons
+- `preload.js` — the bridge between the pages and the app: connect screen, Remember me, mouse side buttons,
+  the Settings overlay and its Desktop App page, the paintbrush (Looks) panel, mood sound button, offline and TV mode messages
 - `server.js` — checks a server address and finds its web app
 - `shelf-art.js` — the procedural bookshelf textures (SVG) and their plank colours
 - `mood-themes.js` — the mood themes: scenery, light layers, bars and fonts
@@ -190,6 +196,8 @@ run `build.cmd` as administrator once (it caches the signing toolkit); after tha
 - `offline.js`, `offline-button.js`, `offline.*` — downloads, the offline library and player, syncing listening back
 - `titlebar.*` — the custom title bar (the web app runs in a panel underneath it)
 - `connect.*` — the connect / change server / can't-reach screen
+- `ui.*` — the themed title-bar menus and message boxes
+- `i18n.js`, `locales/` — the app's own texts in 33 languages (English is the fallback)
 - `build/installer.nsh` — removes the Start with Windows entry on uninstall
 
 ## Contributing

@@ -1012,7 +1012,7 @@ if (location.protocol !== "file:") {
     onRow.append(on, Object.assign(el("span"), { textContent: mood.texts.sounds }));
     const volRow = el("label", "absda-mp-row");
     const vol = Object.assign(el("input"), { type: "range", min: "0", max: "100", step: "5", value: String(mood.volume) });
-    vol.addEventListener("input", () => setMood({ volume: Number(vol.value) }));
+    vol.addEventListener("change", () => setMood({ volume: Number(vol.value) }));
     volRow.append(Object.assign(el("span"), { textContent: mood.texts.volume }), vol);
     // When they play: while a book is playing / also while you're in the library
     const when = el("div", "absda-mp-when");

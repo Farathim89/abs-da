@@ -20,9 +20,24 @@ module.exports = function setupOffline(ctx) {
   // ctx: { view(), wc(), config(), setConfig(patch), tr, isServerUrl, fromServerPage, fromLocalPage,
   //        apiBase(), getToken() → Promise<string|null>, toast(type, text), log }
   const root = () => path.join(app.getPath("userData"), "offline");
-  const folder = (id) => path.join(root(), String(id).replace(/[^A-Za-z0-9_-]/g, ""));
-  const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch { return d; } };
-  const writeJson = (f, data) => { const tmp = f + ".tmp"; fs.writeFileSync(tmp, JSON.stringify(data, null, 2)); fs.renameSync(tmp, f); };
+  // A library item id (letters, digits, - and _); anything else is refused, never cut down —
+  // an empty name would be the offline folder itself.
+  const validId = (id) => typeof id === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(id);
+  const folder = (id) => path.join(root(), validId(String(id)) ? String(id) : "_invalid_");
+  const readJson = (f, d) => {
+    try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch (err) {
+      // (cut short by a crash or power cut: the copy from the save before)
+      if (err && err.code !== "ENOENT") { try { return JSON.parse(fs.readFileSync(f + ".bak", "utf8")); } catch {} }
+      return d;
+    }
+  };
+  const writeJson = (f, data) => {
+    const tmp = f + ".tmp";
+    const fd = fs.openSync(tmp, "w");
+    try { fs.writeSync(fd, JSON.stringify(data, null, 2)); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
+    try { fs.copyFileSync(f, f + ".bak"); } catch {}
+    fs.renameSync(tmp, f);
+  };
   const meta = (id) => readJson(path.join(folder(id), "item.json"), null);
   const progressFile = (id) => path.join(folder(id), "progress.json");
   const progress = (id) => readJson(progressFile(id), { sessions: [] });
@@ -39,6 +54,7 @@ module.exports = function setupOffline(ctx) {
 
   // ---- state for the download button ------------------------------------------
   function state(id) {
+    if (!validId(id)) return { itemId: id, state: "none" };
     if (jobs.has(id)) return { itemId: id, state: "downloading", percent: jobs.get(id).percent };
     if (queue.includes(id)) return { itemId: id, state: "downloading", percent: 0 };
     const m = meta(id);
@@ -70,21 +86,58 @@ module.exports = function setupOffline(ctx) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res;
   }
-  async function saveTo(res, file, onBytes, signal) {
+  async function saveTo(res, file, onBytes, signal, kick = () => {}) {
     const out = fs.createWriteStream(file);
+    let writeErr = null;
+    const failed = new Promise((_, reject) => out.on("error", (err) => { writeErr = err; reject(err); }));
+    failed.catch(() => {});
     const reader = res.body.getReader();
     try {
       for (;;) {
         if (signal.aborted) throw new Error("cancelled");
         const { done, value } = await reader.read();
+        kick();
+        if (writeErr) throw writeErr;
         if (done) break;
         const chunk = Buffer.from(value);
-        if (!out.write(chunk)) await new Promise((r) => out.once("drain", r));
+        if (!out.write(chunk)) await Promise.race([new Promise((r) => out.once("drain", r)), failed]);
         onBytes(chunk.length);
       }
     } finally {
-      await new Promise((r) => out.end(r));
+      if (writeErr) out.destroy();
+      else await Promise.race([new Promise((r) => out.end(r)), failed.catch(() => {})]);
     }
+    if (writeErr) throw writeErr;
+  }
+  // One file, with up to 3 tries; a try that gets no data for 60 s is given up. Cancelling stops at once.
+  async function fetchFile(url, file, onBytes, cancel) {
+    let lastErr = null;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      if (cancel.aborted) throw new Error("cancelled");
+      const att = new AbortController();
+      const stop = () => att.abort();
+      cancel.addEventListener("abort", stop);
+      let idle = null;
+      const kick = () => { clearTimeout(idle); idle = setTimeout(stop, 60000); };
+      let counted = 0;
+      try {
+        kick();
+        const token = await downloadToken();
+        if (!token) throw new Error(ctx.tr("offline.errSignIn"));
+        const res = await api(url, token, { signal: att.signal });
+        await saveTo(res, file, (n) => { counted += n; onBytes(n); }, att.signal, kick);
+        return;
+      } catch (err) {
+        lastErr = err;
+        onBytes(-counted);   // (that try's bytes don't count)
+        if (cancel.aborted || /HTTP 4\d\d/.test(String(err && err.message))) break;   // (cancelled, or the server said no)
+        await new Promise((r) => setTimeout(r, 2000 * attempt));
+      } finally {
+        clearTimeout(idle);
+        cancel.removeEventListener("abort", stop);
+      }
+    }
+    throw lastErr || new Error("download failed");
   }
 
   async function download(id) {
@@ -119,7 +172,7 @@ module.exports = function setupOffline(ctx) {
         const ext = ((a.metadata && a.metadata.ext) || path.extname(String(a.metadata && a.metadata.filename || "")) || ".mp3").replace(/[^.\w]/g, "");
         const file = `track-${String(t.index).padStart(3, "0")}${ext}`;
         const part = path.join(dir, file + ".part");
-        await saveTo(await api(t.contentUrl, token, { signal: ctl.signal }), part, onBytes, ctl.signal);
+        await fetchFile(t.contentUrl, part, onBytes, ctl.signal);
         fs.renameSync(part, path.join(dir, file));
         saved.push({ file, startOffset: t.startOffset || 0, duration: t.duration || 0, mimeType: t.mimeType || a.mimeType || "" });
       }
@@ -130,7 +183,8 @@ module.exports = function setupOffline(ctx) {
         await saveTo(res, path.join(dir, cover), () => {}, ctl.signal);
       } catch { cover = null; }
       // Where you are on the server right now (so offline listening starts there).
-      let serverProgress = null;
+      let serverProgress = null, userId = "";
+      try { userId = ((await (await api("/api/me", token)).json()) || {}).id || ""; } catch {}
       try {
         const p = await (await api(`/api/me/progress/${id}`, token)).json();
         serverProgress = { currentTime: p.currentTime || 0, isFinished: !!p.isFinished, lastUpdate: p.lastUpdate || 0 };
@@ -144,7 +198,7 @@ module.exports = function setupOffline(ctx) {
         id: item.id, libraryId: item.libraryId, title: md.title || "", subtitle: md.subtitle || "",
         author: md.authorName || (md.authors || []).map((x) => x.name).join(", "), narrator: md.narratorName || (md.narrators || []).join(", "),
         series: md.seriesName || "", duration: item.media.duration || 0, chapters: item.media.chapters || [], tracks: saved, cover,
-        server: ctx.config().server || "", downloadedAt: Date.now(), size,
+        server: ctx.config().server || "", userId, downloadedAt: Date.now(), size,
       });
       jobs.delete(id);
       emit(state(id));
@@ -173,6 +227,7 @@ module.exports = function setupOffline(ctx) {
   function enqueue(items) {
     for (const it of items) {
       const id = String(typeof it === "object" ? it.id : it);
+      if (!validId(id)) continue;
       if (typeof it === "object" && it.title) titles.set(id, String(it.title).slice(0, 300));
       if (jobs.has(id) || queue.includes(id) || meta(id)) continue;
       queue.push(id);
@@ -182,6 +237,7 @@ module.exports = function setupOffline(ctx) {
   }
 
   function remove(id) {
+    if (!validId(id)) return;
     const j = jobs.get(id);
     if (j) j.abort();
     const qi = queue.indexOf(id);
@@ -201,6 +257,22 @@ module.exports = function setupOffline(ctx) {
     try { names = fs.readdirSync(root()); } catch {}
     for (const n of names) remove(n);
   }
+  // Left from a download cut short (the app closed or crashed): folders without item.json, and
+  // stray .part / .tmp files. They weren't shown or counted anywhere, but took up space.
+  function cleanLeftovers() {
+    let names = [];
+    try { names = fs.readdirSync(root()); } catch { return; }
+    for (const n of names) {
+      if (!validId(n) || jobs.has(n) || queue.includes(n)) continue;
+      const dir = folder(n);
+      try {
+        if (!fs.statSync(dir).isDirectory()) continue;
+        if (!fs.existsSync(path.join(dir, "item.json"))) { fs.rmSync(dir, { recursive: true, force: true }); continue; }
+        for (const f of fs.readdirSync(dir)) if (/\.(part|tmp)$/.test(f)) fs.rmSync(path.join(dir, f), { force: true });
+      } catch {}
+    }
+  }
+  setTimeout(cleanLeftovers, 20000);
 
   // ---- the offline library page ------------------------------------------------
   function list() {
@@ -212,22 +284,22 @@ module.exports = function setupOffline(ctx) {
       const p = progress(n);
       return { id: m.id, title: m.title, author: m.author, series: m.series, duration: m.duration, size: m.size,
         cover: m.cover ? pathToFileURL(path.join(folder(n), m.cover)).href : null,
-        position: startPosition(p), downloadedAt: m.downloadedAt, lastPlayed: p.lastPlayed || 0, pending: unsynced(p).length > 0 };
+        position: startPosition(p, m.duration), downloadedAt: m.downloadedAt, lastPlayed: p.lastPlayed || 0, pending: unsynced(p).length > 0 };
     }).filter(Boolean).sort((a, b) => (b.lastPlayed || b.downloadedAt) - (a.lastPlayed || a.downloadedAt));
   }
   // Where to start: your offline position, unless the server's is newer.
-  function startPosition(p) {
+  function startPosition(p, duration) {
     const local = p.currentTime != null ? { t: p.currentTime, at: p.updatedAt || 0 } : null;
     const server = p.serverProgress ? { t: p.serverProgress.currentTime || 0, at: p.serverProgress.lastUpdate || 0 } : null;
-    if (local && (!server || local.at >= server.at)) return local.t;
-    return server ? server.t : 0;
+    const t = local && (!server || local.at >= server.at) ? local.t : server ? server.t : 0;
+    return duration && t >= duration - 5 ? 0 : t;   // (at the very end = finished: from the start)
   }
   function item(id) {
     const m = meta(id);
     if (!m) return null;
     return { ...m, cover: m.cover ? pathToFileURL(path.join(folder(id), m.cover)).href : null,
       tracks: m.tracks.map((t) => ({ ...t, url: pathToFileURL(path.join(folder(id), t.file)).href })),
-      position: startPosition(progress(id)) };
+      position: startPosition(progress(id), m.duration) };
   }
 
   // Listening, sent by the offline player every few seconds while playing and on pause.
@@ -243,7 +315,8 @@ module.exports = function setupOffline(ctx) {
     else if (p.finished && p.currentTime < (m.duration || 0) - 60) { p.finished = false; p.finishedSynced = false; }
     p.sessions = p.sessions || [];
     let s = p.sessions[p.sessions.length - 1];
-    const today = new Date(now).toISOString().slice(0, 10);
+    const d0 = new Date(now), pad = (x) => String(x).padStart(2, "0");
+    const today = `${d0.getFullYear()}-${pad(d0.getMonth() + 1)}-${pad(d0.getDate())}`;
     if (!s || newSession || s.date !== today || now - s.updatedAt > 30 * 60 * 1000) {
       s = { id: crypto.randomUUID(), startedAt: now, startTime: Number.isFinite(Number(startTime)) ? Number(startTime) : p.currentTime, timeListening: 0, date: today };
       p.sessions.push(s);
@@ -255,7 +328,7 @@ module.exports = function setupOffline(ctx) {
     writeJson(progressFile(id), p);
     scheduleSync();
   }
-  const unsynced = (p) => (p.sessions || []).filter((s) => s.timeListening > 0 && (s.syncedAt || 0) < s.updatedAt);
+  const unsynced = (p) => (p.sessions || []).filter((s) => s.timeListening > 0 && (s.syncedAt || 0) < s.updatedAt && !s.dead);
 
   // ---- sync to the server ------------------------------------------------------
   let syncing = false, syncTimer = null;
@@ -267,7 +340,8 @@ module.exports = function setupOffline(ctx) {
     try {
       const token = await ctx.getToken();
       if (!token) return;
-      const ids = list().map((x) => x.id);
+      const me = await (await api("/api/me", token)).json();
+      const ids = list().map((x) => x.id).filter((id) => { const m = meta(id); return !m.userId || m.userId === me.id; });
       const sessions = [];
       for (const id of ids) {
         const m = meta(id), p = progress(id);
@@ -287,12 +361,22 @@ module.exports = function setupOffline(ctx) {
         });
         const results = ((await res.json()) || {}).results || [];
         const ok = new Set(results.filter((r) => r.success).map((r) => r.id));
+        const sent = new Set(sessions.map((s) => s.id));
         for (const id of ids) {
           const p = progress(id);
           let changed = false;
-          for (const s of p.sessions || []) if (ok.has(s.id)) { s.syncedAt = s.updatedAt; changed = true; }
-          // Keep the last 20 sessions (older synced ones aren't needed any more).
-          if ((p.sessions || []).length > 20) { p.sessions = p.sessions.slice(-20); changed = true; }
+          for (const s of p.sessions || []) {
+            if (ok.has(s.id)) { s.syncedAt = s.updatedAt; changed = true; }
+            else if (sent.has(s.id)) { s.tries = (s.tries || 0) + 1; if (s.tries >= 10) s.dead = true; changed = true; }
+          }
+          // Keep the last 20 sessions that are done with (sent, or given up); never drop one still waiting.
+          const done = (s) => !(s.timeListening > 0 && (s.syncedAt || 0) < s.updatedAt && !s.dead);
+          const doneOnes = (p.sessions || []).filter(done);
+          if (doneOnes.length > 20) {
+            const keep = new Set(doneOnes.slice(-20));
+            p.sessions = p.sessions.filter((s) => !done(s) || keep.has(s));
+            changed = true;
+          }
           if (changed) writeJson(progressFile(id), p);
         }
         if (ok.size) ctx.toast("success", ctx.tr("offline.synced"));
@@ -308,7 +392,6 @@ module.exports = function setupOffline(ctx) {
         } catch (err) { ctx.log("offline finish failed: " + err.message); }
       }
       // Refresh where the server says you are, for every downloaded book.
-      const me = await (await api("/api/me", token)).json();
       const byItem = new Map((me.mediaProgress || []).map((mp) => [mp.libraryItemId, mp]));
       for (const id of ids) {
         const mp = byItem.get(id);
@@ -325,7 +408,8 @@ module.exports = function setupOffline(ctx) {
           const m = meta(id), p = progress(id);
           if (!m || jobs.has(id) || unsynced(p).length || (p.finished && !p.finishedSynced)) continue;
           const sp = p.serverProgress || {};
-          if ((p.finished && p.finishedSynced) || (sp.isFinished && (sp.finishedAt || 0) > (m.downloadedAt || 0))) {
+          const listeningAgain = !p.finished && (p.updatedAt || 0) > (sp.finishedAt || 0);
+          if ((p.finished && p.finishedSynced) || (sp.isFinished && (sp.finishedAt || 0) > (m.downloadedAt || 0) && !listeningAgain)) {
             remove(id);
             ctx.toast("info", ctx.tr("offline.autoDeleted", { title: m.title }));
           }
@@ -352,8 +436,11 @@ module.exports = function setupOffline(ctx) {
   ipcMain.on("desktop:offline-remove", (e, id) => { if ((fromApp(e) || ctx.fromLocalPage(e)) && id) remove(String(id)); });
   // From the offline library page.
   ipcMain.handle("desktop:offline-list", (e) => (ctx.fromLocalPage(e) ? list() : []));
-  ipcMain.handle("desktop:offline-item", (e, id) => (ctx.fromLocalPage(e) ? item(String(id)) : null));
-  ipcMain.on("desktop:offline-listening", (e, id, data) => { if (ctx.fromLocalPage(e) && id && data) saveListening(String(id), data); });
+  ipcMain.handle("desktop:offline-item", (e, id) => (ctx.fromLocalPage(e) && validId(String(id)) ? item(String(id)) : null));
+  ipcMain.on("desktop:offline-listening", (e, id, data) => {
+    if (!ctx.fromLocalPage(e) || !validId(String(id)) || !data) return;
+    try { saveListening(String(id), data); } catch (err) { ctx.log("offline save failed: " + err.message); }
+  });
 
   return {
     count: () => list().length,
