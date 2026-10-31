@@ -61,7 +61,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   signed back in automatically. **App → Forget Saved Login** removes it.
 - **Keeps playing in the system tray** when you minimise the window (✕ quits; **App → Keep running in
   tray when closed** makes ✕ hide it to the tray too). Click the tray icon to show or hide the window; right-click it for
-  what's playing, Play/Pause, skip back/forward, previous/next chapter and a **sleep timer**
+  what's playing, Play/Pause, skip back/forward, previous/next chapter and a **sleep timer** (also for a book playing in the offline library)
 - **Start with Windows** (in the tray)
 - Keyboard **media keys** and the **Windows media controls** show the book and cover
 - **All libraries on one Home page** (library picker → **All libraries**): continue listening, continue
@@ -75,7 +75,8 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   PlayStation controller**, a TV remote's arrow keys or the keyboard. Home rows, every library (books,
   series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
   Playing** screen (chapter and book progress, chapters, ±jump, speed, sleep timer). While a book plays, a dim, moving **screen saver** comes on after 30 s without a press, and after 5 min when nothing plays (both adjustable). It plays through the web app's own player,
-  so progress syncs as usual. Podcasts show their episodes; the right stick changes the volume.
+  so progress syncs as usual. Podcasts show their episodes; the right stick changes the volume. **Playlists** (side menu) play all
+  or from any line; **Bookmarks** (Now Playing, the book page) play from a bookmark, add one where you are, or remove one.
   **View → TV mode → Start in TV mode** opens it every time the app starts. **⚙ Settings** inside TV
   mode (also the **Start / Options** button) has TV mode's own settings — Start in TV mode, both screen
   savers, locks for the chapter and jump buttons against stray presses — and every switch and choice of

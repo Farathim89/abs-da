@@ -52,6 +52,9 @@ function pageMain(opts) {
     upd: svg("M12 4l-8 8h5v8h6v-8h5z"),
     gear: svg("M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"),
     pad: svg("M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"),
+    bookmark: svg("M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"),
+    playlist: svg("M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"),
+    add: svg("M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"),
     erase: svg("M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"),
   };
 
@@ -359,6 +362,20 @@ function pageMain(opts) {
     if (cur() && cur().type === "np") return;
     push({ type: "np" });
   }
+  // From a time in a book: on the one that's loaded (move there, and play if paused), or load it there.
+  function playAt(itemId, t) {
+    const q = player();
+    if (q && q.streamLibraryItem.id === itemId && !q.streamEpisode) {
+      q.seek(t);
+      if (!q.isPlaying) q.mediaSessionPlay();
+    } else $n.$eventBus.$emit("play-item", { libraryItemId: itemId, episodeId: null, startTime: t });
+  }
+  // After picking a spot (chapter, bookmark): on to Now Playing — back where you came from if that was it.
+  function toNp() {
+    if (stack.length > 1 && stack[stack.length - 2].type === "np") stack.pop();
+    else stack[stack.length - 1] = { type: "np" };
+    show();
+  }
   async function read(item) {
     let full = item;
     try { full = await ax.$get(`/api/items/${item.id}?expanded=1`); } catch (e) {}
@@ -417,7 +434,7 @@ function pageMain(opts) {
       img.onerror = () => { img.remove(); cv.classList.add("noimg"); cv.textContent = titleOf(it); };
       cv.append(img);
     } else { cv.classList.add("noimg"); cv.textContent = o.title || titleOf(it); }
-    const p = progOf(it.id, it.recentEpisode && it.recentEpisode.id);
+    const p = o.noProgress ? null : progOf(it.id, it.recentEpisode && it.recentEpisode.id);
     const frac = fracOf(p);
     if (p && p.isFinished) { const b = el("div", "tv-badge"); b.innerHTML = ICON.check; cv.append(b); }
     else if (frac > 0) { const bar = el("div", "tv-bar"); bar.style.width = Math.round(frac * 100) + "%"; cv.append(bar); }
@@ -968,6 +985,8 @@ function pageMain(opts) {
       btns.append(b);
       if (p && (p.currentTime > 0 || p.isFinished)) btns.append(button(T("startOver"), ICON.back, "over", () => play(it.id, null, 0)));
       if ((media.chapters || []).length > 1) btns.append(button(L("LabelChapters", "Chapters"), ICON.list, "chapters", () => push({ type: "chapters", itemId: it.id, item: it })));
+      const nb = bookmarksOf(it.id).length;
+      if (nb) btns.append(button(`${T("bookmarks")} (${nb})`, ICON.bookmark, "bm", () => push({ type: "bookmarks", itemId: it.id, name: m.title })));
     }
     if (isEbook(it)) { const r = button(L("ButtonRead", "Read"), ICON.read, "read", () => read(it)); if (!btns.children.length) r.classList.add("tv-default"); btns.append(r); }
     if (!podcast) {
@@ -1011,17 +1030,7 @@ function pageMain(opts) {
     const list = el("div", "tv-list");
     chapters.forEach((ch, i) => {
       const isCur = ch.start <= now && now < ch.end;
-      const r = focusable("div", "tv-li" + (isCur ? " cur" : ""), "ch:" + i, () => {
-        const q = player();
-        if (q && q.streamLibraryItem && q.streamLibraryItem.id === s.itemId && !q.streamEpisode) {
-          q.seek(ch.start);
-          if (!q.isPlaying) q.mediaSessionPlay();
-        } else $n.$eventBus.$emit("play-item", { libraryItemId: s.itemId, episodeId: null, startTime: ch.start });
-        // on to Now Playing (back where you came from if that was Now Playing)
-        if (stack.length > 1 && stack[stack.length - 2].type === "np") stack.pop();
-        else stack[stack.length - 1] = { type: "np" };
-        show();
-      });
+      const r = focusable("div", "tv-li" + (isCur ? " cur" : ""), "ch:" + i, () => { playAt(s.itemId, ch.start); toNp(); });
       r.append(el("span", "grow", `${i + 1}.  ${ch.title || ""}`), el("small", null, stamp(ch.start) + "  ·  " + pretty(Math.max(0, ch.end - ch.start))));
       if (isCur) r.classList.add("tv-default");
       list.append(r);
@@ -1093,6 +1102,7 @@ function pageMain(opts) {
     });
     more.append(ui.speed, ui.sleep);
     if (p.chapters && p.chapters.length > 1 && !p.streamEpisode) more.append(button(L("LabelChapters", "Chapters"), ICON.list, "np:chapters", () => push({ type: "chapters", itemId: it.id, item: it })));
+    if (!p.streamEpisode) more.append(button(T("bookmarks"), ICON.bookmark, "np:bm", () => push({ type: "bookmarks", itemId: it.id, name: md(it).title })));
     more.append(button(L("LabelMore", "More"), ICON.info, "np:item", () => push({ type: "item", itemId: it.id })));
     info.append(ctrls, more);
     wrap.append(big, info);
@@ -1126,6 +1136,144 @@ function pageMain(opts) {
     ui.sleep.lastChild.textContent = !p.sleepTimerSet ? L("LabelSleepTimer", "Sleep timer")
       : p.sleepTimerType === "chapter" ? L("LabelEndOfChapter", "End of Chapter") : T("minutes").replace("{n}", Math.max(1, Math.ceil((p.sleepTimerRemaining || 0) / 60)));
     ui.sleep.classList.toggle("tv-cur", !!p.sleepTimerSet);
+  }
+
+  // Your bookmarks in a book (the web app keeps them with your user): pick one to listen from
+  // there or to remove it; while that book plays, the first line adds one where you are.
+  const bookmarksOf = (itemId) => { try { return store.getters["user/getUserBookmarksForItem"](itemId) || []; } catch (e) { return []; } };
+  const playingBook = (itemId) => { const p = player(); return p && p.streamLibraryItem.id === itemId && !p.streamEpisode ? p : null; };
+  function drawBookmarks(s) {
+    if (!s.list) s.list = bookmarksOf(s.itemId).slice();
+    const h = el("div", "tv-h1", L("LabelYourBookmarks", "Your Bookmarks"));
+    if (s.name) h.append(el("small", null, s.name));
+    main.append(h);
+    const list = el("div", "tv-list");
+    const p = playingBook(s.itemId);
+    s.addLabel = null;
+    if (p) {
+      const add = focusable("div", "tv-li", "bm:add", () => addBookmark(s));
+      add.insertAdjacentHTML("beforeend", ICON.add);
+      s.addLabel = el("span", "grow");
+      add.append(s.addLabel);
+      list.append(add);
+      liveBookmarks(s);
+    }
+    const marks = s.list.slice().sort((a, b) => a.time - b.time);
+    marks.forEach((b, i) => {
+      const r = focusable("div", "tv-li", "bm:" + b.time, () => openPicker(b.title || stamp(b.time), [
+        { label: T("playFrom").replace("{time}", stamp(b.time)), icon: ICON.play, def: true, act: () => { playAt(s.itemId, b.time); toNp(); } },
+        { label: L("ButtonRemove", "Remove"), icon: ICON.erase, act: () => removeBookmark(s, b) },
+        { label: L("ButtonCancel", "Cancel"), icon: ICON.back, act: () => {} },
+      ]));
+      r.insertAdjacentHTML("beforeend", ICON.bookmark);
+      r.append(el("span", "grow", b.title || ""), el("small", null, stamp(b.time)));
+      if (i === 0) r.classList.add("tv-default");
+      list.append(r);
+    });
+    main.append(list);
+    if (!marks.length) main.append(el("div", "tv-empty", L("MessageNoBookmarks", "No Bookmarks")));
+  }
+  function liveBookmarks(s) {
+    const p = playingBook(s.itemId);
+    if (s.addLabel && p) s.addLabel.textContent = T("addBookmark").replace("{time}", stamp(p.currentTime || 0));
+  }
+  async function addBookmark(s) {
+    const p = playingBook(s.itemId);
+    if (!p) return;
+    const time = Math.floor(p.currentTime || 0);
+    const ch = p.currentChapter;
+    const title = (ch && ch.title) || new Date().toLocaleString();   // (no keyboard: the chapter names it)
+    try {
+      const b = await ax.$post(`/api/me/item/${s.itemId}/bookmark`, { title, time });
+      s.list = s.list.filter((x) => x.time !== time).concat([b && b.time != null ? b : { libraryItemId: s.itemId, title, time }]);
+    } catch (e) { if ($n.$toast) $n.$toast.error(L("ToastBookmarkCreateFailed", "Failed to create bookmark")); }
+    if (!TV.visible || cur() !== s) return;
+    redraw();
+    const e = main.querySelector(`[data-k="bm:${time}"]`);   // (onto the new one)
+    if (e) setFocus(e);
+  }
+  async function removeBookmark(s, b) {
+    try {
+      await ax.$delete(`/api/me/item/${s.itemId}/bookmark/${b.time}`);
+      s.list = s.list.filter((x) => x.time !== b.time);
+    } catch (e) { if ($n.$toast) $n.$toast.error(L("ToastRemoveFailed", "Remove failed")); }
+    if (TV.visible && cur() === s) redraw();   // (the highlight goes to the first line)
+  }
+
+  // Your playlists (every library's), and one playlist: Play All, or any line to start there —
+  // the rest of the list plays after it, as the web app's queue.
+  async function loadPlaylists() {
+    const all = await Promise.all(libs().map((l) => ax.$get(`/api/libraries/${l.id}/playlists`).then((r) => (r && r.results) || []).catch(() => [])));
+    return { list: all.flat() };
+  }
+  const plItems = (pl) => ((pl && pl.items) || []).filter((x) => x.libraryItem && (x.episode || isAudio(x.libraryItem)));
+  function drawPlaylists(s) {
+    main.append(el("div", "tv-h1", L("ButtonPlaylists", "Playlists")));
+    const d = s.data;
+    if (d.error) { main.append(errorBox(d)); return; }
+    if (!d.list.length) { main.append(el("div", "tv-empty", L("MessageNoUserPlaylists", "You have no playlists"))); return; }
+    const firstOf = (pl) => ((pl.items || []).find((x) => x.libraryItem) || {}).libraryItem;
+    const f0 = firstOf(d.list[0]);
+    const grid = el("div", "tv-grid" + (f0 && squareLib(f0.libraryId) ? " sq" : ""));
+    d.list.forEach((pl, i) => {
+      const f = firstOf(pl), key = "pl:" + pl.id, sub = T("items").replace("{n}", (pl.items || []).length);
+      const act = () => push({ type: "playlist", plId: pl.id, name: pl.name, pl });
+      const c = f ? card(f, { key, title: pl.name, sub, noProgress: true, act }) : button(pl.name, ICON.playlist, key, act);
+      if (i === 0) c.classList.add("tv-default");
+      grid.append(c);
+    });
+    main.append(grid);
+  }
+  async function loadPlaylist(s) {
+    let pl = null;
+    try { pl = await ax.$get(`/api/playlists/${s.plId}`); } catch (e) { if (!s.pl) throw e; }
+    // (the full item with every line; else what the list of playlists had)
+    return { pl: pl && (pl.items || []).every((x) => x.libraryItem) ? pl : s.pl || pl };
+  }
+  const plDone = (x) => { const p = progOf(x.libraryItem.id, x.episode && x.episode.id); return !!(p && p.isFinished); };
+  function playQueue(items, from) {
+    const qItem = (x) => {
+      const li = x.libraryItem, ep = x.episode, m = md(li);
+      return { libraryItemId: li.id, libraryId: li.libraryId, episodeId: ep ? ep.id : null,
+        title: ep ? ep.title : m.title, subtitle: ep ? m.title : authorOf(li), caption: "",
+        duration: (ep ? ep.duration || (ep.audioFile && ep.audioFile.duration) : li.media && li.media.duration) || null,
+        coverPath: (li.media && li.media.coverPath) || null };
+    };
+    const q = items.slice(from).filter((x, j) => j === 0 || !plDone(x)).map(qItem);
+    if (!q.length) return;
+    $n.$eventBus.$emit("play-item", { libraryItemId: q[0].libraryItemId, episodeId: q[0].episodeId, queueItems: q });
+    try { store.commit("setPlayerQueueItems", q); } catch (e) {}   // (also when that one was loaded already)
+    if (cur() && cur().type === "np") return;
+    push({ type: "np" });
+  }
+  function drawPlaylist(s) {
+    const d = s.data;
+    if (d.error) { main.append(el("div", "tv-h1", s.name), errorBox(d)); return; }
+    const pl = d.pl || {}, items = plItems(pl);
+    const h = el("div", "tv-h1", pl.name || s.name);
+    h.append(el("small", null, T("items").replace("{n}", items.length)));
+    main.append(h);
+    if (pl.description) main.append(descBlock(pl.description, pl.name, "desc"));
+    if (!items.length) { main.append(el("div", "tv-empty", T("empty"))); return; }
+    const btns = el("div", "tv-btns");
+    const start = Math.max(0, items.findIndex((x) => !plDone(x)));
+    const all = button(L("ButtonPlayAll", "Play All"), ICON.play, "pl:all", () => playQueue(items, start));
+    all.classList.add("tv-default");
+    btns.append(all);
+    main.append(btns);
+    const list = el("div", "tv-list");
+    items.forEach((x, i) => {
+      const li = x.libraryItem, ep = x.episode;
+      const p = progOf(li.id, ep && ep.id);
+      const r = focusable("div", "tv-li", "pli:" + li.id + ":" + (ep ? ep.id : ""), () => playQueue(items, i));
+      r.insertAdjacentHTML("beforeend", p && p.isFinished ? ICON.check : ICON.play);
+      r.append(el("span", "grow", `${i + 1}.  ${ep ? ep.title || "?" : md(li).title || "?"}`));
+      if (p && !p.isFinished && p.progress > 0) { const bar = el("span", "tv-lbar"); const f = el("i"); f.style.width = Math.round(p.progress * 100) + "%"; bar.append(f); r.append(bar); }
+      const dur = ep ? ep.duration || (ep.audioFile && ep.audioFile.duration) || 0 : (li.media && li.media.duration) || 0;
+      r.append(el("small", null, [ep ? md(li).title : authorOf(li), dur ? pretty(dur) : ""].filter(Boolean).join("  ·  ")));
+      list.append(r);
+    });
+    main.append(list);
   }
 
   // Search: type with the controller on the letters (or a keyboard); results from every library.
@@ -1289,6 +1437,9 @@ function pageMain(opts) {
     item: { load: loadItem, draw: drawItem, refresh: 1 },
     chapters: { draw: drawChapters },
     np: { draw: drawNp, live: liveNp },
+    bookmarks: { draw: drawBookmarks, live: liveBookmarks },
+    playlists: { load: loadPlaylists, draw: drawPlaylists, refresh: 1 },
+    playlist: { load: loadPlaylist, draw: drawPlaylist, refresh: 1 },
     search: { draw: drawSearch, free: true },
     settings: { draw: drawSettings, live: livePad },
   };
@@ -1369,6 +1520,7 @@ function pageMain(opts) {
     item(list, "nav:home", L("ButtonHome", "Home"), ICON.home, () => goRoot({ type: "home" }));
     list.append(el("div", "tv-navsep"));
     for (const l of libs()) item(list, "nav:lib:" + l.id, l.name.trim(), libIcon(l), () => goRoot({ type: "lib", libId: l.id }));
+    item(list, "nav:pl", L("ButtonPlaylists", "Playlists"), ICON.playlist, () => goRoot({ type: "playlists" }));
     list.append(el("div", "tv-navsep"));
     item(list, "nav:np", T("nowPlaying"), ICON.np, () => { if (cur().type !== "np") push({ type: "np", enter: true }); else setFocus(defaultFocus()); });
     const bottom = el("div", "tv-navb");
@@ -1384,7 +1536,7 @@ function pageMain(opts) {
   }
   function markNav() {
     const r = stack[0];
-    const key = r.type === "lib" ? "nav:lib:" + r.libId : r.type === "search" ? "nav:search" : r.type === "settings" ? "nav:set" : cur().type === "np" ? "nav:np" : "nav:home";
+    const key = r.type === "lib" ? "nav:lib:" + r.libId : r.type === "playlists" ? "nav:pl" : r.type === "search" ? "nav:search" : r.type === "settings" ? "nav:set" : cur().type === "np" ? "nav:np" : "nav:home";
     nav.querySelectorAll(".tv-ni").forEach((b) => b.classList.toggle("tv-cur", b.dataset.k === key));
   }
   function tickClock() {

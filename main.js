@@ -333,7 +333,7 @@ function installHome(contents, attempt = 0) {
 let tvActive = false, tvMadeFullScreen = false, tvStarted = false;
 const TV_TEXTS = ["exit", "exitAsk", "stay", "nowPlaying", "nothing", "resume", "startOver", "speed", "off", "sort",
   "select", "playPause", "chapter", "jump", "minutes", "space", "clear", "searchHint", "empty",
-  "controller", "lockChapter", "lockJump", "lockNote", "noPad", "book"];
+  "controller", "lockChapter", "lockJump", "lockNote", "noPad", "book", "bookmarks", "addBookmark", "playFrom", "items"];
 const TV_LOCKS = ["chapter", "jump"];   // controller buttons you can lock: LB/RB (chapter), LT/RT (jump)
 const tvLocks = () => Object.fromEntries(TV_LOCKS.map((k) => [k, !!(config.tvLock && config.tvLock[k])]));
 // Screen saver while listening in TV mode: seconds after the last press (0 = off), config.tvSaver.
@@ -348,7 +348,7 @@ function setTvSaver(secs, idle) {
   writeJson(dataFile("config.json"), config);
   if (view && isServerUrl(wc().getURL())) installTv(wc());
 }
-const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), update: tvUpdateData(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}" })])) });
+const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), update: tvUpdateData(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}", time: "{time}" })])) });
 function setTvLock(kind, on) {
   if (!TV_LOCKS.includes(kind)) return;
   config = { ...config, tvLock: { ...tvLocks(), [kind]: !!on } };
