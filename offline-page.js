@@ -34,7 +34,7 @@ function applyTexts() {
   const sleep = $("sleep"), keep = sleep.value;
   sleep.textContent = "";
   for (const [v, label] of [["0", T("offline.sleepOff", "Off")], ["15", T("offline.minutes", "{n} min", { n: 15 })], ["30", T("offline.minutes", "{n} min", { n: 30 })],
-    ["45", T("offline.minutes", "{n} min", { n: 45 })], ["60", T("offline.minutes", "{n} min", { n: 60 })], ["chapter", T("offline.sleepEnd", "End of chapter")]]) {
+    ["45", T("offline.minutes", "{n} min", { n: 45 })], ["60", T("offline.minutes", "{n} min", { n: 60 })], ["90", T("offline.minutes", "{n} min", { n: 90 })], ["chapter", T("offline.sleepEnd", "End of chapter")]]) {
     const o = document.createElement("option"); o.value = v; o.textContent = label; sleep.append(o);
   }
   sleep.value = keep || "0";
@@ -164,9 +164,7 @@ async function openBook(id) {
   firstReport = true;
   sessionStart = null;
   listened = 0;
-  sleepChapter = null;
-  clearTimeout(sleepTimer);
-  $("sleep").value = "0";
+  setSleep("0");
   showPendingNote();
   seekTo(book.position || 0);
   setupMediaSession();
@@ -212,7 +210,7 @@ audio.addEventListener("timeupdate", () => {
   lastTick = now;
   updateUi(bookTime());
   // Sleep timer "end of chapter": pause when the chapter changes.
-  if (sleepChapter && chapterAt(bookTime()) !== sleepChapter) { sleepChapter = null; $("sleep").value = "0"; pause(); }
+  if (sleepChapter && chapterAt(bookTime()) !== sleepChapter) { setSleep("0"); pause(); }
 });
 
 // Your listening → the app (every 10 seconds while playing, and on pause).
@@ -261,14 +259,21 @@ $("nextCh").addEventListener("click", () => {
 $("seek").addEventListener("input", (e) => { if (book) seekTo((Number(e.target.value) / 1000) * book.duration); });
 speed.addEventListener("change", () => { audio.playbackRate = Number(speed.value) || 1; localStorage.setItem("offlineSpeed", speed.value); });
 
-let sleepChapter = null;
-$("sleep").addEventListener("change", (e) => {
+let sleepChapter = null, sleepEnds = 0;
+// v: minutes ("15"…), "chapter" (end of this chapter) or "0" (off).
+function setSleep(v) {
   clearTimeout(sleepTimer);
   sleepChapter = null;
-  const v = e.target.value;
+  sleepEnds = 0;
+  v = String(v);
   if (v === "chapter") sleepChapter = chapterAt(bookTime());
-  else if (Number(v) > 0) sleepTimer = setTimeout(() => { pause(); $("sleep").value = "0"; }, Number(v) * 60000);
-});
+  else if (Number(v) > 0) {
+    sleepEnds = Date.now() + Number(v) * 60000;
+    sleepTimer = setTimeout(() => { pause(); setSleep("0"); }, Number(v) * 60000);
+  }
+  $("sleep").value = v === "chapter" || Number(v) > 0 ? v : "0";
+}
+$("sleep").addEventListener("change", (e) => setSleep(e.target.value));
 
 document.addEventListener("keydown", (e) => {
   if (!book || e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
@@ -285,5 +290,21 @@ function setupMediaSession() {
     previoustrack: () => $("prevCh").click(), nexttrack: () => $("nextCh").click() };
   for (const [k, fn] of Object.entries(h)) { try { navigator.mediaSession.setActionHandler(k, fn); } catch {} }
 }
+
+// The tray (main.js) reads and steers this player while the offline library is open.
+window.__absdaOffline = {
+  state: () => (book
+    ? { active: true, playing: !audio.paused, title: book.title, artist: book.author || "",
+        sleep: !!(sleepChapter || sleepEnds), sleepType: sleepChapter ? "chapter" : "countdown",
+        sleepLeft: sleepEnds ? Math.max(0, (sleepEnds - Date.now()) / 1000) : 0, hasChapters: book.chapters.length > 0 }
+    : { active: false }),
+  command: (cmd) => {
+    if (!book) return;
+    const run = { toggle: () => (audio.paused ? play() : pause()), back: () => seekTo(bookTime() - 30), forward: () => seekTo(bookTime() + 30),
+      prevChapter: () => $("prevCh").click(), nextChapter: () => $("nextCh").click() }[cmd];
+    if (run) run();
+  },
+  sleep: (v) => { if (book) setSleep(v === "cancel" ? "0" : v); },
+};
 
 showList();

@@ -1345,11 +1345,12 @@ function toggleWindow() {
 }
 
 // What the official player is doing right now (reads its own player component
-// and the media info it gives Windows).
+// and the media info it gives Windows) — or the offline player, when that's open.
 async function playerState() {
   if (!view || view.webContents.isDestroyed()) return { active: false };
   try {
     return await view.webContents.executeJavaScript(`(() => {
+      if (window.__absdaOffline) return window.__absdaOffline.state();
       const el = document.getElementById('mediaPlayerContainer');
       const p = el && el.__vue__;
       if (!p) return { active: false };
@@ -1363,7 +1364,7 @@ async function playerState() {
   }
 }
 
-// Send a command to the official player (the same ones Windows' media keys use).
+// Send a command to the official player (the same ones Windows' media keys use), or the offline one.
 function playerCommand(cmd) {
   const calls = {
     toggle: "p.isPlaying ? p.mediaSessionPause() : p.mediaSessionPlay()",
@@ -1374,7 +1375,7 @@ function playerCommand(cmd) {
   };
   if (!calls[cmd] || !view) return;
   view.webContents.executeJavaScript(
-    `(() => { const el = document.getElementById('mediaPlayerContainer'); const p = el && el.__vue__; if (p) { ${calls[cmd]}; } })()`
+    `(() => { if (window.__absdaOffline) return window.__absdaOffline.command(${JSON.stringify(cmd)}); const el = document.getElementById('mediaPlayerContainer'); const p = el && el.__vue__; if (p) { ${calls[cmd]}; } })()`
   ).catch(() => {});
 }
 
@@ -1387,7 +1388,7 @@ function sleepCommand(minutes) {
   else if (Number.isFinite(minutes) && minutes > 0) call = `p.setSleepTimer({ timerType: 'countdown', seconds: ${Math.round(minutes * 60)} })`;
   if (!call || !view) return;
   view.webContents.executeJavaScript(
-    `(() => { const el = document.getElementById('mediaPlayerContainer'); const p = el && el.__vue__; if (p) { ${call}; } })()`
+    `(() => { if (window.__absdaOffline) return window.__absdaOffline.sleep(${JSON.stringify(minutes)}); const el = document.getElementById('mediaPlayerContainer'); const p = el && el.__vue__; if (p) { ${call}; } })()`
   ).catch(() => {});
   setTimeout(updateTrayTooltip, 300);
 }
