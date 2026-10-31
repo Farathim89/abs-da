@@ -10,6 +10,7 @@
   "app.forgetLogin": "সংরক্ষিত লগইন মুছুন",
   "app.forgotTitle": "সংরক্ষিত লগইন",
   "app.forgotMsg": "আপনার সংরক্ষিত লগইন মুছে ফেলা হয়েছে।",
+  "app.minimizeToTray": "ছোট করলে ট্রেতে পাঠান",
   "app.keepInTray": "বন্ধ করলেও ট্রেতে চালু রাখুন",
   "app.startWithWindows": "Windows-এর সাথে চালু করুন (ট্রেতে)",
   "app.startWithWindowsDev": "Windows-এর সাথে চালু করুন (শুধু ইনস্টল করা অ্যাপে)",

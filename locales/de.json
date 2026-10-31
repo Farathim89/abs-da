@@ -10,6 +10,7 @@
   "app.forgetLogin": "Gespeicherte Anmeldung vergessen",
   "app.forgotTitle": "Gespeicherte Anmeldung",
   "app.forgotMsg": "Deine gespeicherte Anmeldung wurde entfernt.",
+  "app.minimizeToTray": "In den Infobereich minimieren",
   "app.keepInTray": "Beim Schließen im Infobereich weiterlaufen",
   "app.startWithWindows": "Mit Windows starten (im Infobereich)",
   "app.startWithWindowsDev": "Mit Windows starten (nur installierte App)",

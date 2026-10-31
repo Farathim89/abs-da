@@ -10,6 +10,7 @@
   "app.forgetLogin": "Opgeslagen login vergeten",
   "app.forgotTitle": "Opgeslagen login",
   "app.forgotMsg": "Je opgeslagen login is verwijderd.",
+  "app.minimizeToTray": "Minimaliseren naar het systeemvak",
   "app.keepInTray": "Blijf actief in het systeemvak na sluiten",
   "app.startWithWindows": "Starten met Windows (in het systeemvak)",
   "app.startWithWindowsDev": "Starten met Windows (alleen geïnstalleerde app)",

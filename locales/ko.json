@@ -10,6 +10,7 @@
   "app.forgetLogin": "저장된 로그인 정보 삭제",
   "app.forgotTitle": "저장된 로그인",
   "app.forgotMsg": "저장된 로그인 정보가 삭제되었습니다.",
+  "app.minimizeToTray": "최소화하면 트레이로",
   "app.keepInTray": "창을 닫아도 트레이에서 계속 실행",
   "app.startWithWindows": "Windows 시작 시 실행 (트레이에서)",
   "app.startWithWindowsDev": "Windows 시작 시 실행 (설치된 앱만)",

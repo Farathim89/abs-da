@@ -10,6 +10,7 @@
   "app.forgetLogin": "Oublier la connexion enregistrée",
   "app.forgotTitle": "Connexion enregistrée",
   "app.forgotMsg": "Votre connexion enregistrée a été supprimée.",
+  "app.minimizeToTray": "Réduire dans la zone de notification",
   "app.keepInTray": "Rester dans la zone de notification à la fermeture",
   "app.startWithWindows": "Lancer avec Windows (dans la zone de notification)",
   "app.startWithWindowsDev": "Lancer avec Windows (application installée uniquement)",

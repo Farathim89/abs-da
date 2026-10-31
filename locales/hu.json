@@ -10,6 +10,7 @@
   "app.forgetLogin": "Mentett bejelentkezés törlése",
   "app.forgotTitle": "Mentett bejelentkezés",
   "app.forgotMsg": "A mentett bejelentkezés törölve.",
+  "app.minimizeToTray": "Kis méretre állításkor a tálcára",
   "app.keepInTray": "Bezáráskor fusson tovább a tálcán",
   "app.startWithWindows": "Indítás a Windowszal (a tálcán)",
   "app.startWithWindowsDev": "Indítás a Windowszal (csak telepített alkalmazás)",

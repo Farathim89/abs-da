@@ -10,6 +10,7 @@
   "app.forgetLogin": "清除已儲存的登入資訊",
   "app.forgotTitle": "已儲存的登入資訊",
   "app.forgotMsg": "已清除您儲存的登入資訊。",
+  "app.minimizeToTray": "最小化到系統匣",
   "app.keepInTray": "關閉後在系統匣中繼續執行",
   "app.startWithWindows": "隨 Windows 啟動（在系統匣中）",
   "app.startWithWindowsDev": "隨 Windows 啟動（僅限安裝版）",

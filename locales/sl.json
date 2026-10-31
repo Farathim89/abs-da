@@ -10,6 +10,7 @@
   "app.forgetLogin": "Pozabi shranjeno prijavo",
   "app.forgotTitle": "Shranjena prijava",
   "app.forgotMsg": "Vaša shranjena prijava je bila odstranjena.",
+  "app.minimizeToTray": "Pomanjšaj v sistemsko vrstico",
   "app.keepInTray": "Ob zaprtju ostani v sistemski vrstici",
   "app.startWithWindows": "Zaženi ob zagonu sistema Windows (v sistemski vrstici)",
   "app.startWithWindowsDev": "Zaženi ob zagonu sistema Windows (samo nameščena aplikacija)",

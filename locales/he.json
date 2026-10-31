@@ -10,6 +10,7 @@
   "app.forgetLogin": "שכח התחברות שמורה",
   "app.forgotTitle": "התחברות שמורה",
   "app.forgotMsg": "ההתחברות השמורה שלך הוסרה.",
+  "app.minimizeToTray": "מזער למגש המערכת",
   "app.keepInTray": "המשך לפעול במגש המערכת בעת סגירה",
   "app.startWithWindows": "הפעל עם Windows (במגש המערכת)",
   "app.startWithWindowsDev": "הפעל עם Windows (באפליקציה מותקנת בלבד)",

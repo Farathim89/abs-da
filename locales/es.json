@@ -10,6 +10,7 @@
   "app.forgetLogin": "Olvidar inicio de sesión guardado",
   "app.forgotTitle": "Inicio de sesión guardado",
   "app.forgotMsg": "Se ha eliminado tu inicio de sesión guardado.",
+  "app.minimizeToTray": "Minimizar al área de notificación",
   "app.keepInTray": "Seguir en el área de notificación al cerrar",
   "app.startWithWindows": "Iniciar con Windows (en el área de notificación)",
   "app.startWithWindowsDev": "Iniciar con Windows (solo la app instalada)",

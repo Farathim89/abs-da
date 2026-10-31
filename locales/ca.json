@@ -10,6 +10,7 @@
   "app.forgetLogin": "Oblida l’inici de sessió desat",
   "app.forgotTitle": "Inici de sessió desat",
   "app.forgotMsg": "S’ha eliminat l’inici de sessió desat.",
+  "app.minimizeToTray": "Minimitza a l’àrea de notificació",
   "app.keepInTray": "Continua a l’àrea de notificació en tancar",
   "app.startWithWindows": "Inicia amb Windows (a l’àrea de notificació)",
   "app.startWithWindowsDev": "Inicia amb Windows (només l’app instal·lada)",

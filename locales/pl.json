@@ -10,6 +10,7 @@
   "app.forgetLogin": "Zapomnij zapisane logowanie",
   "app.forgotTitle": "Zapisane logowanie",
   "app.forgotMsg": "Zapisane dane logowania zostały usunięte.",
+  "app.minimizeToTray": "Minimalizuj do zasobnika",
   "app.keepInTray": "Po zamknięciu działaj dalej w zasobniku",
   "app.startWithWindows": "Uruchamiaj z systemem Windows (w zasobniku)",
   "app.startWithWindowsDev": "Uruchamiaj z systemem Windows (tylko zainstalowana aplikacja)",

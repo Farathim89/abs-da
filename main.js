@@ -137,7 +137,7 @@ try {
 
 // Only one copy of the app at a time — launching it again focuses the open one.
 // "ABS Desktop App.exe --quit" quits the open one for real, like the tray's Quit (a TV front end closing it:
-// its ✕ only hides the app to the tray); with none open it just ends.
+// with "Keep running in tray when closed" its ✕ only hides the app); with none open it just ends.
 const quitOnly = process.argv.includes("--quit");
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock || quitOnly) app.quit();
@@ -1311,7 +1311,21 @@ function refreshStartWithWindows() {
 }
 
 // ---- system tray: keep playing with the window closed ---------------------
-const closeToTray = () => config.closeToTray !== false;
+// ✕ quits unless "Keep running in tray when closed" is on; minimising hides to the tray unless turned off.
+const closeToTray = () => config.closeToTray === true;
+const minimizeToTray = () => config.minimizeToTray !== false;
+
+// First time the window goes to the tray: say it's still there.
+function trayHint() {
+  if (config.trayHintShown || !tray) return;
+  tray.displayBalloon({
+    iconType: "info",
+    title: tr("tray.stillRunning"),
+    content: tr("tray.stillRunningMsg"),
+  });
+  config = { ...config, trayHintShown: true };
+  writeJson(dataFile("config.json"), config);
+}
 
 function showWindow() {
   if (!win) return;
@@ -1495,21 +1509,19 @@ function createWindow() {
       try { session.defaultSession.flushStorageData(); } catch {}
     });
   }
-  // Closing hides to the tray (audio keeps playing) unless you're quitting or turned it off.
+  // ✕ quits the app — or hides it to the tray (audio keeps playing) when that switch is on.
   win.on("close", (e) => {
     saveWindowState();
     if (isQuitting || !closeToTray() || !tray) return;
     e.preventDefault();
     win.hide();
-    if (!config.trayHintShown) {
-      tray.displayBalloon({
-        iconType: "info",
-        title: tr("tray.stillRunning"),
-        content: tr("tray.stillRunningMsg"),
-      });
-      config = { ...config, trayHintShown: true };
-      writeJson(dataFile("config.json"), config);
-    }
+    trayHint();
+  });
+  // Minimising hides the window to the tray (off the taskbar); the tray icon brings it back.
+  win.on("minimize", () => {
+    if (!minimizeToTray() || !tray) return;
+    win.hide();
+    trayHint();
   });
   win.on("focus", () => {
     win.webContents.send("titlebar:focus", true);
@@ -2352,6 +2364,15 @@ function menuTemplate() {
           click: () => {
             forgetLogin();
             showDialog({ type: "info", title: tr("app.forgotTitle"), message: tr("app.forgotMsg"), buttons: [tr("about.ok")] });
+          },
+        },
+        {
+          label: tr("app.minimizeToTray"),
+          type: "checkbox",
+          checked: minimizeToTray(),
+          click: (item) => {
+            config = { ...config, minimizeToTray: item.checked };
+            writeJson(dataFile("config.json"), config);
           },
         },
         {

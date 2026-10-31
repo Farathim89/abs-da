@@ -10,6 +10,7 @@
   "app.forgetLogin": "Zaboravi spremljenu prijavu",
   "app.forgotTitle": "Spremljena prijava",
   "app.forgotMsg": "Vaša spremljena prijava je uklonjena.",
+  "app.minimizeToTray": "Smanji u područje obavijesti",
   "app.keepInTray": "Nakon zatvaranja nastavi raditi u području obavijesti",
   "app.startWithWindows": "Pokreni sa sustavom Windows (u području obavijesti)",
   "app.startWithWindowsDev": "Pokreni sa sustavom Windows (samo instalirana aplikacija)",

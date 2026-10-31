@@ -10,6 +10,7 @@
   "app.forgetLogin": "Glöm sparad inloggning",
   "app.forgotTitle": "Sparad inloggning",
   "app.forgotMsg": "Din sparade inloggning har tagits bort.",
+  "app.minimizeToTray": "Minimera till systemfältet",
   "app.keepInTray": "Fortsätt köra i systemfältet när fönstret stängs",
   "app.startWithWindows": "Starta med Windows (i systemfältet)",
   "app.startWithWindowsDev": "Starta med Windows (endast installerad app)",

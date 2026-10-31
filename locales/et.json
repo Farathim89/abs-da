@@ -10,6 +10,7 @@
   "app.forgetLogin": "Unusta salvestatud sisselogimine",
   "app.forgotTitle": "Salvestatud sisselogimine",
   "app.forgotMsg": "Sinu salvestatud sisselogimine eemaldati.",
+  "app.minimizeToTray": "Minimeeri teavitusalale",
   "app.keepInTray": "Sulgemisel jätka töötamist teavitusalal",
   "app.startWithWindows": "Käivita koos Windowsiga (teavitusalal)",
   "app.startWithWindowsDev": "Käivita koos Windowsiga (ainult installitud rakendus)",

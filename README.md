@@ -59,7 +59,8 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - Remembers your server, window size and position; the login page shows which server you're on
 - **Remember me** on the login page: your login is saved encrypted with Windows (DPAPI) and you're
   signed back in automatically. **App → Forget Saved Login** removes it.
-- **Keeps playing in the system tray** when you close the window. Right-click the tray icon for
+- **Keeps playing in the system tray** when you minimise the window (✕ quits; **App → Keep running in
+  tray when closed** makes ✕ hide it to the tray too). Right-click the tray icon for
   what's playing, Play/Pause, skip back/forward, previous/next chapter and a **sleep timer**
 - **Start with Windows** (in the tray)
 - Keyboard **media keys** and the **Windows media controls** show the book and cover

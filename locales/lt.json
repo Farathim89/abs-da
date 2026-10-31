@@ -10,6 +10,7 @@
   "app.forgetLogin": "Pamiršti išsaugotą prisijungimą",
   "app.forgotTitle": "Išsaugotas prisijungimas",
   "app.forgotMsg": "Jūsų išsaugotas prisijungimas pašalintas.",
+  "app.minimizeToTray": "Sumažinti į pranešimų sritį",
   "app.keepInTray": "Uždarius toliau veikti pranešimų srityje",
   "app.startWithWindows": "Paleisti kartu su Windows (pranešimų srityje)",
   "app.startWithWindowsDev": "Paleisti kartu su Windows (tik įdiegta programa)",

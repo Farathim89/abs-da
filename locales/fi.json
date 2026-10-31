@@ -10,6 +10,7 @@
   "app.forgetLogin": "Unohda tallennettu kirjautuminen",
   "app.forgotTitle": "Tallennettu kirjautuminen",
   "app.forgotMsg": "Tallennettu kirjautumisesi poistettiin.",
+  "app.minimizeToTray": "Pienennä ilmaisinalueelle",
   "app.keepInTray": "Jatka ilmaisinalueella, kun ikkuna suljetaan",
   "app.startWithWindows": "Käynnistä Windowsin mukana (ilmaisinalueelle)",
   "app.startWithWindowsDev": "Käynnistä Windowsin mukana (vain asennettu sovellus)",

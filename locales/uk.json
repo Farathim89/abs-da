@@ -10,6 +10,7 @@
   "app.forgetLogin": "Забути збережений вхід",
   "app.forgotTitle": "Збережений вхід",
   "app.forgotMsg": "Збережені дані входу видалено.",
+  "app.minimizeToTray": "Згортати в трей",
   "app.keepInTray": "Працювати в треї після закриття вікна",
   "app.startWithWindows": "Запускати разом з Windows (у треї)",
   "app.startWithWindowsDev": "Запускати разом з Windows (лише встановлена версія)",

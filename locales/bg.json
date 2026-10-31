@@ -10,6 +10,7 @@
   "app.forgetLogin": "Забрави запазения вход",
   "app.forgotTitle": "Запазен вход",
   "app.forgotMsg": "Запазените данни за вход бяха премахнати.",
+  "app.minimizeToTray": "Минимизиране в системната област",
   "app.keepInTray": "Продължи работа в системната област при затваряне",
   "app.startWithWindows": "Стартирай с Windows (в системната област)",
   "app.startWithWindowsDev": "Стартирай с Windows (само инсталирано приложение)",

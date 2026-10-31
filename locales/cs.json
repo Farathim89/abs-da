@@ -10,6 +10,7 @@
   "app.forgetLogin": "Zapomenout uložené přihlášení",
   "app.forgotTitle": "Uložené přihlášení",
   "app.forgotMsg": "Vaše uložené přihlášení bylo odstraněno.",
+  "app.minimizeToTray": "Minimalizovat do oznamovací oblasti",
   "app.keepInTray": "Po zavření běžet dál v oznamovací oblasti",
   "app.startWithWindows": "Spouštět se systémem Windows (v oznamovací oblasti)",
   "app.startWithWindowsDev": "Spouštět se systémem Windows (jen nainstalovaná aplikace)",

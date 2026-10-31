@@ -10,6 +10,7 @@
   "app.forgetLogin": "نسيان تسجيل الدخول المحفوظ",
   "app.forgotTitle": "تسجيل الدخول المحفوظ",
   "app.forgotMsg": "تمت إزالة تسجيل الدخول المحفوظ.",
+  "app.minimizeToTray": "التصغير إلى علبة النظام",
   "app.keepInTray": "مواصلة العمل في علبة النظام عند الإغلاق",
   "app.startWithWindows": "التشغيل مع Windows (في علبة النظام)",
   "app.startWithWindowsDev": "التشغيل مع Windows (للتطبيق المثبّت فقط)",

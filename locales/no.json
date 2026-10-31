@@ -10,6 +10,7 @@
   "app.forgetLogin": "Glem lagret pålogging",
   "app.forgotTitle": "Lagret pålogging",
   "app.forgotMsg": "Den lagrede påloggingen din er fjernet.",
+  "app.minimizeToTray": "Minimer til systemstatusfeltet",
   "app.keepInTray": "Fortsett i systemstatusfeltet når vinduet lukkes",
   "app.startWithWindows": "Start med Windows (i systemstatusfeltet)",
   "app.startWithWindowsDev": "Start med Windows (kun installert app)",

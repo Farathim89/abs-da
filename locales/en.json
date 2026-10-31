@@ -10,6 +10,7 @@
   "app.forgetLogin": "Forget Saved Login",
   "app.forgotTitle": "Saved login",
   "app.forgotMsg": "Your saved login was removed.",
+  "app.minimizeToTray": "Minimize to tray",
   "app.keepInTray": "Keep running in tray when closed",
   "app.startWithWindows": "Start with Windows (in the tray)",
   "app.startWithWindowsDev": "Start with Windows (installed app only)",

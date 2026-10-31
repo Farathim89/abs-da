@@ -10,6 +10,7 @@
   "app.forgetLogin": "保存したログイン情報を削除",
   "app.forgotTitle": "保存したログイン情報",
   "app.forgotMsg": "保存したログイン情報を削除しました。",
+  "app.minimizeToTray": "最小化でタスクトレイに格納",
   "app.keepInTray": "閉じてもタスクトレイで実行を続ける",
   "app.startWithWindows": "Windows の起動時に開始（タスクトレイ）",
   "app.startWithWindowsDev": "Windows の起動時に開始（インストール版のみ）",

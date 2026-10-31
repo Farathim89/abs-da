@@ -10,6 +10,7 @@
   "app.forgetLogin": "Xóa thông tin đăng nhập đã lưu",
   "app.forgotTitle": "Thông tin đăng nhập đã lưu",
   "app.forgotMsg": "Đã xóa thông tin đăng nhập đã lưu của bạn.",
+  "app.minimizeToTray": "Thu nhỏ xuống khay hệ thống",
   "app.keepInTray": "Tiếp tục chạy ở khay hệ thống khi đóng",
   "app.startWithWindows": "Khởi động cùng Windows (ở khay hệ thống)",
   "app.startWithWindowsDev": "Khởi động cùng Windows (chỉ bản cài đặt)",

@@ -10,6 +10,7 @@
   "app.forgetLogin": "Esquecer login salvo",
   "app.forgotTitle": "Login salvo",
   "app.forgotMsg": "Seu login salvo foi removido.",
+  "app.minimizeToTray": "Minimizar para a área de notificação",
   "app.keepInTray": "Continuar na área de notificação ao fechar",
   "app.startWithWindows": "Iniciar com o Windows (na área de notificação)",
   "app.startWithWindowsDev": "Iniciar com o Windows (somente app instalado)",

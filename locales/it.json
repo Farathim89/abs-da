@@ -10,6 +10,7 @@
   "app.forgetLogin": "Dimentica accesso salvato",
   "app.forgotTitle": "Accesso salvato",
   "app.forgotMsg": "L’accesso salvato è stato rimosso.",
+  "app.minimizeToTray": "Riduci a icona nell’area di notifica",
   "app.keepInTray": "Resta nell’area di notifica alla chiusura",
   "app.startWithWindows": "Avvia con Windows (nell’area di notifica)",
   "app.startWithWindowsDev": "Avvia con Windows (solo app installata)",
