@@ -1334,6 +1334,16 @@ function showWindow() {
   win.focus();
 }
 
+// The tray icon's click: hides the window when it's in front, otherwise brings it up.
+// (Clicking the tray takes the focus away first, so "in front" = focused until just now.)
+let lastBlur = 0;
+function toggleWindow() {
+  if (!win) return;
+  const inFront = win.isVisible() && !win.isMinimized() && (win.isFocused() || Date.now() - lastBlur < 500);
+  if (inFront) win.hide();
+  else showWindow();
+}
+
 // What the official player is doing right now (reads its own player component
 // and the media info it gives Windows).
 async function playerState() {
@@ -1434,7 +1444,7 @@ async function showTrayMenu() {
 function createTray() {
   tray = new Tray(ICON);
   tray.setToolTip("ABS Desktop App");
-  tray.on("click", showWindow);
+  tray.on("click", toggleWindow);
   tray.on("right-click", showTrayMenu);
   setInterval(updateTrayTooltip, 5000);   // keep "now playing" in the tooltip current
 }
@@ -1528,6 +1538,7 @@ function createWindow() {
     if (view) { wc().focus(); readWebLang(wc()); }
   });
   win.on("blur", () => {
+    lastBlur = Date.now();
     win.webContents.send("titlebar:focus", false);
     if (uiOpen && uiOpen.kind === "menu") closeUi();   // like Windows' own menus
   });
