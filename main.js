@@ -1588,6 +1588,7 @@ function createWindow() {
   contents.on("did-finish-load", () => {
     setTimeout(() => readWebLang(contents), 2500);   // once the web app has loaded its language
     checkPageStyles(contents);
+    checkServerVersion(contents);
     if (clearHistoryOnLoad && isServerUrl(contents.getURL())) {
       clearHistoryOnLoad = false;
       contents.navigationHistory.clear();
@@ -1791,6 +1792,27 @@ function checkPageStyles(contents) {
     await clearWebCache();
     if (!contents.isDestroyed()) contents.reloadIgnoringCache();
   }, 1500);
+}
+
+// The server was updated: old web files left in the app can make the new web app misbehave
+// (e.g. a link that doesn't filter). So when its version changes, empty them and reload, once —
+// not while a book is loaded in the player (then at the next load). The first time there's
+// nothing to compare with: emptied, no reload.
+let serverVersionBusy = false;
+async function checkServerVersion(contents) {
+  if (serverVersionBusy || !config.webUrl || !isServerUrl(contents.getURL())) return;
+  serverVersionBusy = true;
+  try {
+    const res = await net.fetch(new URL("status", config.webUrl).href, { signal: AbortSignal.timeout(8000) });
+    const version = String((await res.json()).serverVersion || "");
+    if (!version || version === config.serverVersion) return;
+    if ((await playerState()).active) return;
+    const first = !config.serverVersion;
+    config = { ...config, serverVersion: version };
+    writeJson(dataFile("config.json"), config);
+    await clearWebCache();
+    if (!first && !contents.isDestroyed() && isServerUrl(contents.getURL())) contents.reloadIgnoringCache();
+  } catch {} finally { serverVersionBusy = false; }
 }
 
 // App → Clear Cache and Restart…: empties the stored web files (cache, service

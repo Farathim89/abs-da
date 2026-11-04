@@ -114,7 +114,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - **One-click updates**: when a new version is out, an **Update** button appears in the title bar;
   **Install now** downloads it, checks it against the fingerprint GitHub publishes, installs it and
   restarts — for both the installer and the portable version. Nothing installs without your click
-- Troubleshooting: repairs a page that loaded without its styles by itself; **App → Clear Cache and
+- Troubleshooting: repairs a page that loaded without its styles by itself, and empties old web files when the server was updated; **App → Clear Cache and
   Restart…** and **Help → Copy Diagnostics** (for bug reports); the portable tells you if its folder
   isn't writable; **App → Use hardware acceleration** can be turned off if pages draw strangely
 - Works with Windows contrast themes without breaking sliders or the e-book reader colours
