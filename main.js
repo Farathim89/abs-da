@@ -26,6 +26,7 @@ const { MOOD_THEMES } = require("./mood-themes");
 const { pickLang, stringsFor, translator, LANGUAGES } = require("./i18n");
 const homePageJs = require("./home-page");
 const tvModeJs = require("./tv-mode");
+const escMenuJs = require("./esc-menu");
 const setupOffline = require("./offline");
 const offlineButtonJs = require("./offline-button");
 const moodFxJs = require("./mood-fx");
@@ -392,6 +393,37 @@ function tvOnLoad(contents) {
   installTv(contents);
 }
 ipcMain.on("desktop:tv-exit", (e) => { if (fromServerPage(e) && tvActive) setTvMode(false); });
+// ---- the Esc menu (esc-menu.js): Esc in the normal window → TV mode, Settings, Offline library, Close the app
+const escMenuOpts = () => ({ title: "ABS Desktop App", items: [
+  { id: "tv", label: tr("tv.open") }, { id: "settings", label: "" },   // ("" = the web app's own word for Settings)
+  { id: "offline", label: tr("app.offlineLibrary") }, { id: "quit", label: tr("tv.quit") }, { id: "back", label: tr("nav.back") },
+] });
+function installEscMenu(contents, attempt = 0) {
+  if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
+  contents.executeJavaScript(escMenuJs(escMenuOpts()))
+    .then((ok) => { if (!ok && attempt < 30) setTimeout(() => installEscMenu(contents, attempt + 1), 1000); })
+    .catch(() => {});
+}
+// Settings, opened on its Desktop App page (the page preload.js adds to the web app's Settings).
+function openDesktopSettingsPage() {
+  if (!config.webUrl) return;
+  openSettings(new URL("config", config.webUrl).href);
+  let tries = 0;
+  const go = () => {
+    if (!settingsView || settingsView.webContents.isDestroyed() || ++tries > 25) return;
+    settingsView.webContents.executeJavaScript(
+      `(() => { const a = document.getElementById("absda-ds-link"); if (!a) return false; if (!document.getElementById("absda-ds-page")) a.click(); return true; })()`)
+      .then((ok) => { if (!ok) setTimeout(go, 300); }).catch(() => setTimeout(go, 300));
+  };
+  setTimeout(go, 300);
+}
+ipcMain.on("desktop:esc-menu", (e, action) => {
+  if (!fromServerPage(e) || !view || e.sender !== wc() || tvActive) return;
+  if (action === "tv") setTvMode(true);
+  else if (action === "settings") openDesktopSettingsPage();
+  else if (action === "offline") showOfflineLibrary();
+  else if (action === "quit") app.quit();
+});
 // Close the app, chosen in TV mode (a real quit, like the tray's Quit; "Start in TV mode" opens it in TV mode again).
 ipcMain.on("desktop:tv-quit", (e) => { if (fromServerPage(e) && e.sender === wc() && tvActive) app.quit(); });
 // Install now, chosen in TV mode (the restarted app opens in TV mode again).
@@ -1171,7 +1203,7 @@ function onLangChanged() {
   for (const c of webContents.getAllWebContents()) {
     if (!c.isDestroyed() && isServerUrl(c.getURL())) c.executeJavaScript(issuesHookJs()).catch(() => {});   // its texts
   }
-  if (view && isServerUrl(wc().getURL())) { installHome(wc()); }   // "All libraries" text
+  if (view && isServerUrl(wc().getURL())) { installHome(wc()); installEscMenu(wc()); }   // "All libraries", the Esc menu's texts
   updateTrayTooltip();
   sendUpdateToTitleBar();
 }
@@ -1622,6 +1654,7 @@ function createWindow() {
     installHome(contents);
     installOfflineButton(contents);
     installTv(contents);   // e.g. you just signed in
+    installEscMenu(contents);
   });
 
   if (!app.isPackaged) contents.on("did-navigate", (_e, url) => console.log("[nav]", url));
@@ -2329,7 +2362,8 @@ function themeMenuItems() {
         items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
         if (themeId() === "snow") items.push({ label: tr("theme.snowFlakes"), type: "checkbox", checked: config.snowFlakes !== false, click: (item) => setSnowFlakes(item.checked) });
         items.push({ label: tr("mood.sounds"), type: "checkbox", checked: !!config.moodSound, click: (item) => setMoodSound({ on: item.checked }) });
-        items.push({ label: tr("mood.volumeMenu"), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
+        items.push({ label: tr("mood.volumeMenu"), slider: { min: 0, max: 100, step: 5, value: moodSoundVolume() },
+          setValue: (v) => setMoodSound({ volume: v }), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
           label: v + "%", type: "checkbox", checked: moodSoundVolume() === v, click: () => setMoodSound({ volume: v }) })) });
         items.push({ label: tr("mood.when"), submenu: [
           { label: tr("mood.whilePlaying"), type: "checkbox", checked: moodWhen() === "book", click: () => setMoodSound({ when: "book" }) },
@@ -2637,7 +2671,7 @@ function menuData(template, handlers) {
     const id = handlers.push(it) - 1;
     return {
       id, label: String(it.label || ""), enabled: it.enabled !== false, checked: !!it.checked, accel: accel(it.accelerator),
-      multi: it.multi || undefined, noTv: it.tv === false || undefined,
+      multi: it.multi || undefined, noTv: it.tv === false || undefined, slider: it.slider || undefined,
       type: it.submenu ? "submenu" : it.type === "checkbox" ? "checkbox" : "normal", radio: it.radio || undefined,
       submenu: it.submenu ? walk(it.submenu) : undefined,
     };
@@ -2701,13 +2735,18 @@ function tvSettingsData() {
   }
   const shown = sections.filter((sec) => sec.items.some((it) => it.type !== "separator"));
   tvShownIds = new Set();
-  const collect = (items) => { for (const it of items) { if (it.type === "submenu") collect(it.submenu || []); else if (it.id != null) tvShownIds.add(it.id); } };
+  const collect = (items) => { for (const it of items) { if (it.slider && it.id != null) tvShownIds.add(it.id); if (it.type === "submenu") collect(it.submenu || []); else if (it.id != null) tvShownIds.add(it.id); } };
   for (const sec of shown) collect(sec.items);
   return { sections: shown };
 }
 let tvShownIds = new Set();
 ipcMain.on("desktop:tv-settings", async (e, cmd) => {
   if (!fromServerPage(e) || !view || e.sender !== wc() || !tvActive) return;
+  const sv = /^set:(\d+):(\d+)$/.exec(String(cmd || ""));
+  if (sv && tvShownIds.has(Number(sv[1]))) {
+    const item = tvSettingsHandlers[Number(sv[1])];
+    if (item && item.slider && typeof item.setValue === "function") { try { item.setValue(Number(sv[2])); } catch {} }
+  }
   const m = /^click:(\d+)$/.exec(String(cmd || ""));
   if (m && tvShownIds.has(Number(m[1]))) {
     const item = tvSettingsHandlers[Number(m[1])];
@@ -2721,6 +2760,15 @@ ipcMain.on("desktop:tv-settings", async (e, cmd) => {
 });
 const fromSettings = (e) => settingsView && !settingsView.webContents.isDestroyed() && e.sender === settingsView.webContents && fromServerPage(e);
 ipcMain.handle("desktop:settings-data", (e) => (fromSettings(e) ? desktopSettingsData() : null));
+ipcMain.handle("desktop:settings-set", async (e, id, value) => {
+  if (!fromSettings(e)) return null;
+  const item = settingsHandlers[Number(id)];
+  if (item && item.slider && typeof item.setValue === "function" && Number.isFinite(Number(value))) {
+    try { item.setValue(Math.max(item.slider.min, Math.min(item.slider.max, Number(value)))); } catch {}
+  }
+  await new Promise((r) => setTimeout(r, 80));
+  return desktopSettingsData();
+});
 ipcMain.handle("desktop:settings-click", async (e, id) => {
   if (!fromSettings(e)) return null;
   const item = settingsHandlers[Number(id)];
@@ -2982,7 +3030,7 @@ ipcMain.handle("desktop:set-look", (e, { kind, id } = {}) => {
 // Every page (title bar, web app, pop-ups, connect screen) gets our styles as soon as it's ready.
 app.on("web-contents-created", (_e, contents) => {
   contents.on("dom-ready", () => { applyPageCss(contents, true); applyTextSize(contents); });
-  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents); installMoodFx(contents); tvOnLoad(contents);
+  contents.on("did-finish-load", () => { applyToastSettings(contents); applyWebAppFixes(contents); installScanWatch(contents); installLibraryMemory(contents); installHome(contents); installOfflineButton(contents); installMoodFx(contents); installEscMenu(contents); tvOnLoad(contents);
     if (view && contents === wc()) { sendWindowActive(); sendMoodSound(); if (!isServerUrl(contents.getURL())) offlinePlaying = false; }
     if (view && contents === wc() && isServerUrl(contents.getURL())) { serverReachedOnce = true; setTimeout(() => offline.sync(), 8000); }   // offline listening → server
   });

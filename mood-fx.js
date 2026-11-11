@@ -50,15 +50,16 @@ function pageMain(opts) {
     const crystals = [crystal(0), crystal(1), crystal(2)];
     // depth: 0 far … 1 near
     const flakes = [];
+    // far: small soft dots; middle and near: snowflakes (crystals), all a little see-through
     const add = (z, y) => flakes.push({
       z, x: Math.random() * W, y: y == null ? Math.random() * H : y,
-      size: z < 0.7 ? 2 + z * 7 : 14 + (z - 0.7) * 40,        // pixels
+      size: z < 0.4 ? 2 + z * 6 : 8 + (z - 0.4) * 40,        // pixels
       fall: 18 + z * 70, sway: rand(6, 22) * (0.4 + z), phase: rand(0, TAU), freq: rand(0.4, 1.1),
-      rot: rand(0, TAU), spin: rand(-0.8, 0.8), alpha: 0.35 + z * 0.55, kind: Math.floor(Math.random() * 3),
+      rot: rand(0, TAU), spin: rand(-0.8, 0.8), alpha: z < 0.4 ? 0.25 + z * 0.6 : 0.45 + (z - 0.4) * 0.5, kind: Math.floor(Math.random() * 3),
     });
-    for (let i = 0; i < 90; i++) add(Math.random() * 0.35);           // far
-    for (let i = 0; i < 45; i++) add(0.35 + Math.random() * 0.35);    // middle
-    for (let i = 0; i < 9; i++) add(0.72 + Math.random() * 0.28);     // near
+    for (let i = 0; i < 30; i++) add(Math.random() * 0.4);            // far
+    for (let i = 0; i < 28; i++) add(0.4 + Math.random() * 0.3);      // middle
+    for (let i = 0; i < 14; i++) add(0.7 + Math.random() * 0.3);      // near
     flakes.sort((a, b) => a.z - b.z);
     let wind = 0, windTo = 0, nextGust = 4;
     return function frame(t, dt) {
@@ -73,7 +74,7 @@ function pageMain(opts) {
         if (f.y - f.size > H) { f.y = -f.size; f.x = Math.random() * W; }
         if (f.x < -40) f.x += W + 80; else if (f.x > W + 40) f.x -= W + 80;
         ctx.globalAlpha = f.alpha;
-        if (f.z < 0.7) {
+        if (f.z < 0.4) {
           ctx.drawImage(soft, f.x - f.size, f.y - f.size, f.size * 2, f.size * 2);
         } else {
           ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot);
@@ -471,7 +472,7 @@ function pageMain(opts) {
     /* while the canvas draws a mood, the theme's older CSS light layers step aside */
     html.absda-moodfx-on body:is(:has(#__nuxt), .absda-mood-page)::before, html.absda-moodfx-on body:is(:has(#__nuxt), .absda-mood-page)::after { display: none !important; }`;
   document.head.append(css);
-  let canvas = null, frame = null, timer = 0, last = 0, t0 = performance.now(), current = null;
+  let canvas = null, frame = null, raf = 0, last = 0, lastDraw = 0, t0 = performance.now(), current = null;
   function resize() {
     if (!canvas) return;
     const k = Math.min(1, Math.sqrt(1.2e6 / (window.innerWidth * window.innerHeight)));
@@ -480,10 +481,13 @@ function pageMain(opts) {
     frame = EFFECTS[current](canvas.getContext("2d"), canvas.width, canvas.height);
   }
   const resting = () => document.hidden || document.documentElement.classList.contains("absda-idle") || document.documentElement.hasAttribute("data-absda-tv-saver");
-  function loop() {
-    timer = window.setTimeout(loop, 1000 / 30);
+  // In step with the screen (no judder from a timer drifting against it), at most ~60 a second
+  // (a 120 / 144 Hz screen draws every other refresh).
+  function loop(now) {
+    raf = window.requestAnimationFrame(loop);
     if (resting()) { last = 0; return; }
-    const now = performance.now();
+    if (now - lastDraw < 1000 / 75) return;
+    lastDraw = now;
     const dt = Math.min(0.1, (now - (last || now)) / 1000);
     last = now;
     frame((now - t0) / 1000, dt);
@@ -491,7 +495,7 @@ function pageMain(opts) {
   F.apply = () => {
     const want = F.opts.effect && EFFECTS[F.opts.effect] && F.opts.motion ? F.opts.effect : null;
     if (want === current) return;
-    window.clearTimeout(timer);
+    window.cancelAnimationFrame(raf);
     if (canvas) { canvas.remove(); canvas = null; }
     current = want;
     document.documentElement.classList.toggle("absda-moodfx-on", !!want);
@@ -500,7 +504,7 @@ function pageMain(opts) {
     canvas.id = "absda-mood-fx";
     document.body.append(canvas);
     resize();
-    loop();
+    raf = window.requestAnimationFrame(loop);
   };
   window.addEventListener("resize", resize);
   F.apply();

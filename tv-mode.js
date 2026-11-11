@@ -197,6 +197,9 @@ function pageMain(opts) {
     #absda-tv .tv-set h2:first-child { margin-top: 0; }
     #absda-tv .tv-set h3 { font-size: .95em; font-weight: 600; opacity: .7; margin: .9em 0 .2em 1em; }
     #absda-tv .tv-setsub { margin-left: 1em; }
+    #absda-tv .tv-track2 { position: relative; flex: none; width: 12em; height: .45em; border-radius: .25em; background: rgba(255,255,255,.2); overflow: hidden; cursor: pointer; }
+    #absda-tv .tv-track2 i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--tb-logo, #f0a848); }
+    #absda-tv .tv-slide .val { min-width: 3.2em; text-align: right; font-variant-numeric: tabular-nums; }
     #absda-tv .tv-li .val { opacity: .75; white-space: nowrap; max-width: 45%; overflow: hidden; text-overflow: ellipsis; }
     #absda-tv .tv-li.tv-dis { opacity: .45; }
     #absda-tv .tv-padname { margin: 0 0 1em; display: flex; align-items: center; gap: .5em; }
@@ -532,6 +535,7 @@ function pageMain(opts) {
   function move(dx, dy) {
     const all = focusables();
     if (!focused || !all.includes(focused)) { setFocus(defaultFocus()); return; }
+    if (dx && !dy && focused._adjust && focused._adjust(dx)) return;
     // Its own area first (the page, a part of it like Search's letters or results), the rest
     // only past its edge (rows scrolled out of view sit "behind" the top menu, so plain
     // distance would jump there too early).
@@ -1437,6 +1441,7 @@ function pageMain(opts) {
     const done = new Set();
     for (const it of items) {
       if (it.type === "separator") continue;
+      if (it.slider) { box.append(sliderRow(path, it)); continue; }
       if (it.radio) {
         if (!done.has(it.radio)) { done.add(it.radio); box.append(choiceRow(path, parentLabel, radios[it.radio])); }
         continue;
@@ -1457,6 +1462,31 @@ function pageMain(opts) {
         box.append(r);
       }
     }
+  }
+  // A number to slide (Mood sound volume): Left / Right while it's highlighted, or click the bar.
+  function sliderRow(path, it) {
+    const sl = it.slider;
+    let v = sl.value, timer = 0;
+    const r = focusable("div", "tv-li tv-slide", "set:" + path + ":" + it.label, null);
+    const track = el("span", "tv-track2"), fill = el("i"), val = el("span", "val");
+    track.append(fill);
+    const show = () => { fill.style.width = ((v - sl.min) / (sl.max - sl.min)) * 100 + "%"; val.textContent = v + "%"; };
+    const send = () => { clearTimeout(timer); timer = setTimeout(() => askSettings("set:" + it.id + ":" + v), 300); };
+    r._adjust = (dx) => {
+      const n = Math.max(sl.min, Math.min(sl.max, v + dx * sl.step));
+      if (n === v) return dx > 0;   // (at the bottom, Left moves on)
+      v = n; show(); send();
+      return true;
+    };
+    track.addEventListener("click", (e) => {
+      const b = track.getBoundingClientRect();
+      v = Math.round((sl.min + ((e.clientX - b.left) / b.width) * (sl.max - sl.min)) / sl.step) * sl.step;
+      v = Math.max(sl.min, Math.min(sl.max, v));
+      show(); send();
+    });
+    r.append(el("span", "grow", it.label), track, val);
+    show();
+    return r;
   }
   function choiceRow(path, label, options) {
     const now = options.find((o) => o.checked);

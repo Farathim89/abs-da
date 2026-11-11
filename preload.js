@@ -296,6 +296,8 @@ if (location.protocol !== "file:") {
     #${DS_PAGE} button.ds-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,.2); cursor: pointer;
       background: var(--color-primary, #1f1f1f); color: #f3f4f6; font: inherit; font-size: 14px; }
     #${DS_PAGE} button.ds-btn:hover { border-color: var(--tb-logo, #f0a848); }
+    #${DS_PAGE} .ds-range { width: 180px; accent-color: var(--tb-logo, #f0a848); cursor: pointer; }
+    #${DS_PAGE} .ds-val { min-width: 44px; text-align: right; opacity: .8; font-variant-numeric: tabular-nums; }
     #${DS_PAGE} .ds-switch { position: relative; width: 44px; height: 24px; flex: none; cursor: pointer; }
     #${DS_PAGE} .ds-switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
     #${DS_PAGE} .ds-switch i { position: absolute; inset: 0; border-radius: 12px; background: rgba(255,255,255,.18); transition: background .15s; pointer-events: none; }
@@ -398,6 +400,21 @@ if (location.protocol !== "file:") {
       if (it.type === "separator") { box.append(Object.assign(document.createElement("div"), { className: "ds-gap" })); continue; }
       if (it.radio) {
         if (!done.has(it.radio)) { done.add(it.radio); box.append(dsSelect(parentLabel, radios[it.radio])); }
+        continue;
+      }
+      if (it.slider) {   // a number to slide (Mood sound volume)
+        const row = document.createElement("label");
+        row.className = "ds-row";
+        const val = Object.assign(document.createElement("span"), { className: "ds-val", textContent: it.slider.value + "%" });
+        const range = Object.assign(document.createElement("input"), { type: "range", className: "ds-range",
+          min: it.slider.min, max: it.slider.max, step: it.slider.step, value: it.slider.value });
+        range.addEventListener("input", () => { val.textContent = range.value + "%"; });
+        range.addEventListener("change", async () => {
+          const data = await ipcRenderer.invoke("desktop:settings-set", it.id, Number(range.value)).catch(() => null);
+          if (data && document.getElementById(DS_PAGE)) renderDesktopSettings(data);
+        });
+        row.append(Object.assign(document.createElement("span"), { textContent: it.label }), range, val);
+        box.append(row);
         continue;
       }
       if (it.type === "submenu") {
@@ -831,6 +848,8 @@ if (location.protocol !== "file:") {
   // TV mode (tv-mode.js) asks to be left with a DOM event; main.js then turns it off
   // (window size, menu tick).
   window.addEventListener("absda-tv-exit", () => ipcRenderer.send("desktop:tv-exit"));
+  // The Esc menu (esc-menu.js): a choice (<html data-absda-esc="tv" | "settings" | "offline" | "quit">).
+  window.addEventListener("absda-esc-menu", () => ipcRenderer.send("desktop:esc-menu", document.documentElement.dataset.absdaEsc || ""));
   // TV mode: Close the app (the leave pop-up).
   window.addEventListener("absda-tv-quit", () => ipcRenderer.send("desktop:tv-quit"));
   // TV mode: Install now (an update's side-menu item).

@@ -83,7 +83,9 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   savers, locks for the chapter and jump buttons against stray presses — and every switch and choice of
   the App and View menus. A new version shows there too: a notice at the top and an **⬆ Update** item in
   the side menu (**Install now** with the controller)
-- **Settings → Desktop App**: every ABS-DA option (App and View menus) as switches and lists, at the top
+- **Esc menu**: in the normal window, `Esc` (when it isn't closing something in the web app) opens a small menu:
+  Open TV mode, Settings, Offline library, Close the app
+- **Settings → Desktop App**: every ABS-DA option (App and View menus) as switches, lists and sliders, at the top
   of the web app's Settings
 - **7 colour themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top
