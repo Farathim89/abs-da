@@ -40,6 +40,7 @@
   "tv.hl.outline": "外框（像 Plex）",
   "tv.hl.white": "白色",
   "tv.hl.theme": "主題顏色",
+  "tv.bar": "底部播放列",
   "tv.seconds": "{n} 秒",
   "tv.exit": "退出電視模式",
   "tv.exitAsk": "要退出電視模式嗎？",

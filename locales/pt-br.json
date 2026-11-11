@@ -40,6 +40,7 @@
   "tv.hl.outline": "Contorno (como no Plex)",
   "tv.hl.white": "Branco",
   "tv.hl.theme": "Cor do tema",
+  "tv.bar": "Barra do player embaixo",
   "tv.seconds": "{n} s",
   "tv.exit": "Sair do modo TV",
   "tv.exitAsk": "Sair do modo TV?",

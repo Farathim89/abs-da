@@ -40,6 +40,7 @@
   "tv.hl.outline": "Ääriviiva (kuten Plex)",
   "tv.hl.white": "Valkoinen",
   "tv.hl.theme": "Teeman väri",
+  "tv.bar": "Soitinpalkki alareunassa",
   "tv.seconds": "{n} s",
   "tv.exit": "Poistu TV-tilasta",
   "tv.exitAsk": "Poistutaanko TV-tilasta?",

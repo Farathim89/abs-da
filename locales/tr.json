@@ -40,6 +40,7 @@
   "tv.hl.outline": "Çerçeve (Plex gibi)",
   "tv.hl.white": "Beyaz",
   "tv.hl.theme": "Tema rengi",
+  "tv.bar": "Altta oynatıcı çubuğu",
   "tv.seconds": "{n} sn",
   "tv.exit": "TV modundan çık",
   "tv.exitAsk": "TV modundan çıkılsın mı?",

@@ -40,6 +40,7 @@
   "tv.hl.outline": "Контур (как в Plex)",
   "tv.hl.white": "Белая",
   "tv.hl.theme": "Цвет темы",
+  "tv.bar": "Панель плеера внизу",
   "tv.seconds": "{n} с",
   "tv.exit": "Выйти из режима ТВ",
   "tv.exitAsk": "Выйти из режима ТВ?",

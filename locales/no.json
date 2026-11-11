@@ -40,6 +40,7 @@
   "tv.hl.outline": "Omriss (som Plex)",
   "tv.hl.white": "Hvit",
   "tv.hl.theme": "Temaets farge",
+  "tv.bar": "Spillerlinje nederst",
   "tv.seconds": "{n} s",
   "tv.exit": "Avslutt TV-modus",
   "tv.exitAsk": "Forlate TV-modus?",

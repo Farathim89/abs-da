@@ -40,6 +40,7 @@
   "tv.hl.outline": "Contorn (com Plex)",
   "tv.hl.white": "Blanc",
   "tv.hl.theme": "Color del tema",
+  "tv.bar": "Barra del reproductor a baix",
   "tv.seconds": "{n} s",
   "tv.exit": "Surt del mode TV",
   "tv.exitAsk": "Vols sortir del mode TV?",

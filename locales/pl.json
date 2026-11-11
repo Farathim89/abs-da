@@ -40,6 +40,7 @@
   "tv.hl.outline": "Obrys (jak w Plex)",
   "tv.hl.white": "Białe",
   "tv.hl.theme": "Kolor motywu",
+  "tv.bar": "Pasek odtwarzacza na dole",
   "tv.seconds": "{n} s",
   "tv.exit": "Wyjdź z trybu TV",
   "tv.exitAsk": "Opuścić tryb TV?",

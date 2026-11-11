@@ -40,6 +40,7 @@
   "tv.hl.outline": "枠線（Plex 風）",
   "tv.hl.white": "白",
   "tv.hl.theme": "テーマの色",
+  "tv.bar": "下部のプレーヤーバー",
   "tv.seconds": "{n}秒",
   "tv.exit": "テレビモードを終了",
   "tv.exitAsk": "テレビモードを終了しますか？",

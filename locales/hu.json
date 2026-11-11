@@ -40,6 +40,7 @@
   "tv.hl.outline": "Körvonal (mint a Plex)",
   "tv.hl.white": "Fehér",
   "tv.hl.theme": "A téma színe",
+  "tv.bar": "Lejátszósáv alul",
   "tv.seconds": "{n} mp",
   "tv.exit": "Kilépés a TV módból",
   "tv.exitAsk": "Kilépsz a TV módból?",

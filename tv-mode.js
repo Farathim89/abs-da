@@ -73,6 +73,10 @@ function pageMain(opts) {
     #absda-tv.tv-hl-theme { --tv-hl: var(--tb-logo, #f0a848); --tv-hl-bg: var(--tb-logo, #f0a848); --tv-hl-fg: #141414; --tv-hl-ring: 0px; }
     #absda-tv.tv-hl-outline .tv-ni { border-radius: 999px; }
     #absda-tv.tv-away { display: none; }
+    /* the player bar switched off: no bar, the screens and the side menu use the full height */
+    #absda-tv.tv-nobar .tv-foot { display: none; }
+    #absda-tv.tv-nobar .tv-main { margin-bottom: 0; padding-bottom: 2.4em; }
+    #absda-tv.tv-nobar .tv-nav { bottom: 0; }
     /* a mood theme's effects (snow, embers…) show over TV mode too, but never over the screen saver */
     html[data-absda-tv-saver] #absda-mood-fx { display: none !important; }
     html[data-absda-tv-saver] body:is(:has(#__nuxt))::before, html[data-absda-tv-saver] body:is(:has(#__nuxt))::after { display: none !important; }
@@ -1886,6 +1890,7 @@ function pageMain(opts) {
     if (!root) return;
     const h = HIGHLIGHTS.includes(TV.opts.highlight) ? TV.opts.highlight : "outline";
     for (const x of HIGHLIGHTS) root.classList.toggle("tv-hl-" + x, x === h);
+    root.classList.toggle("tv-nobar", TV.opts.bar === false);
   }
   // New options from the app (a lock or the highlight changed in the menu): hints and the look follow.
   TV.refresh = () => { applyHighlight(); drawHints(); drawUpdate(); };

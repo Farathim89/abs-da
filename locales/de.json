@@ -40,6 +40,7 @@
   "tv.hl.outline": "Umriss (wie Plex)",
   "tv.hl.white": "Weiß",
   "tv.hl.theme": "Farbe des Designs",
+  "tv.bar": "Player-Leiste unten",
   "tv.seconds": "{n} s",
   "tv.exit": "TV-Modus beenden",
   "tv.exitAsk": "TV-Modus verlassen?",

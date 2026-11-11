@@ -40,6 +40,7 @@
   "tv.hl.outline": "테두리 (Plex처럼)",
   "tv.hl.white": "흰색",
   "tv.hl.theme": "테마 색상",
+  "tv.bar": "하단 플레이어 막대",
   "tv.seconds": "{n}초",
   "tv.exit": "TV 모드 종료",
   "tv.exitAsk": "TV 모드를 종료할까요?",
