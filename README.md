@@ -81,8 +81,8 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   **View → TV mode → Start in TV mode** opens it every time the app starts. **⚙ Settings** inside TV
   mode (also the **Start / Options** button) has TV mode's own settings — Start in TV mode, both screen
   savers, locks for the chapter and jump buttons against stray presses — and every switch and choice of
-  the App and View menus. A new version shows there too: a notice at the top and an **⬆ Update** item in
-  the side menu (**Install now** with the controller)
+  the App and View menus. A new version pops up by itself (**Install now** / **Later** with the controller,
+  once per start) and stays in the side menu as an **⬆ Update** item
 - **Esc menu**: in the normal window, `Esc` (when it isn't closing something in the web app) opens a small menu:
   Open TV mode, Settings, Offline library, Close the app
 - **Settings → Desktop App**: every ABS-DA option (App and View menus) as switches, lists and sliders, at the top

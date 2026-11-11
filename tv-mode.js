@@ -1979,11 +1979,14 @@ function pageMain(opts) {
       TV.navBottom.prepend(it);
     }
     it.lastChild.textContent = u.label;
-    // The notice at the top: once per version when it's found, and while it downloads / installs.
+    // A new version: the Install now / Later pop-up (popUpdate). The notice at the top: while it
+    // downloads / installs, and after that stopped (e.g. it failed).
     const wasBusy = updWasBusy;
     updWasBusy = !!u.busy;
     if (u.busy || wasBusy || updShown !== u.version) {
+      const isNew = updShown !== u.version && !u.busy && !wasBusy;
       updShown = u.version;
+      if (isNew) { clearTimeout(updPopTimer); updPopTimer = setTimeout(popUpdate, 1500); return; }   // (after the screen is drawn: drawing closes pop-ups)
       if (!updToast || !root.contains(updToast)) { updToast = el("div", "tv-toast"); root.append(updToast); }
       updToast.innerHTML = ICON.upd;
       updToast.append(el("span", null, u.busy ? u.label : u.title + "  ·  " + u.version));
@@ -1991,6 +1994,17 @@ function pageMain(opts) {
       clearTimeout(updToastTimer);
       if (!u.busy) updToastTimer = setTimeout(() => { if (updToast) updToast.hidden = true; }, 8000);
     }
+  }
+  // Comes up by itself once per version (each start); waits while something else is open —
+  // another pop-up, the screen saver, the e-book reader — and tries again a moment later.
+  let updPopTimer = 0;
+  function popUpdate() {
+    clearTimeout(updPopTimer);
+    const u = TV.opts.update;
+    if (!u || u.busy || !TV.visible || TV.updPopped === u.version) return;
+    if (modal || saver || TV.reading || !root) { updPopTimer = setTimeout(popUpdate, 3000); return; }
+    TV.updPopped = u.version;
+    askUpdate();
   }
   function askUpdate() {
     const u = TV.opts.update;
