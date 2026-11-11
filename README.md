@@ -71,14 +71,13 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   speed, sleep timer — and sends your listening back when the server is reachable again. Download queue
   with cancel, optional removal of finished books' offline copies, and the offline library opens by
   itself when the server can't be reached
-- **TV mode** (**View → TV mode** or `F10`): a full-screen layout for the couch with a Plex-style side menu, used with an **Xbox or
+- **TV mode** (**View → TV mode** or `F10`): a full-screen layout for the couch with a side menu down the left, used with an **Xbox or
   PlayStation controller**, a TV remote's arrow keys or the keyboard. Home rows, every library (books,
   series, collections, authors), book pages, search with an on-screen keyboard, and a big **Now
   Playing** screen (chapter and book progress, chapters, ±jump, speed, sleep timer). While a book plays, a dim, moving **screen saver** comes on after 30 s without a press, and after 5 min when nothing plays (both adjustable). It plays through the web app's own player,
   so progress syncs as usual. Podcasts show their episodes; the right stick changes the volume. **Playlists** (side menu) play all
   or from any line; **Bookmarks** (Now Playing, the book page) play from a bookmark, add one where you are, or remove one.
-  It follows your theme (a mood theme brings its scenery, font and effects); the highlight is a white outline like
-  Plex (or filled white / the theme colour: **View → TV mode → Highlight**), and **Text size** makes its text bigger, not its covers.
+  It follows your theme (a mood theme brings its scenery, font and effects); the highlight is a white outline (or filled white / the theme colour: **View → TV mode → Highlight**), and **Text size** makes its text bigger, not its covers.
   **View → TV mode → Start in TV mode** opens it every time the app starts. **⚙ Settings** inside TV
   mode (also the **Start / Options** button) has TV mode's own settings — Start in TV mode, both screen
   savers, locks for the chapter and jump buttons against stray presses — and every switch and choice of

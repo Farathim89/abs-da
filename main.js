@@ -342,7 +342,7 @@ const tvSaver = () => (TV_SAVERS.includes(config.tvSaver) ? config.tvSaver : 30)
 // …and while nothing plays (paused, or nothing loaded): config.tvIdleSaver, default 5 min.
 const TV_IDLE_SAVERS = [0, 120, 300, 600, 1800];
 const tvIdleSaver = () => (TV_IDLE_SAVERS.includes(config.tvIdleSaver) ? config.tvIdleSaver : 300);
-// How the highlight looks: a white outline (like Plex, default), filled white, or filled in the theme's colour.
+// How the highlight looks: a white outline (default), filled white, or filled in the theme's colour.
 const TV_HIGHLIGHTS = ["outline", "white", "theme"];
 const tvHighlight = () => (TV_HIGHLIGHTS.includes(config.tvHighlight) ? config.tvHighlight : "outline");
 function setTvHighlight(h) {
