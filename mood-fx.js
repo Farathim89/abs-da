@@ -14,10 +14,15 @@ function pageMain(opts) {
   F.installed = true;
   const TAU = Math.PI * 2;
   const rand = (a, b) => a + Math.random() * (b - a);
-  const sprite = (size, draw) => {
+  // A small picture drawn once and stamped many times. Drawn SQ times finer on a sharp
+  // (high-resolution) canvas, so flakes and sparks stay crisp; q = 1 for soft ones (the vignette).
+  let SQ = 1;
+  const sprite = (size, draw, q = SQ) => {
     const c = document.createElement("canvas");
-    c.width = c.height = size;
-    draw(c.getContext("2d"), size);
+    c.width = c.height = Math.round(size * q);
+    const g = c.getContext("2d");
+    g.scale(q, q);
+    draw(g, size);
     return c;
   };
 
@@ -99,11 +104,11 @@ function pageMain(opts) {
     ctx.drawImage(img, x - rw, y - rh, rw * 2, rh * 2);
   };
   // Darker corners (drawn once).
-  const vignette = (W, H, a) => sprite(Math.max(W, H), (g, s) => {
+  const vignette = (W, H, a) => sprite(Math.max(W, H), (g, s) => {   // (q 1: drawn at its own size)
     const gr = g.createRadialGradient(s / 2, s / 2, s * 0.32, s / 2, s / 2, s * 0.72);
     gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(1, `rgba(0,0,0,${a})`);
     g.fillStyle = gr; g.fillRect(0, 0, s, s);
-  });
+  }, 1);
   // A value that wanders smoothly (flames, flicker).
   const flicker = (lo, hi, speed) => { let v = (lo + hi) / 2; return () => (v += (rand(lo, hi) - v) * speed); };
   // Light shafts falling from the top, swaying (deep sea, summer).
@@ -475,10 +480,18 @@ function pageMain(opts) {
   let canvas = null, frame = null, raf = 0, last = 0, lastDraw = 0, t0 = performance.now(), current = null;
   function resize() {
     if (!canvas) return;
+    // The effects lay out on a ~1.2-megapixel area (their sizes and speeds are made for it)…
     const k = Math.min(1, Math.sqrt(1.2e6 / (window.innerWidth * window.innerHeight)));
-    canvas.width = Math.round(window.innerWidth * k);
-    canvas.height = Math.round(window.innerHeight * k);
-    frame = EFFECTS[current](canvas.getContext("2d"), canvas.width, canvas.height);
+    const W = Math.round(window.innerWidth * k), H = Math.round(window.innerHeight * k);
+    // …and are drawn at the screen's real resolution (big / 4K screens: sharp, not stretched),
+    // at most 4K's worth of pixels.
+    const s = Math.max(1, Math.min((window.devicePixelRatio || 1) / k, Math.sqrt(8.3e6 / (W * H))));
+    canvas.width = Math.round(W * s);
+    canvas.height = Math.round(H * s);
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(s, 0, 0, s, 0, 0);
+    SQ = Math.min(3, Math.ceil(s * 10) / 10);
+    frame = EFFECTS[current](ctx, W, H);
   }
   const resting = () => document.hidden || document.documentElement.classList.contains("absda-idle") || document.documentElement.hasAttribute("data-absda-tv-saver");
   // In step with the screen (no judder from a timer drifting against it), at most ~60 a second
