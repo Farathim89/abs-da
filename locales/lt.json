@@ -306,6 +306,7 @@
   "mood.whilePlaying": "Kai groja knyga",
   "mood.whileLibrary": "Kai groja knyga ir bibliotekoje",
   "settings.desktop": "Darbalaukio programa",
+  "settings.mood": "Nuotaikos temos",
   "settings.desktopNote": "ABS Desktop App nustatymai šiame kompiuteryje. Tos pačios parinktys yra ir pavadinimo juostos meniu (Programa ir Rodinys).",
   "mood.libraryOnly": "Tik bibliotekoje (tylu, kai groja knyga)",
   "theme.summer": "Vasaros miškas",

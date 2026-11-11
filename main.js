@@ -1543,6 +1543,7 @@ function createWindow() {
   for (const ev of ["focus", "blur", "minimize", "restore", "show", "hide"]) win.on(ev, sendWindowActive);
   // TV mode switched on while the window was hidden (started with Windows): full screen when it shows.
   win.on("show", () => { if (tvActive && tvMadeFullScreen && !win.isFullScreen() && !process.env.ABSDA_TEST_OFFSCREEN) win.setFullScreen(true); });
+  for (const ev of ["show", "restore", "focus"]) win.on(ev, () => setTimeout(popUpdate, 1500));   // (a new version found while you weren't in the app)
   win.webContents.on("did-finish-load", sendMoodSound);   // ambience.js lives in the title bar page
   win.webContents.on("will-navigate", (e) => e.preventDefault());   // the title bar never navigates
   win.webContents.on("before-input-event", onShortcut);
@@ -2035,6 +2036,16 @@ function openUpdatePage() {
 }
 
 // "Update available" — with Install now when this copy can update itself.
+// A new version found by the automatic check: the Update dialog comes up by itself, once per
+// start — while you're using the app (its window on screen and in front; else the next time it
+// is, so it never jumps in front of a game or another program) and not in TV mode (TV mode has its own pop-up).
+let updatePopped = null;
+function popUpdate() {
+  if (!latestRelease || updateBusy || tvActive || updatePopped === latestRelease.version) return;
+  if (!win || win.isDestroyed() || !win.isVisible() || win.isMinimized() || !win.isFocused() || process.env.ABSDA_TEST_OFFSCREEN) return;
+  updatePopped = latestRelease.version;
+  showUpdateDialog();
+}
 async function showUpdateDialog() {
   if (!latestRelease || updateBusy) return;
   showWindow();
@@ -2282,17 +2293,21 @@ async function checkForUpdates(manual) {
       sendUpdateToTitleBar();
       if (manual) {
         showUpdateDialog();
-      } else if (config.updateNotified !== version && Notification.isSupported()) {
-        // Tell once per new version.
-        config = { ...config, updateNotified: version };
-        writeJson(dataFile("config.json"), config);
-        const n = (updateToast = new Notification({
-          title: tr("update.newTitle"),
-          body: tr("update.newMsg", { version, current: app.getVersion() }),
-          icon: ICON,
-        }));
-        n.on("click", showUpdateDialog);
-        n.show();
+      } else {
+        popUpdate();
+        // You're not in the app (tray, minimised, another program in front) or in TV mode: a Windows
+        // notification, once per new version (the pop-up comes when you're back in the app).
+        if (updatePopped !== version && config.updateNotified !== version && Notification.isSupported()) {
+          config = { ...config, updateNotified: version };
+          writeJson(dataFile("config.json"), config);
+          const n = (updateToast = new Notification({
+            title: tr("update.newTitle"),
+            body: tr("update.newMsg", { version, current: app.getVersion() }),
+            icon: ICON,
+          }));
+          n.on("click", showUpdateDialog);
+          n.show();
+        }
       }
     } else {
       latestRelease = null;
@@ -2355,7 +2370,7 @@ const shortcut = (accelerator) => ({ accelerator, registerAccelerator: false });
 // group and would tick the first item of every group.)
 function themeMenuItems() {
   const items = [
-    { label: tr("theme.moodThemes"), type: "checkbox", checked: moodsOn(), click: (item) => setMoodThemes(item.checked) },
+    { label: tr("theme.moodThemes"), type: "checkbox", mood: true, checked: moodsOn(), click: (item) => setMoodThemes(item.checked) },
     { type: "separator" },
   ];
   let group, listed = false;
@@ -2363,17 +2378,17 @@ function themeMenuItems() {
     if (!themeAllowed(id)) continue;
     if (listed && t.group !== group) {
       if (group === "mood") {
-        items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
+        items.push({ label: tr("theme.motion"), type: "checkbox", mood: true, checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
         if (themeId() === "snow") {
-          items.push({ label: tr("theme.snowFlakes"), type: "checkbox", checked: config.snowFlakes !== false, click: (item) => setSnowFlakes(item.checked) });
-          items.push({ label: tr("theme.snowAmount"), submenu: Object.keys(SNOW_AMOUNTS).map((k) => ({
+          items.push({ label: tr("theme.snowFlakes"), type: "checkbox", mood: true, checked: config.snowFlakes !== false, click: (item) => setSnowFlakes(item.checked) });
+          items.push({ label: tr("theme.snowAmount"), mood: true, submenu: Object.keys(SNOW_AMOUNTS).map((k) => ({
             label: tr("theme.snow." + k), type: "checkbox", checked: snowAmount() === k, click: () => setSnowAmount(k) })) });
         }
-        items.push({ label: tr("mood.sounds"), type: "checkbox", checked: !!config.moodSound, click: (item) => setMoodSound({ on: item.checked }) });
-        items.push({ label: tr("mood.volumeMenu"), slider: { min: 0, max: 100, step: 5, value: moodSoundVolume() },
+        items.push({ label: tr("mood.sounds"), type: "checkbox", mood: true, checked: !!config.moodSound, click: (item) => setMoodSound({ on: item.checked }) });
+        items.push({ label: tr("mood.volumeMenu"), mood: true, slider: { min: 0, max: 100, step: 5, value: moodSoundVolume() },
           setValue: (v) => setMoodSound({ volume: v }), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
           label: v + "%", type: "checkbox", checked: moodSoundVolume() === v, click: () => setMoodSound({ volume: v }) })) });
-        items.push({ label: tr("mood.when"), submenu: [
+        items.push({ label: tr("mood.when"), mood: true, submenu: [
           { label: tr("mood.whilePlaying"), type: "checkbox", checked: moodWhen() === "book", click: () => setMoodSound({ when: "book" }) },
           { label: tr("mood.whileLibrary"), type: "checkbox", checked: moodWhen() === "both", click: () => setMoodSound({ when: "both" }) },
           { label: tr("mood.libraryOnly"), type: "checkbox", checked: moodWhen() === "library", click: () => setMoodSound({ when: "library" }) },
@@ -2689,7 +2704,7 @@ function menuData(template, handlers) {
     const id = handlers.push(it) - 1;
     return {
       id, label: String(it.label || ""), enabled: it.enabled !== false, checked: !!it.checked, accel: accel(it.accelerator),
-      multi: it.multi || undefined, noTv: it.tv === false || undefined, slider: it.slider || undefined,
+      multi: it.multi || undefined, noTv: it.tv === false || undefined, slider: it.slider || undefined, mood: it.mood || undefined,
       type: it.submenu ? "submenu" : it.type === "checkbox" ? "checkbox" : "normal", radio: it.radio || undefined,
       submenu: it.submenu ? walk(it.submenu) : undefined,
     };
@@ -2733,9 +2748,22 @@ function settingsMenus(handlers) {
   const tops = [t[0], t[2]].filter(Boolean).map((top) => ({ ...top, submenu: keep(top.submenu || []) }));   // App, View
   return menuData(tops, handlers);
 }
+// The mood themes' own settings (show / animate them, snow, sounds — tagged mood: true in View →
+// Theme) get a group of their own on the settings pages: a tab in TV mode, a column on Desktop App.
+function withMoodGroup(menus) {
+  const found = [];
+  const pull = (items) => items.filter((it) => {
+    if (it.mood) { found.push(it); return false; }
+    if (it.submenu) it.submenu = pull(it.submenu);
+    return true;
+  });
+  for (const m of menus) m.items = pull(m.items);
+  if (found.length) menus.push({ label: tr("settings.mood"), items: found });
+  return menus;
+}
 function desktopSettingsData() {
   settingsHandlers = [];
-  return { title: tr("settings.desktop"), note: tr("settings.desktopNote"), menus: settingsMenus(settingsHandlers) };
+  return { title: tr("settings.desktop"), note: tr("settings.desktopNote"), menus: withMoodGroup(settingsMenus(settingsHandlers)) };
 }
 // TV mode's Settings screen (tv-mode.js): the same settings, but only switches and choices
 // (buttons open windows and dialogs that need a mouse), with the TV mode section first.
@@ -2746,7 +2774,7 @@ function tvSettingsData() {
     .filter((it) => !it.noTv && (it.type === "checkbox" || it.type === "submenu" || it.type === "separator"))
     .map((it) => (it.type === "submenu" ? { ...it, submenu: tvOnly(it.submenu) } : it))
     .filter((it) => it.type !== "submenu" || it.submenu.some((k) => k.type !== "separator"));
-  const sections = settingsMenus(tvSettingsHandlers).map((m) => ({ label: m.label, items: tvOnly(m.items) }));
+  const sections = withMoodGroup(settingsMenus(tvSettingsHandlers)).map((m) => ({ label: m.label, items: tvOnly(m.items) }));
   for (const sec of sections) {
     const i = sec.items.findIndex((it) => it.type === "submenu" && it.label === tr("tv.mode"));
     if (i >= 0) { const [tvSec] = sec.items.splice(i, 1); sections.unshift({ label: tvSec.label, items: tvSec.submenu, tv: true }); break; }

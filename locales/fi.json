@@ -306,6 +306,7 @@
   "mood.whilePlaying": "Kun kirja soi",
   "mood.whileLibrary": "Kun kirja soi ja kirjastossa",
   "settings.desktop": "Työpöytäsovellus",
+  "settings.mood": "Tunnelmateemat",
   "settings.desktopNote": "ABS Desktop Appin asetukset tällä tietokoneella. Samat valinnat löytyvät myös otsikkopalkin valikoista (Sovellus ja Näytä).",
   "mood.libraryOnly": "Vain kirjastossa (hiljaa, kun kirja soi)",
   "theme.summer": "Kesämetsä",

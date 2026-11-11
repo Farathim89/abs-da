@@ -85,7 +85,7 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   once per start) and stays in the side menu as an **⬆ Update** item
 - **Esc menu**: in the normal window, `Esc` (when it isn't closing something in the web app) opens a small menu:
   Open TV mode, Settings, Offline library, Close the app
-- **Settings → Desktop App**: every ABS-DA option (App and View menus) as switches, lists and sliders, at the top
+- **Settings → Desktop App**: every ABS-DA option (App and View menus) as switches, lists and sliders (the mood themes' settings in a group of their own), at the top
   of the web app's Settings
 - **7 colour themes** (Audiobookshelf, Midnight, OLED Black, Forest, Mocha, Amethyst, **High contrast**) plus *Windows contrast
   colours* — they recolour the whole app, live. Pick them from the **paintbrush** button in the top

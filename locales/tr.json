@@ -306,6 +306,7 @@
   "mood.whilePlaying": "Bir kitap çalarken",
   "mood.whileLibrary": "Bir kitap çalarken ve kitaplıkta",
   "settings.desktop": "Masaüstü Uygulaması",
+  "settings.mood": "Ruh hâli temaları",
   "settings.desktopNote": "Bu bilgisayardaki ABS Desktop App ayarları. Aynı seçenekler başlık çubuğu menülerinde de var (Uygulama ve Görünüm).",
   "mood.libraryOnly": "Yalnızca kitaplıkta (kitap çalarken sessiz)",
   "theme.summer": "Yaz Ormanı",

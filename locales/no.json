@@ -306,6 +306,7 @@
   "mood.whilePlaying": "Mens en bok spilles",
   "mood.whileLibrary": "Mens en bok spilles og i biblioteket",
   "settings.desktop": "Skrivebordsapp",
+  "settings.mood": "Stemningstemaer",
   "settings.desktopNote": "Innstillinger for ABS Desktop App på denne PC-en. De samme valgene finnes i tittellinjens menyer (App og Vis).",
   "mood.libraryOnly": "Bare i biblioteket (stille mens en bok spilles)",
   "theme.summer": "Sommerskog",
