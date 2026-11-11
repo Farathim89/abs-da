@@ -96,9 +96,10 @@ function pageMain(opts) {
       fall: 18 + z * 70, sway: rand(6, 22) * (0.4 + z), phase: rand(0, TAU), freq: rand(0.4, 1.1),
       rot: rand(0, TAU), spin: rand(-0.8, 0.8), alpha: 0.3 + z * 0.45, kind: Math.floor(Math.random() * crystals.length),
     });
-    for (let i = 0; i < 30; i++) add(Math.random() * 0.4);            // far
-    for (let i = 0; i < 28; i++) add(0.4 + Math.random() * 0.3);      // middle
-    for (let i = 0; i < 14; i++) add(0.7 + Math.random() * 0.3);      // near
+    // (not too dense: about 40 flakes on the screen)
+    for (let i = 0; i < 17; i++) add(Math.random() * 0.4);            // far
+    for (let i = 0; i < 15; i++) add(0.4 + Math.random() * 0.3);      // middle
+    for (let i = 0; i < 8; i++) add(0.7 + Math.random() * 0.3);       // near
     flakes.sort((a, b) => a.z - b.z);
     let wind = 0, windTo = 0, nextGust = 4;
     return function frame(t, dt) {
