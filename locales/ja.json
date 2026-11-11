@@ -36,6 +36,7 @@
   "tv.start": "テレビモードで起動",
   "tv.saver": "再生中のスクリーンセーバー",
   "tv.idleSaver": "再生していないときのスクリーンセーバー",
+  "tv.saverFx": "スクリーンセーバーでもムード効果",
   "tv.highlight": "ハイライト",
   "tv.hl.outline": "枠線",
   "tv.hl.white": "白",

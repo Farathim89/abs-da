@@ -357,7 +357,7 @@ function setTvSaver(secs, idle) {
   writeJson(dataFile("config.json"), config);
   if (view && isServerUrl(wc().getURL())) installTv(wc());
 }
-const tvJs = () => tvModeJs({ open: tvActive, textSize: textSize(), highlight: tvHighlight(), bar: config.tvBar !== false, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), update: tvUpdateData(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}", time: "{time}" })])) });
+const tvJs = () => tvModeJs({ open: tvActive, textSize: textSize(), highlight: tvHighlight(), bar: config.tvBar !== false, saverFx: !!config.tvSaverFx, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), update: tvUpdateData(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}", time: "{time}" })])) });
 function setTvLock(kind, on) {
   if (!TV_LOCKS.includes(kind)) return;
   config = { ...config, tvLock: { ...tvLocks(), [kind]: !!on } };
@@ -2537,6 +2537,11 @@ function menuTemplate() {
             label: saverLabel(sec), type: "checkbox", checked: tvSaver() === sec, click: () => setTvSaver(sec) })) },
           { label: tr("tv.idleSaver"), submenu: TV_IDLE_SAVERS.map((sec) => ({
             label: saverLabel(sec), type: "checkbox", checked: tvIdleSaver() === sec, click: () => setTvSaver(sec, true) })) },
+          { label: tr("tv.saverFx"), type: "checkbox", checked: !!config.tvSaverFx, click: (item) => {
+            config = { ...config, tvSaverFx: item.checked };
+            writeJson(dataFile("config.json"), config);
+            if (view && isServerUrl(wc().getURL())) installTv(wc());
+          } },
           { label: tr("tv.highlight"), submenu: TV_HIGHLIGHTS.map((h) => ({
             label: tr("tv.hl." + h), type: "checkbox", checked: tvHighlight() === h, click: () => setTvHighlight(h) })) },
           { label: tr("tv.bar"), type: "checkbox", checked: config.tvBar !== false, click: (item) => {

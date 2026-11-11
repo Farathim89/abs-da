@@ -36,6 +36,7 @@
   "tv.start": "Start in TV mode",
   "tv.saver": "Screen saver while listening",
   "tv.idleSaver": "Screen saver when nothing plays",
+  "tv.saverFx": "Mood effects in the screen saver",
   "tv.highlight": "Highlight",
   "tv.hl.outline": "Outline",
   "tv.hl.white": "White",

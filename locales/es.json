@@ -36,6 +36,7 @@
   "tv.start": "Iniciar en modo TV",
   "tv.saver": "Salvapantallas mientras escuchas",
   "tv.idleSaver": "Salvapantallas cuando no se reproduce nada",
+  "tv.saverFx": "Efectos del tema de ambiente en el salvapantallas",
   "tv.highlight": "Resaltado",
   "tv.hl.outline": "Contorno",
   "tv.hl.white": "Blanco",

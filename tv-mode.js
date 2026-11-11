@@ -1823,7 +1823,7 @@ function pageMain(opts) {
     if (Date.now() - lastInput >= secs * 1000) showSaver();
   }
   function showSaver() {
-    html.setAttribute("data-absda-tv-saver", "");
+    if (!TV.opts.saverFx) html.setAttribute("data-absda-tv-saver", "");   // (mood effects stay on only if chosen)
     saver = el("div", "tv-saver");
     const card = el("div", "tv-scard");
     saver._card = card;

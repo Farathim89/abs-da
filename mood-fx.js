@@ -29,38 +29,72 @@ function pageMain(opts) {
   // (Every mood theme has one; see main.js moodFxOpts.)
   // ---- Snow: tumbling crystal flakes with depth -------------------------------------
   function snow(ctx, W, H) {
-    // a soft round flake (far and middle) and a few crystal shapes (near)
-    const soft = sprite(32, (g, s) => {
-      const gr = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
-      gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(0.45, "rgba(240,248,255,.55)"); gr.addColorStop(1, "rgba(240,248,255,0)");
-      g.fillStyle = gr; g.fillRect(0, 0, s, s);
-    });
-    const crystal = (seed) => sprite(64, (g, s) => {
-      const r = s * 0.34, c = s / 2;
+    // Snowflakes only, in many shapes: six arms built from a few parts — side branches (one to
+    // three pairs, short or long, steep or wide), little twigs on them, tips (a fork, a dot, a
+    // small plate), and a middle (a dot, a ring or a hexagon plate).
+    const crystal = (shape) => sprite(64, (g, s) => {
+      const r = s * 0.36, c = s / 2;
       g.translate(c, c);
-      g.strokeStyle = "rgba(255,255,255,.95)"; g.lineCap = "round";
-      g.shadowColor = "rgba(190,225,255,.9)"; g.shadowBlur = 6;
-      const br = [0.35 + (seed % 3) * 0.1, 0.62 + (seed % 2) * 0.08];
+      g.strokeStyle = "rgba(255,255,255,.95)"; g.fillStyle = "rgba(255,255,255,.95)"; g.lineCap = "round"; g.lineJoin = "round";
+      g.shadowColor = "rgba(190,225,255,.9)"; g.shadowBlur = 5;
+      const hex = (rad, fill) => {
+        g.beginPath();
+        for (let k = 0; k < 6; k++) { const a = (k * TAU) / 6 + TAU / 12; g.lineTo(Math.cos(a) * rad, Math.sin(a) * rad); }
+        g.closePath(); if (fill) g.fill(); else g.stroke();
+      };
+      const arm = shape.arm * r;
       for (let k = 0; k < 6; k++) {
         g.save(); g.rotate((k * TAU) / 6);
-        g.lineWidth = 2.2; g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -r); g.stroke();
-        g.lineWidth = 1.6;
-        for (const b of br) {
-          g.beginPath(); g.moveTo(0, -r * b); g.lineTo(r * 0.24, -r * (b + 0.17)); g.moveTo(0, -r * b); g.lineTo(-r * 0.24, -r * (b + 0.17)); g.stroke();
+        g.lineWidth = shape.thick; g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -arm); g.stroke();
+        g.lineWidth = shape.thick * 0.72;
+        for (const [at, len] of shape.branches) {
+          const y = -arm * at, l = arm * len, a = shape.angle;
+          for (const side of [1, -1]) {
+            const ex = Math.sin(a) * l * side, ey = y - Math.cos(a) * l;
+            g.beginPath(); g.moveTo(0, y); g.lineTo(ex, ey); g.stroke();
+            if (shape.twigs) {   // small twigs on the branch
+              const mx = ex * 0.55, my = y + (ey - y) * 0.55;
+              g.beginPath(); g.moveTo(mx, my); g.lineTo(mx + side * l * 0.18, my - l * 0.28); g.stroke();
+            }
+          }
+        }
+        if (shape.tip === "fork") {
+          g.beginPath(); g.moveTo(0, -arm); g.lineTo(arm * 0.12, -arm * 1.13); g.moveTo(0, -arm); g.lineTo(-arm * 0.12, -arm * 1.13); g.stroke();
+        } else if (shape.tip === "dot") {
+          g.beginPath(); g.arc(0, -arm, shape.thick * 1.3, 0, TAU); g.fill();
+        } else if (shape.tip === "plate") {
+          g.save(); g.translate(0, -arm); g.lineWidth = shape.thick * 0.6; hex(arm * 0.12, false); g.restore();
         }
         g.restore();
       }
-      g.fillStyle = "#fff"; g.beginPath(); g.arc(0, 0, r * 0.12, 0, TAU); g.fill();
+      g.lineWidth = shape.thick * 0.7;
+      if (shape.middle === "plate") { hex(r * 0.2, false); hex(r * 0.09, true); }
+      else if (shape.middle === "ring") { g.beginPath(); g.arc(0, 0, r * 0.14, 0, TAU); g.stroke(); }
+      else { g.beginPath(); g.arc(0, 0, r * 0.1, 0, TAU); g.fill(); }
     });
-    const crystals = [crystal(0), crystal(1), crystal(2)];
+    const D = Math.PI / 180;
+    const crystals = [
+      { arm: 1, thick: 2.2, angle: 45 * D, branches: [[0.4, 0.3], [0.68, 0.24]], tip: "", middle: "dot" },
+      { arm: 1, thick: 2.0, angle: 38 * D, branches: [[0.35, 0.22], [0.55, 0.3], [0.78, 0.18]], tip: "fork", middle: "dot" },
+      { arm: 0.95, thick: 2.4, angle: 60 * D, branches: [[0.55, 0.32]], tip: "plate", middle: "plate" },
+      { arm: 1, thick: 1.8, angle: 50 * D, branches: [[0.3, 0.42], [0.6, 0.3]], tip: "", middle: "ring", twigs: true },
+      { arm: 0.9, thick: 2.6, angle: 0, branches: [], tip: "plate", middle: "plate" },
+      { arm: 1, thick: 2.0, angle: 30 * D, branches: [[0.45, 0.35], [0.75, 0.2]], tip: "dot", middle: "dot" },
+      { arm: 1, thick: 1.6, angle: 42 * D, branches: [[0.25, 0.2], [0.45, 0.28], [0.65, 0.24], [0.82, 0.14]], tip: "", middle: "dot" },
+      { arm: 0.85, thick: 2.6, angle: 55 * D, branches: [[0.5, 0.45]], tip: "dot", middle: "ring" },
+      { arm: 1, thick: 2.0, angle: 48 * D, branches: [[0.62, 0.4]], tip: "fork", middle: "plate", twigs: true },
+      { arm: 1, thick: 2.2, angle: 35 * D, branches: [[0.5, 0.18]], tip: "", middle: "plate" },
+      { arm: 1, thick: 1.8, angle: 60 * D, branches: [[0.35, 0.28], [0.7, 0.28]], tip: "plate", middle: "dot" },
+      { arm: 0.95, thick: 2.0, angle: 40 * D, branches: [[0.4, 0.36]], tip: "fork", middle: "ring", twigs: true },
+    ].map(crystal);
     // depth: 0 far … 1 near
     const flakes = [];
-    // far: small soft dots; middle and near: snowflakes (crystals), all a little see-through
+    // all snowflakes, far ones small and faint, near ones big; all a little see-through
     const add = (z, y) => flakes.push({
       z, x: Math.random() * W, y: y == null ? Math.random() * H : y,
-      size: z < 0.4 ? 2 + z * 6 : 8 + (z - 0.4) * 40,        // pixels
+      size: 6 + z * 26,        // pixels
       fall: 18 + z * 70, sway: rand(6, 22) * (0.4 + z), phase: rand(0, TAU), freq: rand(0.4, 1.1),
-      rot: rand(0, TAU), spin: rand(-0.8, 0.8), alpha: z < 0.4 ? 0.25 + z * 0.6 : 0.45 + (z - 0.4) * 0.5, kind: Math.floor(Math.random() * 3),
+      rot: rand(0, TAU), spin: rand(-0.8, 0.8), alpha: 0.3 + z * 0.45, kind: Math.floor(Math.random() * crystals.length),
     });
     for (let i = 0; i < 30; i++) add(Math.random() * 0.4);            // far
     for (let i = 0; i < 28; i++) add(0.4 + Math.random() * 0.3);      // middle
@@ -79,13 +113,9 @@ function pageMain(opts) {
         if (f.y - f.size > H) { f.y = -f.size; f.x = Math.random() * W; }
         if (f.x < -40) f.x += W + 80; else if (f.x > W + 40) f.x -= W + 80;
         ctx.globalAlpha = f.alpha;
-        if (f.z < 0.4) {
-          ctx.drawImage(soft, f.x - f.size, f.y - f.size, f.size * 2, f.size * 2);
-        } else {
-          ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot);
-          ctx.drawImage(crystals[f.kind], -f.size, -f.size, f.size * 2, f.size * 2);
-          ctx.restore();
-        }
+        ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.rot);
+        ctx.drawImage(crystals[f.kind], -f.size, -f.size, f.size * 2, f.size * 2);
+        ctx.restore();
       }
       ctx.globalAlpha = 1;
     };
