@@ -578,6 +578,9 @@ function pageMain(opts) {
     if (!next) { list = page; next = pick(true); }
     if (!next && dx && root.classList.contains("tv-free")) { list = page; next = pick(false); }
     if (!next && dx < 0 && !modal) { focusNav(); return; }
+    // Up / down into a row of tabs (Settings, a library) from outside it: onto the tab you're in.
+    const tabs = dy && next && next.closest(".tv-tabs");
+    if (tabs && !tabs.contains(focused)) next = tabs.querySelector(".tv-f.tv-cur") || next;
     if (next) setFocus(next);
   }
   // Where the highlight goes back to on the page (from the menu).
