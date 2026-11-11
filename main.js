@@ -334,7 +334,7 @@ function installHome(contents, attempt = 0) {
 let tvActive = false, tvMadeFullScreen = false, tvStarted = false;
 const TV_TEXTS = ["exit", "exitAsk", "stay", "nowPlaying", "nothing", "resume", "startOver", "speed", "off", "sort",
   "select", "playPause", "chapter", "jump", "minutes", "space", "clear", "searchHint", "empty",
-  "controller", "lockChapter", "lockJump", "lockNote", "noPad", "book", "quit", "bookmarks", "addBookmark", "playFrom", "items"];
+  "controller", "lockChapter", "lockJump", "lockNote", "noPad", "book", "quit", "newPlaylist", "bookmarks", "addBookmark", "playFrom", "items"];
 const TV_LOCKS = ["chapter", "jump"];   // controller buttons you can lock: LB/RB (chapter), LT/RT (jump)
 const tvLocks = () => Object.fromEntries(TV_LOCKS.map((k) => [k, !!(config.tvLock && config.tvLock[k])]));
 // Screen saver while listening in TV mode: seconds after the last press (0 = off), config.tvSaver.
@@ -468,9 +468,13 @@ function installOfflineButton(contents, attempt = 0) {
     .catch(() => {});
 }
 // ---- mood effects drawn on a canvas over the library (mood-fx.js; every mood theme) ----
+// Snowy Night's snowfall: Light / Normal / Heavy (config.snowAmount).
+const SNOW_AMOUNTS = { light: 0.6, normal: 1, heavy: 1.75 };
+const snowAmount = () => (SNOW_AMOUNTS[config.snowAmount] ? config.snowAmount : "normal");
 const moodFxOpts = () => ({
   effect: !isMood() ? null : themeId() === "snow" && config.snowFlakes === false ? null : themeId(),   // (Snowy Night without snowflakes: none)
   motion: config.moodMotion !== false,
+  amount: SNOW_AMOUNTS[snowAmount()],
 });
 function installMoodFx(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;
@@ -2360,7 +2364,11 @@ function themeMenuItems() {
     if (listed && t.group !== group) {
       if (group === "mood") {
         items.push({ label: tr("theme.motion"), type: "checkbox", checked: config.moodMotion !== false, click: (item) => setMoodMotion(item.checked) });
-        if (themeId() === "snow") items.push({ label: tr("theme.snowFlakes"), type: "checkbox", checked: config.snowFlakes !== false, click: (item) => setSnowFlakes(item.checked) });
+        if (themeId() === "snow") {
+          items.push({ label: tr("theme.snowFlakes"), type: "checkbox", checked: config.snowFlakes !== false, click: (item) => setSnowFlakes(item.checked) });
+          items.push({ label: tr("theme.snowAmount"), submenu: Object.keys(SNOW_AMOUNTS).map((k) => ({
+            label: tr("theme.snow." + k), type: "checkbox", checked: snowAmount() === k, click: () => setSnowAmount(k) })) });
+        }
         items.push({ label: tr("mood.sounds"), type: "checkbox", checked: !!config.moodSound, click: (item) => setMoodSound({ on: item.checked }) });
         items.push({ label: tr("mood.volumeMenu"), slider: { min: 0, max: 100, step: 5, value: moodSoundVolume() },
           setValue: (v) => setMoodSound({ volume: v }), submenu: [10, 20, 35, 50, 70, 100].map((v) => ({
@@ -2389,6 +2397,11 @@ function setSnowFlakes(on) {
   config = { ...config, snowFlakes: !!on };
   writeJson(dataFile("config.json"), config);
   reapplyTheme();
+  if (view && isServerUrl(wc().getURL())) installMoodFx(wc());
+}
+function setSnowAmount(k) {
+  config = { ...config, snowAmount: k };
+  writeJson(dataFile("config.json"), config);
   if (view && isServerUrl(wc().getURL())) installMoodFx(wc());
 }
 // Mood themes' torches, embers, bubbles… moving or standing still (remembered).

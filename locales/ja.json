@@ -46,6 +46,7 @@
   "tv.exit": "テレビモードを終了",
   "tv.exitAsk": "テレビモードを終了しますか？",
   "tv.quit": "アプリを閉じる",
+  "tv.newPlaylist": "新しいプレイリスト「{name}」",
   "tv.stay": "とどまる",
   "tv.nowPlaying": "再生中",
   "tv.nothing": "再生中のものはありません",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "このPCのABS Desktop Appの設定です。同じ項目はタイトルバーのメニュー（アプリと表示）にもあります。",
   "mood.libraryOnly": "ライブラリのみ（本の再生中は鳴らさない）",
   "theme.summer": "夏の森",
-  "theme.snowFlakes": "雪の結晶を表示"
+  "theme.snowFlakes": "雪の結晶を表示",
+  "theme.snowAmount": "雪の量",
+  "theme.snow.light": "少なめ",
+  "theme.snow.normal": "ふつう",
+  "theme.snow.heavy": "多め"
 }

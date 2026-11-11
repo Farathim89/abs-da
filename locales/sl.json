@@ -46,6 +46,7 @@
   "tv.exit": "Zapri način TV",
   "tv.exitAsk": "Zapustim način TV?",
   "tv.quit": "Zapri aplikacijo",
+  "tv.newPlaylist": "Nov seznam »{name}«",
   "tv.stay": "Ostani",
   "tv.nowPlaying": "Zdaj se predvaja",
   "tv.nothing": "Nič se ne predvaja",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Nastavitve ABS Desktop App v tem računalniku. Iste možnosti so tudi v menijih naslovne vrstice (Aplikacija in Pogled).",
   "mood.libraryOnly": "Samo v knjižnici (tiho med predvajanjem knjige)",
   "theme.summer": "Poletni gozd",
-  "theme.snowFlakes": "Prikaži snežinke"
+  "theme.snowFlakes": "Prikaži snežinke",
+  "theme.snowAmount": "Sneženje",
+  "theme.snow.light": "Rahlo",
+  "theme.snow.normal": "Običajno",
+  "theme.snow.heavy": "Močno"
 }

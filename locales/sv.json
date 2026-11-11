@@ -46,6 +46,7 @@
   "tv.exit": "Avsluta TV-läge",
   "tv.exitAsk": "Lämna TV-läget?",
   "tv.quit": "Stäng appen",
+  "tv.newPlaylist": "Ny spellista ”{name}”",
   "tv.stay": "Stanna",
   "tv.nowPlaying": "Spelas nu",
   "tv.nothing": "Inget spelas",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Inställningar för ABS Desktop App på den här datorn. Samma val finns i namnlistens menyer (App och Visa).",
   "mood.libraryOnly": "Bara i biblioteket (tyst medan en bok spelas)",
   "theme.summer": "Sommarskog",
-  "theme.snowFlakes": "Visa snöflingor"
+  "theme.snowFlakes": "Visa snöflingor",
+  "theme.snowAmount": "Snöfall",
+  "theme.snow.light": "Lätt",
+  "theme.snow.normal": "Normalt",
+  "theme.snow.heavy": "Kraftigt"
 }

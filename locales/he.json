@@ -46,6 +46,7 @@
   "tv.exit": "יציאה ממצב טלוויזיה",
   "tv.exitAsk": "לצאת ממצב טלוויזיה?",
   "tv.quit": "סגור את האפליקציה",
+  "tv.newPlaylist": "רשימת השמעה חדשה „{name}“",
   "tv.stay": "הישארות",
   "tv.nowPlaying": "מתנגן עכשיו",
   "tv.nothing": "שום דבר לא מתנגן",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "הגדרות ABS Desktop App במחשב הזה. אותן אפשרויות נמצאות גם בתפריטי שורת הכותרת (אפליקציה ותצוגה).",
   "mood.libraryOnly": "רק בספרייה (שקט כשספר מתנגן)",
   "theme.summer": "יער קיצי",
-  "theme.snowFlakes": "הצגת פתיתי שלג"
+  "theme.snowFlakes": "הצגת פתיתי שלג",
+  "theme.snowAmount": "שלג",
+  "theme.snow.light": "קל",
+  "theme.snow.normal": "רגיל",
+  "theme.snow.heavy": "כבד"
 }

@@ -46,6 +46,7 @@
   "tv.exit": "Выйти из режима ТВ",
   "tv.exitAsk": "Выйти из режима ТВ?",
   "tv.quit": "Закрыть приложение",
+  "tv.newPlaylist": "Новый плейлист «{name}»",
   "tv.stay": "Остаться",
   "tv.nowPlaying": "Сейчас играет",
   "tv.nothing": "Ничего не играет",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Настройки ABS Desktop App на этом ПК. Те же параметры есть в меню заголовка (Приложение и Вид).",
   "mood.libraryOnly": "Только в библиотеке (тихо, пока играет книга)",
   "theme.summer": "Летний лес",
-  "theme.snowFlakes": "Показывать снежинки"
+  "theme.snowFlakes": "Показывать снежинки",
+  "theme.snowAmount": "Снегопад",
+  "theme.snow.light": "Лёгкий",
+  "theme.snow.normal": "Обычный",
+  "theme.snow.heavy": "Сильный"
 }

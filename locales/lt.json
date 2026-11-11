@@ -46,6 +46,7 @@
   "tv.exit": "Išeiti iš TV režimo",
   "tv.exitAsk": "Išeiti iš TV režimo?",
   "tv.quit": "Uždaryti programą",
+  "tv.newPlaylist": "Naujas grojaraštis „{name}“",
   "tv.stay": "Likti",
   "tv.nowPlaying": "Dabar groja",
   "tv.nothing": "Niekas negroja",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "ABS Desktop App nustatymai šiame kompiuteryje. Tos pačios parinktys yra ir pavadinimo juostos meniu (Programa ir Rodinys).",
   "mood.libraryOnly": "Tik bibliotekoje (tylu, kai groja knyga)",
   "theme.summer": "Vasaros miškas",
-  "theme.snowFlakes": "Rodyti snaiges"
+  "theme.snowFlakes": "Rodyti snaiges",
+  "theme.snowAmount": "Snygis",
+  "theme.snow.light": "Silpnas",
+  "theme.snow.normal": "Įprastas",
+  "theme.snow.heavy": "Stiprus"
 }

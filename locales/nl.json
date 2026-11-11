@@ -46,6 +46,7 @@
   "tv.exit": "Tv-modus verlaten",
   "tv.exitAsk": "Tv-modus verlaten?",
   "tv.quit": "App sluiten",
+  "tv.newPlaylist": "Nieuwe afspeellijst ‘{name}’",
   "tv.stay": "Blijven",
   "tv.nowPlaying": "Nu aan het spelen",
   "tv.nothing": "Er speelt niets",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Instellingen voor ABS Desktop App op deze pc. Dezelfde opties staan in de menu's van de titelbalk (App en Beeld).",
   "mood.libraryOnly": "Alleen in de bibliotheek (stil terwijl een boek speelt)",
   "theme.summer": "Zomerbos",
-  "theme.snowFlakes": "Sneeuwvlokken tonen"
+  "theme.snowFlakes": "Sneeuwvlokken tonen",
+  "theme.snowAmount": "Sneeuwval",
+  "theme.snow.light": "Licht",
+  "theme.snow.normal": "Normaal",
+  "theme.snow.heavy": "Zwaar"
 }

@@ -46,6 +46,7 @@
   "tv.exit": "Exit TV mode",
   "tv.exitAsk": "Leave TV mode?",
   "tv.quit": "Close the app",
+  "tv.newPlaylist": "New playlist “{name}”",
   "tv.stay": "Stay",
   "tv.nowPlaying": "Now playing",
   "tv.nothing": "Nothing is playing",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Settings for ABS Desktop App on this PC. The same options are in the title bar menus (App and View).",
   "mood.libraryOnly": "Only in the library (quiet while a book plays)",
   "theme.summer": "Summer Woods",
-  "theme.snowFlakes": "Show snowflakes"
+  "theme.snowFlakes": "Show snowflakes",
+  "theme.snowAmount": "Snowfall",
+  "theme.snow.light": "Light",
+  "theme.snow.normal": "Normal",
+  "theme.snow.heavy": "Heavy"
 }

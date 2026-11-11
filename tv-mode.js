@@ -1018,6 +1018,7 @@ function pageMain(opts) {
       if ((media.chapters || []).length > 1) btns.append(button(L("LabelChapters", "Chapters"), ICON.list, "chapters", () => push({ type: "chapters", itemId: it.id, item: it })));
       const nb = bookmarksOf(it.id).length;
       if (nb) btns.append(button(`${T("bookmarks")} (${nb})`, ICON.bookmark, "bm", () => push({ type: "bookmarks", itemId: it.id, name: m.title })));
+      btns.append(button(L("LabelAddToPlaylist", "Add to Playlist"), ICON.playlist, "addpl", () => pickPlaylist(it)));
     }
     if (isEbook(it)) { const r = button(L("ButtonRead", "Read"), ICON.read, "read", () => read(it)); if (!btns.children.length) r.classList.add("tv-default"); btns.append(r); }
     if (!podcast) {
@@ -1229,6 +1230,40 @@ function pageMain(opts) {
       s.list = s.list.filter((x) => x.time !== b.time);
     } catch (e) { if ($n.$toast) $n.$toast.error(L("ToastRemoveFailed", "Remove failed")); }
     if (TV.visible && cur() === s) redraw();   // (the highlight goes to the first line)
+  }
+
+  // Add to Playlist (a book's page): your playlists in its library, ticked where the book is
+  // already in; picking one adds it (or takes it out). The last line makes a new playlist named
+  // after the book (no keyboard on a TV — it can be renamed in the web app).
+  async function pickPlaylist(it) {
+    let lists = [];
+    try { lists = ((await ax.$get(`/api/libraries/${it.libraryId}/playlists`)) || {}).results || []; } catch (e) {}
+    const entry = [{ libraryItemId: it.id, episodeId: null }];
+    const has = (pl) => (pl.items || []).some((x) => x.libraryItemId === it.id && !x.episodeId);
+    const opts = lists.map((pl) => ({ label: pl.name, icon: ICON.playlist, on: has(pl), act: async () => {
+      try {
+        await ax.$post(`/api/playlists/${pl.id}/batch/${has(pl) ? "remove" : "add"}`, { items: entry });
+        flash(L("ToastPlaylistUpdateSuccess", "Playlist updated") + "  ·  " + pl.name);
+      } catch (e) { flash(L("ToastFailedToUpdate", "Failed to update")); }
+    } }));
+    const name = md(it).title || "?";
+    opts.push({ label: T("newPlaylist").replace("{name}", name), icon: ICON.add, def: !lists.length, act: async () => {
+      try {
+        await ax.$post("/api/playlists", { libraryId: it.libraryId, name, items: entry });
+        flash(L("ToastPlaylistCreateSuccess", "Playlist created") + "  ·  " + name);
+      } catch (e) { flash(L("ToastPlaylistCreateFailed", "Failed to create playlist")); }
+    } });
+    openPicker(L("LabelAddToPlaylist", "Add to Playlist"), opts, lists.length ? null : L("MessageNoUserPlaylistsHelp", ""));
+  }
+  let flashEl = null, flashTimer = 0;
+  function flash(text) {
+    if (!root) return;
+    if (!flashEl || !root.contains(flashEl)) { flashEl = el("div", "tv-toast"); root.append(flashEl); }
+    flashEl.innerHTML = ICON.check;
+    flashEl.append(el("span", null, text));
+    flashEl.hidden = false;
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => { if (flashEl) flashEl.hidden = true; }, 2600);
   }
 
   // Your playlists (every library's), and one playlist: Play All, or any line to start there —

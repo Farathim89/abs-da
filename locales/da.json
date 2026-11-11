@@ -46,6 +46,7 @@
   "tv.exit": "Afslut TV-tilstand",
   "tv.exitAsk": "Forlad TV-tilstand?",
   "tv.quit": "Luk appen",
+  "tv.newPlaylist": "Ny playliste “{name}”",
   "tv.stay": "Bliv",
   "tv.nowPlaying": "Afspilles nu",
   "tv.nothing": "Intet afspilles",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Indstillinger for ABS Desktop App på denne pc. De samme valg findes i titellinjens menuer (App og Vis).",
   "mood.libraryOnly": "Kun i biblioteket (stille mens en bog afspilles)",
   "theme.summer": "Sommerskov",
-  "theme.snowFlakes": "Vis snefnug"
+  "theme.snowFlakes": "Vis snefnug",
+  "theme.snowAmount": "Snefald",
+  "theme.snow.light": "Let",
+  "theme.snow.normal": "Normal",
+  "theme.snow.heavy": "Kraftig"
 }

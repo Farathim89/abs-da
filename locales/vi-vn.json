@@ -46,6 +46,7 @@
   "tv.exit": "Thoát chế độ TV",
   "tv.exitAsk": "Rời chế độ TV?",
   "tv.quit": "Đóng ứng dụng",
+  "tv.newPlaylist": "Danh sách phát mới “{name}”",
   "tv.stay": "Ở lại",
   "tv.nowPlaying": "Đang phát",
   "tv.nothing": "Không có gì đang phát",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Cài đặt ABS Desktop App trên PC này. Các tùy chọn giống vậy cũng có trong menu thanh tiêu đề (Ứng dụng và Xem).",
   "mood.libraryOnly": "Chỉ trong thư viện (im lặng khi đang phát sách)",
   "theme.summer": "Rừng mùa hè",
-  "theme.snowFlakes": "Hiện bông tuyết"
+  "theme.snowFlakes": "Hiện bông tuyết",
+  "theme.snowAmount": "Tuyết rơi",
+  "theme.snow.light": "Nhẹ",
+  "theme.snow.normal": "Bình thường",
+  "theme.snow.heavy": "Dày"
 }

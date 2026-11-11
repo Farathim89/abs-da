@@ -46,6 +46,7 @@
   "tv.exit": "TV modundan çık",
   "tv.exitAsk": "TV modundan çıkılsın mı?",
   "tv.quit": "Uygulamayı kapat",
+  "tv.newPlaylist": "Yeni çalma listesi “{name}”",
   "tv.stay": "Kal",
   "tv.nowPlaying": "Şimdi çalıyor",
   "tv.nothing": "Hiçbir şey çalmıyor",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Bu bilgisayardaki ABS Desktop App ayarları. Aynı seçenekler başlık çubuğu menülerinde de var (Uygulama ve Görünüm).",
   "mood.libraryOnly": "Yalnızca kitaplıkta (kitap çalarken sessiz)",
   "theme.summer": "Yaz Ormanı",
-  "theme.snowFlakes": "Kar tanelerini göster"
+  "theme.snowFlakes": "Kar tanelerini göster",
+  "theme.snowAmount": "Kar yağışı",
+  "theme.snow.light": "Hafif",
+  "theme.snow.normal": "Normal",
+  "theme.snow.heavy": "Yoğun"
 }

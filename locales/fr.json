@@ -46,6 +46,7 @@
   "tv.exit": "Quitter le mode TV",
   "tv.exitAsk": "Quitter le mode TV ?",
   "tv.quit": "Fermer l’application",
+  "tv.newPlaylist": "Nouvelle playlist « {name} »",
   "tv.stay": "Rester",
   "tv.nowPlaying": "En cours de lecture",
   "tv.nothing": "Aucune lecture en cours",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Réglages d'ABS Desktop App sur ce PC. Les mêmes options sont dans les menus de la barre de titre (Application et Affichage).",
   "mood.libraryOnly": "Seulement dans la bibliothèque (silence pendant la lecture d'un livre)",
   "theme.summer": "Forêt d'été",
-  "theme.snowFlakes": "Afficher les flocons de neige"
+  "theme.snowFlakes": "Afficher les flocons de neige",
+  "theme.snowAmount": "Chute de neige",
+  "theme.snow.light": "Légère",
+  "theme.snow.normal": "Normale",
+  "theme.snow.heavy": "Forte"
 }

@@ -3,7 +3,7 @@
 // themes' light layers): particles with depth — small, soft and slow far away, big,
 // detailed and faster up close — drifting on a wind that gusts now and then.
 // pageMain runs inside the Audiobookshelf page (main.js injects it); the canvas never takes
-// clicks, runs ~30 frames a second only while the app is the window you're using
+// clicks, runs up to 60 frames a second only while the app is the window you're using
 // (html.absda-idle = rest) and while no scene view covers it.
 
 /* global window, document, performance */
@@ -96,10 +96,11 @@ function pageMain(opts) {
       fall: 18 + z * 70, sway: rand(6, 22) * (0.4 + z), phase: rand(0, TAU), freq: rand(0.4, 1.1),
       rot: rand(0, TAU), spin: rand(-0.8, 0.8), alpha: 0.3 + z * 0.45, kind: Math.floor(Math.random() * crystals.length),
     });
-    // (not too dense: about 40 flakes on the screen)
-    for (let i = 0; i < 17; i++) add(Math.random() * 0.4);            // far
-    for (let i = 0; i < 15; i++) add(0.4 + Math.random() * 0.3);      // middle
-    for (let i = 0; i < 8; i++) add(0.7 + Math.random() * 0.3);       // near
+    // about 40 flakes on the screen (Normal); Light about 24, Heavy about 70 (F.opts.amount)
+    const n = (count) => Math.max(1, Math.round(count * (Number(F.opts.amount) || 1)));
+    for (let i = 0; i < n(17); i++) add(Math.random() * 0.4);            // far
+    for (let i = 0; i < n(15); i++) add(0.4 + Math.random() * 0.3);      // middle
+    for (let i = 0; i < n(8); i++) add(0.7 + Math.random() * 0.3);       // near
     flakes.sort((a, b) => a.z - b.z);
     let wind = 0, windTo = 0, nextGust = 4;
     return function frame(t, dt) {
@@ -508,7 +509,7 @@ function pageMain(opts) {
     /* while the canvas draws a mood, the theme's older CSS light layers step aside */
     html.absda-moodfx-on body:is(:has(#__nuxt), .absda-mood-page)::before, html.absda-moodfx-on body:is(:has(#__nuxt), .absda-mood-page)::after { display: none !important; }`;
   document.head.append(css);
-  let canvas = null, frame = null, raf = 0, last = 0, lastDraw = 0, t0 = performance.now(), current = null;
+  let canvas = null, frame = null, raf = 0, last = 0, lastDraw = 0, t0 = performance.now(), current = null, currentKey = "";
   function resize() {
     if (!canvas) return;
     // The effects lay out on a ~1.2-megapixel area (their sizes and speeds are made for it)…
@@ -538,7 +539,9 @@ function pageMain(opts) {
   }
   F.apply = () => {
     const want = F.opts.effect && EFFECTS[F.opts.effect] && F.opts.motion ? F.opts.effect : null;
-    if (want === current) return;
+    const key = want ? want + ":" + (F.opts.amount || 1) : "";   // (a new snowfall amount starts it again)
+    if (key === currentKey) return;
+    currentKey = key;
     window.cancelAnimationFrame(raf);
     if (canvas) { canvas.remove(); canvas = null; }
     current = want;

@@ -46,6 +46,7 @@
   "tv.exit": "الخروج من وضع التلفاز",
   "tv.exitAsk": "الخروج من وضع التلفاز؟",
   "tv.quit": "إغلاق التطبيق",
+  "tv.newPlaylist": "قائمة تشغيل جديدة «{name}»",
   "tv.stay": "البقاء",
   "tv.nowPlaying": "قيد التشغيل الآن",
   "tv.nothing": "لا شيء قيد التشغيل",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "إعدادات ABS Desktop App على هذا الحاسوب. الخيارات نفسها في قوائم شريط العنوان (التطبيق والعرض).",
   "mood.libraryOnly": "في المكتبة فقط (صامتة أثناء تشغيل كتاب)",
   "theme.summer": "غابة الصيف",
-  "theme.snowFlakes": "إظهار رقاقات الثلج"
+  "theme.snowFlakes": "إظهار رقاقات الثلج",
+  "theme.snowAmount": "كثافة الثلج",
+  "theme.snow.light": "خفيف",
+  "theme.snow.normal": "عادي",
+  "theme.snow.heavy": "كثيف"
 }

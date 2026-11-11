@@ -46,6 +46,7 @@
   "tv.exit": "Salir del modo TV",
   "tv.exitAsk": "¿Salir del modo TV?",
   "tv.quit": "Cerrar la aplicación",
+  "tv.newPlaylist": "Nueva lista «{name}»",
   "tv.stay": "Quedarse",
   "tv.nowPlaying": "Reproduciendo",
   "tv.nothing": "No se está reproduciendo nada",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Ajustes de ABS Desktop App en este PC. Las mismas opciones están en los menús de la barra de título (Aplicación y Ver).",
   "mood.libraryOnly": "Solo en la biblioteca (en silencio mientras suena un libro)",
   "theme.summer": "Bosque de verano",
-  "theme.snowFlakes": "Mostrar copos de nieve"
+  "theme.snowFlakes": "Mostrar copos de nieve",
+  "theme.snowAmount": "Nevada",
+  "theme.snow.light": "Ligera",
+  "theme.snow.normal": "Normal",
+  "theme.snow.heavy": "Intensa"
 }

@@ -46,6 +46,7 @@
   "tv.exit": "退出电视模式",
   "tv.exitAsk": "退出电视模式？",
   "tv.quit": "关闭应用",
+  "tv.newPlaylist": "新播放列表“{name}”",
   "tv.stay": "留下",
   "tv.nowPlaying": "正在播放",
   "tv.nothing": "没有正在播放的内容",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "此电脑上 ABS Desktop App 的设置。同样的选项也在标题栏菜单（应用和视图）中。",
   "mood.libraryOnly": "仅在书库中（播放书籍时静音）",
   "theme.summer": "夏日森林",
-  "theme.snowFlakes": "显示雪花"
+  "theme.snowFlakes": "显示雪花",
+  "theme.snowAmount": "降雪量",
+  "theme.snow.light": "少",
+  "theme.snow.normal": "正常",
+  "theme.snow.heavy": "多"
 }

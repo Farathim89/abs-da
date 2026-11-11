@@ -46,6 +46,7 @@
   "tv.exit": "Välju teleri režiimist",
   "tv.exitAsk": "Väljuda teleri režiimist?",
   "tv.quit": "Sulge rakendus",
+  "tv.newPlaylist": "Uus esitusloend „{name}“",
   "tv.stay": "Jää",
   "tv.nowPlaying": "Praegu mängib",
   "tv.nothing": "Midagi ei mängi",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "ABS Desktop Appi seaded selles arvutis. Samad valikud on ka tiitliriba menüüdes (Rakendus ja Vaade).",
   "mood.libraryOnly": "Ainult raamatukogus (vaikne, kui raamat mängib)",
   "theme.summer": "Suvemets",
-  "theme.snowFlakes": "Näita lumehelbeid"
+  "theme.snowFlakes": "Näita lumehelbeid",
+  "theme.snowAmount": "Lumesadu",
+  "theme.snow.light": "Kerge",
+  "theme.snow.normal": "Tavaline",
+  "theme.snow.heavy": "Tihe"
 }

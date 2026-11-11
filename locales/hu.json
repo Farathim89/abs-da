@@ -46,6 +46,7 @@
   "tv.exit": "Kilépés a TV módból",
   "tv.exitAsk": "Kilépsz a TV módból?",
   "tv.quit": "Alkalmazás bezárása",
+  "tv.newPlaylist": "Új lejátszási lista: „{name}”",
   "tv.stay": "Maradok",
   "tv.nowPlaying": "Most szól",
   "tv.nothing": "Semmi sem szól",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Az ABS Desktop App beállításai ezen a gépen. Ugyanezek az opciók a címsor menüiben is megvannak (Alkalmazás és Nézet).",
   "mood.libraryOnly": "Csak a könyvtárban (csendes, amíg könyv szól)",
   "theme.summer": "Nyári erdő",
-  "theme.snowFlakes": "Hópelyhek megjelenítése"
+  "theme.snowFlakes": "Hópelyhek megjelenítése",
+  "theme.snowAmount": "Havazás",
+  "theme.snow.light": "Gyenge",
+  "theme.snow.normal": "Normál",
+  "theme.snow.heavy": "Erős"
 }

@@ -46,6 +46,7 @@
   "tv.exit": "Wyjdź z trybu TV",
   "tv.exitAsk": "Opuścić tryb TV?",
   "tv.quit": "Zamknij aplikację",
+  "tv.newPlaylist": "Nowa playlista „{name}”",
   "tv.stay": "Zostań",
   "tv.nowPlaying": "Teraz odtwarzane",
   "tv.nothing": "Nic nie jest odtwarzane",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Ustawienia ABS Desktop App na tym komputerze. Te same opcje są w menu paska tytułu (Aplikacja i Widok).",
   "mood.libraryOnly": "Tylko w bibliotece (cisza, gdy gra książka)",
   "theme.summer": "Letni las",
-  "theme.snowFlakes": "Pokaż płatki śniegu"
+  "theme.snowFlakes": "Pokaż płatki śniegu",
+  "theme.snowAmount": "Opady śniegu",
+  "theme.snow.light": "Lekkie",
+  "theme.snow.normal": "Normalne",
+  "theme.snow.heavy": "Intensywne"
 }

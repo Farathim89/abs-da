@@ -46,6 +46,7 @@
   "tv.exit": "Poistu TV-tilasta",
   "tv.exitAsk": "Poistutaanko TV-tilasta?",
   "tv.quit": "Sulje sovellus",
+  "tv.newPlaylist": "Uusi soittolista ”{name}”",
   "tv.stay": "Pysy",
   "tv.nowPlaying": "Nyt toistetaan",
   "tv.nothing": "Mitään ei toisteta",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "ABS Desktop Appin asetukset tällä tietokoneella. Samat valinnat löytyvät myös otsikkopalkin valikoista (Sovellus ja Näytä).",
   "mood.libraryOnly": "Vain kirjastossa (hiljaa, kun kirja soi)",
   "theme.summer": "Kesämetsä",
-  "theme.snowFlakes": "Näytä lumihiutaleet"
+  "theme.snowFlakes": "Näytä lumihiutaleet",
+  "theme.snowAmount": "Lumisade",
+  "theme.snow.light": "Kevyt",
+  "theme.snow.normal": "Normaali",
+  "theme.snow.heavy": "Runsas"
 }

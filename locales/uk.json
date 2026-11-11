@@ -46,6 +46,7 @@
   "tv.exit": "Вийти з режиму ТБ",
   "tv.exitAsk": "Вийти з режиму ТБ?",
   "tv.quit": "Закрити застосунок",
+  "tv.newPlaylist": "Новий плейлист «{name}»",
   "tv.stay": "Залишитися",
   "tv.nowPlaying": "Зараз грає",
   "tv.nothing": "Нічого не грає",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Налаштування ABS Desktop App на цьому ПК. Ті самі параметри є в меню заголовка (Застосунок і Вигляд).",
   "mood.libraryOnly": "Лише в бібліотеці (тихо, коли грає книга)",
   "theme.summer": "Літній ліс",
-  "theme.snowFlakes": "Показувати сніжинки"
+  "theme.snowFlakes": "Показувати сніжинки",
+  "theme.snowAmount": "Снігопад",
+  "theme.snow.light": "Легкий",
+  "theme.snow.normal": "Звичайний",
+  "theme.snow.heavy": "Сильний"
 }

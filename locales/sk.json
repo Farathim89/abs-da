@@ -46,6 +46,7 @@
   "tv.exit": "Ukončiť režim TV",
   "tv.exitAsk": "Opustiť režim TV?",
   "tv.quit": "Zavrieť aplikáciu",
+  "tv.newPlaylist": "Nový playlist „{name}“",
   "tv.stay": "Zostať",
   "tv.nowPlaying": "Práve hrá",
   "tv.nothing": "Nič nehrá",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Nastavenia ABS Desktop App v tomto PC. Rovnaké voľby sú aj v ponukách záhlavia (Aplikácia a Zobraziť).",
   "mood.libraryOnly": "Len v knižnici (ticho, keď hrá kniha)",
   "theme.summer": "Letný les",
-  "theme.snowFlakes": "Zobraziť snehové vločky"
+  "theme.snowFlakes": "Zobraziť snehové vločky",
+  "theme.snowAmount": "Sneženie",
+  "theme.snow.light": "Slabé",
+  "theme.snow.normal": "Normálne",
+  "theme.snow.heavy": "Husté"
 }

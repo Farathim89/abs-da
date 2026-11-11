@@ -46,6 +46,7 @@
   "tv.exit": "টিভি মোড থেকে বেরোন",
   "tv.exitAsk": "টিভি মোড ছাড়বেন?",
   "tv.quit": "অ্যাপ বন্ধ করুন",
+  "tv.newPlaylist": "নতুন প্লেলিস্ট “{name}”",
   "tv.stay": "থাকুন",
   "tv.nowPlaying": "এখন চলছে",
   "tv.nothing": "কিছুই চলছে না",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "এই পিসিতে ABS Desktop App-এর সেটিংস। একই বিকল্প টাইটেল বারের মেনুতেও আছে (অ্যাপ ও ভিউ)।",
   "mood.libraryOnly": "শুধু লাইব্রেরিতে (বই চলার সময় চুপ)",
   "theme.summer": "গ্রীষ্মের বন",
-  "theme.snowFlakes": "তুষারকণা দেখান"
+  "theme.snowFlakes": "তুষারকণা দেখান",
+  "theme.snowAmount": "তুষারপাত",
+  "theme.snow.light": "হালকা",
+  "theme.snow.normal": "স্বাভাবিক",
+  "theme.snow.heavy": "ভারী"
 }

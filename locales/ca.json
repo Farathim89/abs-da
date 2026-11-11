@@ -46,6 +46,7 @@
   "tv.exit": "Surt del mode TV",
   "tv.exitAsk": "Vols sortir del mode TV?",
   "tv.quit": "Tanca l’aplicació",
+  "tv.newPlaylist": "Llista nova «{name}»",
   "tv.stay": "Queda't",
   "tv.nowPlaying": "S'està reproduint",
   "tv.nothing": "No s'està reproduint res",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Configuració d'ABS Desktop App en aquest PC. Les mateixes opcions són als menús de la barra de títol (Aplicació i Visualització).",
   "mood.libraryOnly": "Només a la biblioteca (en silenci mentre sona un llibre)",
   "theme.summer": "Bosc d'estiu",
-  "theme.snowFlakes": "Mostra els flocs de neu"
+  "theme.snowFlakes": "Mostra els flocs de neu",
+  "theme.snowAmount": "Nevada",
+  "theme.snow.light": "Lleugera",
+  "theme.snow.normal": "Normal",
+  "theme.snow.heavy": "Intensa"
 }

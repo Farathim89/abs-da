@@ -46,6 +46,7 @@
   "tv.exit": "Изход от ТВ режим",
   "tv.exitAsk": "Изход от ТВ режим?",
   "tv.quit": "Затвори приложението",
+  "tv.newPlaylist": "Нов плейлист „{name}“",
   "tv.stay": "Оставане",
   "tv.nowPlaying": "Сега звучи",
   "tv.nothing": "Нищо не звучи",
@@ -308,5 +309,9 @@
   "settings.desktopNote": "Настройки на ABS Desktop App на този компютър. Същите опции са и в менютата на заглавната лента (Приложение и Изглед).",
   "mood.libraryOnly": "Само в библиотеката (тихо, докато звучи книга)",
   "theme.summer": "Лятна гора",
-  "theme.snowFlakes": "Показване на снежинки"
+  "theme.snowFlakes": "Показване на снежинки",
+  "theme.snowAmount": "Снеговалеж",
+  "theme.snow.light": "Лек",
+  "theme.snow.normal": "Нормален",
+  "theme.snow.heavy": "Силен"
 }
