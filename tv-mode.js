@@ -746,8 +746,8 @@ function pageMain(opts) {
     if (d.inProg.length) {
       main.append(row(L("LabelContinueListening", "Continue Listening"), null, "cont", d.inProg.map((it) => {
         const sub = contSub(it);
-        // Continue = straight back into it (the book's page is one press away in Now Playing).
-        const act = isAudio(it) ? () => play(it.id, it.recentEpisode && it.recentEpisode.id) : isEbook(it) ? () => read(it) : () => openItem(it);
+        // A card opens the book's page (Resume is highlighted there); it never starts playing by itself.
+        const act = () => push({ type: "item", itemId: it.id, focusKey: it.recentEpisode ? "ep:" + it.recentEpisode.id : null });
         const c = card(it, { key: "cont:" + it.id + (it.recentEpisode ? ":" + it.recentEpisode.id : ""), big: true, sub, act });
         if (n++ === 0) c.classList.add("tv-default");
         return c;
