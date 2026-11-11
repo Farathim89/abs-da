@@ -84,7 +84,7 @@ function pageMain(opts) {
     #absda-tv .tv-bg.on { opacity: 1; }
     #absda-tv .tv-main { position: relative; z-index: 1; }
     /* The side menu (like Plex): icons down the left; it opens with the names while you're in it. */
-    #absda-tv .tv-nav { position: absolute; z-index: 6; left: 0; top: 0; bottom: 0; width: 4.9em; display: flex; flex-direction: column;
+    #absda-tv .tv-nav { position: absolute; z-index: 6; left: 0; top: 0; bottom: 4.4em; width: 4.9em; display: flex; flex-direction: column;
       gap: .3em; padding: 1.4em .75em; overflow: hidden; transition: width .18s ease, background .18s ease, box-shadow .18s ease;
       background: linear-gradient(90deg, rgba(0,0,0,.45), rgba(0,0,0,0)); }
     #absda-tv .tv-nav.open, #absda-tv:not(.tv-nocursor) .tv-nav:hover { width: 17.5em;
@@ -114,7 +114,7 @@ function pageMain(opts) {
     #absda-tv .tv-ni.tv-on.tv-cur::before { background: var(--tv-hl); }
     #absda-tv .tv-clock { position: absolute; z-index: 4; top: 1.1em; right: 2.4em; font-size: 1.05em; opacity: .8; font-variant-numeric: tabular-nums;
       text-shadow: 0 1px 4px rgba(0,0,0,.7); pointer-events: none; }
-    #absda-tv .tv-main { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 1.2em 2.4em 5.5em 6.6em; scrollbar-width: none; }
+    #absda-tv .tv-main { flex: 1; min-height: 0; margin-bottom: 4.4em; overflow-y: auto; overflow-x: hidden; padding: 1.2em 2.4em 1.6em 6.6em; scrollbar-width: none; }
     #absda-tv .tv-main::-webkit-scrollbar, #absda-tv .tv-track::-webkit-scrollbar, #absda-tv .tv-mlist::-webkit-scrollbar { display: none; }
     #absda-tv .tv-loading, #absda-tv .tv-empty { opacity: .6; font-size: 1.3em; padding: 1.5em 0; }
     #absda-tv .tv-h1 { font-size: 1.9em; font-weight: 700; margin: .1em 0 .5em; display: flex; align-items: center; gap: .5em; }
@@ -251,19 +251,20 @@ function pageMain(opts) {
     #absda-tv .tv-key svg { width: 1.3em; height: 1.3em; }
     #absda-tv .tv-res { flex: 1; min-width: 0; }
     /* mini player, hints, pop-up lists */
-    #absda-tv .tv-mini { position: absolute; z-index: 3; left: 6.6em; bottom: 1em; display: flex; gap: .8em; align-items: center; max-width: 42vw;
-      padding: .45em 1.1em .45em .45em; border-radius: .8em; background: var(--tb-image, rgba(0,0,0,.6)); backdrop-filter: blur(10px);
-      box-shadow: 0 .3em 1em rgba(0,0,0,.45); }
+    #absda-tv .tv-foot { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 4.4em; display: flex; align-items: center;
+      justify-content: space-between; gap: 2em; padding: 0 2.4em 0 6.6em;
+      background: var(--tb-image, color-mix(in srgb, var(--color-primary, #141414) 92%, black));
+      box-shadow: inset 0 1px 0 var(--tb-line, rgba(255,255,255,.1)), 0 -.6em 1.6em rgba(0,0,0,.45); }
+    #absda-tv .tv-mini { display: flex; gap: .8em; align-items: center; min-width: 0; max-width: 55vw; flex: 0 1 auto; }
     #absda-tv .tv-mini img { height: 2.9em; width: auto; max-width: 2.9em; object-fit: cover; border-radius: .3em; }
-    #absda-tv .tv-mini .tx { min-width: 0; }
+    #absda-tv .tv-mini .tx { min-width: 0; width: clamp(14em, 30vw, 36em); }
     #absda-tv .tv-mini .t { font-weight: 600; font-size: .85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #absda-tv .tv-mini .m { font-size: .7em; opacity: .7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #absda-tv .tv-mini .p { height: .2em; border-radius: .1em; background: rgba(255,255,255,.2); margin-top: .35em; overflow: hidden; }
     #absda-tv .tv-mini .p i { display: block; height: 100%; background: var(--tb-logo, #f0a848); }
     #absda-tv .tv-mini svg { width: 1.4em; height: 1.4em; flex: none; }
     #absda-tv[data-screen="np"] .tv-mini { display: none; }
-    #absda-tv .tv-hints { position: absolute; z-index: 3; right: 2.4em; bottom: 1.4em; display: flex; gap: 1.2em; font-size: .72em;
-      padding: .5em 1.1em; border-radius: 999px; background: rgba(0,0,0,.6); backdrop-filter: blur(10px); color: rgba(255,255,255,.85); }
+    #absda-tv .tv-hints { display: flex; gap: 1.2em; font-size: .72em; flex: none; margin-left: auto; color: rgba(255,255,255,.85); }
     #absda-tv .tv-hints:empty { display: none; }
     #absda-tv .tv-hints span { display: inline-flex; align-items: center; white-space: nowrap; }
     #absda-tv .tv-g { display: inline-grid; place-items: center; min-width: 1.7em; height: 1.7em; padding: 0 .35em; margin-right: .4em; border-radius: .85em;
@@ -1399,12 +1400,25 @@ function pageMain(opts) {
       if (!s.waiting) { s.waiting = true; s.enterLater = s.enter; askSettings("get"); }   // (into the list once it's there)
       return;
     }
+    const secs = s.data.sections;
+    if (!(s.tab >= 0 && s.tab < secs.length)) s.tab = 0;
+    const tabs = el("div", "tv-tabs");
+    secs.forEach((sec, i) => {
+      const b = button(sec.label, sec.tv ? ICON.pad : null, "settab:" + i, () => {
+        if (s.tab === i) return;
+        s.tab = i; s.scroll = 0; s.enter = true;
+        redraw();
+        const t = main.querySelector(`[data-k="settab:${i}"]`);   // (stay on the tab you picked)
+        if (t) setFocus(t);
+      });
+      if (s.tab === i) b.classList.add("tv-cur");
+      tabs.append(b);
+    });
+    main.append(tabs);
+    const sec = secs[s.tab];
     const box = el("div", "tv-set");
-    for (const sec of s.data.sections) {
-      box.append(el("h2", null, sec.label));
-      settingRows(sec.items, box, sec.label, sec.label);
-      if (sec.tv) box.append(el("div", "tv-note", T("lockNote")));
-    }
+    settingRows(sec.items, box, sec.label, sec.label);
+    if (sec.tv) box.append(el("div", "tv-note", T("lockNote")));
     main.append(box);
     const first = box.querySelector(".tv-f");
     if (first) first.classList.add("tv-default");
@@ -1849,7 +1863,9 @@ function pageMain(opts) {
     main = el("div", "tv-main");
     mini = el("div", "tv-mini");
     hints = el("div", "tv-hints");
-    root.append(bg, nav, main, mini, hints);
+    const foot = el("div", "tv-foot");
+    foot.append(mini, hints);
+    root.append(bg, nav, main, foot);
     applyHighlight();
     root.addEventListener("mousemove", showCursor);
     root.addEventListener("contextmenu", (e) => { e.preventDefault(); back(); });   // right-click = back
