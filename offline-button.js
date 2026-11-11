@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // The "Download for offline" button on a book's page in the web app (next to Play).
 // Shows the download's progress, then a tick; clicking the tick offers to remove the copy.
-// A series page gets a "Download series" button too (every audiobook in the series).
+// A series page gets a "Download series" button too (every audiobook in the series), and a
+// podcast's page a download button on each episode (next to its Play).
 // pageMain runs inside the Audiobookshelf page (main.js injects it); it talks to the app
 // through window messages that preload.js passes on (see offline.js).
 
@@ -11,7 +12,7 @@ function pageMain(opts) {
   if (!$n || !$n.$router || !$n.$store) return false;
   const B = window.__absdaOffline || (window.__absdaOffline = {});
   B.opts = opts;
-  if (B.installed) { B.ensure(true); if (B.ensureSeries) B.ensureSeries(); return true; }
+  if (B.installed) { B.ensure(true); if (B.ensureSeries) B.ensureSeries(); if (B.ensureEpisodes) B.ensureEpisodes(); return true; }
   B.installed = true;
 
   const BTN_ID = "absda-offline-btn";
@@ -35,7 +36,7 @@ function pageMain(opts) {
     const r = e.data.absdaOfflineReply;
     if (r && pending.has(r.reqId)) { pending.get(r.reqId)(r.result); pending.delete(r.reqId); }
     const s = e.data.absdaOfflineStatus;
-    if (s) { B.states[s.itemId] = s; draw(); drawSeries(); }
+    if (s) { B.states[s.itemId] = s; draw(); drawSeries(); drawEpisodes(); }
   });
   B.states = {};
 
@@ -210,6 +211,64 @@ function pageMain(opts) {
       seriesBusy = false;
     }
   };
+  // ---- podcast page: a download button on each episode ------------------------------
+  // An episode's download is known by "<podcast id>__<episode id>" (offline.js).
+  const EP_CLS = "absda-ep-dl";
+  function drawEp(btn) {
+    const s = B.states[btn.dataset.key] || { state: "none" };
+    btn.dataset.state = s.state;
+    if (s.state === "downloading") {
+      btn.innerHTML = `<span style="font-size:11px;font-weight:700">${Math.max(0, s.percent || 0)}%</span>`;
+      btn.title = fill(B.opts.downloading, { percent: Math.max(0, s.percent || 0) });
+    } else if (s.state === "done") {
+      btn.innerHTML = ICON_OK;
+      btn.title = B.opts.downloaded;
+    } else {
+      btn.innerHTML = ICON_DL;
+      btn.title = B.opts.download;
+    }
+    btn.style.color = s.state === "done" ? "var(--tb-logo)" : "";
+    btn.setAttribute("aria-label", btn.title);
+  }
+  function drawEpisodes() { document.querySelectorAll("." + EP_CLS).forEach(drawEp); }
+  // (The web app draws only the rows in view and redraws them while you scroll: each new row gets its button.)
+  B.ensureEpisodes = () => {
+    if (!/^\/item\//.test($n.$route.path)) return;
+    for (const row of document.querySelectorAll('[id^="lazy-episode-"]')) {
+      const vm = row.__vue__;
+      const ep = vm && vm.episode, itemId = vm && vm.libraryItemId;
+      if (!ep || !ep.id || !itemId || !ep.audioFile) continue;
+      const key = itemId + "__" + ep.id;
+      let btn = row.querySelector("." + EP_CLS);
+      if (btn && btn.dataset.key === key) continue;
+      if (btn) btn.remove();
+      const bar = row.querySelector(".flex.items-center.pt-2");
+      if (!bar) continue;
+      btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = EP_CLS;
+      btn.dataset.key = key;
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const s = B.states[key] || { state: "none" };
+        if (s.state === "none") {
+          window.postMessage({ absdaOffline: { action: "download", itemId: key, title: ep.title || "" } }, window.location.origin);
+          return;
+        }
+        $n.$store.commit("globals/setConfirmPrompt", {
+          message: fill(s.state === "done" ? B.opts.removeConfirm : B.opts.cancelConfirm, { title: ep.title || "", size: sizeText(s.size || 0) }),
+          type: "yesNo", yesButtonText: B.opts.remove, yesButtonColor: "error",
+          callback: (ok) => { if (ok) tell("remove", key); },
+        });
+      });
+      const play = bar.querySelector("button");
+      if (play) play.after(btn); else bar.prepend(btn);
+      drawEp(btn);
+      if (!B.states[key]) ask(key).then((st) => { B.states[key] = st || { state: "none" }; drawEp(btn); });
+    }
+  };
+
   if (!document.getElementById("absda-offline-style")) {
     const st = document.createElement("style");
     st.id = "absda-offline-style";
@@ -217,12 +276,16 @@ function pageMain(opts) {
       border-radius: 6px; border: 1px solid rgba(255, 255, 255, .22); background: rgba(0, 0, 0, .3); color: inherit; font-size: 13px;
       white-space: nowrap; cursor: pointer; }
       #${SERIES_ID}:hover { border-color: var(--tb-logo); }
-      #${SERIES_ID} svg { width: 18px; height: 18px; }`;
+      #${SERIES_ID} svg { width: 18px; height: 18px; }
+      .${EP_CLS} { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin-left: 8px;
+        border-radius: 999px; border: 1px solid rgba(255, 255, 255, .2); background: none; color: inherit; cursor: pointer; flex: none; }
+      .${EP_CLS}:hover { background: rgba(255, 255, 255, .1); }
+      .${EP_CLS} svg { width: 18px; height: 18px; }`;
     document.head.append(st);
   }
 
   let t = null;
-  const ensureAll = () => { B.ensure(false); B.ensureSeries(); };
+  const ensureAll = () => { B.ensure(false); B.ensureSeries(); B.ensureEpisodes(); };
   new window.MutationObserver(() => { clearTimeout(t); t = setTimeout(ensureAll, 250); }).observe(document.body, { childList: true, subtree: true });
   $n.$router.afterEach(() => setTimeout(ensureAll, 400));
   ensureAll();

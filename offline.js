@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Offline listening: download audiobooks to listen without the server, and send that
-// listening back to the server when it's reachable again.
+// Offline listening: download audiobooks and podcast episodes to listen without the server,
+// and send that listening back to the server when it's reachable again.
 //
-//  - Downloads go to <data folder>/offline/<libraryItemId>/: the audio tracks, the cover,
+//  - Downloads go to <data folder>/offline/<key>/ — a book's key is its libraryItemId, a podcast
+//    episode's is "<libraryItemId>__<episodeId>" —: the audio tracks, the cover,
 //    item.json (title, chapters, tracks…) and progress.json (where you are, and the
 //    listening sessions that still have to reach the server). item.json is written last,
 //    so a folder without it is an unfinished download.
@@ -24,6 +25,12 @@ module.exports = function setupOffline(ctx) {
   // an empty name would be the offline folder itself.
   const validId = (id) => typeof id === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(id);
   const folder = (id) => path.join(root(), validId(String(id)) ? String(id) : "_invalid_");
+  // A download's key → the library item and (podcasts) the episode.
+  const parseKey = (key) => {
+    const i = String(key).indexOf("__");
+    return i > 0 ? { itemId: key.slice(0, i), episodeId: key.slice(i + 2) } : { itemId: String(key), episodeId: null };
+  };
+  const progressPath = (itemId, episodeId) => `/api/me/progress/${itemId}${episodeId ? "/" + episodeId : ""}`;
   const readJson = (f, d) => {
     try { return JSON.parse(fs.readFileSync(f, "utf8")); } catch (err) {
       // (cut short by a crash or power cut: the copy from the save before)
@@ -150,14 +157,27 @@ module.exports = function setupOffline(ctx) {
     try {
       const token = await downloadToken();
       if (!token) throw new Error(ctx.tr("offline.errSignIn"));
-      const item = await (await api(`/api/items/${id}?expanded=1`, token)).json();
-      title = item.media && item.media.metadata ? item.media.metadata.title : "";
+      const { itemId, episodeId } = parseKey(id);
+      const item = await (await api(`/api/items/${itemId}?expanded=1`, token)).json();
+      const ep = episodeId ? ((item.media && item.media.episodes) || []).find((e) => e.id === episodeId) : null;
+      title = ep ? ep.title || "" : item.media && item.media.metadata ? item.media.metadata.title : "";
       if (title) titles.set(id, title);
-      const tracks = ((item.media && item.media.tracks) || []).slice().sort((a, b) => a.index - b.index);
-      if (item.mediaType !== "book" || !tracks.length) throw new Error(ctx.tr("offline.errNoAudio"));
+      let tracks, audioFiles;
+      if (episodeId) {   // a podcast episode: its one audio file
+        const af = ep && ep.audioFile;
+        if (item.mediaType !== "podcast" || !af) throw new Error(ctx.tr("offline.errNoAudio"));
+        const at = ep.audioTrack || {};
+        tracks = [{ index: 1, startOffset: 0, duration: at.duration || af.duration || 0, mimeType: at.mimeType || af.mimeType || "",
+          contentUrl: at.contentUrl || `/api/items/${itemId}/file/${af.ino}` }];
+        audioFiles = [af];
+      } else {
+        tracks = ((item.media && item.media.tracks) || []).slice().sort((a, b) => a.index - b.index);
+        if (item.mediaType !== "book" || !tracks.length) throw new Error(ctx.tr("offline.errNoAudio"));
+        audioFiles = item.media.audioFiles || [];
+      }
       fs.mkdirSync(dir, { recursive: true });
       try { fs.unlinkSync(path.join(dir, "item.json")); } catch {}
-      const audioById = new Map((item.media.audioFiles || []).map((a) => [String(a.ino), a]));
+      const audioById = new Map(audioFiles.map((a) => [String(a.ino), a]));
       const total = tracks.reduce((s, t) => s + (((audioById.get(String(t.contentUrl).split("/").pop()) || {}).metadata || {}).size || 0), 0) || 1;
       let got = 0, lastPct = -1;
       const onBytes = (n) => {
@@ -178,7 +198,7 @@ module.exports = function setupOffline(ctx) {
       }
       let cover = null;
       try {
-        const res = await api(`/api/items/${id}/cover?raw=1`, token, { signal: ctl.signal });
+        const res = await api(`/api/items/${itemId}/cover?raw=1`, token, { signal: ctl.signal });
         cover = /png/.test(res.headers.get("content-type") || "") ? "cover.png" : "cover.jpg";
         await saveTo(res, path.join(dir, cover), () => {}, ctl.signal);
       } catch { cover = null; }
@@ -186,7 +206,7 @@ module.exports = function setupOffline(ctx) {
       let serverProgress = null, userId = "";
       try { userId = ((await (await api("/api/me", token)).json()) || {}).id || ""; } catch {}
       try {
-        const p = await (await api(`/api/me/progress/${id}`, token)).json();
+        const p = await (await api(progressPath(itemId, episodeId), token)).json();
         serverProgress = { currentTime: p.currentTime || 0, isFinished: !!p.isFinished, lastUpdate: p.lastUpdate || 0 };
       } catch {}
       const md = item.media.metadata || {};
@@ -194,7 +214,12 @@ module.exports = function setupOffline(ctx) {
       const pr = progress(id);
       pr.serverProgress = serverProgress;
       writeJson(progressFile(id), pr);
-      writeJson(path.join(dir, "item.json"), {
+      writeJson(path.join(dir, "item.json"), ep ? {
+        // a podcast episode: the episode is the title, the podcast the "author"
+        id, itemId, episodeId, mediaType: "podcast", libraryId: item.libraryId, title: ep.title || "", subtitle: ep.subtitle || "",
+        author: md.title || "", narrator: "", series: "", duration: tracks[0].duration || 0, chapters: ep.chapters || [], tracks: saved, cover,
+        server: ctx.config().server || "", userId, downloadedAt: Date.now(), size,
+      } : {
         id: item.id, libraryId: item.libraryId, title: md.title || "", subtitle: md.subtitle || "",
         author: md.authorName || (md.authors || []).map((x) => x.name).join(", "), narrator: md.narratorName || (md.narrators || []).join(", "),
         series: md.seriesName || "", duration: item.media.duration || 0, chapters: item.media.chapters || [], tracks: saved, cover,
@@ -348,7 +373,7 @@ module.exports = function setupOffline(ctx) {
         for (const s of unsynced(p)) {
           const d = new Date(s.updatedAt);
           sessions.push({
-            id: s.id, libraryId: m.libraryId, libraryItemId: m.id, episodeId: null, mediaType: "book",
+            id: s.id, libraryId: m.libraryId, libraryItemId: m.itemId || m.id, episodeId: m.episodeId || null, mediaType: m.episodeId ? "podcast" : "book",
             displayTitle: m.title, displayAuthor: m.author, duration: m.duration, playMethod: 3, mediaPlayer: "html5",
             date: s.date, dayOfWeek: d.toLocaleDateString("en-US", { weekday: "long" }), timeListening: s.timeListening,
             startTime: s.startTime, currentTime: s.currentTime, startedAt: s.startedAt, updatedAt: s.updatedAt,
@@ -386,13 +411,14 @@ module.exports = function setupOffline(ctx) {
         const p = progress(id);
         if (!p.finished || p.finishedSynced || unsynced(p).length) continue;
         try {
-          await api(`/api/me/progress/${id}`, token, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isFinished: true }) });
+          const m = meta(id);
+          await api(progressPath(m.itemId || m.id, m.episodeId), token, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ isFinished: true }) });
           p.finishedSynced = true;
           writeJson(progressFile(id), p);
         } catch (err) { ctx.log("offline finish failed: " + err.message); }
       }
       // Refresh where the server says you are, for every downloaded book.
-      const byItem = new Map((me.mediaProgress || []).map((mp) => [mp.libraryItemId, mp]));
+      const byItem = new Map((me.mediaProgress || []).map((mp) => [mp.libraryItemId + (mp.episodeId ? "__" + mp.episodeId : ""), mp]));
       for (const id of ids) {
         const mp = byItem.get(id);
         if (!mp) continue;

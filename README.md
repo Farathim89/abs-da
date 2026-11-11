@@ -61,13 +61,13 @@ collections, playlists, series, stats, and — for admin accounts — all the se
   signed back in automatically. **App → Forget Saved Login** removes it.
 - **Keeps playing in the system tray** when you minimise the window (✕ quits; **App → Keep running in
   tray when closed** makes ✕ hide it to the tray too). Click the tray icon to show or hide the window; right-click it for
-  what's playing, Play/Pause, skip back/forward, previous/next chapter and a **sleep timer** (also for a book playing in the offline library)
+  what's playing, Play/Pause, skip back/forward, previous/next chapter and a **sleep timer** (also for a book or episode playing in the offline library)
 - **Start with Windows** (in the tray)
 - Keyboard **media keys** and the **Windows media controls** show the book and cover
 - **All libraries on one Home page** (library picker → **All libraries**): continue listening, continue
   series, recently added per library (one card per series) and listen again, flat or on bookshelves
-- **Offline listening**: a download button next to Play (and **Download series** on series pages) keeps
-  books on your PC. The **Offline library** (App → Offline) plays them without the server — chapters,
+- **Offline listening**: a download button next to Play (and **Download series** on series pages, and one on
+  every podcast episode) keeps books and episodes on your PC. The **Offline library** (App → Offline) plays them without the server — chapters,
   speed, sleep timer — and sends your listening back when the server is reachable again. Download queue
   with cancel, optional removal of finished books' offline copies, and the offline library opens by
   itself when the server can't be reached
