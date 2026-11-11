@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Téléchargement {done}/{total}",
   "offline.seriesDone": "Les {total} téléchargés",
   "offline.seriesRemoveConfirm": "Supprimer les copies hors ligne des {count} livres de « {series} » ? Cela libère {size}. Les livres restent sur votre serveur.",
+  "offline.podcastDownload": "Télécharger {count} épisodes",
+  "offline.podcastRemoveConfirm": "Supprimer les copies hors ligne des {count} épisodes ? Cela libère {size}. Les épisodes restent sur votre serveur.",
   "offline.startNote": "Votre serveur est injoignable pour le moment, voici donc vos livres téléchargés. Appuyez sur « Retour au serveur » pour réessayer.",
   "theme.dungeon": "Donjon",
   "theme.tavern": "Taverne au coin du feu",

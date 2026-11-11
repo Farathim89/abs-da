@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Allalaadimine {done}/{total}",
   "offline.seriesDone": "Kõik {total} alla laaditud",
   "offline.seriesRemoveConfirm": "Kas eemaldada sarja „{series}“ kõigi {count} raamatu võrguühenduseta koopiad? Vabaneb {size}. Raamatud jäävad serverisse.",
+  "offline.podcastDownload": "Laadi alla {count} episoodi",
+  "offline.podcastRemoveConfirm": "Kas eemaldada kõigi {count} episoodi võrguühenduseta koopiad? See vabastab {size}. Episoodid jäävad serverisse.",
   "offline.startNote": "Server pole praegu kättesaadav, seega siin on sinu allalaaditud raamatud. Proovi uuesti nupuga „Tagasi serverisse“.",
   "theme.dungeon": "Koobas",
   "theme.tavern": "Kaminaga kõrts",

@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Laster ned {done}/{total}",
   "offline.seriesDone": "Alle {total} lastet ned",
   "offline.seriesRemoveConfirm": "Fjerne de frakoblede kopiene av alle {count} bøkene i «{series}»? Det frigjør {size}. Bøkene blir værende på serveren.",
+  "offline.podcastDownload": "Last ned {count} episoder",
+  "offline.podcastRemoveConfirm": "Vil du fjerne frakoblede kopier av alle {count} episodene? Det frigjør {size}. Episodene blir på serveren.",
   "offline.startNote": "Serveren kan ikke nås akkurat nå, så her er de nedlastede bøkene dine. Trykk «Tilbake til serveren» for å prøve igjen.",
   "theme.dungeon": "Fangehull",
   "theme.tavern": "Vertshuset ved peisen",

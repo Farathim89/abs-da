@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Baixando {done}/{total}",
   "offline.seriesDone": "Todos os {total} baixados",
   "offline.seriesRemoveConfirm": "Remover as cópias offline de todos os {count} livros de “{series}”? Libera {size}. Os livros continuam no seu servidor.",
+  "offline.podcastDownload": "Baixar {count} episódios",
+  "offline.podcastRemoveConfirm": "Remover as cópias offline de todos os {count} episódios? Libera {size}. Os episódios continuam no servidor.",
   "offline.startNote": "Seu servidor não pode ser acessado agora, então aqui estão seus livros baixados. Toque em “Voltar ao servidor” para tentar de novo.",
   "theme.dungeon": "Masmorra",
   "theme.tavern": "Taverna da lareira",

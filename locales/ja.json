@@ -279,6 +279,8 @@
   "offline.seriesProgress": "ダウンロード中 {done}/{total}",
   "offline.seriesDone": "全{total}冊ダウンロード済み",
   "offline.seriesRemoveConfirm": "「{series}」の全{count}冊のオフラインコピーを削除しますか？ {size} が空きます。本はサーバーに残ります。",
+  "offline.podcastDownload": "{count} 件のエピソードをダウンロード",
+  "offline.podcastRemoveConfirm": "{count} 件すべてのエピソードのオフラインコピーを削除しますか？ {size} 空きます。エピソードはサーバーに残ります。",
   "offline.startNote": "現在サーバーに接続できないため、ダウンロード済みの本を表示しています。「サーバーに戻る」を押して再試行してください。",
   "theme.dungeon": "ダンジョン",
   "theme.tavern": "暖炉の酒場",

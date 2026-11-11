@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Descargando {done}/{total}",
   "offline.seriesDone": "Los {total} descargados",
   "offline.seriesRemoveConfirm": "¿Quitar las copias sin conexión de los {count} libros de «{series}»? Libera {size}. Los libros siguen en tu servidor.",
+  "offline.podcastDownload": "Descargar {count} episodios",
+  "offline.podcastRemoveConfirm": "¿Quitar las copias sin conexión de los {count} episodios? Libera {size}. Los episodios siguen en tu servidor.",
   "offline.startNote": "Ahora mismo no se puede acceder a tu servidor, así que aquí tienes tus libros descargados. Pulsa «Volver al servidor» para intentarlo de nuevo.",
   "theme.dungeon": "Mazmorra",
   "theme.tavern": "Taberna junto al fuego",

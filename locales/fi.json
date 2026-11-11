@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Ladataan {done}/{total}",
   "offline.seriesDone": "Kaikki {total} ladattu",
   "offline.seriesRemoveConfirm": "Poistetaanko sarjan ”{series}” kaikkien {count} kirjan offline-kopiot? Vapautuu {size}. Kirjat pysyvät palvelimellasi.",
+  "offline.podcastDownload": "Lataa {count} jaksoa",
+  "offline.podcastRemoveConfirm": "Poistetaanko kaikkien {count} jakson offline-kopiot? Vapauttaa {size}. Jaksot jäävät palvelimelle.",
   "offline.startNote": "Palvelimeen ei juuri nyt saada yhteyttä, joten tässä ovat lataamasi kirjat. Yritä uudelleen painamalla ”Takaisin palvelimelle”.",
   "theme.dungeon": "Tyrmä",
   "theme.tavern": "Takkatulen kapakka",

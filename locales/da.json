@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Downloader {done}/{total}",
   "offline.seriesDone": "Alle {total} downloadet",
   "offline.seriesRemoveConfirm": "Fjern offlinekopierne af alle {count} bøger i “{series}”? Det frigør {size}. Bøgerne bliver på din server.",
+  "offline.podcastDownload": "Download {count} episoder",
+  "offline.podcastRemoveConfirm": "Fjern offlinekopierne af alle {count} episoder? Det frigiver {size}. Episoderne bliver på serveren.",
   "offline.startNote": "Din server kan ikke nås lige nu, så her er dine downloadede bøger. Tryk på “Tilbage til serveren” for at prøve igen.",
   "theme.dungeon": "Fangehul",
   "theme.tavern": "Kroen ved kaminen",

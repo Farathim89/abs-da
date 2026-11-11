@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Спампоўка {done}/{total}",
   "offline.seriesDone": "Усе {total} спампаваны",
   "offline.seriesRemoveConfirm": "Выдаліць афлайн-копіі ўсіх {count} кніг у «{series}»? Вызваліцца {size}. Кнігі застаюцца на серверы.",
+  "offline.podcastDownload": "Спампаваць эпізоды: {count}",
+  "offline.podcastRemoveConfirm": "Выдаліць афлайн-копіі ўсіх {count} эпізодаў? Вызваліцца {size}. Эпізоды застануцца на серверы.",
   "offline.startNote": "Сервер зараз недаступны, таму вось вашы спампаваныя кнігі. Націсніце «Назад да сервера», каб паспрабаваць зноў.",
   "theme.dungeon": "Падзямелле",
   "theme.tavern": "Карчма ля каміна",

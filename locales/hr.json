@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Preuzimanje {done}/{total}",
   "offline.seriesDone": "Preuzeto svih {total}",
   "offline.seriesRemoveConfirm": "Ukloniti izvanmrežne kopije svih {count} knjiga u „{series}”? Oslobađa {size}. Knjige ostaju na poslužitelju.",
+  "offline.podcastDownload": "Preuzmi epizode: {count}",
+  "offline.podcastRemoveConfirm": "Ukloniti izvanmrežne kopije svih {count} epizoda? Oslobađa {size}. Epizode ostaju na poslužitelju.",
   "offline.startNote": "Poslužitelj trenutačno nije dostupan, pa evo vaših preuzetih knjiga. Pritisnite „Natrag na poslužitelj” za ponovni pokušaj.",
   "theme.dungeon": "Tamnica",
   "theme.tavern": "Krčma uz kamin",

@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Pobieranie {done}/{total}",
   "offline.seriesDone": "Pobrano wszystkie {total}",
   "offline.seriesRemoveConfirm": "Usunąć kopie offline wszystkich {count} książek z „{series}”? Zwolni to {size}. Książki zostają na serwerze.",
+  "offline.podcastDownload": "Pobierz odcinki: {count}",
+  "offline.podcastRemoveConfirm": "Usunąć kopie offline wszystkich {count} odcinków? Zwolni to {size}. Odcinki zostaną na serwerze.",
   "offline.startNote": "Serwer jest teraz niedostępny, więc oto twoje pobrane książki. Naciśnij „Wróć do serwera”, aby spróbować ponownie.",
   "theme.dungeon": "Loch",
   "theme.tavern": "Karczma przy kominku",

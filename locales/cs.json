@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Stahování {done}/{total}",
   "offline.seriesDone": "Staženo všech {total}",
   "offline.seriesRemoveConfirm": "Odebrat offline kopie všech {count} knih v „{series}“? Uvolní {size}. Knihy zůstanou na serveru.",
+  "offline.podcastDownload": "Stáhnout epizody: {count}",
+  "offline.podcastRemoveConfirm": "Odebrat offline kopie všech {count} epizod? Uvolní se {size}. Epizody zůstanou na serveru.",
   "offline.startNote": "Server je teď nedostupný, takže tady jsou vaše stažené knihy. Stiskněte „Zpět na server“ a zkuste to znovu.",
   "theme.dungeon": "Kobka",
   "theme.tavern": "Krčma u krbu",

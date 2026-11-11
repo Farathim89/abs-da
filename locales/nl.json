@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Downloaden {done}/{total}",
   "offline.seriesDone": "Alle {total} gedownload",
   "offline.seriesRemoveConfirm": "De offline kopieën van alle {count} boeken in ‘{series}’ verwijderen? Dit maakt {size} vrij. De boeken blijven op je server.",
+  "offline.podcastDownload": "{count} afleveringen downloaden",
+  "offline.podcastRemoveConfirm": "Offline kopieën van alle {count} afleveringen verwijderen? Dat maakt {size} vrij. De afleveringen blijven op je server.",
   "offline.startNote": "Je server is nu niet bereikbaar, dus hier zijn je gedownloade boeken. Druk op ‘Terug naar de server’ om het opnieuw te proberen.",
   "theme.dungeon": "Kerker",
   "theme.tavern": "Herberg bij de haard",

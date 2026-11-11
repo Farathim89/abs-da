@@ -66,8 +66,8 @@ collections, playlists, series, stats, and — for admin accounts — all the se
 - Keyboard **media keys** and the **Windows media controls** show the book and cover
 - **All libraries on one Home page** (library picker → **All libraries**): continue listening, continue
   series, recently added per library (one card per series) and listen again, flat or on bookshelves
-- **Offline listening**: a download button next to Play (and **Download series** on series pages, and one on
-  every podcast episode) keeps books and episodes on your PC. The **Offline library** (App → Offline) plays them without the server — chapters,
+- **Offline listening**: a download button next to Play (and **Download series** on series pages, one on
+  every podcast episode, and **Download N episodes** on a podcast's episode list) keeps books and episodes on your PC. The **Offline library** (App → Offline) plays them without the server — chapters,
   speed, sleep timer — and sends your listening back when the server is reachable again. Download queue
   with cancel, optional removal of finished books' offline copies, and the offline library opens by
   itself when the server can't be reached

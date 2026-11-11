@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Downloading {done}/{total}",
   "offline.seriesDone": "All {total} downloaded",
   "offline.seriesRemoveConfirm": "Remove the offline copies of all {count} books in “{series}”? It frees {size}. The books stay on your server.",
+  "offline.podcastDownload": "Download {count} episodes",
+  "offline.podcastRemoveConfirm": "Remove the offline copies of all {count} episodes? It frees {size}. The episodes stay on your server.",
   "offline.startNote": "Your server can't be reached right now, so here are your downloaded books. Press “Back to the server” to try again.",
   "theme.dungeon": "Dungeon",
   "theme.tavern": "Fireside Tavern",

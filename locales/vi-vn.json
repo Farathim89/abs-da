@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Đang tải {done}/{total}",
   "offline.seriesDone": "Đã tải đủ {total} cuốn",
   "offline.seriesRemoveConfirm": "Xóa bản sao ngoại tuyến của cả {count} cuốn trong “{series}”? Giải phóng {size}. Sách vẫn còn trên máy chủ.",
+  "offline.podcastDownload": "Tải {count} tập",
+  "offline.podcastRemoveConfirm": "Xóa bản ngoại tuyến của cả {count} tập? Giải phóng {size}. Các tập vẫn còn trên máy chủ.",
   "offline.startNote": "Hiện không kết nối được máy chủ, đây là các sách bạn đã tải xuống. Nhấn “Quay lại máy chủ” để thử lại.",
   "theme.dungeon": "Hầm ngục",
   "theme.tavern": "Quán rượu bên lò sưởi",

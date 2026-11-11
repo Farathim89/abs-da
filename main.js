@@ -460,6 +460,7 @@ const offlineButtonTexts = () => ({
   removeConfirm: tr("offline.removeConfirm"), cancelConfirm: tr("offline.cancelConfirm"), remove: tr("offline.remove"),
   seriesDownload: tr("offline.seriesDownload"), seriesRest: tr("offline.seriesRest"), seriesProgress: tr("offline.seriesProgress"),
   seriesDone: tr("offline.seriesDone"), seriesRemoveConfirm: tr("offline.seriesRemoveConfirm"),
+  podcastDownload: tr("offline.podcastDownload"), podcastRemoveConfirm: tr("offline.podcastRemoveConfirm"),
 });
 function installOfflineButton(contents, attempt = 0) {
   if (!view || contents !== wc() || !isServerUrl(contents.getURL())) return;

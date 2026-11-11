@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Lädt {done}/{total}",
   "offline.seriesDone": "Alle {total} geladen",
   "offline.seriesRemoveConfirm": "Die Offline-Kopien aller {count} Bücher in „{series}“ entfernen? Das gibt {size} frei. Die Bücher bleiben auf deinem Server.",
+  "offline.podcastDownload": "{count} Folgen herunterladen",
+  "offline.podcastRemoveConfirm": "Die Offline-Kopien aller {count} Folgen entfernen? Das gibt {size} frei. Die Folgen bleiben auf deinem Server.",
   "offline.startNote": "Dein Server ist gerade nicht erreichbar, hier sind deine heruntergeladenen Bücher. Drücke „Zurück zum Server“, um es erneut zu versuchen.",
   "theme.dungeon": "Verlies",
   "theme.tavern": "Taverne am Kamin",

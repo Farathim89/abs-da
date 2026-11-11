@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Prenašanje {done}/{total}",
   "offline.seriesDone": "Prenesenih vseh {total}",
   "offline.seriesRemoveConfirm": "Odstranim kopije brez povezave vseh {count} knjig v »{series}«? Sprosti {size}. Knjige ostanejo na strežniku.",
+  "offline.podcastDownload": "Prenesi epizode: {count}",
+  "offline.podcastRemoveConfirm": "Odstranim kopije brez povezave vseh {count} epizod? Sprosti se {size}. Epizode ostanejo na strežniku.",
   "offline.startNote": "Strežnik trenutno ni dosegljiv, zato so tu vaše prenesene knjige. Pritisnite »Nazaj na strežnik« za ponovni poskus.",
   "theme.dungeon": "Ječa",
   "theme.tavern": "Krčma ob kaminu",

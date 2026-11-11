@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Изтегляне {done}/{total}",
   "offline.seriesDone": "Всички {total} са изтеглени",
   "offline.seriesRemoveConfirm": "Премахване на офлайн копията на всички {count} книги в „{series}“? Освобождава {size}. Книгите остават на сървъра.",
+  "offline.podcastDownload": "Изтегли {count} епизода",
+  "offline.podcastRemoveConfirm": "Да се премахнат ли офлайн копията на всички {count} епизода? Освобождава {size}. Епизодите остават на сървъра.",
   "offline.startNote": "Сървърът ви е недостъпен в момента, затова ето изтеглените ви книги. Натиснете „Обратно към сървъра“, за да опитате отново.",
   "theme.dungeon": "Подземие",
   "theme.tavern": "Кръчма до камината",

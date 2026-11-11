@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Baixant {done}/{total}",
   "offline.seriesDone": "Tots {total} baixats",
   "offline.seriesRemoveConfirm": "Voleu eliminar les còpies fora de línia dels {count} llibres de «{series}»? S'alliberaran {size}. Els llibres es queden al servidor.",
+  "offline.podcastDownload": "Baixa {count} episodis",
+  "offline.podcastRemoveConfirm": "Vols suprimir les còpies fora de línia dels {count} episodis? S’alliberen {size}. Els episodis es queden al servidor.",
   "offline.startNote": "Ara mateix no es pot accedir al servidor, així que aquí teniu els llibres baixats. Premeu «Torna al servidor» per tornar-ho a provar.",
   "theme.dungeon": "Masmorra",
   "theme.tavern": "Taverna de la llar de foc",

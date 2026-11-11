@@ -279,6 +279,8 @@
   "offline.seriesProgress": "正在下載 {done}/{total}",
   "offline.seriesDone": "全部 {total} 本已下載",
   "offline.seriesRemoveConfirm": "移除「{series}」中全部 {count} 本書的離線副本？將釋放 {size}。書仍保留在你的伺服器上。",
+  "offline.podcastDownload": "下載 {count} 集",
+  "offline.podcastRemoveConfirm": "移除全部 {count} 集的離線副本？將釋放 {size}。單集仍保留在伺服器上。",
   "offline.startNote": "目前無法連線伺服器，這裡是你已下載的書。按「返回伺服器」重試。",
   "theme.dungeon": "地下城",
   "theme.tavern": "爐邊酒館",

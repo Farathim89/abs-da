@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Letöltés {done}/{total}",
   "offline.seriesDone": "Mind a {total} letöltve",
   "offline.seriesRemoveConfirm": "Eltávolítod a(z) „{series}” mind a {count} könyvének offline másolatát? {size} szabadul fel. A könyvek a szerveren maradnak.",
+  "offline.podcastDownload": "{count} epizód letöltése",
+  "offline.podcastRemoveConfirm": "Eltávolítod mind a(z) {count} epizód offline másolatát? {size} szabadul fel. Az epizódok a szerveren maradnak.",
   "offline.startNote": "A szerver most nem érhető el, ezért itt vannak a letöltött könyveid. Nyomd meg a „Vissza a szerverre” gombot az újrapróbáláshoz.",
   "theme.dungeon": "Tömlöc",
   "theme.tavern": "Kandallós fogadó",

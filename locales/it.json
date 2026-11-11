@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Download {done}/{total}",
   "offline.seriesDone": "Tutti i {total} scaricati",
   "offline.seriesRemoveConfirm": "Rimuovere le copie offline di tutti i {count} libri di «{series}»? Libera {size}. I libri restano sul tuo server.",
+  "offline.podcastDownload": "Scarica {count} episodi",
+  "offline.podcastRemoveConfirm": "Rimuovere le copie offline di tutti i {count} episodi? Libera {size}. Gli episodi restano sul server.",
   "offline.startNote": "Il server non è raggiungibile in questo momento, ecco quindi i tuoi libri scaricati. Premi «Torna al server» per riprovare.",
   "theme.dungeon": "Segrete",
   "theme.tavern": "Taverna del focolare",

@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Atsisiunčiama {done}/{total}",
   "offline.seriesDone": "Atsisiųstos visos {total}",
   "offline.seriesRemoveConfirm": "Pašalinti visų {count} knygų iš „{series}“ kopijas neprisijungus? Atlaisvins {size}. Knygos lieka serveryje.",
+  "offline.podcastDownload": "Atsisiųsti epizodus: {count}",
+  "offline.podcastRemoveConfirm": "Pašalinti visų {count} epizodų neprisijungus kopijas? Atlaisvins {size}. Epizodai liks serveryje.",
   "offline.startNote": "Serveris šiuo metu nepasiekiamas, todėl štai jūsų atsisiųstos knygos. Spauskite „Atgal į serverį“, kad bandytumėte dar kartą.",
   "theme.dungeon": "Požemis",
   "theme.tavern": "Smuklė prie židinio",

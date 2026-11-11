@@ -279,6 +279,8 @@
   "offline.seriesProgress": "İndiriliyor {done}/{total}",
   "offline.seriesDone": "{total} kitabın tümü indirildi",
   "offline.seriesRemoveConfirm": "“{series}” serisindeki {count} kitabın tümünün çevrimdışı kopyaları kaldırılsın mı? {size} boşalır. Kitaplar sunucunuzda kalır.",
+  "offline.podcastDownload": "{count} bölümü indir",
+  "offline.podcastRemoveConfirm": "{count} bölümün tümünün çevrimdışı kopyaları kaldırılsın mı? {size} boşalır. Bölümler sunucuda kalır.",
   "offline.startNote": "Sunucunuza şu anda ulaşılamıyor, işte indirdiğiniz kitaplar. Yeniden denemek için “Sunucuya dön”e basın.",
   "theme.dungeon": "Zindan",
   "theme.tavern": "Ocak Başı Meyhanesi",

@@ -279,6 +279,8 @@
   "offline.seriesProgress": "جارٍ التنزيل {done}/{total}",
   "offline.seriesDone": "تم تنزيل الكل ({total})",
   "offline.seriesRemoveConfirm": "إزالة النسخ دون اتصال لكل الكتب الـ {count} في «{series}»؟ سيُحرَّر {size}. تبقى الكتب على خادمك.",
+  "offline.podcastDownload": "تنزيل {count} حلقات",
+  "offline.podcastRemoveConfirm": "إزالة النسخ دون اتصال لكل الحلقات الـ{count}؟ يحرر ذلك {size}. تبقى الحلقات على الخادم.",
   "offline.startNote": "لا يمكن الوصول إلى خادمك الآن، فهذه كتبك المنزّلة. اضغط «العودة إلى الخادم» للمحاولة مجددًا.",
   "theme.dungeon": "الزنزانة",
   "theme.tavern": "حانة المدفأة",

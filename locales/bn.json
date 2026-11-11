@@ -279,6 +279,8 @@
   "offline.seriesProgress": "ডাউনলোড হচ্ছে {done}/{total}",
   "offline.seriesDone": "সব {total}টি ডাউনলোড হয়েছে",
   "offline.seriesRemoveConfirm": "“{series}”-এর সব {count}টি বইয়ের অফলাইন কপি সরাবেন? {size} খালি হবে। বইগুলো আপনার সার্ভারে থাকবে।",
+  "offline.podcastDownload": "{count}টি পর্ব ডাউনলোড করুন",
+  "offline.podcastRemoveConfirm": "সব {count}টি পর্বের অফলাইন কপি সরাবেন? এতে {size} খালি হবে। পর্বগুলো সার্ভারে থাকবে।",
   "offline.startNote": "এখন আপনার সার্ভারে পৌঁছানো যাচ্ছে না, তাই এখানে আপনার ডাউনলোড করা বই। আবার চেষ্টা করতে “সার্ভারে ফিরুন” চাপুন।",
   "theme.dungeon": "অন্ধকূপ",
   "theme.tavern": "অগ্নিকুণ্ডের সরাইখানা",

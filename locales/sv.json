@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Laddar ner {done}/{total}",
   "offline.seriesDone": "Alla {total} nedladdade",
   "offline.seriesRemoveConfirm": "Ta bort offlinekopiorna av alla {count} böcker i ”{series}”? Det frigör {size}. Böckerna finns kvar på din server.",
+  "offline.podcastDownload": "Ladda ned {count} avsnitt",
+  "offline.podcastRemoveConfirm": "Ta bort offlinekopiorna av alla {count} avsnitt? Det frigör {size}. Avsnitten finns kvar på servern.",
   "offline.startNote": "Din server går inte att nå just nu, så här är dina nedladdade böcker. Tryck på ”Tillbaka till servern” för att försöka igen.",
   "theme.dungeon": "Fängelsehåla",
   "theme.tavern": "Värdshuset vid brasan",

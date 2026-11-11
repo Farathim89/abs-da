@@ -279,6 +279,8 @@
   "offline.seriesProgress": "Загрузка {done}/{total}",
   "offline.seriesDone": "Все {total} загружены",
   "offline.seriesRemoveConfirm": "Удалить офлайн-копии всех {count} книг из «{series}»? Освободится {size}. Книги останутся на сервере.",
+  "offline.podcastDownload": "Скачать эпизоды: {count}",
+  "offline.podcastRemoveConfirm": "Удалить офлайн-копии всех {count} эпизодов? Освободится {size}. Эпизоды останутся на сервере.",
   "offline.startNote": "Сервер сейчас недоступен, поэтому вот ваши загруженные книги. Нажмите «Вернуться к серверу», чтобы попробовать снова.",
   "theme.dungeon": "Подземелье",
   "theme.tavern": "Таверна у камина",

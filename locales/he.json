@@ -279,6 +279,8 @@
   "offline.seriesProgress": "מוריד {done}/{total}",
   "offline.seriesDone": "כל {total} הורדו",
   "offline.seriesRemoveConfirm": "להסיר את העותקים הלא מקוונים של כל {count} הספרים ב\"{series}\"? יתפנו {size}. הספרים נשארים בשרת.",
+  "offline.podcastDownload": "הורד {count} פרקים",
+  "offline.podcastRemoveConfirm": "להסיר את העותקים הלא־מקוונים של כל {count} הפרקים? זה משחרר {size}. הפרקים נשארים בשרת.",
   "offline.startNote": "אין כרגע גישה לשרת, אז הנה הספרים שהורדתם. לחצו \"חזרה לשרת\" כדי לנסות שוב.",
   "theme.dungeon": "מבוך",
   "theme.tavern": "פונדק האח",
