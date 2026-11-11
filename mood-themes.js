@@ -576,11 +576,12 @@ const FONTS = {
 // Headings and labels only (titles, shelf names, side menu) — never the reading text.
 const FONT_TARGETS = ["#appbar h1", "#toolbar p", ".shinyBlack", "#page-wrapper h1", "#page-wrapper h2",
   "#page-wrapper h3", "#absda-home h2", ".bar .title", "#mediaPlayerContainer a.truncate",
-  ".absda-mood-page h1", ".absda-mood-page h2", ".absda-mood-page .ptitle"];
+  ".absda-mood-page h1", ".absda-mood-page h2", ".absda-mood-page .ptitle",
+  "#absda-tv .tv-h1", "#absda-tv .tv-row h2", "#absda-tv .tv-info h1", "#absda-tv .tv-npi h1", "#absda-tv .tv-mbox h2", "#absda-tv .tv-set h2"];
 // The scenery texture is defined once (--absda-tex) and darkened per bar.
 function chromeCss(c) {
   const bg = (v) => (c.tex ? `linear-gradient(${v}, ${v}), var(--absda-tex)` : v);
-  return `html:root { ${c.tex ? `--absda-tex: ${c.tex};` : ""} --tb-image: ${bg(c.bar)}; --tb-line: ${c.line}; }
+  return `html:root { ${c.tex ? `--absda-tex: ${c.tex};` : ""} --tb-image: ${bg(c.bar)}; --tb-line: ${c.line}; --absda-rail: ${bg(c.rail)}; }
     html body div:has(> #appbar) { background: var(--tb-image) !important; box-shadow: inset 0 -2px 0 ${c.line}, 0 2px 14px ${c.glow} !important; }
     html body #mediaPlayerContainer { background: var(--tb-image) !important; box-shadow: inset 0 2px 0 ${c.line}, 0 -2px 14px ${c.glow} !important; }
     html body div:has(> #siderail-buttons-container) { background: ${bg(c.rail)} !important; box-shadow: inset -2px 0 0 ${c.line}, 2px 0 14px ${c.glow} !important; }`;

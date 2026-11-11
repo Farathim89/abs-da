@@ -342,13 +342,21 @@ const tvSaver = () => (TV_SAVERS.includes(config.tvSaver) ? config.tvSaver : 30)
 // …and while nothing plays (paused, or nothing loaded): config.tvIdleSaver, default 5 min.
 const TV_IDLE_SAVERS = [0, 120, 300, 600, 1800];
 const tvIdleSaver = () => (TV_IDLE_SAVERS.includes(config.tvIdleSaver) ? config.tvIdleSaver : 300);
+// How the highlight looks: a white outline (like Plex, default), filled white, or filled in the theme's colour.
+const TV_HIGHLIGHTS = ["outline", "white", "theme"];
+const tvHighlight = () => (TV_HIGHLIGHTS.includes(config.tvHighlight) ? config.tvHighlight : "outline");
+function setTvHighlight(h) {
+  config = { ...config, tvHighlight: h };
+  writeJson(dataFile("config.json"), config);
+  if (view && isServerUrl(wc().getURL())) installTv(wc());
+}
 const saverLabel = (sec) => (sec === 0 ? tr("tv.off") : sec < 60 ? tr("tv.seconds", { n: sec }) : tr("tv.minutes", { n: sec / 60 }));
 function setTvSaver(secs, idle) {
   config = { ...config, [idle ? "tvIdleSaver" : "tvSaver"]: secs };
   writeJson(dataFile("config.json"), config);
   if (view && isServerUrl(wc().getURL())) installTv(wc());
 }
-const tvJs = () => tvModeJs({ open: tvActive, locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), update: tvUpdateData(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}", time: "{time}" })])) });
+const tvJs = () => tvModeJs({ open: tvActive, textSize: textSize(), highlight: tvHighlight(), locks: tvLocks(), saver: tvSaver(), idleSaver: tvIdleSaver(), update: tvUpdateData(), t: Object.fromEntries(TV_TEXTS.map((k) => [k, tr("tv." + k, { n: "{n}", time: "{time}" })])) });
 function setTvLock(kind, on) {
   if (!TV_LOCKS.includes(kind)) return;
   config = { ...config, tvLock: { ...tvLocks(), [kind]: !!on } };
@@ -746,7 +754,7 @@ function themeCss(id) {
     parts.push(`::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:hover { background: ${t.scroll} !important; }`);
     parts.push(`#bookshelf { scrollbar-color: ${t.scroll} rgba(0, 0, 0, 0) !important; }`);
   }
-  if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`);
+  if (t.page) parts.push(`#bookshelf, #page-wrapper { background-image: ${t.page} !important; }`, `html:root { --absda-page: ${t.page}; }`);   // (also TV mode's background)
   if (t.colors && config.toastThemed !== false) parts.push(toastCss(t.colors.bg, t.title.logo, t.toast));
   if (t.colors && t.colors.success) {
     // "Info" buttons (Read, …) and info text: a lighter shade of the action colour, so
@@ -1253,6 +1261,7 @@ function setTextSize(f) {
   config = { ...config, textSize: f };
   writeJson(dataFile("config.json"), config);
   for (const c of webContents.getAllWebContents()) applyTextSize(c);
+  if (tvActive && view) installTv(wc());   // (TV mode's text follows; its covers stay as they are)
 }
 // Ctrl +/-/0 and Ctrl+mouse wheel: 10% steps.
 function zoom(step) {
@@ -2492,6 +2501,8 @@ function menuTemplate() {
             label: saverLabel(sec), type: "checkbox", checked: tvSaver() === sec, click: () => setTvSaver(sec) })) },
           { label: tr("tv.idleSaver"), submenu: TV_IDLE_SAVERS.map((sec) => ({
             label: saverLabel(sec), type: "checkbox", checked: tvIdleSaver() === sec, click: () => setTvSaver(sec, true) })) },
+          { label: tr("tv.highlight"), submenu: TV_HIGHLIGHTS.map((h) => ({
+            label: tr("tv.hl." + h), type: "checkbox", checked: tvHighlight() === h, click: () => setTvHighlight(h) })) },
           { type: "separator" },
           { label: tr("tv.lockChapter"), type: "checkbox", checked: tvLocks().chapter, click: (item) => setTvLock("chapter", item.checked) },
           { label: tr("tv.lockJump"), type: "checkbox", checked: tvLocks().jump, click: (item) => setTvLock("jump", item.checked) },
