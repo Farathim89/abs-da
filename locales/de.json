@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "TV-Modus beenden",
   "tv.exitAsk": "TV-Modus verlassen?",
+  "tv.quit": "App schließen",
   "tv.stay": "Bleiben",
   "tv.nowPlaying": "Läuft gerade",
   "tv.nothing": "Es läuft nichts",

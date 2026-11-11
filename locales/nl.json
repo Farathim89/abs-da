@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Tv-modus verlaten",
   "tv.exitAsk": "Tv-modus verlaten?",
+  "tv.quit": "App sluiten",
   "tv.stay": "Blijven",
   "tv.nowPlaying": "Nu aan het spelen",
   "tv.nothing": "Er speelt niets",

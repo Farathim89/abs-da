@@ -44,6 +44,7 @@
   "tv.seconds": "{n} sn",
   "tv.exit": "TV modundan çık",
   "tv.exitAsk": "TV modundan çıkılsın mı?",
+  "tv.quit": "Uygulamayı kapat",
   "tv.stay": "Kal",
   "tv.nowPlaying": "Şimdi çalıyor",
   "tv.nothing": "Hiçbir şey çalmıyor",

@@ -333,7 +333,7 @@ function installHome(contents, attempt = 0) {
 let tvActive = false, tvMadeFullScreen = false, tvStarted = false;
 const TV_TEXTS = ["exit", "exitAsk", "stay", "nowPlaying", "nothing", "resume", "startOver", "speed", "off", "sort",
   "select", "playPause", "chapter", "jump", "minutes", "space", "clear", "searchHint", "empty",
-  "controller", "lockChapter", "lockJump", "lockNote", "noPad", "book", "bookmarks", "addBookmark", "playFrom", "items"];
+  "controller", "lockChapter", "lockJump", "lockNote", "noPad", "book", "quit", "bookmarks", "addBookmark", "playFrom", "items"];
 const TV_LOCKS = ["chapter", "jump"];   // controller buttons you can lock: LB/RB (chapter), LT/RT (jump)
 const tvLocks = () => Object.fromEntries(TV_LOCKS.map((k) => [k, !!(config.tvLock && config.tvLock[k])]));
 // Screen saver while listening in TV mode: seconds after the last press (0 = off), config.tvSaver.
@@ -392,6 +392,8 @@ function tvOnLoad(contents) {
   installTv(contents);
 }
 ipcMain.on("desktop:tv-exit", (e) => { if (fromServerPage(e) && tvActive) setTvMode(false); });
+// Close the app, chosen in TV mode (a real quit, like the tray's Quit; "Start in TV mode" opens it in TV mode again).
+ipcMain.on("desktop:tv-quit", (e) => { if (fromServerPage(e) && e.sender === wc() && tvActive) app.quit(); });
 // Install now, chosen in TV mode (the restarted app opens in TV mode again).
 ipcMain.on("desktop:tv-update", (e) => {
   if (!fromServerPage(e) || !tvActive || !latestRelease || !latestRelease.asset || updateBusy) return;

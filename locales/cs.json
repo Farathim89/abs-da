@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Ukončit režim TV",
   "tv.exitAsk": "Opustit režim TV?",
+  "tv.quit": "Zavřít aplikaci",
   "tv.stay": "Zůstat",
   "tv.nowPlaying": "Právě hraje",
   "tv.nothing": "Nic nehraje",

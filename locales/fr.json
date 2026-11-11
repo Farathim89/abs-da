@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Quitter le mode TV",
   "tv.exitAsk": "Quitter le mode TV ?",
+  "tv.quit": "Fermer l’application",
   "tv.stay": "Rester",
   "tv.nowPlaying": "En cours de lecture",
   "tv.nothing": "Aucune lecture en cours",

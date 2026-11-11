@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Välju teleri režiimist",
   "tv.exitAsk": "Väljuda teleri režiimist?",
+  "tv.quit": "Sulge rakendus",
   "tv.stay": "Jää",
   "tv.nowPlaying": "Praegu mängib",
   "tv.nothing": "Midagi ei mängi",

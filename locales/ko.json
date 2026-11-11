@@ -44,6 +44,7 @@
   "tv.seconds": "{n}초",
   "tv.exit": "TV 모드 종료",
   "tv.exitAsk": "TV 모드를 종료할까요?",
+  "tv.quit": "앱 닫기",
   "tv.stay": "계속 보기",
   "tv.nowPlaying": "재생 중",
   "tv.nothing": "재생 중인 항목 없음",

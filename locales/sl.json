@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Zapri način TV",
   "tv.exitAsk": "Zapustim način TV?",
+  "tv.quit": "Zapri aplikacijo",
   "tv.stay": "Ostani",
   "tv.nowPlaying": "Zdaj se predvaja",
   "tv.nothing": "Nič se ne predvaja",

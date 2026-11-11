@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Avslutt TV-modus",
   "tv.exitAsk": "Forlate TV-modus?",
+  "tv.quit": "Lukk appen",
   "tv.stay": "Bli",
   "tv.nowPlaying": "Spilles nå",
   "tv.nothing": "Ingenting spilles",

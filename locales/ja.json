@@ -44,6 +44,7 @@
   "tv.seconds": "{n}秒",
   "tv.exit": "テレビモードを終了",
   "tv.exitAsk": "テレビモードを終了しますか？",
+  "tv.quit": "アプリを閉じる",
   "tv.stay": "とどまる",
   "tv.nowPlaying": "再生中",
   "tv.nothing": "再生中のものはありません",

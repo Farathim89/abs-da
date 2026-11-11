@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Išeiti iš TV režimo",
   "tv.exitAsk": "Išeiti iš TV režimo?",
+  "tv.quit": "Uždaryti programą",
   "tv.stay": "Likti",
   "tv.nowPlaying": "Dabar groja",
   "tv.nothing": "Niekas negroja",

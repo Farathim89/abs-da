@@ -44,6 +44,7 @@
   "tv.seconds": "{n} 秒",
   "tv.exit": "退出電視模式",
   "tv.exitAsk": "要退出電視模式嗎？",
+  "tv.quit": "關閉應用程式",
   "tv.stay": "留下",
   "tv.nowPlaying": "正在播放",
   "tv.nothing": "沒有正在播放的內容",

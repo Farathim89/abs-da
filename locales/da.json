@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Afslut TV-tilstand",
   "tv.exitAsk": "Forlad TV-tilstand?",
+  "tv.quit": "Luk appen",
   "tv.stay": "Bliv",
   "tv.nowPlaying": "Afspilles nu",
   "tv.nothing": "Intet afspilles",

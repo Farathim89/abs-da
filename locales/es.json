@@ -44,6 +44,7 @@
   "tv.seconds": "{n} s",
   "tv.exit": "Salir del modo TV",
   "tv.exitAsk": "¿Salir del modo TV?",
+  "tv.quit": "Cerrar la aplicación",
   "tv.stay": "Quedarse",
   "tv.nowPlaying": "Reproduciendo",
   "tv.nothing": "No se está reproduciendo nada",
